@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.Pages.MainPage"
+             BackgroundColor="White"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid RowDefinitions="Auto, *">
+        <Grid Grid.Row="0" BackgroundColor="#E0E0E0" Padding="15,10" ColumnDefinitions="Auto, *">
+            <Label x:Name="TimeFinalExam"                    
+                   Text="00:00:00" 
+                   FontSize="22" 
+                   FontAttributes="Bold"
+                   FontFamily="HONORSansArabicUI"
+                   TextColor="Black"
+                   HorizontalOptions="Start" 
+                   VerticalOptions="Center"
+                   x:FieldModifier="public"/>
+            <ImageButton Source="usersettings.png" 
+                         Grid.Column="1"
+                         HeightRequest="40" 
+                         WidthRequest="40"
+                         Clicked="ImageButton_Clicked"
+                         HorizontalOptions="End"/>
+        </Grid>
+
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout Padding="20" Spacing="15">
+
+                <Button Text="Group 1" Style="{StaticResource PrimaryButtonStyle}" Clicked="Button_Clicked" BackgroundColor="#1E3A5F" HeightRequest="80"/>
+                <Button Text="Group 2" Style="{StaticResource PrimaryButtonStyle}" Clicked="Button_Clicked" BackgroundColor="#1E3A5F" HeightRequest="80"/>
+                <Button Text="Group 3" Style="{StaticResource PrimaryButtonStyle}" Clicked="Button_Clicked" BackgroundColor="#1E3A5F" HeightRequest="80"/>
+                <Button Text="Group 4" Style="{StaticResource PrimaryButtonStyle}" Clicked="Button_Clicked" BackgroundColor="#1E3A5F" HeightRequest="80"/>
+
+                <Button Text="Final Exam" 
+                        Style="{StaticResource PrimaryButtonStyle}" 
+                        Clicked="Button_Clicked" 
+                        BackgroundColor="#1E3A5F" 
+                        HeightRequest="80"
+                        Margin="0,10,0,0"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

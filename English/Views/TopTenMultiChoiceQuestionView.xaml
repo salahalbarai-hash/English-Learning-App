@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.Views.TopTenMultiChoiceQuestionView">
+
+        <!-- المحتوى الرئيسي -->
+        <Grid RowDefinitions="Auto, *" Padding="25" BackgroundColor="#0B1120">
+            <Label Grid.Row="0"
+                   Text="{Binding Path=BindingContext.CurrentWord.ArabicWord, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
+                   TextColor="White" 
+                   FontSize="52" 
+                   HorizontalOptions="Center" 
+                   FontFamily="CairoBold"
+                   Margin="0,10,0,40">
+                <Label.Shadow>
+                    <Shadow Brush="#A855F7" Offset="0,0" Radius="20" Opacity="0.9" />
+                </Label.Shadow>
+            </Label>
+
+            <FlexLayout Grid.Row="1"
+                        Wrap="Wrap"
+                        JustifyContent="SpaceBetween"
+                        AlignItems="Start"
+                        BindableLayout.ItemsSource="{Binding Path=BindingContext.ShuffledOptions, Source={RelativeSource AncestorType={x:Type ContentPage}}}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Border FlexLayout.Basis="48%"
+                                HeightRequest="100"
+                                Margin="5"
+                                BackgroundColor="#111827"
+                                StrokeThickness="2"
+                                Stroke="#A855F7" 
+                                StrokeShape="RoundRectangle 20">
+                            <Border.Shadow>
+                                <Shadow Brush="#A855F7" Offset="0,0" Radius="10" Opacity="0.4" />
+                            </Border.Shadow>
+                            <Label Text="{Binding .}" 
+                                   TextColor="White"
+                                   FontSize="19"
+                                   FontFamily="CairoBold"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   HorizontalTextAlignment="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOptionSelected_Tapped" />
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+        </Grid>
+</ContentView>

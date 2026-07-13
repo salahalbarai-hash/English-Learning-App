@@ -1,0 +1,82 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:English.Models" 
+             xmlns:viewmodels="clr-namespace:English.ViewModels"
+             xmlns:views="clr-namespace:English.Views"
+             x:Class="English.Pages.ExamTopTenPage"
+             x:Name="ExamPage"
+             x:DataType="viewmodels:QuizTopTenVM"
+             BackgroundColor="#050505"
+             NavigationPage.HasNavigationBar="False">
+
+    <ContentPage.Resources>
+        <DataTemplate x:Key="MultiView">
+            <views:TopTenMultiChoiceQuestionView/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="WritingView">
+            <views:TopTenWritingQuestionView />
+        </DataTemplate>
+
+        <DataTemplate x:Key="ListeningView">
+            <views:TopTenListeningQuestionView />
+        </DataTemplate>
+
+        <models:ExamStageTemplateSelector x:Key="StageSelector"
+            MultiChoiceTemplate="{StaticResource MultiView}"
+            WritingTemplate="{StaticResource WritingView}"
+            ListeningTemplate="{StaticResource ListeningView}" />
+    </ContentPage.Resources>
+
+    <!-- ✅ الحل: كل شيء داخل Grid واحد -->
+    <Grid>
+
+        <Grid RowDefinitions="250,*" RowSpacing="0">
+
+            <!-- Header -->
+            <Border Grid.Row="0" BackgroundColor="#111" StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="0,0,40,40"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout VerticalOptions="Center" Spacing="10" Padding="10">
+
+                    <ContentView x:Name="MasterTimerContainer"
+                                 HorizontalOptions="Center"
+                                 HeightRequest="100"
+                                 WidthRequest="100"/>
+
+                    <Label Text="{Binding CurrentStageName}"
+                           TextColor="{Binding StageColor}"
+                           FontSize="20"
+                           HorizontalOptions="Center"
+                           FontFamily="CairoBold">
+                        <Label.Shadow>
+                            <Shadow Brush="{Binding StageColor}"
+                                    Offset="0,0"
+                                    Radius="15"
+                                    Opacity="0.8"/>
+                        </Label.Shadow>
+                    </Label>
+
+                    <HorizontalStackLayout HorizontalOptions="Center"
+                                           Spacing="20"
+                                           HeightRequest="40">
+                        <Label Text="❤️" FontSize="30" Opacity="{Binding Heart1Opacity}"/>
+                        <Label Text="❤️" FontSize="30" Opacity="{Binding Heart2Opacity}"/>
+                    </HorizontalStackLayout>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Content -->
+            <Grid Grid.Row="1" Padding="15">
+                <StackLayout BindableLayout.ItemsSource="{Binding CurrentStageList}"
+                             BindableLayout.ItemTemplateSelector="{StaticResource StageSelector}"
+                             VerticalOptions="Fill"
+                             HorizontalOptions="Fill" />
+            </Grid>
+
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+	<!-- ثيم شاشة البداية -->
+	<style name="Maui.SplashTheme" parent ="Theme.Maui.Splash">
+	</style>
+
+	<!-- الثيم الرئيسي الذي يحتوي على MaterialComponents المطلوبة لحل المشكلة -->
+	<style name="Maui.MainTheme.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+	</style>
+</resources>

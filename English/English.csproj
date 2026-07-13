@@ -1,0 +1,141 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net9.0-android</TargetFramework>
+
+		<OutputType>Exe</OutputType>
+		<RootNamespace>English</RootNamespace>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<ApplicationTitle>English</ApplicationTitle>
+		<ApplicationId>com.companyname.english</ApplicationId>
+		<ApplicationDisplayVersion>1.6</ApplicationDisplayVersion>
+		<ApplicationVersion>7</ApplicationVersion>
+
+		<SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
+
+		<RuntimeIdentifiers>android-arm</RuntimeIdentifiers> <!-- android-arm;android-arm64;android-x64 -->
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)' == 'Release|net9.0-android'">
+		<RunAOTCompilation>false</RunAOTCompilation>
+		<AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+		<PublishTrimmed>false</PublishTrimmed>
+		<AndroidEnableMultiDex>true</AndroidEnableMultiDex>
+		<AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
+	 <AndroidPackageFormat>apk</AndroidPackageFormat>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#512BD4" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#68B1F6" BaseSize="200,200" />
+		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+		<MauiFont Include="Resources\Fonts\*" />
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AndroidResource Remove="Platforms\Android\Resources\values\styles.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="Pages\ExamPage.xaml.cs" />
+		<Compile Remove="Pages\GroupPage.xaml.cs" />
+		<Compile Remove="Pages\MainPage.xaml.cs" />
+		<Compile Remove="Pages\VideoPage.xaml.cs" />
+		<Compile Remove="Services\InterstitialAd.cs" />
+		<Compile Remove="Services\RewardedAd.cs" />
+		<Compile Remove="ViewModels\ListeningQuestionsViewVM.cs" />
+		<Compile Remove="ViewModels\OptionsQuestionsViewVM.cs" />
+		<Compile Remove="Views\ListeningQuestionView.xaml.cs" />
+		<Compile Remove="Views\OptionsQuestionView.xaml.cs" />
+		<Compile Remove="Views\WinView.xaml.cs" />
+		<Compile Remove="Views\WritingQuestionView.xaml.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Remove="Pages\ExamPage.xaml" />
+	  <MauiXaml Remove="Pages\GroupPage.xaml" />
+	  <MauiXaml Remove="Pages\MainPage.xaml" />
+	  <MauiXaml Remove="Pages\VideoPage.xaml" />
+	  <MauiXaml Remove="Views\ListeningQuestionView.xaml" />
+	  <MauiXaml Remove="Views\OptionsQuestionView.xaml" />
+	  <MauiXaml Remove="Views\WinView.xaml" />
+	  <MauiXaml Remove="Views\WritingQuestionView.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<MauiAsset Include="Resources\Images\ok.gif" />
+		<MauiAsset Include="Resources\Images\usersettings.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageReference Include="Plugin.Maui.Audio" Version="4.0.0" />
+		<PackageReference Include="RestSharp" Version="113.1.0" />
+		<PackageReference Include="SkiaSharp" Version="3.119.1" />
+		<PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="2.0.0" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.9" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Pages\CreateAccountPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\ExamTopTenPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\GuessGamePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\LeadersPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\ResultPopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\SettingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\TenWordsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\FinalExamView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\LoseView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\TopTenListeningQuestionView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\TopTenMultiChoiceQuestionView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\TopTenWritingQuestionView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<AndroidSigningKeyStore>english.keystore</AndroidSigningKeyStore>
+		<AndroidSigningKeyAlias>english</AndroidSigningKeyAlias>
+		<AndroidSigningKeyPass>123456</AndroidSigningKeyPass>
+		<AndroidSigningStorePass>123456</AndroidSigningStorePass>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+	</PropertyGroup>
+</Project>

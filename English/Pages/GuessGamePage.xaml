@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="English.Pages.GuessGamePage"
+    BackgroundColor="#070B18"
+    FlowDirection="RightToLeft"
+    Title="تحدي التخمين">
+
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
+
+        <Border Grid.Row="0"
+                Margin="0,0,0,12"
+                StrokeThickness="0"
+                StrokeShape="RoundRectangle 0,0,35,35">
+
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#111827" Offset="0"/>
+                    <GradientStop Color="#312E81" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <Grid Padding="18" ColumnDefinitions="Auto,*,Auto">
+                <Border WidthRequest="55" HeightRequest="55" BackgroundColor="#252C55" StrokeThickness="0" StrokeShape="RoundRectangle 28">
+                    <Label Text="🧠" FontSize="30" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Border>
+
+                <VerticalStackLayout Grid.Column="1" Margin="15,0" VerticalOptions="Center">
+                    <Label Text="المفتش الذكي" FontSize="21" FontFamily="CairoBold" TextColor="White"/>
+                    <Label Text="اكتشف الكلمة السرية" FontSize="13" TextColor="#A5B4FC" FontFamily="CairoRegular"/>
+                </VerticalStackLayout>
+
+                <Border Grid.Column="2" BackgroundColor="#4F46E5" Stroke="#818CF8" StrokeThickness="1" Padding="12,6" StrokeShape="RoundRectangle 18">
+                    <HorizontalStackLayout Spacing="6">
+                        <Label Text="❤️" FontSize="16"/>
+                        <Label Text="{Binding RemainingAttempts,StringFormat='{0}/20'}" FontSize="16" FontFamily="CairoBold" TextColor="White"/>
+                    </HorizontalStackLayout>
+                </Border>
+            </Grid>
+        </Border>
+
+        <CollectionView Grid.Row="1"
+                        x:Name="ChatCollectionView"
+                        ItemsSource="{Binding ChatMessages}"
+                        Margin="15,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="0,7">
+                        <Border IsVisible="{Binding IsUser}" HorizontalOptions="Start" MaximumWidthRequest="300" Padding="16" BackgroundColor="#2563EB" StrokeThickness="0" StrokeShape="RoundRectangle 22,22,0,22">
+                            <Label Text="{Binding Text}" TextColor="White" FontSize="15" FontFamily="CairoBold"/>
+                        </Border>
+
+                        <Border IsVisible="{Binding IsAI}" HorizontalOptions="End" MaximumWidthRequest="300" Padding="16" BackgroundColor="#172033" Stroke="#334155" StrokeThickness="1" StrokeShape="RoundRectangle 22,22,22,0">
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="🧠 المفتش الذكي" FontSize="11" TextColor="#818CF8" FontFamily="CairoBold"/>
+                                <Label Text="{Binding Text}" TextColor="#E2E8F0" FontSize="15" FontFamily="CairoBold"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Border Grid.Row="2"
+                IsVisible="{Binding IsWaitingForAI}"
+                HorizontalOptions="End"
+                Margin="15,5,15,5"
+                Padding="16,10"
+                BackgroundColor="#172033"
+                Stroke="#334155"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 22,22,22,0">
+
+            <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                <Label Text="🧠 يكتب"
+                       FontSize="13"
+                       TextColor="#818CF8"
+                       FontFamily="CairoBold"
+                       VerticalOptions="Center"/>
+
+                <Label Text="{Binding ThinkingStatus}"
+                       TextColor="#E2E8F0"
+                       FontSize="16"
+                       FontFamily="CairoBold"
+                       VerticalOptions="Center"
+                       WidthRequest="25"/>
+            </HorizontalStackLayout>
+        </Border>
+
+        <Border Grid.Row="3"
+                Margin="15,5,15,20"
+                Padding="8"
+                BackgroundColor="#111827"
+                Stroke="#334155"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 35">
+            <Border.Shadow>
+                <Shadow Brush="Black" Offset="0,5" Radius="12" Opacity="0.35"/>
+            </Border.Shadow>
+
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <Entry Grid.Column="0" x:Name="QuestionEntry" Text="{Binding UserQuestion}" Placeholder="اكتب سؤال نعم أو لا..." PlaceholderColor="#64748B" TextColor="White" FontFamily="CairoBold" FontSize="15" BackgroundColor="Transparent" ReturnType="Send" ReturnCommand="{Binding SendMessageCommand}"/>
+                <Button Grid.Column="1" Text="💡" Command="{Binding HelpCommand}" HeightRequest="48" WidthRequest="55" CornerRadius="24" BackgroundColor="#F59E0B" TextColor="White" FontSize="20"/>
+                <Button Grid.Column="2" Text="🚀" Command="{Binding SendMessageCommand}" HeightRequest="48" WidthRequest="60" CornerRadius="24" BackgroundColor="#6366F1" TextColor="White" FontSize="20"/>
+            </Grid>
+        </Border>
+
+    </Grid>
+</ContentPage>

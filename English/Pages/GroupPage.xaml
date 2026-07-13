@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.Pages.GroupPage"
+             BackgroundColor="#1E3A5F">
+
+    <Grid Padding="18">
+
+        <CollectionView x:Name="CV"
+                        ItemsSource="{Binding Titles}"
+                        SelectionMode="None">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+
+                    <Grid Margin="0,10">
+
+                        <!-- Card -->
+                        <Border BackgroundColor="#2A3B52"
+                                Stroke="Azure"
+                                StrokeThickness="2"
+                                Padding="22"
+                                StrokeShape="RoundRectangle 20">
+                            <Grid>
+
+                                <!-- Word -->
+                                <Label Text="{Binding EnglishWord}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="#F8FAFC"
+                                       FontFamily="HONORSansArabicUI"
+                                       HorizontalTextAlignment="Center"
+                                       VerticalTextAlignment="Center"
+                                       ClassId="{Binding ArabicWord}">
+
+                                    <Label.GestureRecognizers>
+
+                                        <TapGestureRecognizer
+                                            Tapped="OnWordTapped"
+                                            NumberOfTapsRequired="1"/>
+
+                                        <TapGestureRecognizer
+                                            Tapped="OnWordLanguageTapped"
+                                            NumberOfTapsRequired="2"/>
+
+                                    </Label.GestureRecognizers>
+
+                                </Label>
+
+                            </Grid>
+
+                        </Border>
+
+                        <!-- Lock -->
+                        <Label Text="🔒"
+                               FontSize="16"
+                               TextColor="#CBD5E1"
+                               BackgroundColor="#2A3B52"
+                               Padding="6"
+                               HorizontalOptions="End"
+                               VerticalOptions="Start"
+                               Margin="10,6"
+                               IsVisible="{Binding Locked}" />
+
+                    </Grid>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+        <ActivityIndicator x:Name="ActivityIndicator"
+                           WidthRequest="45"
+                           HeightRequest="45"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"
+                           Color="#38BDF8"
+                           IsRunning="False"
+                           IsVisible="False"/>
+
+    </Grid>
+
+</ContentPage>
