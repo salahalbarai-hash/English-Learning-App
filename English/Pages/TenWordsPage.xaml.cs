@@ -145,17 +145,22 @@ public partial class TenWordsPage : ContentPage
                     Password = Preferences.Get("Password", ""),
                 });
 
+                string result = "0";
                 if (memorizedWords < user.MemorizedWords)
-                    memorizedWords = user.MemorizedWords;
-
-                string result = await Service.UpdateMemorizedWords(new User
                 {
-                    ID = id,
-                    MemorizedWords = memorizedWords
-                });
+                    memorizedWords = user.MemorizedWords;
+                    Preferences.Set("MemorizedWords", memorizedWords);
+                }
+                else
+                {
+                    result = await Service.UpdateMemorizedWords(new User
+                    {
+                        ID = id,
+                        MemorizedWords = memorizedWords
+                    });
+                }                
 
                 vm.MemorizedWordsCount = memorizedWords;
-
                 string message = "تم الحفظ بنجاح 🔥";
                 if (result != "1") message = "حدث خطأ 😓";
 
