@@ -6,14 +6,11 @@ namespace English.Pages;
 public partial class GuessGamePage : ContentPage
 {
     private GuessGameVM _viewModel;
-
-    public GuessGamePage()
+    public GuessGamePage(string selectedCategory)
     {
         InitializeComponent();
-        _viewModel = new GuessGameVM();
+        _viewModel = new GuessGameVM(selectedCategory);
         BindingContext = _viewModel;
-
-        // الاشتراك في حدث التمرير لأسفل
         _viewModel.ScrollToBottomRequested = ScrollToBottom;
     }
 
@@ -38,4 +35,5 @@ public class WordItem
     public int Id { get; set; }
     public string? EnglishWord { get; set; }
     public string? ArabicWord { get; set; }
+    public string? Category { get; set; }
 }

@@ -99,10 +99,9 @@
                 <Shadow Brush="Black" Offset="0,5" Radius="12" Opacity="0.35"/>
             </Border.Shadow>
 
-            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
                 <Entry Grid.Column="0" x:Name="QuestionEntry" Text="{Binding UserQuestion}" Placeholder="اكتب سؤال نعم أو لا..." PlaceholderColor="#64748B" TextColor="White" FontFamily="CairoBold" FontSize="15" BackgroundColor="Transparent" ReturnType="Send" ReturnCommand="{Binding SendMessageCommand}"/>
-                <Button Grid.Column="1" Text="💡" Command="{Binding HelpCommand}" HeightRequest="48" WidthRequest="55" CornerRadius="24" BackgroundColor="#F59E0B" TextColor="White" FontSize="20"/>
-                <Button Grid.Column="2" Text="🚀" Command="{Binding SendMessageCommand}" HeightRequest="48" WidthRequest="60" CornerRadius="24" BackgroundColor="#6366F1" TextColor="White" FontSize="20"/>
+                <Button Grid.Column="1" Text="🚀" Command="{Binding SendMessageCommand}" HeightRequest="48" WidthRequest="60" CornerRadius="24" BackgroundColor="#6366F1" TextColor="White" FontSize="20"/>
             </Grid>
         </Border>
 

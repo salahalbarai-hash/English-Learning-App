@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.Pages.FriendRequestsPage"
+             Title="طلبات الصداقة الواردة"
+             FlowDirection="RightToLeft"
+             BackgroundColor="#111827">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <CollectionView x:Name="RequestsCollectionView" HeightRequest="650">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Padding="12" Margin="0,5" BackgroundColor="#1E293B" StrokeShape="RoundRectangle 12">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                                <Label Text="📩" FontSize="12" VerticalOptions="Center"/>
+                                <Label Text="{Binding}" TextColor="White" FontSize="15" VerticalOptions="Center" FontFamily="CairoBold"/>
+                            </HorizontalStackLayout>
+
+                            <Button Grid.Column="1"
+                                    Text="قبول ✅"
+                                    BackgroundColor="#10B981"
+                                    TextColor="White"
+                                    FontSize="12"
+                                    HeightRequest="35"
+                                    Clicked="OnAcceptRequestClicked"
+                                    CommandParameter="{Binding}"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+</ContentPage>

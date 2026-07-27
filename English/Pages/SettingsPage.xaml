@@ -2,11 +2,14 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="English.Pages.SettingsPage"
-             BackgroundColor="#F4F7FC">
+             BackgroundColor="#F4F7FC"
+             FlowDirection="RightToLeft">
+
     <Grid>
         <ScrollView>
-            <VerticalStackLayout Spacing="0">
+            <VerticalStackLayout Spacing="0" Padding="0,0,0,30">
 
+                <!-- الهيدر (رأس الصفحة) -->
                 <Grid HeightRequest="180" BackgroundColor="#68A5E9">
                     <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
                         <Label Text="إعدادات الحساب" TextColor="White" FontSize="26" FontFamily="CairoBold" HorizontalOptions="Center"/>
@@ -14,7 +17,8 @@
                     </VerticalStackLayout>
                 </Grid>
 
-                <Border Margin="20,-30,20,30"
+                <!-- بطاقة إعدادات الحساب الأساسية -->
+                <Border Margin="20,-30,20,20"
                         StrokeShape="RoundRectangle 25"
                         StrokeThickness="0"
                         BackgroundColor="White"
@@ -25,7 +29,9 @@
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="20">
+                        <Label Text="تحديث البيانات الشخصية" TextColor="#333333" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,10"/>
 
+                        <!-- حقل اسم المستخدم -->
                         <VerticalStackLayout Spacing="8">
                             <Label Text="اسم المستخدم" TextColor="#555555" FontSize="14" FontAttributes="Bold" Margin="5,0,0,0"/>
                             <Border StrokeShape="RoundRectangle 12" StrokeThickness="1" Stroke="#E8EEF2" BackgroundColor="#F8FAFC" Padding="15,0">
@@ -33,6 +39,7 @@
                             </Border>
                         </VerticalStackLayout>
 
+                        <!-- حقل كلمة المرور -->
                         <VerticalStackLayout Spacing="8">
                             <Label Text="كلمة المرور" TextColor="#555555" FontSize="14" FontAttributes="Bold" Margin="5,0,0,0"/>
                             <Border StrokeShape="RoundRectangle 12" StrokeThickness="1" Stroke="#E8EEF2" BackgroundColor="#F8FAFC" Padding="15,0">
@@ -40,6 +47,7 @@
                             </Border>
                         </VerticalStackLayout>
 
+                        <!-- حقل رقم الهاتف -->
                         <VerticalStackLayout Spacing="8">
                             <Label Text="رقم الهاتف" TextColor="#555555" FontSize="14" FontAttributes="Bold" Margin="5,0,0,0"/>
                             <Border StrokeShape="RoundRectangle 12" StrokeThickness="1" Stroke="#E8EEF2" BackgroundColor="#F8FAFC" Padding="15,0">
@@ -47,6 +55,7 @@
                             </Border>
                         </VerticalStackLayout>
 
+                        <!-- زر حفظ التعديلات (خاص فقط بالبيانات أعلاه) -->
                         <Button Text="حفظ التعديلات" 
                                 Command="{Binding SaveCustomerInformationCommand}"
                                 BackgroundColor="#68A5E9" 
@@ -63,9 +72,40 @@
 
                     </VerticalStackLayout>
                 </Border>
+
+                <!-- بطاقة منفصلة لإدارة الأصدقاء -->
+                <Border Margin="20,0,20,0"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0"
+                        BackgroundColor="White"
+                        Padding="20">
+
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,5" Radius="15" Opacity="0.05"/>
+                    </Border.Shadow>
+
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNavigateToFriendsClicked"/>
+                    </Border.GestureRecognizers>
+
+                    <Grid ColumnDefinitions="Auto, *, Auto">
+                        <Border Grid.Column="0" BackgroundColor="#F0F7FF" StrokeThickness="0" StrokeShape="RoundRectangle 12" WidthRequest="45" HeightRequest="45">
+                            <Label Text="👥" FontSize="22" VerticalOptions="Center" HorizontalOptions="Center"/>
+                        </Border>
+
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Margin="15,0,0,0">
+                            <Label Text="إدارة الأصدقاء" TextColor="#333333" FontSize="16" FontAttributes="Bold" />
+                            <Label Text="إرسال طلبات وإدارة التحديات" TextColor="#888888" FontSize="12" />
+                        </VerticalStackLayout>
+
+                        <Label Grid.Column="2" Text="➔" TextColor="#68A5E9" FontSize="20" FontAttributes="Bold" VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
             </VerticalStackLayout>
         </ScrollView>
 
+        <!-- نافذة التحميل -->
         <Grid x:Name="LoadingOverlay" BackgroundColor="#90000000" IsVisible="{Binding IsBusy, FallbackValue=False}">
             <Frame HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="20" BackgroundColor="White" Padding="30" HasShadow="True">
                 <VerticalStackLayout Spacing="15">

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.Pages.DuelGamePage"
+             BackgroundColor="#070B18"
+             FlowDirection="RightToLeft"
+             Title="مبارزة التحدي المباشر">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto">
+
+        <!-- 1. بطاقة الكلمة السرية الخاصة بك (مع زر الإخفاء والإظهار) -->
+        <Border Grid.Row="0" Margin="15,10,15,0" Padding="14,10" BackgroundColor="#111827" Stroke="#334155" StrokeThickness="1" StrokeShape="RoundRectangle 16">
+            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                    <Label Text="كلمتك السرية (التي يحاول صديقك تخمينها):" FontSize="11" TextColor="#94A3B8" FontFamily="CairoBold"/>
+                    <Label Text="{Binding DisplaySecretWord}" FontSize="15" TextColor="#34D399" FontFamily="CairoBold"/>
+                </VerticalStackLayout>
+                <Button Grid.Column="1" Text="{Binding VisibilityIcon}" Command="{Binding ToggleSecretWordCommand}" BackgroundColor="#1E293B" TextColor="#818CF8" FontSize="12" FontFamily="CairoBold" CornerRadius="12" HeightRequest="36" Padding="10,0"/>
+            </Grid>
+        </Border>
+
+        <!-- 2. شريط الحالة العلوي -->
+        <Border Grid.Row="1" Margin="15,8" Padding="12" BackgroundColor="#111827" Stroke="#334155" StrokeThickness="1" StrokeShape="RoundRectangle 16">
+            <Label Text="{Binding GameStatusText}" FontSize="13" FontFamily="CairoBold" TextColor="#818CF8" HorizontalOptions="Center"/>
+        </Border>
+
+        <!-- 3. قائمة الرسائل والمحادثة بين اللاعبين -->
+        <CollectionView Grid.Row="2" x:Name="ChatCollectionView" ItemsSource="{Binding ChatMessages}" Margin="15,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="0,6">
+
+                        <!-- رسالة النظام -->
+                        <Border IsVisible="{Binding IsSystemMessage}" HorizontalOptions="Center" BackgroundColor="#1E293B" Padding="14,8" StrokeShape="RoundRectangle 16">
+                            <Label Text="{Binding Text}" TextColor="#E2E8F0" FontSize="13" FontFamily="CairoBold" HorizontalTextAlignment="Center"/>
+                        </Border>
+
+                        <!-- رسالة مرسلة منك -->
+                        <Border IsVisible="{Binding IsMyMessage}" HorizontalOptions="End" MaximumWidthRequest="280" Padding="14" BackgroundColor="#2563EB" StrokeShape="RoundRectangle 18,18,0,18">
+                            <VerticalStackLayout Spacing="3">
+                                <Label Text="أنت" FontSize="10" TextColor="#93C5FD" FontFamily="CairoBold"/>
+                                <Label Text="{Binding Text}" TextColor="White" FontSize="14" FontFamily="CairoBold"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- رسالة مرسلة من الصديق -->
+                        <Border IsVisible="{Binding IsOpponentMessage}" HorizontalOptions="Start" MaximumWidthRequest="280" Padding="14" BackgroundColor="#172033" Stroke="#334155" StrokeThickness="1" StrokeShape="RoundRectangle 18,18,18,0">
+                            <VerticalStackLayout Spacing="3">
+                                <Label Text="{Binding Sender}" FontSize="10" TextColor="#818CF8" FontFamily="CairoBold"/>
+                                <Label Text="{Binding Text}" TextColor="#E2E8F0" FontFamily="CairoBold"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- 4. لوحة أزرار الإجابة السريعة (تظهر عندما يكون دورك للإجابة بـ نعم أو لا) -->
+        <Grid Grid.Row="3" IsVisible="{Binding IsMyTurnToAnswer}" ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="15,8">
+            <Button Grid.Column="0" Text="نعم 👍" Command="{Binding AnswerYesCommand}" BackgroundColor="#10B981" TextColor="White" FontFamily="CairoBold" CornerRadius="16"/>
+            <Button Grid.Column="1" Text="لا 👎" Command="{Binding AnswerNoCommand}" BackgroundColor="#EF4444" TextColor="White" FontFamily="CairoBold" CornerRadius="16"/>
+            <Button Grid.Column="2" Text="ربما 🤔" Command="{Binding AnswerMaybeCommand}" BackgroundColor="#F59E0B" TextColor="White" FontFamily="CairoBold" CornerRadius="16"/>
+        </Grid>
+
+        <!-- 5. صندوق إدخال السؤال أو التخمين (يظهر عندما يكون دورك للسؤال) -->
+        <Border Grid.Row="4" IsVisible="{Binding IsMyTurnToAsk}" Margin="15,5,15,20" Padding="8" BackgroundColor="#111827" Stroke="#334155" StrokeThickness="1" StrokeShape="RoundRectangle 35">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                <Entry Grid.Column="0" Text="{Binding UserQuestion}" Placeholder="اكتب سؤالاً أو خمن الكلمة مباشرة..." PlaceholderColor="#64748B" TextColor="White" FontFamily="CairoBold" FontSize="14" BackgroundColor="Transparent" ReturnCommand="{Binding SendMessageCommand}"/>
+                <Button Grid.Column="1" Text="🚀" Command="{Binding SendMessageCommand}" HeightRequest="44" WidthRequest="55" CornerRadius="22" BackgroundColor="#6366F1" TextColor="White" FontSize="18"/>
+            </Grid>
+        </Border>
+
+    </Grid>
+</ContentPage>

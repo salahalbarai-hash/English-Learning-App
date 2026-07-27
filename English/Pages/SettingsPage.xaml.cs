@@ -15,4 +15,9 @@ public partial class SettingsPage : ContentPage
         vm = new SettingsVM();
         BindingContext = vm;
     }
+    private async void OnNavigateToFriendsClicked(object sender, EventArgs e)
+    {
+        // الانتقال إلى شاشة الأصدقاء
+        await Navigation.PushModalAsync(new FriendsPage());
+    }
 }

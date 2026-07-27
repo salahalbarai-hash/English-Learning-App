@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             ios:Page.UseSafeArea="True"
+             x:Class="English.Pages.SmartInspectorPage"
+             FlowDirection="RightToLeft"
+             NavigationPage.HasNavigationBar="False">
+
+    <!-- خلفية احترافية مطابقة تماماً لشاشات اللعب -->
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#10111A" Offset="0.0" />
+            <!-- كحلي داكن جداً -->
+            <GradientStop Color="#1A1B2F" Offset="1.0" />
+            <!-- أزرق مائل للبنفسجي الداكن -->
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <Grid RowDefinitions="Auto, Auto, *, Auto" Padding="20">
+
+        <!-- الصف 0: الهيدر -->
+        <VerticalStackLayout Grid.Row="0" Spacing="5" Margin="0,0,0,25">
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                <Label Text="🧠" FontSize="35" VerticalOptions="Center"/>
+                <Label Text="المفتش الذكي" FontSize="32" FontAttributes="Bold" TextColor="#F8F9FA" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+            <Label Text="اكتشف الكلمة السرية عن طريق الأسئلة!" 
+                   TextColor="#94A3B8" FontSize="15" HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+        <!-- الصف 1: اختيار وضع اللعب -->
+        <VerticalStackLayout Grid.Row="1" Spacing="15" Margin="0,0,0,20">
+            <Label Text="🎮 وضع اللعب:" TextColor="White" FontSize="20" FontAttributes="Bold"/>
+
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                <!-- كرت اللعب الفردي -->
+                <Border x:Name="SinglePlayerCard" Grid.Column="0" 
+                        Stroke="#333752" StrokeThickness="2" 
+                        BackgroundColor="#151624" 
+                        Padding="15" StrokeShape="RoundRectangle 20">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSinglePlayerTapped" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Label Text="👤" FontSize="35" HorizontalOptions="Center"/>
+                        <Label x:Name="SinglePlayerText" Text="لعب فردي" TextColor="White" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- كرت تحدي صديق -->
+                <Border x:Name="MultiplayerCard" Grid.Column="1" 
+                        Stroke="#333752" StrokeThickness="2" 
+                        BackgroundColor="#151624" 
+                        Padding="15" StrokeShape="RoundRectangle 20">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnMultiplayerTapped" />
+                    </Border.GestureRecognizers>
+                    <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Label Text="👥" FontSize="35" HorizontalOptions="Center"/>
+                        <Label x:Name="MultiplayerText" Text="تحدي صديق" TextColor="White" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </VerticalStackLayout>
+
+        <!-- الصف 2: قسم الفئات -->
+        <ScrollView Grid.Row="2" VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout Spacing="15" Padding="0,0,0,20">
+                <Label Text="📌 الفئة المستهدفة:" TextColor="White" FontSize="20" FontAttributes="Bold"/>
+
+                <Label x:Name="EmptyCategoriesLabel" 
+                       Text="احفظ المزيد من الكلمات لفتح الفئات!" 
+                       TextColor="#00E5FF" 
+                       FontSize="16" 
+                       IsVisible="False"
+                       HorizontalOptions="Center" 
+                       Margin="0,20,0,0"/>
+
+                <FlexLayout x:Name="CategoriesContainer" Wrap="Wrap" Direction="Row" JustifyContent="Start">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border Stroke="{Binding StrokeColor}" 
+                                    StrokeThickness="2" 
+                                    BackgroundColor="{Binding BackgroundColor}" 
+                                    Padding="20,10" 
+                                    Margin="0,0,10,10" 
+                                    StrokeShape="RoundRectangle 15">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnCategoryTapped" />
+                                </Border.GestureRecognizers>
+                                <Label Text="{Binding Name}" 
+                                       TextColor="{Binding TextColor}" 
+                                       FontAttributes="Bold" 
+                                       FontSize="16" 
+                                       VerticalOptions="Center"/>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- الصف 3: زر البدء -->
+        <Button Grid.Row="3"
+                Text="بدء اللعب"
+                BackgroundColor="#00B4D8" 
+                TextColor="#0B1221"
+                FontSize="22"
+                FontAttributes="Bold"
+                HeightRequest="60"
+                CornerRadius="15"
+                Clicked="OnStartGameClicked"
+                Margin="0,10,0,10">
+            <!-- توهج ناعم وهادئ للزر -->
+            <Button.Shadow>
+                <Shadow Brush="#00B4D8" Offset="0,4" Radius="10" Opacity="0.4"/>
+            </Button.Shadow>
+        </Button>
+
+    </Grid>
+</ContentPage>

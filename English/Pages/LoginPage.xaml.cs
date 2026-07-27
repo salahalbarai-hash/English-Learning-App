@@ -33,7 +33,7 @@ public partial class LoginPage : ContentPage
             // التحقق من تسجيل سابق محلي
             if (IsLocalUserValid(username, password))
             {
-                await LoginSuccess();
+                await LoginSuccess(username);
                 return;
             }
 
@@ -57,7 +57,7 @@ public partial class LoginPage : ContentPage
             }
 
             SaveUserPreferences(user);
-            await LoginSuccess();
+            await LoginSuccess(user.UserName!);
         }
         catch (Exception ex)
         {
@@ -91,17 +91,24 @@ public partial class LoginPage : ContentPage
         Preferences.Set("MemorizedWords", user.MemorizedWords);
     }
 
-    private async Task LoginSuccess()
+    private async Task LoginSuccess(string username)
     {
         if (Application.Current?.Windows.Count > 0)
-            Application.Current.Windows[0].Page = new AppShell();
+        {
+            // 1. إنشاء و تعيين AppShell كصفحة رئيسية جديدة
+            var appShell = new AppShell();
+            Application.Current.Windows[0].Page = appShell;
+
+            // 2. بدء اتصال SignalR وربط الأحداث باسم المستخدم الحالي
+            await appShell.StartGameHubAsync(username);
+        }
+
         await Toast.Make("تم تسجيل الدخول بنجاح 😊").Show();
     }
 
     private void SetBusy(bool value)
     {
         _isBusy = value;
-        // التعديل هنا: إظهار أو إخفاء الشاشة الزجاجية (Overlay) بالكامل
         LoadingOverlay.IsVisible = value;
     }
 

@@ -1,0 +1,191 @@
+﻿using Microsoft.AspNetCore.SignalR.Client;
+
+namespace English.Hubs;
+
+public class GameHub
+{
+    private HubConnection? _hubConnection;
+
+    // --- الأحداث الخاصة بالتحديات ---
+    public event Action<string, string>? OnChallengeReceived;
+    public event Action<string, bool, string>? OnChallengeResponseReceived;
+    public event Action<string>? OnChallengeCanceled;
+
+    // --- الأحداث الخاصة بالأصدقاء ---
+    public event Action<string>? OnFriendRequestAccepted;
+    public event Action<string>? OnFriendRequestReceived;
+
+    // --- أحداث متابعة حالة الاتصال ---
+    public event Action<string>? OnUserConnected;
+    public event Action<string>? OnUserDisconnected;
+
+    // --- 🟢 أحداث المبارزة واللعب (Duel Events) ---
+    public event Action<string, string>? OnDuelQuestionReceived;
+    public event Action<string, string>? OnDuelAnswerReceived;
+    public event Action<string, string, string>? OnSecretWordReceived;
+    public event Action<string, string>? OnDuelWinnerReceived;
+
+    // 🟢 إضافة حدث الانسحاب
+    public event Action<string>? OnDuelWithdrawalReceived;
+
+    public HubConnection? HubConnection => _hubConnection;
+
+    public async Task ConnectAsync(string userName)
+    {
+        if (_hubConnection != null && _hubConnection.State == HubConnectionState.Connected)
+            return;
+
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl($"http://192.168.8.139:5005/gamehub?username={userName}")
+            .WithAutomaticReconnect()
+            .Build();
+
+        // 1. إعادة تسجيل المستخدم تلقائياً
+        _hubConnection.Reconnected += async (connectionId) =>
+        {
+            try
+            {
+                await _hubConnection.InvokeAsync("RegisterUser", userName);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Reconnection Registration Error: {ex.Message}");
+            }
+        };
+
+        // 2. الاستماع لدخول/خروج المستخدمين
+        _hubConnection.On<string>("UserConnected", (connectedUserName) =>
+            OnUserConnected?.Invoke(connectedUserName));
+
+        _hubConnection.On<string>("UserDisconnected", (disconnectedUserName) =>
+            OnUserDisconnected?.Invoke(disconnectedUserName));
+
+        // 3. الاستماع للتحديات والردود
+        _hubConnection.On<string, string>("ReceiveChallenge", (sender, category) =>
+            OnChallengeReceived?.Invoke(sender, category));
+
+        _hubConnection.On<string, bool, string>("ChallengeResponseReceived", (responder, isAccepted, category) =>
+            OnChallengeResponseReceived?.Invoke(responder, isAccepted, category));
+
+        _hubConnection.On<string>("ChallengeCanceled", (senderName) =>
+            OnChallengeCanceled?.Invoke(senderName));
+
+        // 4. الاستماع لطلبات الصداقة
+        _hubConnection.On<string>("ReceiveFriendRequest", (senderName) =>
+            OnFriendRequestReceived?.Invoke(senderName));
+
+        _hubConnection.On<string>("FriendRequestAccepted", (acceptorName) =>
+            OnFriendRequestAccepted?.Invoke(acceptorName));
+
+        // --- 🟢 5. الاستماع لأحداث ومراسلات المبارزة داخل غرفة اللعب ---
+        _hubConnection.On<string, string>("ReceiveDuelQuestion", (sender, q) =>
+            OnDuelQuestionReceived?.Invoke(sender, q));
+
+        _hubConnection.On<string, string>("ReceiveDuelAnswer", (responder, a) =>
+            OnDuelAnswerReceived?.Invoke(responder, a));
+
+        _hubConnection.On<string, string, string>("ReceiveSecretWord", (target, w, a) =>
+            OnSecretWordReceived?.Invoke(target, w, a));
+
+        _hubConnection.On<string, string>("ReceiveDuelWinner", (winner, word) =>
+            OnDuelWinnerReceived?.Invoke(winner, word));
+
+        // 🟢 الاستماع لحدث الانسحاب القادم من السيرفر
+        _hubConnection.On<string>("ReceiveDuelWithdrawal", (withdrawingUser) =>
+            OnDuelWithdrawalReceived?.Invoke(withdrawingUser));
+
+        try
+        {
+            await _hubConnection.StartAsync();
+            await _hubConnection.InvokeAsync("RegisterUser", userName);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"SignalR Connection Error: {ex.Message}");
+        }
+    }
+
+    // --- دوال التحديات ---
+    public async Task SendChallengeAsync(string targetUser, string category)
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+            await _hubConnection.InvokeAsync("SendChallenge", targetUser, category);
+    }
+
+    public async Task JoinDuelRoomAsync(string roomName)
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+            await _hubConnection.InvokeAsync("JoinDuelRoom", roomName);
+    }
+
+    public async Task SendResponseAsync(string targetUser, bool isAccepted, string category)
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+            await _hubConnection.InvokeAsync("RespondToChallenge", targetUser, isAccepted, category);
+    }
+
+    public async Task CancelChallengeAsync(string targetUser)
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+            await _hubConnection.InvokeAsync("CancelChallenge", targetUser);
+    }
+
+    // --- دوال الصداقة ---
+    public async Task SendFriendRequestAsync(string targetUser)
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+            await _hubConnection.InvokeAsync("SendFriendRequest", targetUser);
+    }
+
+    public async Task AcceptFriendRequestAsync(string senderName)
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+            await _hubConnection.InvokeAsync("AcceptFriendRequest", senderName);
+    }
+
+    public async Task<List<string>> GetPendingFriendRequestsAsync()
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+        {
+            try { return await _hubConnection.InvokeAsync<List<string>>("GetPendingFriendRequests"); }
+            catch { return new List<string>(); }
+        }
+        return new List<string>();
+    }
+
+    public async Task<List<string>> GetOnlineUsersAsync()
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+        {
+            try { return await _hubConnection.InvokeAsync<List<string>>("GetOnlineUsers"); }
+            catch { return new List<string>(); }
+        }
+        return new List<string>();
+    }
+
+    public async Task<List<string>> GetFriendsAsync()
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+        {
+            try { return await _hubConnection.InvokeAsync<List<string>>("GetFriends"); }
+            catch { return new List<string>(); }
+        }
+        return new List<string>();
+    }
+
+    public async Task<List<string>> GetSentPendingRequestsAsync()
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+        {
+            try { return await _hubConnection.InvokeAsync<List<string>>("GetSentPendingRequests"); }
+            catch { return new List<string>(); }
+        }
+        return new List<string>();
+    }
+
+    public async Task DisconnectAsync()
+    {
+        if (_hubConnection != null)
+            await _hubConnection.StopAsync();
+    }
+}

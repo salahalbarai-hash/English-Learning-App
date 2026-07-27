@@ -14,21 +14,23 @@
               ContentTemplate="{DataTemplate pages:TenWordsPage}"
               Route="MainPage"
               Shell.NavBarIsVisible="False"/>
+
         <ShellContent Title="المتصدرون"
               Icon="winner.webp"
               ContentTemplate="{DataTemplate pages:LeadersPage}"
               Route="LeadersPage"
               Shell.NavBarIsVisible="False"/>
+
         <ShellContent Title="لعبة التخمين"
                       Icon="playicon.png"
-                      ContentTemplate="{DataTemplate pages:GuessGamePage}"
-                      Route="GuessGamePage"
+                      ContentTemplate="{DataTemplate pages:SmartInspectorPage}"
+                      Route="SmartInspectorPage"
                       Shell.NavBarIsVisible="False"/>
+
         <ShellContent Title="الملف الشخصي"
               Icon="usersettings.png"
               ContentTemplate="{DataTemplate pages:SettingsPage}"
               Route="VideoPage"
               Shell.NavBarIsVisible="False"/>
     </TabBar>
-
 </Shell>

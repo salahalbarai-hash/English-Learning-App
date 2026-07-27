@@ -12,12 +12,12 @@ namespace English.Services
         private static int _adCounter = 0;
         public static bool IsAdShowing { get; private set; }
 
-        private static readonly string ApiUrl = Preferences.Get("ApiUrl", "");
-        //#if DEBUG
-        //    "http://192.168.8.139:5005/";
-        //#else
-        //    Preferences.Get("ApiUrl", "");
-        //#endif
+        private static readonly string ApiUrl = //Preferences.Get("ApiUrl", "");
+        #if DEBUG
+            "http://192.168.8.139:5005/";
+        #else
+            Preferences.Get("ApiUrl", "");
+        #endif
 
         // ========================
         // Users
@@ -33,6 +33,32 @@ namespace English.Services
                 return null;
 
             return JsonConvert.DeserializeObject<Leader[]>(response.Content);
+        }
+
+        public static async Task<string[]> GetFriendsAsync(string userName)
+        {
+            var client = new RestClient(new RestClientOptions(ApiUrl));
+            var request = new RestRequest("Users/GetFriends", Method.Get);
+
+            // تمرير اسم المستخدم الحالي كـ Query Parameter للـ API
+            request.AddQueryParameter("userName", userName);
+
+            try
+            {
+                var response = await client.ExecuteAsync(request);
+                var content = response.Content;
+
+                if (!response.IsSuccessful || string.IsNullOrWhiteSpace(content))
+                    return [];
+
+                // إلغاء التسلسل إلى مصفوفة نصوص تمثل أسماء الأصدقاء
+                var result = JsonConvert.DeserializeObject<string[]>(content);
+                return result ?? [];
+            }
+            catch
+            {
+                return [];
+            }
         }
 
         public static async Task<Leader[]> GetStudents()

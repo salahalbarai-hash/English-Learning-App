@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="English.Popups.FriendSelectPopup"
+             Color="Transparent">
+
+    <!-- إطار عصري متناسق مع الهوية البصرية للتطبيق (Dark Mode & Neon Glow) -->
+    <Border BackgroundColor="#151624"
+            Stroke="#333752"
+            StrokeThickness="2"
+            StrokeShape="RoundRectangle 24"
+            Padding="24"
+            WidthRequest="340"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+
+        <Border.Shadow>
+            <Shadow Brush="#00E5FF" Offset="0,0" Radius="15" Opacity="0.15"/>
+        </Border.Shadow>
+
+        <VerticalStackLayout Spacing="18">
+
+            <!-- الهيدر -->
+            <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                <Label Text="تحدي صديق" 
+                       FontSize="22" 
+                       FontAttributes="Bold" 
+                       TextColor="#F8F9FA" 
+                       HorizontalOptions="Center"/>
+                <Label x:Name="CategorySubtitleLabel"
+                       FontSize="13" 
+                       TextColor="#00E5FF" 
+                       HorizontalOptions="Center"
+                       FontAttributes="Bold"/>
+            </VerticalStackLayout>
+
+            <!-- رسالة في حال عدم وجود أصدقاء -->
+            <Label x:Name="EmptyFriendsLabel"
+                   Text="ليس لديك أصدقاء مضافون حالياً 📭"
+                   TextColor="#94A3B8"
+                   FontSize="14"
+                   HorizontalOptions="Center"
+                   IsVisible="False"
+                   Margin="0,10"/>
+
+            <!-- قائمة الأصدقاء المتاحين -->
+            <CollectionView x:Name="FriendsCollectionView" 
+                            HeightRequest="300"
+                            SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Padding="12,10" 
+                                Margin="0,4" 
+                                BackgroundColor="#1E1F30" 
+                                Stroke="#333752"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14">
+                            <HorizontalStackLayout Spacing="12">
+                                <Border BackgroundColor="#112A38" 
+                                        Stroke="#00E5FF" 
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 10" 
+                                        WidthRequest="36" HeightRequest="36">
+                                    <Label Text="👤" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Border>
+                                <Label Text="{Binding}" 
+                                       TextColor="White" 
+                                       FontSize="16" 
+                                       FontAttributes="Bold" 
+                                       VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- زر الإرسال -->
+            <Button x:Name="SendButton"
+                    Text="إرسال طلب التحدي 🚀"
+                    BackgroundColor="#00B4D8"
+                    TextColor="#0B1221"
+                    CornerRadius="14"
+                    HeightRequest="50"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    Clicked="OnSendChallengeClicked">
+                <Button.Shadow>
+                    <Shadow Brush="#00B4D8" Offset="0,4" Radius="10" Opacity="0.4"/>
+                </Button.Shadow>
+            </Button>
+
+        </VerticalStackLayout>
+    </Border>
+</toolkit:Popup>
