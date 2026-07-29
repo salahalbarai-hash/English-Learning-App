@@ -25,8 +25,8 @@ namespace English.Services
 
         public static async Task<Leader[]?> GetTopTen()
         {
-            var client = CreateClient();
-            var request = CreateRequest("Users/TopTen/", Method.Get);
+            var client = new RestClient(new RestClientOptions(ApiUrl));
+            var request = new RestRequest("Users/TopTen/", Method.Get);
 
             var response = await client.ExecuteAsync(request);
             if (!response.IsSuccessful || string.IsNullOrEmpty(response.Content))
@@ -83,8 +83,7 @@ namespace English.Services
         public static async Task<string> GetApiKey()
         {
             var client = new RestClient(new RestClientOptions(ApiUrl));
-
-            var request = CreateRequest("Users/GetGeminiKey",Method.Get);
+            var request = new RestRequest("Users/GetGeminiKey", Method.Get);
             var response = await client.ExecuteAsync(request);
 
             if (!response.IsSuccessful || string.IsNullOrEmpty(response.Content))
@@ -98,7 +97,7 @@ namespace English.Services
         public static async Task<ApiResult<User>> GetUser(User user)
         {
             var client = new RestClient(new RestClientOptions(ApiUrl));
-            var request = CreateRequest("Users/GetUser/", Method.Post);
+            var request = new RestRequest("Users/GetUser/", Method.Post);
             request.AddJsonBody(user);
 
             var response = await client.ExecuteAsync(request);
@@ -119,8 +118,8 @@ namespace English.Services
 
         public static async Task<string> AddUser(User user)
         {
-            var client = CreateClient();
-            var request = CreateRequest("Users", Method.Post);
+            var client = new RestClient(new RestClientOptions(ApiUrl));
+            var request = new RestRequest("Users", Method.Post);
             request.AddJsonBody(user);
 
             var response = await client.ExecuteAsync(request);
@@ -132,8 +131,8 @@ namespace English.Services
 
         public static async Task<string> UpdateUser(User user)
         {
-            var client = CreateClient();
-            var request = CreateRequest("Users", Method.Put);
+            var client = new RestClient(new RestClientOptions(ApiUrl));
+            var request = new RestRequest("Users", Method.Put);
             request.AddJsonBody(user);
 
             var response = await client.ExecuteAsync(request);
@@ -142,8 +141,8 @@ namespace English.Services
 
         public static async Task<string> UpdateTimeFinalExam(TimeFinalExamModel model)
         {
-            var client = CreateClient();
-            var request = CreateRequest("Users/UpdateTimeFinalExam", Method.Put);
+            var client = new RestClient(new RestClientOptions(ApiUrl));
+            var request = new RestRequest("Users/UpdateTimeFinalExam", Method.Put);
             request.AddJsonBody(model);
 
             var response = await client.ExecuteAsync(request);
@@ -233,18 +232,9 @@ namespace English.Services
             return new RestClient(new RestClientOptions(ApiUrl));
         }
 
-        private static RestRequest CreateRequest(string endpoint, Method method)
-        {
-            var request = new RestRequest(endpoint, method);
-           // request.AddHeader("Authorization", $"Basic {Credentials()}");
-            return request;
-        }
+        // The CreateRequest helper was removed. Use `new RestRequest(endpoint, method)` directly.
 
-        private static string Credentials()
-        {
-            var raw = "11294124:60-dayfreetrial";
-            return Convert.ToBase64String(Encoding.ASCII.GetBytes(raw));
-        }
+
 
         private static async Task<JObject> ReadLockFile()
         {
