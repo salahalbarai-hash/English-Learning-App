@@ -10,14 +10,6 @@ public partial class SettingsPage : ContentPage
     public SettingsPage()
     {
         InitializeComponent();
-
-        // ربط الـ ViewModel
-        vm = new SettingsVM();
-        BindingContext = vm;
-    }
-    private async void OnNavigateToFriendsClicked(object sender, EventArgs e)
-    {
-        // الانتقال إلى شاشة الأصدقاء
-        await Navigation.PushModalAsync(new FriendsPage());
+        BindingContext = vm = new SettingsVM();
     }
 }

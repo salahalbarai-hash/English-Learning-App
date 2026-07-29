@@ -27,10 +27,10 @@
                       Route="SmartInspectorPage"
                       Shell.NavBarIsVisible="False"/>
 
-        <ShellContent Title="الملف الشخصي"
-              Icon="usersettings.png"
-              ContentTemplate="{DataTemplate pages:SettingsPage}"
-              Route="VideoPage"
+        <ShellContent Title="المزيد"
+              Icon="more.png"
+              ContentTemplate="{DataTemplate pages:MorePage}"
+              Route="MorePage"
               Shell.NavBarIsVisible="False"/>
     </TabBar>
 </Shell>

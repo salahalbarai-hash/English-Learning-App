@@ -1,13 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using English.Models;
-using English.Services;
-using Microsoft.Maui.Networking;
-using Microsoft.Maui.Storage;
-using CommunityToolkit.Maui.Alerts; // مكتبة التوست
 using CommunityToolkit.Maui.Core;   // إعدادات التوست
-using System;
-using System.Threading.Tasks;
 
 namespace English.ViewModels
 {

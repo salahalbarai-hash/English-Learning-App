@@ -12,8 +12,8 @@
                 <!-- الهيدر (رأس الصفحة) -->
                 <Grid HeightRequest="180" BackgroundColor="#68A5E9">
                     <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
-                        <Label Text="إعدادات الحساب" TextColor="White" FontSize="26" FontFamily="CairoBold" HorizontalOptions="Center"/>
-                        <Label Text="Setting" FontAttributes="Bold" TextColor="#E0F0FF" FontSize="20" HorizontalOptions="Center"/>
+                        <Label Text="" TextColor="White" FontSize="26" FontFamily="CairoBold" HorizontalOptions="Center"/>
+                        <Label Text="" FontAttributes="Bold" TextColor="#E0F0FF" FontSize="20" HorizontalOptions="Center"/>
                     </VerticalStackLayout>
                 </Grid>
 
@@ -71,35 +71,6 @@
                         </Button>
 
                     </VerticalStackLayout>
-                </Border>
-
-                <!-- بطاقة منفصلة لإدارة الأصدقاء -->
-                <Border Margin="20,0,20,0"
-                        StrokeShape="RoundRectangle 20"
-                        StrokeThickness="0"
-                        BackgroundColor="White"
-                        Padding="20">
-
-                    <Border.Shadow>
-                        <Shadow Brush="Black" Offset="0,5" Radius="15" Opacity="0.05"/>
-                    </Border.Shadow>
-
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnNavigateToFriendsClicked"/>
-                    </Border.GestureRecognizers>
-
-                    <Grid ColumnDefinitions="Auto, *, Auto">
-                        <Border Grid.Column="0" BackgroundColor="#F0F7FF" StrokeThickness="0" StrokeShape="RoundRectangle 12" WidthRequest="45" HeightRequest="45">
-                            <Label Text="👥" FontSize="22" VerticalOptions="Center" HorizontalOptions="Center"/>
-                        </Border>
-
-                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Margin="15,0,0,0">
-                            <Label Text="إدارة الأصدقاء" TextColor="#333333" FontSize="16" FontAttributes="Bold" />
-                            <Label Text="إرسال طلبات وإدارة التحديات" TextColor="#888888" FontSize="12" />
-                        </VerticalStackLayout>
-
-                        <Label Grid.Column="2" Text="➔" TextColor="#68A5E9" FontSize="20" FontAttributes="Bold" VerticalOptions="Center"/>
-                    </Grid>
                 </Border>
 
             </VerticalStackLayout>

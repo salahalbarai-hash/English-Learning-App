@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.Pages.AboutPage"
+             Title="حول التطبيق">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="25" HorizontalOptions="Center">
+
+            <!-- 1. الشعار -->
+            <!-- تأكد من وضع صورة الشعار في مجلد Resources/Images -->
+            <Image Source="dotnet_bot.png" 
+                   WidthRequest="120" 
+                   HeightRequest="120"
+                   Margin="0, 20, 0, 10"
+                   HorizontalOptions="Center" />
+
+            <!-- 2. اسم التطبيق -->
+            <Label Text="تطبيق إنجليش"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <!-- 3. رقم الإصدار -->
+            <Label Text="الإصدار 1.0.0"
+                   FontSize="14"
+                   TextColor="Gray"
+                   HorizontalOptions="Center" />
+
+            <BoxView HeightRequest="1" Color="LightGray" Margin="0,15" />
+
+            <!-- 4. وصف التطبيق -->
+            <Label Text="تطبيق تفاعلي يتيح لك اختبار لغتك الإنجليزية عبر تحدي أصدقائك في مبارزات مباشرة، واكتشاف الكلمات السرية، وتطوير مهاراتك بطريقة ممتعة وتنافسية."
+                   FontSize="16"
+                   HorizontalTextAlignment="Center"
+                   LineBreakMode="WordWrap" />
+
+            <BoxView HeightRequest="1" Color="LightGray" Margin="0,15" />
+
+            <!-- 5. أزرار التفاعل -->
+            <Button Text="قيّم التطبيق"
+                    CornerRadius="10"
+                    WidthRequest="220"
+                    BackgroundColor="#2196F3"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    Clicked="OnRateAppClicked"
+                    HorizontalOptions="Center" />
+
+            <Button Text="تواصل معنا"
+                    CornerRadius="10"
+                    WidthRequest="220"
+                    BackgroundColor="Transparent"
+                    TextColor="#2196F3"
+                    BorderColor="#2196F3"
+                    BorderWidth="1"
+                    FontAttributes="Bold"
+                    Clicked="OnContactUsClicked"
+                    HorizontalOptions="Center" />
+
+            <!-- 6. حقوق النشر -->
+            <Label Text="© 2026 جميع الحقوق محفوظة"
+                   FontSize="12"
+                   TextColor="Gray"
+                   Margin="0, 40, 0, 0"
+                   HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

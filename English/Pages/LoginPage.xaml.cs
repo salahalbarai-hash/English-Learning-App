@@ -44,18 +44,18 @@ public partial class LoginPage : ContentPage
             }
 
             // التحقق من المستخدم من السيرفر
-            var user = await Service.GetUser(new User
+            var result = await Service.GetUser(new User
             {
                 UserName = username,
                 Password = password,
             });
 
-            if (user == null)
+            if (!result.Success)
             {
-                await Toast.Make("بيانات الدخول غير صحيحة").Show();
+                await Toast.Make(result.Message ?? "حدث خطأ").Show();
                 return;
             }
-
+            User user = result.Data!;
             SaveUserPreferences(user);
             await LoginSuccess(user.UserName!);
         }

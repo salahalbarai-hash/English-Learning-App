@@ -102,8 +102,13 @@ public partial class TenWordsPage : ContentPage
             string username = Preferences.Get("UserName", "");
             string password = Preferences.Get("Password", "");
 
-            var user = await Service.GetUser(new User { UserName = username, Password = password });
-
+            var result = await Service.GetUser(new User { UserName = username, Password = password });
+            if (!result.Success)
+            {
+                await Toast.Make(result.Message ?? "حدث خطأ").Show();
+                return;
+            }
+            User user = result.Data!;
             if (user is not null)
             {
                 Preferences.Set("MemorizedWords", user.MemorizedWords);
@@ -139,13 +144,18 @@ public partial class TenWordsPage : ContentPage
 
             if (await Service.HasActiveInternetAsync(5))
             {
-                User user = await Service.GetUser(new User
+                var result = await Service.GetUser(new User
                 {
                     UserName = Preferences.Get("UserName", ""),
                     Password = Preferences.Get("Password", ""),
                 });
-
-                string result = "0";
+                if (!result.Success)
+                {
+                    await Toast.Make(result.Message ?? "حدث خطأ").Show();
+                    return;
+                }
+                User user = result.Data!;
+                string res = "0";
                 if (memorizedWords < user.MemorizedWords)
                 {
                     memorizedWords = user.MemorizedWords;
@@ -153,7 +163,7 @@ public partial class TenWordsPage : ContentPage
                 }
                 else
                 {
-                    result = await Service.UpdateMemorizedWords(new User
+                    res = await Service.UpdateMemorizedWords(new User
                     {
                         ID = id,
                         MemorizedWords = memorizedWords
@@ -162,7 +172,7 @@ public partial class TenWordsPage : ContentPage
 
                 vm.MemorizedWordsCount = memorizedWords;
                 string message = "تم الحفظ بنجاح 🔥";
-                if (result != "1") message = "حدث خطأ 😓";
+                if (res != "1") message = "حدث خطأ 😓";
 
                 await Toast.Make(message, ToastDuration.Short, 14).Show(new CancellationToken());
             }

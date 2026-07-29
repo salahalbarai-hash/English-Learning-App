@@ -13,11 +13,11 @@ namespace English.Services
         public static bool IsAdShowing { get; private set; }
 
         private static readonly string ApiUrl = //Preferences.Get("ApiUrl", "");
-        #if DEBUG
+#if DEBUG
             "http://192.168.8.139:5005/";
-        #else
+#else
             Preferences.Get("ApiUrl", "");
-        #endif
+#endif
 
         // ========================
         // Users
@@ -95,18 +95,27 @@ namespace English.Services
             return JsonConvert.DeserializeObject<string>(response.Content) ?? "";
         }
 
-        public static async Task<User> GetUser(User user)
+        public static async Task<ApiResult<User>> GetUser(User user)
         {
-            var client = CreateClient();
+            var client = new RestClient(new RestClientOptions(ApiUrl));
             var request = CreateRequest("Users/GetUser/", Method.Post);
             request.AddJsonBody(user);
 
             var response = await client.ExecuteAsync(request);
-            if (!response.IsSuccessful || string.IsNullOrEmpty(response.Content))
-                return new();
 
-            return JsonConvert.DeserializeObject<User>(response.Content) ?? new();
-        }        
+            if (string.IsNullOrEmpty(response.Content))
+            {
+                return new ApiResult<User> { Success = false, Message = "تعذر الاتصال بالسيرفر" };
+            }
+
+            var result = JsonConvert.DeserializeObject<ApiResult<User>>(response.Content);
+
+            return result ?? new ApiResult<User>
+            {
+                Success = false,
+                Message = "حدث خطأ غير معروف"
+            };
+        }
 
         public static async Task<string> AddUser(User user)
         {
