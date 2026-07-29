@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using System;
 
 namespace English.Hubs;
 
@@ -18,6 +19,10 @@ public class GameHub
     // --- أحداث متابعة حالة الاتصال ---
     public event Action<string>? OnUserConnected;
     public event Action<string>? OnUserDisconnected;
+    // --- أحداث حالة الاتصال المحلية ---
+    public event Action? OnReconnecting;
+    public event Action? OnReconnected;
+    public event Action<Exception?>? OnClosed;
 
     // --- 🟢 أحداث المبارزة واللعب (Duel Events) ---
     public event Action<string, string>? OnDuelQuestionReceived;
@@ -40,18 +45,35 @@ public class GameHub
             .WithAutomaticReconnect()
             .Build();
 
-        // 1. إعادة تسجيل المستخدم تلقائياً
-        _hubConnection.Reconnected += async (connectionId) =>
-        {
-            try
+         // 1. إعادة تسجيل المستخدم تلقائياً
+            _hubConnection.Reconnected += async (connectionId) =>
             {
-                await _hubConnection.InvokeAsync("RegisterUser", userName);
-            }
-            catch (Exception ex)
+                try
+                {
+                    await _hubConnection.InvokeAsync("RegisterUser", userName);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Reconnection Registration Error: {ex.Message}");
+                }
+
+                // إعلام المشتركين أن الاتصال أعيد
+                OnReconnected?.Invoke();
+            };
+
+            // إعلام المشتركين عند بدء محاولة إعادة الاتصال
+            _hubConnection.Reconnecting += (ex) =>
             {
-                System.Diagnostics.Debug.WriteLine($"Reconnection Registration Error: {ex.Message}");
-            }
-        };
+                OnReconnecting?.Invoke();
+                return Task.CompletedTask;
+            };
+
+            // إعلام المشتركين عند غلق الاتصال
+            _hubConnection.Closed += (ex) =>
+            {
+                OnClosed?.Invoke(ex);
+                return Task.CompletedTask;
+            };
 
         // 2. الاستماع لدخول/خروج المستخدمين
         _hubConnection.On<string>("UserConnected", (connectedUserName) =>

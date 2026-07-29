@@ -3,6 +3,8 @@ using English.Hubs;
 using English.Popups;
 using English.Pages;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Maui.Networking;
+using Microsoft.Maui.Dispatching;
 
 namespace English
 {
@@ -24,6 +26,34 @@ namespace English
             if (!string.IsNullOrEmpty(savedUserName))
             {
                 _ = StartGameHubAsync(savedUserName);
+            }
+
+            // الاستماع لتغيرات اتصال الشبكة لإعادة المحاولة تلقائياً عند توفر الإنترنت
+            try
+            {
+                Connectivity.Current.ConnectivityChanged += OnConnectivityChanged;
+            }
+            catch { }
+        }
+
+        private void OnConnectivityChanged(object? sender, ConnectivityChangedEventArgs e)
+        {
+            // إذا أصبح لدينا اتصال إنترنت فعليًا
+            if (e.NetworkAccess == NetworkAccess.Internet)
+            {
+                var savedUserName = Preferences.Get("UserName", "");
+                if (!string.IsNullOrEmpty(savedUserName))
+                {
+                    // تشغيل الاتصال في الخلفية ولكن على خيط الواجهة عند الحاجة
+                    _ = MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        try
+                        {
+                            await StartGameHubAsync(savedUserName);
+                        }
+                        catch { }
+                    });
+                }
             }
         }
 

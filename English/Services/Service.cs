@@ -25,7 +25,7 @@ namespace English.Services
 
         public static async Task<Leader[]?> GetTopTen()
         {
-            var client = new RestClient(new RestClientOptions(ApiUrl));
+            var client = CreateClient();
             var request = new RestRequest("Users/TopTen/", Method.Get);
 
             var response = await client.ExecuteAsync(request);
@@ -37,7 +37,7 @@ namespace English.Services
 
         public static async Task<string[]> GetFriendsAsync(string userName)
         {
-            var client = new RestClient(new RestClientOptions(ApiUrl));
+            var client = CreateClient();
             var request = new RestRequest("Users/GetFriends", Method.Get);
 
             // تمرير اسم المستخدم الحالي كـ Query Parameter للـ API
@@ -63,7 +63,7 @@ namespace English.Services
 
         public static async Task<Leader[]> GetStudents()
         {
-            var client = new RestClient(new RestClientOptions(ApiUrl));
+            var client = CreateClient();
             var request = new RestRequest("Students", Method.Get);
             try
             {
@@ -96,7 +96,7 @@ namespace English.Services
 
         public static async Task<ApiResult<User>> GetUser(User user)
         {
-            var client = new RestClient(new RestClientOptions(ApiUrl));
+            var client = CreateClient();
             var request = new RestRequest("Users/GetUser/", Method.Post);
             request.AddJsonBody(user);
 
@@ -153,7 +153,7 @@ namespace English.Services
         }
         public static async Task<string> UpdateMemorizedWords(User student)
         {
-            var client = new RestClient(new RestClientOptions(ApiUrl));
+            var client = CreateClient();
             var request = new RestRequest("Students/UpdateMemorizedWords", Method.Put);
             request.AddJsonBody(student);
 
