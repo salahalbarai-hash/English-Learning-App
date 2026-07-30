@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.Json; // مطلوب لقراءة كلمات التحدي
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Views; // مطلوب لاستخدام النوافذ المنبثقة ShowPopupAsync
 
 namespace English.Pages;
 
@@ -89,7 +91,6 @@ public partial class FriendsPage : ContentPage
     {
         base.OnAppearing();
 
-        // 🟢 الاشتراك في أحداث الاتصال/الانقطاع من GameHub
         if (Shell.Current is AppShell appShell && appShell.GameHub != null)
         {
             appShell.GameHub.OnUserConnected += OnUserConnectedHandler;
@@ -103,7 +104,6 @@ public partial class FriendsPage : ContentPage
     {
         base.OnDisappearing();
 
-        // 🟢 إلغاء الاشتراك لتجنب استهلاك الذاكرة عند مغادرة الصفحة
         if (Shell.Current is AppShell appShell && appShell.GameHub != null)
         {
             appShell.GameHub.OnUserConnected -= OnUserConnectedHandler;
@@ -116,12 +116,18 @@ public partial class FriendsPage : ContentPage
         if (Shell.Current is AppShell appShell)
         {
             _onlineUsers = await appShell.GetOnlineUsersAsync();
-            _friends = await appShell.GetFriendsAsync();
+
+            // 🟢 استخدام الدالة الجديدة لجلب جميع الأصدقاء من قاعدة البيانات
+            _friends = await appShell.GetAllFriendsAsync();
+
             _sentRequests = await appShell.GetSentPendingRequestsAsync();
 
-            // 1. تجهيز قائمة المتصلين المتاح إضافتهم
+            // 🟢 جلب اسم المستخدم الحالي لاستبعاده من قائمة المتصلين المتاح إضافتهم
+            var currentUser = Preferences.Get("UserName", "");
+
             var availableOnlineUsers = _onlineUsers
-                .Where(user => !_friends.Contains(user, StringComparer.OrdinalIgnoreCase)
+                .Where(user => !string.Equals(user, currentUser, StringComparison.OrdinalIgnoreCase)
+                            && !_friends.Contains(user, StringComparer.OrdinalIgnoreCase)
                             && !_sentRequests.Contains(user, StringComparer.OrdinalIgnoreCase))
                 .ToList();
 
@@ -133,8 +139,7 @@ public partial class FriendsPage : ContentPage
                 ButtonBgColor = Color.FromArgb("#6366F1")
             }).ToList();
 
-            // 2. تجهيز قائمة الأصدقاء مع تحديد حالة الاتصال وقيمة IsOnline
-            _friendItems = _friends.Select(friend => {
+            _friendItems = [.. _friends.Select(friend => {
                 bool isOnline = _onlineUsers.Contains(friend, StringComparer.OrdinalIgnoreCase);
                 return new FriendItem
                 {
@@ -142,13 +147,12 @@ public partial class FriendsPage : ContentPage
                     StatusIcon = isOnline ? "🟢" : "🔴",
                     IsOnline = isOnline
                 };
-            }).ToList();
+            })];
 
             RefreshUI();
         }
     }
 
-    // 🟢 معالج حدث عودة أو دخول مستخدم متصل
     private void OnUserConnectedHandler(string userName)
     {
         MainThread.BeginInvokeOnMainThread(() =>
@@ -156,7 +160,6 @@ public partial class FriendsPage : ContentPage
             if (!_onlineUsers.Contains(userName, StringComparer.OrdinalIgnoreCase))
                 _onlineUsers.Add(userName);
 
-            // إذا كان المستخدم صديقاً، نحدث حالته فوراً ليكون متصلاً 🟢
             var friend = _friendItems.FirstOrDefault(f => f.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
             if (friend != null)
             {
@@ -166,7 +169,6 @@ public partial class FriendsPage : ContentPage
             else if (!_friends.Contains(userName, StringComparer.OrdinalIgnoreCase) &&
                      !_sentRequests.Contains(userName, StringComparer.OrdinalIgnoreCase))
             {
-                // إذا لم يكن صديقاً، نضيفه لقائمة المتصلين المتاح إضافتهم
                 if (!_onlineUserItems.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase)))
                 {
                     _onlineUserItems.Add(new OnlineUserItem
@@ -182,14 +184,12 @@ public partial class FriendsPage : ContentPage
         });
     }
 
-    // 🟢 معالج حدث انقطاع أو خروج مستخدم
     private void OnUserDisconnectedHandler(string userName)
     {
         MainThread.BeginInvokeOnMainThread(() =>
         {
             _onlineUsers.RemoveAll(u => u.Equals(userName, StringComparison.OrdinalIgnoreCase));
 
-            // إذا كان المستخدم صديقاً، نغير حالته إلى غير متصل 🔴
             var friend = _friendItems.FirstOrDefault(f => f.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
             if (friend != null)
             {
@@ -197,7 +197,6 @@ public partial class FriendsPage : ContentPage
                 friend.IsOnline = false;
             }
 
-            // إزالته من قائمة المتصلين المتاحين للإضافة
             _onlineUserItems.RemoveAll(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
             RefreshUI();
         });
@@ -260,6 +259,13 @@ public partial class FriendsPage : ContentPage
     {
         if (sender is Button button && button.CommandParameter is string targetUser)
         {
+            var currentUser = Preferences.Get("UserName", "");
+            if (string.Equals(currentUser, targetUser, StringComparison.OrdinalIgnoreCase))
+            {
+                await Toast.Make("لا يمكنك إرسال طلب صداقة لنفسك").Show();
+                return;
+            }
+
             if (Shell.Current is AppShell appShell)
             {
                 await appShell.SendFriendRequestAsync(targetUser);
@@ -276,16 +282,82 @@ public partial class FriendsPage : ContentPage
     {
         if (sender is Button button && button.CommandParameter is string friendName)
         {
-            string category = await DisplayActionSheet("اختر قسم التحدي:", "إلغاء", null, "قواعد", "مفردات", "استماع");
+            // فتح Popup اختيار الفئة المصممة بشكل عصري
+            var popup = new Popups.CategorySelectPopup();
+            var result = await this.ShowPopupAsync(popup);
 
-            if (!string.IsNullOrEmpty(category) && category != "إلغاء")
+            if (result is not Popups.CategorySelectPopup.CategorySelectionResult sel || string.IsNullOrWhiteSpace(sel.Category))
+                return;
+
+            string category = sel.Category;
+            string selectedWordEnglish = sel.English;
+            string selectedWordArabic = sel.Arabic; // يمكنك استخدامه إذا لزم الأمر
+
+            if (string.IsNullOrEmpty(category) || category == "إلغاء")
+                return;
+
+            // إذا لم يتم جلب كلمة من الـ Popup، نقوم بجلبها عشوائياً من ملف words.json
+            if (string.IsNullOrEmpty(selectedWordEnglish))
             {
-                if (Shell.Current is AppShell appShell)
+                try
                 {
-                    await appShell.SendChallengeToFriendAsync(friendName, category);
+                    using var stream = await FileSystem.OpenAppPackageFileAsync("words.json");
+                    using var reader = new StreamReader(stream);
+                    var json = await reader.ReadToEndAsync();
+                    using var doc = JsonDocument.Parse(json);
+                    var items = doc.RootElement.EnumerateArray()
+                                 .Where(x => x.TryGetProperty("Category", out var c) && c.GetString() == category)
+                                 .ToArray();
+
+                    if (items.Length == 0)
+                    {
+                        await Toast.Make($"لا توجد كلمات في الفئة {category}").Show();
+                        return;
+                    }
+
+                    var rnd = new Random();
+                    var chosen = items[rnd.Next(items.Length)];
+                    selectedWordEnglish = chosen.GetProperty("EnglishWord").GetString() ?? string.Empty;
                 }
+                catch
+                {
+                    await Toast.Make("تعذر قراءة ملف الكلمات").Show();
+                    return;
+                }
+            }
+
+            if (Shell.Current is AppShell appShell)
+            {
+                var waitingPopup = new Popups.WaitingChallengePopup(friendName);
+
+                Action<string, bool, string> onChallengeResponded = (responder, isAccepted, cat) =>
+                {
+                    if (responder == friendName)
+                    {
+                        // استخدام Close بدلاً من CloseWithResult لأنها الدالة القياسية في CommunityToolkit
+                        MainThread.BeginInvokeOnMainThread(() => waitingPopup.Close(isAccepted));
+                    }
+                };
+
+                appShell.GameHub.OnChallengeResponseReceived += onChallengeResponded;
+
+                // إرسال التحدي مع إرسال الكلمة (payload)
+                await appShell.SendChallengeToFriendAsync(friendName, category, selectedWordEnglish);
 
                 await Toast.Make($"تم إرسال التحدي إلى {friendName} في قسم {category}").Show();
+                var waitResult = await this.ShowPopupAsync(waitingPopup);
+
+                appShell.GameHub.OnChallengeResponseReceived -= onChallengeResponded;
+
+                if (waitResult is bool isAcceptedResult)
+                {
+                    if (!isAcceptedResult)
+                        await Toast.Make($"{friendName} رفض التحدي أو هو مشغول حالياً.").Show();
+                }
+                else if (waitResult is string status && status == "Cancel")
+                {
+                    await appShell.GameHub.CancelChallengeAsync(friendName);
+                }
             }
         }
     }

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace English.Hubs;
 
@@ -9,6 +11,8 @@ public class GameHub
 
     // --- الأحداث الخاصة بالتحديات ---
     public event Action<string, string>? OnChallengeReceived;
+    // تم تغيير الاسم هنا لتجنب التعارض مع الحدث السابق
+    public event Action<string, string, string>? OnChallengeWithWordReceived;
     public event Action<string, bool, string>? OnChallengeResponseReceived;
     public event Action<string>? OnChallengeCanceled;
 
@@ -19,6 +23,7 @@ public class GameHub
     // --- أحداث متابعة حالة الاتصال ---
     public event Action<string>? OnUserConnected;
     public event Action<string>? OnUserDisconnected;
+
     // --- أحداث حالة الاتصال المحلية ---
     public event Action? OnReconnecting;
     public event Action? OnReconnected;
@@ -45,35 +50,35 @@ public class GameHub
             .WithAutomaticReconnect()
             .Build();
 
-         // 1. إعادة تسجيل المستخدم تلقائياً
-            _hubConnection.Reconnected += async (connectionId) =>
+        // 1. إعادة تسجيل المستخدم تلقائياً
+        _hubConnection.Reconnected += async (connectionId) =>
+        {
+            try
             {
-                try
-                {
-                    await _hubConnection.InvokeAsync("RegisterUser", userName);
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Reconnection Registration Error: {ex.Message}");
-                }
-
-                // إعلام المشتركين أن الاتصال أعيد
-                OnReconnected?.Invoke();
-            };
-
-            // إعلام المشتركين عند بدء محاولة إعادة الاتصال
-            _hubConnection.Reconnecting += (ex) =>
+                await _hubConnection.InvokeAsync("RegisterUser", userName);
+            }
+            catch (Exception ex)
             {
-                OnReconnecting?.Invoke();
-                return Task.CompletedTask;
-            };
+                System.Diagnostics.Debug.WriteLine($"Reconnection Registration Error: {ex.Message}");
+            }
 
-            // إعلام المشتركين عند غلق الاتصال
-            _hubConnection.Closed += (ex) =>
-            {
-                OnClosed?.Invoke(ex);
-                return Task.CompletedTask;
-            };
+            // إعلام المشتركين أن الاتصال أعيد
+            OnReconnected?.Invoke();
+        };
+
+        // إعلام المشتركين عند بدء محاولة إعادة الاتصال
+        _hubConnection.Reconnecting += (ex) =>
+        {
+            OnReconnecting?.Invoke();
+            return Task.CompletedTask;
+        };
+
+        // إعلام المشتركين عند غلق الاتصال
+        _hubConnection.Closed += (ex) =>
+        {
+            OnClosed?.Invoke(ex);
+            return Task.CompletedTask;
+        };
 
         // 2. الاستماع لدخول/خروج المستخدمين
         _hubConnection.On<string>("UserConnected", (connectedUserName) =>
@@ -85,6 +90,10 @@ public class GameHub
         // 3. الاستماع للتحديات والردود
         _hubConnection.On<string, string>("ReceiveChallenge", (sender, category) =>
             OnChallengeReceived?.Invoke(sender, category));
+
+        // ربط الحدث الجديد ذو الـ 3 معاملات
+        _hubConnection.On<string, string, string>("ReceiveChallenge", (sender, category, word) =>
+            OnChallengeWithWordReceived?.Invoke(sender, category, word));
 
         _hubConnection.On<string, bool, string>("ChallengeResponseReceived", (responder, isAccepted, category) =>
             OnChallengeResponseReceived?.Invoke(responder, isAccepted, category));
@@ -128,10 +137,21 @@ public class GameHub
     }
 
     // --- دوال التحديات ---
-    public async Task SendChallengeAsync(string targetUser, string category)
+
+    // تم دمج الدالتين وتصحيح الخطأ البرمجي في الأقواس المتداخلة
+    public async Task SendChallengeAsync(string targetUser, string category, string word = "")
     {
         if (_hubConnection?.State == HubConnectionState.Connected)
-            await _hubConnection.InvokeAsync("SendChallenge", targetUser, category);
+        {
+            if (string.IsNullOrEmpty(word))
+            {
+                await _hubConnection.InvokeAsync("SendChallenge", targetUser, category);
+            }
+            else
+            {
+                await _hubConnection.InvokeAsync("SendChallenge", targetUser, category, word);
+            }
+        }
     }
 
     public async Task JoinDuelRoomAsync(string roomName)

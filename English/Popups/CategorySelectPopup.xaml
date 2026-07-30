@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="English.Popups.CategorySelectPopup"
+               Size="400,600"
+               Color="Transparent">
+
+	<Border BackgroundColor="#0F1724"
+            Stroke="#26324A"
+            StrokeThickness="1"
+            StrokeShape="RoundRectangle 20"
+            Padding="18"
+            WidthRequest="360">
+
+		<VerticalStackLayout Spacing="12">
+
+			<HorizontalStackLayout HorizontalOptions="Fill" VerticalOptions="Start" Spacing="10">
+				<Label Text="اختر القسم" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="StartAndExpand"/>
+				<Button Text="إلغاء" BackgroundColor="Transparent" TextColor="#94A3B8" Clicked="OnCancelClicked"/>
+			</HorizontalStackLayout>
+
+			<Label x:Name="SubtitleLabel" Text="اختر فئة مناسبة للتحدي" FontSize="13" TextColor="#94A3B8"/>
+
+			<!-- شبكة للفئات -->
+			<CollectionView x:Name="CategoriesCollectionView" SelectionMode="Single" HeightRequest="360">
+				<CollectionView.ItemsLayout>
+					<GridItemsLayout Orientation="Vertical" Span="2"/>
+				</CollectionView.ItemsLayout>
+				<CollectionView.ItemTemplate>
+					<DataTemplate>
+						<!-- 🟢 تم حذف CornerRadius="12" والاكتفاء بـ StrokeShape هنا -->
+						<Border Padding="12" Margin="6" BackgroundColor="#111827" Stroke="#333752" StrokeShape="RoundRectangle 12">
+							<VerticalStackLayout>
+								<Label Text="{Binding Name}" TextColor="White" FontAttributes="Bold" FontSize="14" HorizontalOptions="Center"/>
+								<Label Text="{Binding Preview}" TextColor="#94A3B8" FontSize="12" HorizontalOptions="Center" Margin="0,6,0,0"/>
+							</VerticalStackLayout>
+						</Border>
+					</DataTemplate>
+				</CollectionView.ItemTemplate>
+			</CollectionView>
+
+			<!-- استخدام CornerRadius هنا صحيح لأن الزر يدعمه -->
+			<Button x:Name="ConfirmButton" Text="تأكيد القسم" BackgroundColor="#00B4D8" TextColor="#061118" HeightRequest="48" CornerRadius="12" Clicked="OnConfirmClicked"/>
+
+		</VerticalStackLayout>
+	</Border>
+</toolkit:Popup>
