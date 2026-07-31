@@ -271,4 +271,9 @@ public partial class SmartInspectorPage : ContentPage
         // تحويل المصفوفة إلى قائمة وإرجاعها
         return [.. friendsArray];
     }
+
+    private async void OnBackClicked(object sender, EventArgs e)
+    {
+        await Navigation.PopModalAsync();
+    }
 }

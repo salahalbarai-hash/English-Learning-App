@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.Pages.GameHubPage"
+             FlowDirection="RightToLeft"
+             BackgroundColor="#0F172A"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid RowDefinitions="Auto, *">
+
+        <!-- 🟢 1. ترويسة الصفحة العلويّة (Header) -->
+        <Border Grid.Row="0"
+                BackgroundColor="#1E293B"
+                StrokeThickness="0"
+                Padding="20,24,20,16">
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,4" Radius="8" Opacity="0.15"/>
+            </Border.Shadow>
+
+            <VerticalStackLayout Spacing="6">
+                <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                    <Label Text="🎮" FontSize="28" VerticalOptions="Center"/>
+                    <Label Text="مركز الألعاب"
+                           FontSize="24"
+                           FontFamily="CairoBold"
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                <Label Text="اختر لعبتك المفضلة واستمتع بتطوير مهاراتك وتحدي أصدقائك"
+                       FontSize="13"
+                       FontFamily="CairoRegular"
+                       TextColor="#94A3B8"/>
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- 🟢 2. قائمة بطاقات الألعاب التفاعلية (Cards) -->
+        <ScrollView Grid.Row="1" Padding="20,16">
+            <VerticalStackLayout Spacing="18">
+
+                <!-- 🧠 بطاقة اللعبة الأولى: المفتش الذكي -->
+                <Border Stroke="#312E81"
+                        StrokeThickness="1.5"
+                        BackgroundColor="#1E1B4B"
+                        StrokeShape="RoundRectangle 20"
+                        Padding="18">
+                    <Border.Shadow>
+                        <Shadow Brush="#6366F1" Offset="0,4" Radius="12" Opacity="0.2"/>
+                    </Border.Shadow>
+
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSmartInspectorTapped"/>
+                    </Border.GestureRecognizers>
+
+                    <Grid RowDefinitions="Auto, Auto, Auto" RowSpacing="12">
+
+                        <!-- الهيدر والرمز والوسام -->
+                        <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto">
+                            <Border Grid.Column="0"
+                                    WidthRequest="52"
+                                    HeightRequest="52"
+                                    StrokeShape="RoundRectangle 26"
+                                    StrokeThickness="0"
+                                    BackgroundColor="#3730A3">
+                                <Label Text="🔍" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" VerticalOptions="Center" Spacing="2">
+                                <Label Text="المفتش الذكي"
+                                       FontSize="18"
+                                       FontFamily="CairoBold"
+                                       TextColor="White"/>
+                                <Label Text="تخمين وذكاء 💡"
+                                       FontSize="11"
+                                       FontFamily="CairoRegular"
+                                       TextColor="#818CF8"/>
+                            </VerticalStackLayout>
+
+                            <Border Grid.Column="2"
+                                    BackgroundColor="#312E81"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 12"
+                                    Padding="10,4"
+                                    VerticalOptions="Start">
+                                <Label Text="الأكثر شعبية 🔥"
+                                       FontSize="10"
+                                       FontFamily="CairoBold"
+                                       TextColor="#A5B4FC"/>
+                            </Border>
+                        </Grid>
+
+                        <!-- الوصف -->
+                        <Label Grid.Row="1"
+                               Text="اكتشف الكلمة السرية الإنجليزية عن طريق الأسئلة والتخمين المنطقي بأقل عدد محاولات."
+                               FontSize="13"
+                               FontFamily="CairoRegular"
+                               TextColor="#C7D2FE"
+                               LineBreakMode="WordWrap"/>
+
+                        <!-- زر البدء -->
+                        <Button Grid.Row="2"
+                                Text="خوض التحدي 🚀"
+                                BackgroundColor="#6366F1"
+                                TextColor="White"
+                                FontFamily="CairoBold"
+                                FontSize="14"
+                                HeightRequest="44"
+                                CornerRadius="12"
+                                Clicked="OnSmartInspectorTapped"/>
+                    </Grid>
+                </Border>
+
+                <!-- ⚡ بطاقة اللعبة الثانية: تحدي الخيارات -->
+                <Border Stroke="#065F46"
+                        StrokeThickness="1.5"
+                        BackgroundColor="#064E3B"
+                        StrokeShape="RoundRectangle 20"
+                        Padding="18">
+                    <Border.Shadow>
+                        <Shadow Brush="#10B981" Offset="0,4" Radius="12" Opacity="0.2"/>
+                    </Border.Shadow>
+
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnChoiceChallengeTapped"/>
+                    </Border.GestureRecognizers>
+
+                    <Grid RowDefinitions="Auto, Auto, Auto" RowSpacing="12">
+
+                        <!-- الهيدر والرمز والوسام -->
+                        <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto">
+                            <Border Grid.Column="0"
+                                    WidthRequest="52"
+                                    HeightRequest="52"
+                                    StrokeShape="RoundRectangle 26"
+                                    StrokeThickness="0"
+                                    BackgroundColor="#047857">
+                                <Label Text="⚡" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" VerticalOptions="Center" Spacing="2">
+                                <Label Text="تحدي الخيارات"
+                                       FontSize="18"
+                                       FontFamily="CairoBold"
+                                       TextColor="White"/>
+                                <Label Text="سرعة ومعرفة ⚡"
+                                       FontSize="11"
+                                       FontFamily="CairoRegular"
+                                       TextColor="#34D399"/>
+                            </VerticalStackLayout>
+
+                            <Border Grid.Column="2"
+                                    BackgroundColor="#065F46"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 12"
+                                    Padding="10,4"
+                                    VerticalOptions="Start">
+                                <Label Text="سريع وممتع ⏱️"
+                                       FontSize="10"
+                                       FontFamily="CairoBold"
+                                       TextColor="#A7F3D0"/>
+                            </Border>
+                        </Grid>
+
+                        <!-- الوصف -->
+                        <Label Grid.Row="1"
+                               Text="اختبر مفرداتك وسرعة إجابتك باختيار المعنى الصحيح للكلمات من بين عدة خيارات."
+                               FontSize="13"
+                               FontFamily="CairoRegular"
+                               TextColor="#D1FAE5"
+                               LineBreakMode="WordWrap"/>
+
+                        <!-- زر البدء -->
+                        <Button Grid.Row="2"
+                                Text="خوض التحدي 🚀"
+                                BackgroundColor="#10B981"
+                                TextColor="White"
+                                FontFamily="CairoBold"
+                                FontSize="14"
+                                HeightRequest="44"
+                                CornerRadius="12"
+                                Clicked="OnChoiceChallengeTapped"/>
+                    </Grid>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

@@ -5,6 +5,21 @@ namespace English.Services
 {
     public static class TenWords
     {
+        public static List<WordModel> GetMemorizedWords()
+        {
+            var stream = FileSystem.OpenAppPackageFileAsync("words.json").Result;
+            using var reader = new StreamReader(stream);
+            var json = reader.ReadToEnd();
+
+            var allWords = JsonSerializer.Deserialize<List<WordModel>>(json);
+
+            if (allWords == null || allWords.Count == 0)
+                return [];
+
+            int skipCount = Preferences.Get("MemorizedWords", 0);
+            return [.. allWords.Take(skipCount)];
+        }
+
         public static List<WordModel> All()
         {
             // قراءة الملف

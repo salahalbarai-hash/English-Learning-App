@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.Pages.ChoiceChallengePage"
+             FlowDirection="RightToLeft"
+             BackgroundColor="#050505"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid>
+        <!-- ============================================== -->
+        <!-- 🟢 1. Game View (Hidden by default)           -->
+        <!-- ============================================== -->
+        <Grid x:Name="GameView" RowDefinitions="Auto, *" IsVisible="False">
+            <!-- Header (Timer and Lives, Score) -->
+            <Border Grid.Row="0" BackgroundColor="#111" StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="0,0,40,40"/>
+                </Border.StrokeShape>
+                <Grid ColumnDefinitions="Auto, *, Auto" Padding="20">
+                    <Button Grid.Column="0"
+                            Text="➔"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            TextColor="White"
+                            BackgroundColor="#1E293B"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            CornerRadius="20"
+                            Padding="0"
+                            Clicked="OnBackClicked"/>
+
+                    <!-- Timer -->
+                    <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" Spacing="5">
+                        <Label x:Name="TimerLabel" Text="15" FontSize="24" FontFamily="CairoBold" TextColor="#F59E0B" HorizontalOptions="Center"/>
+                        <ProgressBar x:Name="TimerProgress" Progress="1.0" ProgressColor="#10B981" HeightRequest="6" WidthRequest="150" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+
+                    <!-- Score -->
+                    <Border Grid.Column="2" VerticalOptions="Center" BackgroundColor="#065F46" StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="12,6">
+                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                            <Label Text="🏆" FontSize="14"/>
+                            <Label x:Name="ScoreLabel" Text="0" FontSize="14" FontFamily="CairoBold" TextColor="White"/>
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Question Content (Centered vertically & slightly shifted up) -->
+            <Grid Grid.Row="1" Padding="20,10" BackgroundColor="#0B1120">
+                <VerticalStackLayout VerticalOptions="Center" Spacing="20" Margin="0,-30,0,0">
+                    <Label x:Name="QuestionWordLabel"
+                           Text="Word" 
+                           TextColor="White" 
+                           FontSize="44" 
+                           HorizontalOptions="Center" 
+                           FontFamily="CairoBold"
+                           Margin="0,0,0,10">
+                        <Label.Shadow>
+                            <Shadow Brush="#A855F7" Offset="0,0" Radius="20" Opacity="0.9" />
+                        </Label.Shadow>
+                    </Label>
+
+                    <FlexLayout Wrap="Wrap"
+                                JustifyContent="SpaceBetween"
+                                AlignItems="Center"
+                                AlignContent="Center">
+                        <!-- Option 1 -->
+                        <Border x:Name="OptionBorder0" FlexLayout.Basis="48%" HeightRequest="100" Margin="4,4" BackgroundColor="#111827" StrokeThickness="2" Stroke="#A855F7" StrokeShape="RoundRectangle 20">
+                            <Border.Shadow>
+                                <Shadow Brush="#A855F7" Offset="0,0" Radius="10" Opacity="0.4" />
+                            </Border.Shadow>
+                            <Label x:Name="OptionBtn0" Text="الخيار الأول" TextColor="White" FontSize="19" FontFamily="CairoBold" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOptionClicked" CommandParameter="0"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <!-- Option 2 -->
+                        <Border x:Name="OptionBorder1" FlexLayout.Basis="48%" HeightRequest="100" Margin="4,4" BackgroundColor="#111827" StrokeThickness="2" Stroke="#A855F7" StrokeShape="RoundRectangle 20">
+                            <Border.Shadow>
+                                <Shadow Brush="#A855F7" Offset="0,0" Radius="10" Opacity="0.4" />
+                            </Border.Shadow>
+                            <Label x:Name="OptionBtn1" Text="الخيار الثاني" TextColor="White" FontSize="19" FontFamily="CairoBold" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOptionClicked" CommandParameter="1"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <!-- Option 3 -->
+                        <Border x:Name="OptionBorder2" FlexLayout.Basis="48%" HeightRequest="100" Margin="4,4" BackgroundColor="#111827" StrokeThickness="2" Stroke="#A855F7" StrokeShape="RoundRectangle 20">
+                            <Border.Shadow>
+                                <Shadow Brush="#A855F7" Offset="0,0" Radius="10" Opacity="0.4" />
+                            </Border.Shadow>
+                            <Label x:Name="OptionBtn2" Text="الخيار الثالث" TextColor="White" FontSize="19" FontFamily="CairoBold" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOptionClicked" CommandParameter="2"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <!-- Option 4 -->
+                        <Border x:Name="OptionBorder3" FlexLayout.Basis="48%" HeightRequest="100" Margin="4,4" BackgroundColor="#111827" StrokeThickness="2" Stroke="#A855F7" StrokeShape="RoundRectangle 20">
+                            <Border.Shadow>
+                                <Shadow Brush="#A855F7" Offset="0,0" Radius="10" Opacity="0.4" />
+                            </Border.Shadow>
+                            <Label x:Name="OptionBtn3" Text="الخيار الرابع" TextColor="White" FontSize="19" FontFamily="CairoBold" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnOptionClicked" CommandParameter="3"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </FlexLayout>
+
+                    <Button x:Name="NextButton"
+                            Text="السؤال التالي ➔"
+                            BackgroundColor="#3B82F6"
+                            TextColor="White"
+                            FontFamily="CairoBold"
+                            FontSize="18"
+                            HeightRequest="50"
+                            CornerRadius="16"
+                            Margin="0,10,0,0"
+                            IsVisible="False"
+                            Clicked="OnNextClicked"/>
+                </VerticalStackLayout>
+            </Grid>
+        </Grid>
+
+        <!-- ============================================== -->
+        <!-- 🟢 2. Setup View (Visible by default)         -->
+        <!-- ============================================== -->
+        <Grid x:Name="SetupView" BackgroundColor="#0F172A" Padding="20">
+            <Grid RowDefinitions="Auto, *">
+                <Button Grid.Row="0"
+                        Text="➔"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        TextColor="White"
+                        BackgroundColor="#1E293B"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        CornerRadius="20"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Start"
+                        Padding="0"
+                        Clicked="OnBackClicked"/>
+
+                <VerticalStackLayout Grid.Row="1" VerticalOptions="Center" Spacing="22">
+                    <Label Text="تحدي الخيارات ⚡" FontSize="28" FontFamily="CairoBold" TextColor="White" HorizontalOptions="Center"/>
+
+                    <!-- بطاقة إحصائية بكلمات المستخدم المحفوظة -->
+                    <Border BackgroundColor="#1E293B" Stroke="#334155" StrokeThickness="1" StrokeShape="RoundRectangle 16" Padding="15,10">
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="8">
+                            <Label Text="📚 إجمالي الكلمات التي حفظتها حتى الآن:" FontSize="14" FontFamily="CairoRegular" TextColor="#94A3B8" VerticalOptions="Center"/>
+                            <Label x:Name="MaxWordsLabel" Text="0" FontSize="18" FontFamily="CairoBold" TextColor="#38BDF8" VerticalOptions="Center"/>
+                            <Label Text="كلمة" FontSize="14" FontFamily="CairoRegular" TextColor="#94A3B8" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- 1. تحديد عدد الكلمات المطلوب اللعب بها -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="حدد عدد الكلمات التي تريد اللعب بها عشوائياً:" FontSize="14" FontFamily="CairoRegular" TextColor="White" HorizontalOptions="Center"/>
+                        <Entry x:Name="WordsCountEntry" Keyboard="Numeric" Text="10" Placeholder="مثال: 10 (افتراضي)" PlaceholderColor="#94A3B8" TextColor="White" BackgroundColor="#1E293B" FontSize="18" HorizontalTextAlignment="Center" HeightRequest="50"/>
+                    </VerticalStackLayout>
+
+                    <!-- 2. وقت الإجابة لكل سؤال (الافتراضي 5 ثوان) -->
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="وقت الإجابة لكل سؤال (بالثواني):" FontSize="14" FontFamily="CairoRegular" TextColor="White" HorizontalOptions="Center"/>
+                        <Entry x:Name="TimePerQuestionEntry" Keyboard="Numeric" Text="5" Placeholder="مثال: 5 ثوانٍ (افتراضي)" PlaceholderColor="#94A3B8" TextColor="White" BackgroundColor="#1E293B" FontSize="18" HorizontalTextAlignment="Center" HeightRequest="50"/>
+                    </VerticalStackLayout>
+
+                    <Button Text="بدء التحدي 🚀" BackgroundColor="#10B981" TextColor="White" FontFamily="CairoBold" FontSize="18" HeightRequest="55" CornerRadius="16" Clicked="OnStartChallengeClicked" Margin="0,10,0,0"/>
+                </VerticalStackLayout>
+            </Grid>
+        </Grid>
+
+    </Grid>
+</ContentPage>

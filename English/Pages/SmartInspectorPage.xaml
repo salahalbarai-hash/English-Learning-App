@@ -19,15 +19,29 @@
 
     <Grid RowDefinitions="Auto, Auto, *, Auto" Padding="20">
 
-        <!-- الصف 0: الهيدر -->
-        <VerticalStackLayout Grid.Row="0" Spacing="5" Margin="0,0,0,25">
-            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                <Label Text="🧠" FontSize="35" VerticalOptions="Center"/>
-                <Label Text="المفتش الذكي" FontSize="32" FontAttributes="Bold" TextColor="#F8F9FA" VerticalOptions="Center"/>
-            </HorizontalStackLayout>
-            <Label Text="اكتشف الكلمة السرية عن طريق الأسئلة!" 
-                   TextColor="#94A3B8" FontSize="15" HorizontalOptions="Center"/>
-        </VerticalStackLayout>
+        <!-- الصف 0: الهيدر وزر العودة -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,20" VerticalOptions="Center">
+            <Button Grid.Column="0"
+                    Text="➔"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    TextColor="White"
+                    BackgroundColor="#1E293B"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    CornerRadius="20"
+                    Padding="0"
+                    Clicked="OnBackClicked"/>
+
+            <VerticalStackLayout Grid.Column="1" Spacing="3" HorizontalOptions="Center">
+                <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                    <Label Text="🧠" FontSize="28" VerticalOptions="Center"/>
+                    <Label Text="المفتش الذكي" FontSize="24" FontAttributes="Bold" TextColor="#F8F9FA" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                <Label Text="اكتشف الكلمة السرية عن طريق الأسئلة!" 
+                       TextColor="#94A3B8" FontSize="13" HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+        </Grid>
 
         <!-- الصف 1: اختيار وضع اللعب -->
         <VerticalStackLayout Grid.Row="1" Spacing="15" Margin="0,0,0,20">

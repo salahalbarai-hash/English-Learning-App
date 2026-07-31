@@ -21,10 +21,10 @@
               Route="LeadersPage"
               Shell.NavBarIsVisible="False"/>
 
-        <ShellContent Title="لعبة التخمين"
+        <ShellContent Title="الألعاب"
                       Icon="playicon.png"
-                      ContentTemplate="{DataTemplate pages:SmartInspectorPage}"
-                      Route="SmartInspectorPage"
+                      ContentTemplate="{DataTemplate pages:GameHubPage}"
+                      Route="GameHubPage"
                       Shell.NavBarIsVisible="False"/>
 
         <ShellContent Title="المزيد"

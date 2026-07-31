@@ -16,6 +16,9 @@ namespace English
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             Routing.RegisterRoute(nameof(FriendRequestsPage), typeof(FriendRequestsPage));
             Routing.RegisterRoute("ChatPage", typeof(ChatPage));
+            Routing.RegisterRoute(nameof(Pages.GameHubPage), typeof(Pages.GameHubPage));
+            Routing.RegisterRoute(nameof(Pages.SmartInspectorPage), typeof(Pages.SmartInspectorPage));
+            Routing.RegisterRoute(nameof(Pages.ChoiceChallengePage), typeof(Pages.ChoiceChallengePage));
             _gameHub = new GameHub();
 
             string savedUserName = Preferences.Get("UserName", "");
