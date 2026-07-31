@@ -15,6 +15,7 @@ namespace English
             InitializeComponent();
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             Routing.RegisterRoute(nameof(FriendRequestsPage), typeof(FriendRequestsPage));
+            Routing.RegisterRoute("ChatPage", typeof(ChatPage));
             _gameHub = new GameHub();
 
             string savedUserName = Preferences.Get("UserName", "");
@@ -214,6 +215,29 @@ namespace English
                 return await _gameHub.GetSentPendingRequestsAsync();
             }
             return new List<string>();
+        }
+
+        // 🟢 إضافة دالة لجلب سجل المحادثة من السيرفر
+        public async Task<List<ChatMessageDto>> GetChatHistoryAsync(string targetUser)
+        {
+            if (_gameHub != null && _gameHub.HubConnection?.State == Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected)
+            {
+                try
+                {
+                    return await _gameHub.HubConnection.InvokeAsync<List<ChatMessageDto>>("GetChatHistory", targetUser);
+                }
+                catch { return new List<ChatMessageDto>(); }
+            }
+            return new List<ChatMessageDto>();
+        }
+
+        public async Task<DateTime?> GetLastSeenAsync(string targetUser)
+        {
+            if (_gameHub != null)
+            {
+                return await _gameHub.GetLastSeenAsync(targetUser);
+            }
+            return null;
         }
     }
 }

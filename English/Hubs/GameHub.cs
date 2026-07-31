@@ -230,4 +230,14 @@ public class GameHub
         if (_hubConnection != null)
             await _hubConnection.StopAsync();
     }
+
+    public async Task<DateTime?> GetLastSeenAsync(string targetUser)
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+        {
+            try { return await _hubConnection.InvokeAsync<DateTime?>("GetLastSeen", targetUser); }
+            catch { return null; }
+        }
+        return null;
+    }
 }

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.Pages.ChatPage"
+             BackgroundColor="#EFEAE2"
+             NavigationPage.HasNavigationBar="False">
+    <!-- إخفاء شريط التنقل الافتراضي -->
+
+    <Grid RowDefinitions="Auto, *, Auto">
+
+        <!-- 🟢 1. ترويسة علوية احترافية (Custom Header) -->
+        <Frame Grid.Row="0" BackgroundColor="#00A884" Padding="10,25,10,10" HasShadow="True" CornerRadius="0" BorderColor="Transparent">
+            <Grid ColumnDefinitions="Auto, Auto, *, Auto">
+                <!-- صورة الصديق -->
+                <Frame Grid.Column="1" WidthRequest="40" HeightRequest="40" CornerRadius="20" Padding="0" Margin="10,0" HasShadow="False" BackgroundColor="#DFDFDF" VerticalOptions="Center">
+                    <Label x:Name="FriendInitialLabel" Text="?" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="#374151" FontSize="18"/>
+                </Frame>
+
+                <!-- اسم الصديق وحالته -->
+                <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="2">
+                    <Label x:Name="FriendNameTitle" Text="جاري التحميل..." FontAttributes="Bold" FontSize="17" TextColor="White" />
+                    <Label x:Name="FriendStatusLabel" Text="تحقق من الاتصال..." FontSize="13" TextColor="#D1D5DB" />
+                </VerticalStackLayout>
+            </Grid>
+        </Frame>
+
+        <!-- 🟢 2. قائمة الرسائل (الدردشة) -->
+        <CollectionView x:Name="MessagesList" Grid.Row="1" Margin="10">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="0,4">
+                        <Frame HasShadow="True" 
+                               Shadow="{Shadow Brush=Black, Offset='0,1', Opacity=0.1, Radius=2}"
+                               CornerRadius="12"
+                               Padding="10,6"
+                               BackgroundColor="{Binding BubbleColor}"
+                               HorizontalOptions="{Binding BubbleAlignment}"
+                               MaximumWidthRequest="280">
+
+                            <!-- ترتيب النص وفيه الوقت وحالة الرسالة -->
+                            <Grid RowDefinitions="Auto, Auto">
+                                <!-- نص الرسالة -->
+                                <Label Grid.Row="0" Text="{Binding Content}" FontSize="15" TextColor="Black" Margin="0,0,0,2"/>
+
+                                <!-- الوقت وحالة القراءة (الصح) في الأسفل يمين -->
+                                <HorizontalStackLayout Grid.Row="1" HorizontalOptions="End" Spacing="4">
+                                    <Label Text="{Binding TimeString}" FontSize="11" TextColor="#8E8E93" VerticalOptions="Center"/>
+                                    <!-- علامة الصح تظهر فقط إذا كانت الرسالة مرسلة مني (IsMine = True) -->
+                                    <Label Text="{Binding StatusIconText}" 
+                                           TextColor="{Binding StatusIconColor}" 
+                                           FontSize="12" 
+                                           IsVisible="{Binding IsMine}" 
+                                           VerticalOptions="Center"
+                                           FontAttributes="Bold"/>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- 🟢 3. منطقة إدخال النص السفلية (عصرية) -->
+        <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Padding="10" BackgroundColor="#EFEAE2">
+            <Frame Grid.Column="0" Padding="15,0" CornerRadius="24" HasShadow="False" BackgroundColor="White" HeightRequest="48" VerticalOptions="Center">
+                <Entry x:Name="MessageEntry" 
+                       Placeholder="المراسلة..." 
+                       BackgroundColor="Transparent" 
+                       ClearButtonVisibility="Never"
+                       VerticalOptions="Center" />
+            </Frame>
+
+            <Frame Grid.Column="1" WidthRequest="48" HeightRequest="48" CornerRadius="24" BackgroundColor="#00A884" HasShadow="False" Padding="0" Margin="8,0,0,0">
+                <ImageButton Source="send.png" BackgroundColor="Transparent" Clicked="OnSendClicked" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" VerticalOptions="Center" />
+            </Frame>
+        </Grid>
+
+    </Grid>
+</ContentPage>

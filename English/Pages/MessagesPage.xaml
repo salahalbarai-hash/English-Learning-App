@@ -2,36 +2,60 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="English.Pages.MessagesPage"
+             BackgroundColor="White"
              Title="الرسائل">
-    <VerticalStackLayout Padding="12" Spacing="10">
-        <Label Text="الرسائل" FontSize="24" HorizontalOptions="Center" />
 
-        <SearchBar x:Name="SearchBarFriends"
-                   Placeholder="ابحث عن صديق..."
-                   SearchCommandParameter=""
-                   TextChanged="OnSearchTextChanged" />
+    <Grid RowDefinitions="Auto, *">
 
+        <!-- منطقة شريط البحث العلوية -->
+        <Frame Grid.Row="0" Margin="15,10,15,5" CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#F2F2F7" HeightRequest="40">
+            <SearchBar x:Name="SearchBarFriends"
+                       Placeholder="ابحث عن صديق..."
+                       BackgroundColor="Transparent"
+                       CancelButtonColor="#8E8E93"
+                       PlaceholderColor="#8E8E93"
+                       TextColor="Black"
+                       TextChanged="OnSearchTextChanged" />
+        </Frame>
+
+        <!-- قائمة الأصدقاء -->
         <CollectionView x:Name="FriendsList"
+                        Grid.Row="1"
                         SelectionMode="Single"
                         SelectionChanged="OnFriendSelected">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Padding="8" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto">
-                        <Frame WidthRequest="48" HeightRequest="48" CornerRadius="24" HasShadow="False" Padding="0" BackgroundColor="#E5E7EB">
-                            <Label Text="{Binding Initials}" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" />
-                        </Frame>
+                    <Grid RowDefinitions="Auto,Auto" BackgroundColor="White">
 
-                        <StackLayout Grid.Column="1" Spacing="2" Padding="8,0">
-                            <Label Text="{Binding Name}" FontSize="16" />
-                            <Label Text="{Binding StatusText}" FontSize="12" TextColor="#6B7280" />
-                        </StackLayout>
+                        <!-- المحتوى الأساسي -->
+                        <Grid Grid.Row="0" Padding="15,10,15,10" ColumnDefinitions="Auto,*,Auto">
 
-                        <Label Grid.Column="2" Text="{Binding StatusIcon}" VerticalOptions="Center" HorizontalOptions="End" />
+                            <!-- الصورة الرمزية / الحرف الأول -->
+                            <Frame Grid.Column="0" WidthRequest="54" HeightRequest="54" CornerRadius="27" HasShadow="False" Padding="0" BackgroundColor="#E5E7EB" VerticalOptions="Center">
+                                <Label Text="{Binding Initials}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="20" FontAttributes="Bold" TextColor="#4B5563"/>
+                            </Frame>
+
+                            <!-- اسم الصديق وآخر رسالة -->
+                            <StackLayout Grid.Column="1" Spacing="4" Padding="15,0,10,0" VerticalOptions="Center">
+                                <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+                            </StackLayout>
+
+                            <!-- حالة الاتصال (نقطة خضراء أو رمادية/حمراء) -->
+                            <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="3">
+                                <Label Text="{Binding StatusIcon}" HorizontalOptions="End" FontSize="12"/>
+                                <Label Text="{Binding StatusText}" FontSize="12" TextColor="#8E8E93" HorizontalOptions="End" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- خط فاصل احترافي مثل الواتساب (يبدأ بعد الصورة الرمزية) -->
+                        <BoxView Grid.Row="1" HeightRequest="1" Color="#E5E5EA" Margin="84,0,0,0" VerticalOptions="End" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <Label x:Name="EmptyLabel" Text="لا توجد أصدقاء لعرضهم" IsVisible="False" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
-    </VerticalStackLayout>
+        <!-- رسالة عند عدم وجود محادثات -->
+        <Label x:Name="EmptyLabel" Grid.Row="1" Text="لا يوجد أصدقاء لعرضهم" TextColor="#8E8E93" IsVisible="False" HorizontalOptions="Center" VerticalOptions="Center" />
+
+    </Grid>
 </ContentPage>
