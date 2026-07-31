@@ -17,12 +17,21 @@
                BorderColor="Transparent">
 
             <Grid ColumnDefinitions="Auto, Auto, *, Auto">
-                <!-- صورة الصديق -->
-                <Frame Grid.Column="1" WidthRequest="40" HeightRequest="40" CornerRadius="20" Padding="0" Margin="10,0" HasShadow="False" 
-                       BackgroundColor="{AppThemeBinding Light=#DFDFDF, Dark=#6B7C85}" VerticalOptions="Center">
-                    <Label x:Name="FriendInitialLabel" Text="?" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" 
-                           TextColor="{AppThemeBinding Light=#374151, Dark=#FFFFFF}" FontSize="18"/>
-                </Frame>
+                <!-- صورة الصديق ونقطة الاتصال المدمجة باحترافية -->
+                <Grid Grid.Column="1" WidthRequest="46" HeightRequest="46" Margin="10,0" VerticalOptions="Center">
+                    <Border WidthRequest="42" HeightRequest="42" StrokeShape="RoundRectangle 21" StrokeThickness="0" 
+                            BackgroundColor="{AppThemeBinding Light=#DFDFDF, Dark=#6B7C85}" VerticalOptions="Center" HorizontalOptions="Center">
+                        <Label x:Name="FriendInitialLabel" Text="?" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" 
+                               TextColor="{AppThemeBinding Light=#374151, Dark=#FFFFFF}" FontSize="18"/>
+                    </Border>
+
+                    <!-- نقطة الاتصال المدمجة مع قطع الاحترافي لـ Avatar -->
+                    <Border x:Name="OnlineStatusIndicator" 
+                            WidthRequest="14" HeightRequest="14" StrokeShape="RoundRectangle 7" Padding="0" 
+                            BackgroundColor="#EF4444" 
+                            Stroke="{AppThemeBinding Light=#00A884, Dark=#202C33}" StrokeThickness="2"
+                            HorizontalOptions="End" VerticalOptions="End" Margin="0,0,1,1" />
+                </Grid>
 
                 <!-- اسم الصديق وحالته -->
                 <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="2">

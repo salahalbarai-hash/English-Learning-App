@@ -50,7 +50,7 @@
 
                         <Grid ColumnDefinitions="Auto,*,Auto">
 
-                            <!-- الصورة -->
+                            <!-- الصورة ونقطة الاتصال -->
                             <Grid WidthRequest="58"
                                   HeightRequest="58">
 
@@ -72,16 +72,15 @@
 
                                 </Frame>
 
-                                <!-- نقطة الاتصال -->
-
-                                <Frame
+                                <!-- نقطة الاتصال الديناميكية المدمجة باحترافية -->
+                                <Border
                                     WidthRequest="16"
                                     HeightRequest="16"
-                                    CornerRadius="8"
+                                    StrokeShape="RoundRectangle 8"
                                     Padding="0"
-                                    BackgroundColor="#22C55E"
-                                    BorderColor="White"
-                                    HasShadow="False"
+                                    Stroke="White"
+                                    StrokeThickness="2"
+                                    BackgroundColor="{Binding StatusColor}"
                                     HorizontalOptions="End"
                                     VerticalOptions="End"/>
 

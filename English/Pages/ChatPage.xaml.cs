@@ -80,6 +80,7 @@ public partial class ChatPage : ContentPage
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 FriendStatusLabel.Text = "متصل الآن";
+                OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#22C55E");
             });
         }
     }
@@ -102,6 +103,7 @@ public partial class ChatPage : ContentPage
         if (_shell?.GameHub?.HubConnection == null || _shell.GameHub.HubConnection.State != HubConnectionState.Connected)
         {
             FriendStatusLabel.Text = "";
+            MainThread.BeginInvokeOnMainThread(() => OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#EF4444"));
             return;
         }
 
@@ -111,6 +113,7 @@ public partial class ChatPage : ContentPage
             if (onlineUsers.Contains(FriendName, StringComparer.OrdinalIgnoreCase))
             {
                 FriendStatusLabel.Text = "متصل الآن";
+                MainThread.BeginInvokeOnMainThread(() => OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#22C55E"));
             }
             else
             {
@@ -120,6 +123,7 @@ public partial class ChatPage : ContentPage
         catch
         {
             FriendStatusLabel.Text = "";
+            MainThread.BeginInvokeOnMainThread(() => OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#EF4444"));
         }
     }
 
@@ -129,6 +133,8 @@ public partial class ChatPage : ContentPage
         try
         {
             var lastSeen = await _shell?.GetLastSeenAsync(FriendName);
+            MainThread.BeginInvokeOnMainThread(() => OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#EF4444"));
+
             if (lastSeen.HasValue)
             {
                 var time = lastSeen.Value;
@@ -154,6 +160,7 @@ public partial class ChatPage : ContentPage
         catch
         {
             FriendStatusLabel.Text = "غير متصل";
+            MainThread.BeginInvokeOnMainThread(() => OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#EF4444"));
         }
     }
 

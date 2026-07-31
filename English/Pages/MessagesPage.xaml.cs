@@ -8,6 +8,9 @@ public class MessagesFriendItem
         : string.Join("", Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0].ToString())).ToUpper();
     public string StatusIcon { get; set; } = "🔴";
     public string StatusText => StatusIcon == "🟢" ? "متصل" : "غير متصل";
+
+    // 🟢 لون نقطة الاتصال: أخضر للمتصل وأحمر للغير متصل
+    public Color StatusColor => StatusIcon == "🟢" ? Color.FromArgb("#22C55E") : Color.FromArgb("#EF4444");
 }
 
 public partial class MessagesPage : ContentPage
