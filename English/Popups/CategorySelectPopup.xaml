@@ -3,46 +3,92 @@
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
                x:Class="English.Popups.CategorySelectPopup"
-               Size="400,600"
+               Size="380, 500"
                Color="Transparent">
 
-	<Border BackgroundColor="#0F1724"
-            Stroke="#26324A"
-            StrokeThickness="1"
-            StrokeShape="RoundRectangle 20"
-            Padding="18"
+	<!-- الخلفية الرئيسية للنافذة المنبثقة -->
+	<Border BackgroundColor="#1E293B"
+            Stroke="#334155"
+            StrokeThickness="1.5"
+            StrokeShape="RoundRectangle 24"
+            Padding="20"
             WidthRequest="360">
 
-		<VerticalStackLayout Spacing="12">
+		<Grid RowDefinitions="Auto, *, Auto" RowSpacing="15">
 
-			<HorizontalStackLayout HorizontalOptions="Fill" VerticalOptions="Start" Spacing="10">
-				<Label Text="اختر القسم" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="StartAndExpand"/>
-				<Button Text="إلغاء" BackgroundColor="Transparent" TextColor="#94A3B8" Clicked="OnCancelClicked"/>
-			</HorizontalStackLayout>
+			<!-- عنوان النافذة -->
+			<Label Grid.Row="0"
+                   Text="اختر فئة التحدي"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   FontFamily="CairoBold"/>
 
-			<Label x:Name="SubtitleLabel" Text="اختر فئة مناسبة للتحدي" FontSize="13" TextColor="#94A3B8"/>
-
-			<!-- شبكة للفئات -->
-			<CollectionView x:Name="CategoriesCollectionView" SelectionMode="Single" HeightRequest="360">
+			<!-- قائمة الفئات المتاحة -->
+			<CollectionView Grid.Row="1"
+                            x:Name="CategoriesCollectionView"
+                            SelectionMode="Single"
+                            SelectionChanged="OnSelectionChanged"
+                            VerticalScrollBarVisibility="Never">
 				<CollectionView.ItemsLayout>
-					<GridItemsLayout Orientation="Vertical" Span="2"/>
+					<GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="10" VerticalItemSpacing="10"/>
 				</CollectionView.ItemsLayout>
 				<CollectionView.ItemTemplate>
 					<DataTemplate>
-						<!-- 🟢 تم حذف CornerRadius="12" والاكتفاء بـ StrokeShape هنا -->
-						<Border Padding="12" Margin="6" BackgroundColor="#111827" Stroke="#333752" StrokeShape="RoundRectangle 12">
-							<VerticalStackLayout>
-								<Label Text="{Binding Name}" TextColor="White" FontAttributes="Bold" FontSize="14" HorizontalOptions="Center"/>
-								<Label Text="{Binding Preview}" TextColor="#94A3B8" FontSize="12" HorizontalOptions="Center" Margin="0,6,0,0"/>
-							</VerticalStackLayout>
+						<!-- عنصر الفئة بدون كلمات معاينة -->
+						<Border StrokeShape="RoundRectangle 16"
+                                Padding="12"
+                                HeightRequest="65">
+
+							<!-- تفاعل بصري عند الاختيار (VisualStateManager) -->
+							<VisualStateManager.VisualStateGroups>
+								<VisualStateGroup x:Name="CommonStates">
+									<VisualState x:Name="Normal">
+										<VisualState.Setters>
+											<Setter Property="BackgroundColor" Value="#0F172A" />
+											<Setter Property="Stroke" Value="#334155" />
+											<Setter Property="StrokeThickness" Value="1" />
+										</VisualState.Setters>
+									</VisualState>
+									<VisualState x:Name="Selected">
+										<VisualState.Setters>
+											<Setter Property="BackgroundColor" Value="#172A46" />
+											<Setter Property="Stroke" Value="#38BDF8" />
+											<Setter Property="StrokeThickness" Value="2" />
+										</VisualState.Setters>
+									</VisualState>
+								</VisualStateGroup>
+							</VisualStateManager.VisualStateGroups>
+
+							<Grid VerticalOptions="Center">
+								<Label Text="{Binding Name}"
+                                       TextColor="White"
+                                       FontAttributes="Bold"
+                                       FontSize="15"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       FontFamily="CairoBold"/>
+							</Grid>
 						</Border>
 					</DataTemplate>
 				</CollectionView.ItemTemplate>
 			</CollectionView>
 
-			<!-- استخدام CornerRadius هنا صحيح لأن الزر يدعمه -->
-			<Button x:Name="ConfirmButton" Text="تأكيد القسم" BackgroundColor="#00B4D8" TextColor="#061118" HeightRequest="48" CornerRadius="12" Clicked="OnConfirmClicked"/>
-
-		</VerticalStackLayout>
+			<!-- زر التأكيد -->
+			<Button Grid.Row="2"
+                    x:Name="ConfirmButton"
+                    Text="إرسال التحدي 🚀"
+                    BackgroundColor="#38BDF8"
+                    TextColor="#0F172A"
+                    HeightRequest="52"
+                    CornerRadius="16"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    FontFamily="CairoBold"
+                    IsEnabled="False"
+                    Opacity="0.5"
+                    Clicked="OnConfirmClicked"/>
+		</Grid>
 	</Border>
 </toolkit:Popup>

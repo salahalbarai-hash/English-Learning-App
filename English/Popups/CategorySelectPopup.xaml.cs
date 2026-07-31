@@ -1,9 +1,12 @@
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using CommunityToolkit.Maui.Views;
+
 namespace English.Popups;
 
 public class CategoryViewModel
 {
     public string Name { get; set; } = string.Empty;
-    public string Preview { get; set; } = string.Empty;
 }
 
 public partial class CategorySelectPopup : Popup
@@ -14,6 +17,15 @@ public partial class CategorySelectPopup : Popup
     public string? SelectedEnglishWord { get; private set; }
     public string? SelectedArabicWord { get; private set; }
 
+    // 🟢 قائمة الفئات المسموحة والمعتمدة داخل التطبيق
+    private readonly List<string> _allowedCategories = new()
+    {
+        "صفات", "طعام", "افعال", "ادوات", "حيوانات", "مهن", "الاشكال"
+    };
+
+    private readonly List<string> _userUnlockedCategories;
+    private readonly int _memorizedCount;
+
     public class CategorySelectionResult
     {
         public string Category { get; set; } = "";
@@ -21,15 +33,17 @@ public partial class CategorySelectPopup : Popup
         public string Arabic { get; set; } = "";
     }
 
-    public CategorySelectPopup()
+    public CategorySelectPopup(List<string> userUnlockedCategories, int memorizedCount)
     {
         InitializeComponent();
+
+        _userUnlockedCategories = userUnlockedCategories ?? new List<string>();
+        _memorizedCount = memorizedCount;
 
         var cv = this.FindByName<CollectionView>("CategoriesCollectionView");
         if (cv != null)
             cv.ItemsSource = Categories;
 
-        // بدء تحميل الفئات دون إيقاف الواجهة
         _ = LoadCategoriesAsync();
     }
 
@@ -42,28 +56,26 @@ public partial class CategorySelectPopup : Popup
             var json = await reader.ReadToEndAsync();
             using var doc = JsonDocument.Parse(json);
 
-            var groups = new Dictionary<string, List<string>>();
+            // 1. أخذ الكلمات المحفوظة فقط بناءً على عدد الحفظ
+            var memorizedWords = doc.RootElement.EnumerateArray().Take(_memorizedCount);
 
-            foreach (var el in doc.RootElement.EnumerateArray())
-            {
-                if (el.TryGetProperty("Category", out var c) && el.TryGetProperty("EnglishWord", out var w))
-                {
-                    var cat = c.GetString() ?? "";
-                    var word = w.GetString() ?? "";
+            // 2. استخراج الفئات الموجودة ضمن الكلمات المحفوظة
+            var availableInFile = memorizedWords
+                .Where(el => el.TryGetProperty("Category", out var c) && !string.IsNullOrWhiteSpace(c.GetString()))
+                .Select(el => el.GetProperty("Category").GetString()!)
+                .Distinct();
 
-                    if (!groups.ContainsKey(cat))
-                        groups[cat] = new List<string>();
+            // 3. التصفية: إظهار الفئات الموجودة ضمن الكلمات المحفوظة والمفتوحة للمستخدم والموجودة في _allowedCategories فقط
+            var filteredCategories = availableInFile
+                .Where(cat => _allowedCategories.Contains(cat, StringComparer.OrdinalIgnoreCase) &&
+                             _userUnlockedCategories.Contains(cat, StringComparer.OrdinalIgnoreCase))
+                .Distinct()
+                .ToList();
 
-                    if (!string.IsNullOrWhiteSpace(word) && groups[cat].Count < 5) // preview up to 5
-                        groups[cat].Add(word);
-                }
-            }
-
-            // إضافة العناصر إلى ObservableCollection (تقوم بتحديث الواجهة تلقائياً)
             Categories.Clear();
-            foreach (var kv in groups)
+            foreach (var catName in filteredCategories)
             {
-                Categories.Add(new CategoryViewModel { Name = kv.Key, Preview = string.Join(", ", kv.Value) });
+                Categories.Add(new CategoryViewModel { Name = catName });
             }
         }
         catch (Exception ex)
@@ -72,12 +84,17 @@ public partial class CategorySelectPopup : Popup
         }
     }
 
+    private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        ConfirmButton.IsEnabled = e.CurrentSelection.FirstOrDefault() != null;
+        ConfirmButton.Opacity = ConfirmButton.IsEnabled ? 1.0 : 0.5;
+    }
+
     private void OnCancelClicked(object sender, EventArgs e)
     {
         Close(null);
     }
 
-    // 🟢 تم تحويل الدالة هنا إلى async void لإصلاح مشكلة التجميد (Deadlock)
     private async void OnConfirmClicked(object sender, EventArgs e)
     {
         var cv = this.FindByName<CollectionView>("CategoriesCollectionView");
@@ -87,13 +104,13 @@ public partial class CategorySelectPopup : Popup
 
             try
             {
-                // 🟢 استخدام await بدلاً من .Result و ReadToEndAsync بدلاً من ReadToEnd
                 using var stream = await FileSystem.OpenAppPackageFileAsync("words.json");
                 using var reader = new StreamReader(stream);
                 var json = await reader.ReadToEndAsync();
-
                 using var doc = JsonDocument.Parse(json);
+
                 var items = doc.RootElement.EnumerateArray()
+                             .Take(_memorizedCount)
                              .Where(el => el.TryGetProperty("Category", out var c) && c.GetString() == SelectedCategory)
                              .ToArray();
 

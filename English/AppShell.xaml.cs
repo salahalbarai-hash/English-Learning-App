@@ -143,6 +143,21 @@ namespace English
                         if (isAccepted)
                         {
                             await _gameHub.AcceptFriendRequestAsync(senderName);
+
+                            // 🟢 تحديث الكاش المحلي فوراً بإضافة الصديق الجديد
+                            try
+                            {
+                                string cachedFriendsJson = Preferences.Get("Cached_Friends_List", "[]");
+                                var friendsList = JsonSerializer.Deserialize<List<string>>(cachedFriendsJson) ?? new List<string>();
+
+                                if (!friendsList.Contains(senderName, StringComparer.OrdinalIgnoreCase))
+                                {
+                                    friendsList.Add(senderName);
+                                    Preferences.Set("Cached_Friends_List", JsonSerializer.Serialize(friendsList));
+                                }
+                            }
+                            catch { }
+
                             await Toast.Make($"أصبح {senderName} الآن في قائمة أصدقائك!").Show();
                         }
                     }
