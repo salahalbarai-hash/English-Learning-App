@@ -2,24 +2,34 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="English.Pages.ChatPage"
-             BackgroundColor="#EFEAE2"
+             BackgroundColor="{AppThemeBinding Light=#EFEAE2, Dark=#0B141A}"
              NavigationPage.HasNavigationBar="False">
     <!-- إخفاء شريط التنقل الافتراضي -->
 
     <Grid RowDefinitions="Auto, *, Auto">
 
         <!-- 🟢 1. ترويسة علوية احترافية (Custom Header) -->
-        <Frame Grid.Row="0" BackgroundColor="#00A884" Padding="10,25,10,10" HasShadow="True" CornerRadius="0" BorderColor="Transparent">
+        <Frame Grid.Row="0" 
+               BackgroundColor="{AppThemeBinding Light=#00A884, Dark=#202C33}" 
+               Padding="10,25,10,10" 
+               HasShadow="True" 
+               CornerRadius="0" 
+               BorderColor="Transparent">
+
             <Grid ColumnDefinitions="Auto, Auto, *, Auto">
                 <!-- صورة الصديق -->
-                <Frame Grid.Column="1" WidthRequest="40" HeightRequest="40" CornerRadius="20" Padding="0" Margin="10,0" HasShadow="False" BackgroundColor="#DFDFDF" VerticalOptions="Center">
-                    <Label x:Name="FriendInitialLabel" Text="?" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="#374151" FontSize="18"/>
+                <Frame Grid.Column="1" WidthRequest="40" HeightRequest="40" CornerRadius="20" Padding="0" Margin="10,0" HasShadow="False" 
+                       BackgroundColor="{AppThemeBinding Light=#DFDFDF, Dark=#6B7C85}" VerticalOptions="Center">
+                    <Label x:Name="FriendInitialLabel" Text="?" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" 
+                           TextColor="{AppThemeBinding Light=#374151, Dark=#FFFFFF}" FontSize="18"/>
                 </Frame>
 
                 <!-- اسم الصديق وحالته -->
                 <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="2">
-                    <Label x:Name="FriendNameTitle" Text="جاري التحميل..." FontAttributes="Bold" FontSize="17" TextColor="White" />
-                    <Label x:Name="FriendStatusLabel" Text="تحقق من الاتصال..." FontSize="13" TextColor="#D1D5DB" />
+                    <Label x:Name="FriendNameTitle" Text="جاري التحميل..." FontAttributes="Bold" FontSize="17" 
+                           TextColor="{AppThemeBinding Light=White, Dark=#E9EDEF}" />
+                    <Label x:Name="FriendStatusLabel" Text="تحقق من الاتصال..." FontSize="13" 
+                           TextColor="{AppThemeBinding Light=#D1D5DB, Dark=#8696A0}" />
                 </VerticalStackLayout>
             </Grid>
         </Frame>
@@ -29,8 +39,7 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid Padding="0,4">
-                        <Frame HasShadow="True" 
-                               Shadow="{Shadow Brush=Black, Offset='0,1', Opacity=0.1, Radius=2}"
+                        <Frame HasShadow="False" 
                                CornerRadius="12"
                                Padding="10,6"
                                BackgroundColor="{Binding BubbleColor}"
@@ -40,12 +49,15 @@
                             <!-- ترتيب النص وفيه الوقت وحالة الرسالة -->
                             <Grid RowDefinitions="Auto, Auto">
                                 <!-- نص الرسالة -->
-                                <Label Grid.Row="0" Text="{Binding Content}" FontSize="15" TextColor="Black" Margin="0,0,0,2"/>
+                                <!-- تم تعديل لون النص ليتوافق مع الوضع الداكن -->
+                                <Label Grid.Row="0" Text="{Binding Content}" FontSize="15" 
+                                       TextColor="{AppThemeBinding Light=Black, Dark=#E9EDEF}" Margin="0,0,0,2"/>
 
-                                <!-- الوقت وحالة القراءة (الصح) في الأسفل يمين -->
+                                <!-- الوقت وحالة القراءة -->
                                 <HorizontalStackLayout Grid.Row="1" HorizontalOptions="End" Spacing="4">
-                                    <Label Text="{Binding TimeString}" FontSize="11" TextColor="#8E8E93" VerticalOptions="Center"/>
-                                    <!-- علامة الصح تظهر فقط إذا كانت الرسالة مرسلة مني (IsMine = True) -->
+                                    <Label Text="{Binding TimeString}" FontSize="11" 
+                                           TextColor="{AppThemeBinding Light=#8E8E93, Dark=#8696A0}" VerticalOptions="Center"/>
+                                    <!-- علامة الصح -->
                                     <Label Text="{Binding StatusIconText}" 
                                            TextColor="{Binding StatusIconColor}" 
                                            FontSize="12" 
@@ -61,16 +73,22 @@
         </CollectionView>
 
         <!-- 🟢 3. منطقة إدخال النص السفلية (عصرية) -->
-        <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Padding="10" BackgroundColor="#EFEAE2">
-            <Frame Grid.Column="0" Padding="15,0" CornerRadius="24" HasShadow="False" BackgroundColor="White" HeightRequest="48" VerticalOptions="Center">
+        <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Padding="10" 
+              BackgroundColor="{AppThemeBinding Light=#EFEAE2, Dark=#0B141A}">
+
+            <Frame Grid.Column="0" Padding="15,0" CornerRadius="24" HasShadow="False" 
+                   BackgroundColor="{AppThemeBinding Light=White, Dark=#2A3942}" HeightRequest="48" VerticalOptions="Center">
                 <Entry x:Name="MessageEntry" 
                        Placeholder="المراسلة..." 
+                       PlaceholderColor="{AppThemeBinding Light=#667781, Dark=#8696A0}"
+                       TextColor="{AppThemeBinding Light=Black, Dark=#E9EDEF}"
                        BackgroundColor="Transparent" 
                        ClearButtonVisibility="Never"
                        VerticalOptions="Center" />
             </Frame>
 
-            <Frame Grid.Column="1" WidthRequest="48" HeightRequest="48" CornerRadius="24" BackgroundColor="#00A884" HasShadow="False" Padding="0" Margin="8,0,0,0">
+            <Frame Grid.Column="1" WidthRequest="48" HeightRequest="48" CornerRadius="24" 
+                   BackgroundColor="{AppThemeBinding Light=#00A884, Dark=#00A884}" HasShadow="False" Padding="0" Margin="8,0,0,0">
                 <ImageButton Source="send.png" BackgroundColor="Transparent" Clicked="OnSendClicked" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" VerticalOptions="Center" />
             </Frame>
         </Grid>
