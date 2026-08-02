@@ -374,6 +374,8 @@ public partial class ChoiceChallengePage : ContentPage
         NextButton.IsVisible = false;
         ResetOptionButtons();
 
+        QuestionIndexLabel.Text = $"سؤال {_currentIndex + 1} من {_questions.Count}";
+
         var q = _questions[_currentIndex];
         QuestionWordLabel.Text = q.Word;
 

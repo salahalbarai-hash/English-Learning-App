@@ -167,6 +167,11 @@
                         </VerticalStackLayout>
                     </Border>
 
+                    <!-- رقم السؤال -->
+                    <Border BackgroundColor="#121B2D" StrokeThickness="0" StrokeShape="RoundRectangle 14" Padding="14,6" HorizontalOptions="Center">
+                        <Label x:Name="QuestionIndexLabel" Text="سؤال 1 من 10" TextColor="#94A3B8" FontSize="13" FontFamily="CairoBold"/>
+                    </Border>
+
                     <!-- الكلمة المراد ترجمتها -->
                     <Label x:Name="QuestionWordLabel" Text="Word" TextColor="White" FontSize="46" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontFamily="CairoBold" Margin="0,0,0,15">
                         <Label.Shadow>
