@@ -21,18 +21,6 @@
 
         <!-- الصف 0: الهيدر وزر العودة -->
         <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,20" VerticalOptions="Center">
-            <Button Grid.Column="0"
-                    Text="➔"
-                    FontSize="18"
-                    FontAttributes="Bold"
-                    TextColor="White"
-                    BackgroundColor="#1E293B"
-                    WidthRequest="40"
-                    HeightRequest="40"
-                    CornerRadius="20"
-                    Padding="0"
-                    Clicked="OnBackClicked"/>
-
             <VerticalStackLayout Grid.Column="1" Spacing="3" HorizontalOptions="Center">
                 <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
                     <Label Text="🧠" FontSize="28" VerticalOptions="Center"/>

@@ -10,27 +10,51 @@
 
         <!-- 🟢 1. ترويسة الصفحة العلويّة (Header) -->
         <Border Grid.Row="0"
-                BackgroundColor="#1E293B"
-                StrokeThickness="0"
-                Padding="20,24,20,16">
+        BackgroundColor="#111827"
+        StrokeThickness="0"
+        Padding="0,24,20,18">
+
             <Border.Shadow>
-                <Shadow Brush="#000000" Offset="0,4" Radius="8" Opacity="0.15"/>
+                <Shadow Brush="#000000"
+                Offset="0,5"
+                Radius="12"
+                Opacity="0.25"/>
             </Border.Shadow>
 
-            <VerticalStackLayout Spacing="6">
-                <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                    <Label Text="🎮" FontSize="28" VerticalOptions="Center"/>
-                    <Label Text="مركز الألعاب"
-                           FontSize="24"
-                           FontFamily="CairoBold"
-                           TextColor="White"
-                           VerticalOptions="Center"/>
+
+            <VerticalStackLayout Spacing="8">
+
+                <!-- الأيقونة + العنوان -->
+                <HorizontalStackLayout HorizontalOptions="Center"
+                               Spacing="10"
+                               VerticalOptions="Center">
+
+                    <Label Text="🎮"
+                   FontSize="32"
+                   VerticalOptions="Center"/>
+
+
+                    <Label Text="الألعاب"
+                   FontSize="26"
+                   FontFamily="CairoBold"
+                   TextColor="White"
+                   VerticalOptions="Center"/>
+
                 </HorizontalStackLayout>
-                <Label Text="اختر لعبتك المفضلة واستمتع بتطوير مهاراتك وتحدي أصدقائك"
-                       FontSize="13"
-                       FontFamily="CairoRegular"
-                       TextColor="#94A3B8"/>
+
+
+                <!-- الوصف -->
+                <Label Text="استمتع بألعاب تعليمية ممتعة لتطوير مهاراتك في اللغة الإنجليزية"
+               FontSize="12"
+               FontFamily="CairoRegular"
+               FontAttributes="Bold"
+               TextColor="#94A3B8"
+               HorizontalTextAlignment="Center"
+               LineBreakMode="WordWrap"/>
+
+
             </VerticalStackLayout>
+
         </Border>
 
         <!-- 🟢 2. قائمة بطاقات الألعاب التفاعلية (Cards) -->
@@ -81,7 +105,7 @@
                                     StrokeShape="RoundRectangle 12"
                                     Padding="10,4"
                                     VerticalOptions="Start">
-                                <Label Text="الأكثر شعبية 🔥"
+                                <Label Text="🔥"
                                        FontSize="10"
                                        FontFamily="CairoBold"
                                        TextColor="#A5B4FC"/>
@@ -153,7 +177,7 @@
                                     StrokeShape="RoundRectangle 12"
                                     Padding="10,4"
                                     VerticalOptions="Start">
-                                <Label Text="سريع وممتع ⏱️"
+                                <Label Text="⏱️"
                                        FontSize="10"
                                        FontFamily="CairoBold"
                                        TextColor="#A7F3D0"/>
@@ -178,6 +202,78 @@
                                 HeightRequest="44"
                                 CornerRadius="12"
                                 Clicked="OnChoiceChallengeTapped"/>
+                    </Grid>
+                </Border>
+
+                <!-- ✍️ بطاقة اللعبة الثالثة: تحدي الكتابة -->
+                <Border Stroke="#0369A1"
+                        StrokeThickness="1.5"
+                        BackgroundColor="#0C4A6E"
+                        StrokeShape="RoundRectangle 20"
+                        Padding="18">
+                    <Border.Shadow>
+                        <Shadow Brush="#0284C7" Offset="0,4" Radius="12" Opacity="0.2"/>
+                    </Border.Shadow>
+
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnWritingChallengeTapped"/>
+                    </Border.GestureRecognizers>
+
+                    <Grid RowDefinitions="Auto, Auto, Auto" RowSpacing="12">
+
+                        <!-- الهيدر والرمز والوسام -->
+                        <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto">
+                            <Border Grid.Column="0"
+                                    WidthRequest="52"
+                                    HeightRequest="52"
+                                    StrokeShape="RoundRectangle 26"
+                                    StrokeThickness="0"
+                                    BackgroundColor="#0284C7">
+                                <Label Text="✍️" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" VerticalOptions="Center" Spacing="2">
+                                <Label Text="تحدي الكتابة"
+                                       FontSize="18"
+                                       FontFamily="CairoBold"
+                                       TextColor="White"/>
+                                <Label Text="إملاء ودقة 📝"
+                                       FontSize="11"
+                                       FontFamily="CairoRegular"
+                                       TextColor="#38BDF8"/>
+                            </VerticalStackLayout>
+
+                            <Border Grid.Column="2"
+                                    BackgroundColor="#0369A1"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 12"
+                                    Padding="10,4"
+                                    VerticalOptions="Start">
+                                <Label Text="✍️"
+                                       FontSize="10"
+                                       FontFamily="CairoBold"
+                                       TextColor="#BAE6FD"/>
+                            </Border>
+                        </Grid>
+
+                        <!-- الوصف -->
+                        <Label Grid.Row="1"
+                               Text="اكتب الكلمة الإنجليزية الصحيحة وطور مهاراتك الإملائية في جو من الحماس والتحدي."
+                               FontSize="13"
+                               FontFamily="CairoRegular"
+                               TextColor="#E0F2FE"
+                               LineBreakMode="WordWrap"/>
+
+                        <!-- زر البدء -->
+                        <Button Grid.Row="2"
+                                Text="خوض التحدي 🚀"
+                                BackgroundColor="#0284C7"
+                                TextColor="White"
+                                FontFamily="CairoBold"
+                                FontSize="14"
+                                HeightRequest="44"
+                                CornerRadius="12"
+                                Clicked="OnWritingChallengeTapped"/>
                     </Grid>
                 </Border>
 

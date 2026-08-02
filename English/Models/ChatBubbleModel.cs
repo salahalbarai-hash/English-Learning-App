@@ -39,9 +39,9 @@ public class ChatBubbleModel
     public string StatusIconText => Status switch
     {
         MessageStatus.Pending => "🕒",
-        MessageStatus.Sent => "✓",
-        MessageStatus.Delivered => "✓✓",
-        MessageStatus.Read => "✓✓",
+        MessageStatus.Sent => "✔✔",
+        MessageStatus.Delivered => "✔✔",
+        MessageStatus.Read => "✔✔",
         _ => ""
     };
 

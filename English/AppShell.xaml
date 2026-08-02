@@ -22,7 +22,7 @@
               Shell.NavBarIsVisible="False"/>
 
         <ShellContent Title="الألعاب"
-                      Icon="playicon.png"
+                      Icon="game.png"
                       ContentTemplate="{DataTemplate pages:GameHubPage}"
                       Route="GameHubPage"
                       Shell.NavBarIsVisible="False"/>

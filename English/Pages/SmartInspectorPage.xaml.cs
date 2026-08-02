@@ -27,7 +27,7 @@ public class CategoryItem : BindableObject
     // 🟢 ألوان الفئات (متطابقة مع ألوان تحديد وضع اللعب)
     public Color BackgroundColor => IsSelected ? Color.FromArgb("#112A38") : Color.FromArgb("#151624");
     public Color TextColor => IsSelected ? Colors.White : Color.FromArgb("#94A3B8");
-    public Color StrokeColor => IsSelected ? Color.FromArgb("#00E5FF") : Color.FromArgb("#333752");
+    public Color StrokeColor => IsSelected ? Color.FromArgb("#6366F1") : Color.FromArgb("#312E81");
 }
 
 public partial class SmartInspectorPage : ContentPage
@@ -149,14 +149,14 @@ public partial class SmartInspectorPage : ContentPage
 
     private void UpdateGameModeUI()
     {
-        // 🟢 ألوان بطاقات وضع اللعب (محدثة لتتطابق تماماً مع ألوان الفئات)
-        Color normalBorderColor = Color.FromArgb("#333752");
+        // 🟢 ألوان بطاقات وضع اللعب
+        Color normalBorderColor = Color.FromArgb("#6366F1");
         Color normalBgColor = Color.FromArgb("#151624");
         Color normalTextColor = Color.FromArgb("#94A3B8");
 
-        // الألوان عند التحديد (نفس ألوان CategoryItem)
-        Color selectedBorderColor = Color.FromArgb("#00E5FF"); // سيان (سماوي مضيء)
-        Color selectedBgColor = Color.FromArgb("#112A38");     // خلفية كحلية مزرقة
+        // الألوان عند التحديد
+        Color selectedBorderColor = Color.FromArgb("#6366F1");
+        Color selectedBgColor = Color.FromArgb("#112A38");
         Color selectedTextColor = Colors.White;
 
         // تحديث كرت اللعب الفردي
@@ -227,23 +227,23 @@ public partial class SmartInspectorPage : ContentPage
 
                         appShell.GameHub.OnChallengeResponseReceived -= onChallengeResponded;
 
-                        // 🔵 معالجة النتيجة بفحص نوع البيانات (Pattern Matching)
-                        if (waitResult is bool isAcceptedResult)
+                        // 🔵 معالجة النتيجة
+                        if (waitResult is string statusResult)
                         {
-                            if (isAcceptedResult)
+                            if (statusResult == "Accepted")
                             {
                                 // الصديق قبل التحدي (تم إزالة كود الانتقال لأن AppShell سيتولى ذلك)
                             }
-                            else
+                            else if (statusResult == "Rejected")
                             {
                                 // الصديق رفض
                                 await Toast.Make($"{targetFriend} رفض التحدي أو هو مشغول حالياً.").Show();
                             }
-                        }
-                        else if (waitResult is string status && status == "Cancel")
-                        {
-                            // المستخدم ألغى الطلب بنفسه
-                            await appShell.GameHub.CancelChallengeAsync(targetFriend);
+                            else if (statusResult == "Cancel")
+                            {
+                                // المستخدم ألغى الطلب بنفسه
+                                await appShell.GameHub.CancelChallengeAsync(targetFriend);
+                            }
                         }
                     }
                 }

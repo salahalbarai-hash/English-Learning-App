@@ -91,8 +91,8 @@ public class GameHub
         _hubConnection.On<string, string>("ReceiveChallenge", (sender, category) =>
             OnChallengeReceived?.Invoke(sender, category));
 
-        // ربط الحدث الجديد ذو الـ 3 معاملات
-        _hubConnection.On<string, string, string>("ReceiveChallenge", (sender, category, word) =>
+        // ربط الحدث الجديد ذو الـ 3 معاملات باسم منفصل لمنع التعارض
+        _hubConnection.On<string, string, string>("ReceiveChallengeWithWord", (sender, category, word) =>
             OnChallengeWithWordReceived?.Invoke(sender, category, word));
 
         _hubConnection.On<string, bool, string>("ChallengeResponseReceived", (responder, isAccepted, category) =>

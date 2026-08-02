@@ -8,28 +8,27 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 namespace English.Pages;
 
-public partial class ChoiceChallengePage : ContentPage
+public partial class WritingChallengePage : ContentPage
 {
-    private class QuestionItem
+    private class WritingQuestionItem
     {
-        public string Word { get; set; } = string.Empty;
-        public string CorrectAnswer { get; set; } = string.Empty;
-        public List<string> Options { get; set; } = new();
+        public string ArabicWord { get; set; } = string.Empty;
+        public string EnglishWord { get; set; } = string.Empty;
     }
 
-    private class GamePayload
+    private class WritingGamePayload
     {
-        public List<QuestionItem> Questions { get; set; } = new();
+        public List<WritingQuestionItem> Questions { get; set; } = new();
         public int TimePerQuestion { get; set; }
     }
 
-    private List<QuestionItem> _questions = new();
+    private List<WritingQuestionItem> _questions = new();
     private int _currentIndex = 0;
     private int _score = 0;
     private int _opponentScore = 0;
     private System.Timers.Timer? _timer;
-    private int _timePerQuestion = 5;
-    private int _timeLeft = 5;
+    private int _timePerQuestion = 10;
+    private int _timeLeft = 10;
     private bool _answered = false;
     private bool _isLeaving = false;
     private bool _isMultiplayer = false;
@@ -39,16 +38,16 @@ public partial class ChoiceChallengePage : ContentPage
     private string _roomName = "";
     private string _opponentName = "";
 
-    // للعب الفردي
-    public ChoiceChallengePage()
+    // For Single Player
+    public WritingChallengePage()
     {
         InitializeComponent();
         LoadSetupData();
         UpdateGameModeUI();
     }
 
-    // للعب الثنائي (متلقي التحدي أو مرسل التحدي بعد القبول)
-    public ChoiceChallengePage(HubConnection hubConnection, string roomName, string opponentName, string payloadJson)
+    // For Multiplayer (Receiver / Accepted sender)
+    public WritingChallengePage(HubConnection hubConnection, string roomName, string opponentName, string payloadJson)
     {
         InitializeComponent();
 
@@ -88,7 +87,7 @@ public partial class ChoiceChallengePage : ContentPage
                         string json = msg.Replace("PAYLOAD:", "");
                         try
                         {
-                            var payload = JsonSerializer.Deserialize<GamePayload>(json);
+                            var payload = JsonSerializer.Deserialize<WritingGamePayload>(json);
                             if (payload != null)
                             {
                                 _questions = payload.Questions;
@@ -120,7 +119,7 @@ public partial class ChoiceChallengePage : ContentPage
         {
             try
             {
-                var payload = JsonSerializer.Deserialize<GamePayload>(payloadJson);
+                var payload = JsonSerializer.Deserialize<WritingGamePayload>(payloadJson);
                 if (payload != null)
                 {
                     _questions = payload.Questions;
@@ -135,6 +134,11 @@ public partial class ChoiceChallengePage : ContentPage
     private void LoadSetupData()
     {
         _memorizedWords = TenWords.GetMemorizedWords();
+        if (_memorizedWords.Count == 0)
+        {
+            _memorizedWords = TenWords.All();
+        }
+
         MaxWordsLabel.Text = _memorizedWords.Count.ToString();
 
         if (_memorizedWords.Count > 0)
@@ -162,12 +166,12 @@ public partial class ChoiceChallengePage : ContentPage
 
     private void UpdateGameModeUI()
     {
-        Color normalBorderColor = Color.FromArgb("#23344D");
-        Color normalBgColor = Color.FromArgb("#121B2D");
+        Color normalBorderColor = Color.FromArgb("#333752");
+        Color normalBgColor = Color.FromArgb("#151624");
         Color normalTextColor = Color.FromArgb("#94A3B8");
 
-        Color selectedBorderColor = Color.FromArgb("#34D399");
-        Color selectedBgColor = Color.FromArgb("#121B2D"); // نفس الخلفية
+        Color selectedBorderColor = Color.FromArgb("#00E5FF");
+        Color selectedBgColor = Color.FromArgb("#112A38");
         Color selectedTextColor = Colors.White;
 
         SinglePlayerCard.BackgroundColor = !_isMultiplayer ? selectedBgColor : normalBgColor;
@@ -193,17 +197,17 @@ public partial class ChoiceChallengePage : ContentPage
 
         if (count > _memorizedWords.Count)
         {
-            await Toast.Make($"عدد الكلمات لا يمكن أن يتجاوز الكلمات المحفوظة ({_memorizedWords.Count}).", ToastDuration.Short).Show();
+            await Toast.Make($"عدد الكلمات لا يمكن أن يتجاوز الكلمات المتاحة ({_memorizedWords.Count}).", ToastDuration.Short).Show();
             return;
         }
 
-        if (_memorizedWords.Count < 4)
+        if (_memorizedWords.Count == 0)
         {
-            await Toast.Make("يجب أن تحفظ 4 كلمات على الأقل لتتمكن من اللعب.", ToastDuration.Short).Show();
+            await Toast.Make("لا توجد كلمات متاحة حالياً.", ToastDuration.Short).Show();
             return;
         }
 
-        int seconds = 5;
+        int seconds = 10;
         if (!string.IsNullOrWhiteSpace(TimePerQuestionEntry.Text))
         {
             if (!int.TryParse(TimePerQuestionEntry.Text, out seconds) || seconds <= 0)
@@ -224,7 +228,7 @@ public partial class ChoiceChallengePage : ContentPage
         }
         else
         {
-            // --- وضع تحدي صديق ---
+            // --- Friend Challenge Mode ---
             try
             {
                 List<string> myFriends = await FetchFriendsFromDatabaseAsync();
@@ -235,23 +239,23 @@ public partial class ChoiceChallengePage : ContentPage
                     return;
                 }
 
-                var popup = new Popups.FriendSelectPopup("تحدي الخيارات", myFriends);
+                var popup = new Popups.FriendSelectPopup("تحدي الكتابة", myFriends);
                 var result = await this.ShowPopupAsync(popup);
 
                 if (result is string targetFriend && !string.IsNullOrEmpty(targetFriend))
                 {
                     if (Shell.Current is AppShell appShell)
                     {
-                        var payload = new GamePayload { Questions = _questions, TimePerQuestion = _timePerQuestion };
+                        var payload = new WritingGamePayload { Questions = _questions, TimePerQuestion = _timePerQuestion };
                         string payloadJson = JsonSerializer.Serialize(payload);
 
                         try
                         {
-                            await appShell.GameHub.SendChallengeAsync(targetFriend, "ChoiceMulti", payloadJson);
+                            await appShell.GameHub.SendChallengeAsync(targetFriend, "WritingMulti", payloadJson);
                         }
                         catch
                         {
-                            await appShell.GameHub.SendChallengeAsync(targetFriend, "ChoiceMulti");
+                            await appShell.GameHub.SendChallengeAsync(targetFriend, "WritingMulti");
                         }
 
                         var waitingPopup = new Popups.WaitingChallengePopup(targetFriend);
@@ -276,7 +280,7 @@ public partial class ChoiceChallengePage : ContentPage
                             string currentUser = Preferences.Get("UserName", "");
                             _hubConnection = appShell.GameHub.HubConnection;
                             _roomName = string.Compare(currentUser, targetFriend, StringComparison.Ordinal) < 0
-                                    ? $"room_{currentUser}_{targetFriend}" : $"room_{targetFriend}_{currentUser}";
+                                        ? $"room_{currentUser}_{targetFriend}" : $"room_{targetFriend}_{currentUser}";
                             _opponentName = targetFriend;
 
                             MyNameLabel.Text = currentUser;
@@ -290,7 +294,10 @@ public partial class ChoiceChallengePage : ContentPage
 
                             try
                             {
-                                await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, "PAYLOAD:" + payloadJson);
+                                if (_hubConnection != null)
+                                {
+                                    await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, "PAYLOAD:" + payloadJson);
+                                }
                             }
                             catch { }
                         }
@@ -308,7 +315,6 @@ public partial class ChoiceChallengePage : ContentPage
             catch (Exception ex)
             {
                 await DisplayAlert("خطأ في الاتصال", $"تعذر بدء التحدي: {ex.Message}", "حسناً");
-                Console.WriteLine($"Error in multiplayer game start: {ex.Message}");
             }
         }
     }
@@ -325,30 +331,20 @@ public partial class ChoiceChallengePage : ContentPage
 
     private void GenerateQuestions(int count)
     {
-        _questions.Clear();
-        var selectedWords = _memorizedWords.OrderBy(w => Guid.NewGuid()).Take(count).ToList();
-        var allWords = TenWords.All();
-        if (allWords.Count < 4) allWords = _memorizedWords; // fallback
+        var rnd = new Random();
+        var selectedWords = _memorizedWords.OrderBy(_ => rnd.Next()).Take(count).ToList();
 
-        foreach (var word in selectedWords)
+        _questions = selectedWords.Select(w => new WritingQuestionItem
         {
-            var options = new List<string> { word.ArabicWord };
-            var wrongOptions = allWords
-                .Where(w => w.ArabicWord != word.ArabicWord)
-                .OrderBy(w => Guid.NewGuid())
-                .Take(3)
-                .Select(w => w.ArabicWord)
-                .ToList();
+            ArabicWord = w.ArabicWord,
+            EnglishWord = w.EnglishWord
+        }).ToList();
 
-            options.AddRange(wrongOptions);
-
-            _questions.Add(new QuestionItem
-            {
-                Word = word.EnglishWord,
-                CorrectAnswer = word.ArabicWord,
-                Options = options.OrderBy(o => Guid.NewGuid()).ToList()
-            });
-        }
+        _currentIndex = 0;
+        _score = 0;
+        _opponentScore = 0;
+        ScoreLabel.Text = "0";
+        OpponentScoreLabel.Text = "0";
     }
 
     private void LoadQuestion()
@@ -360,18 +356,24 @@ public partial class ChoiceChallengePage : ContentPage
         }
 
         _answered = false;
-        NextButton.IsVisible = false;
-        ResetOptionButtons();
-
         var q = _questions[_currentIndex];
-        QuestionWordLabel.Text = q.Word;
 
-        OptionBtn0.Text = q.Options[0];
-        OptionBtn1.Text = q.Options[1];
-        OptionBtn2.Text = q.Options[2];
-        OptionBtn3.Text = q.Options[3];
+        QuestionIndexLabel.Text = $"سؤال {_currentIndex + 1} من {_questions.Count}";
+        ArabicWordLabel.Text = q.ArabicWord;
+
+        AnswerEntry.Text = string.Empty;
+        AnswerEntry.IsEnabled = true;
+        AnswerBorder.Stroke = Color.FromArgb("#0284C7");
+        FeedbackLabel.IsVisible = false;
+
+        ActionButton.Text = "تأكيد الإجابة ➔";
 
         StartTimer();
+
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            AnswerEntry.Focus();
+        });
     }
 
     private void StartTimer()
@@ -387,13 +389,14 @@ public partial class ChoiceChallengePage : ContentPage
             _timeLeft--;
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                TimerLabel.Text = _timeLeft.ToString();
-                TimerProgress.Progress = (double)_timeLeft / (double)_timePerQuestion;
+                if (_isLeaving) return;
+                TimerLabel.Text = Math.Max(0, _timeLeft).ToString();
+                TimerProgress.Progress = (double)Math.Max(0, _timeLeft) / _timePerQuestion;
 
                 if (_timeLeft <= 0)
                 {
                     StopTimer();
-                    OnTimeExpired();
+                    ProcessAnswer(null);
                 }
             });
         };
@@ -402,130 +405,140 @@ public partial class ChoiceChallengePage : ContentPage
 
     private void StopTimer()
     {
-        if (_timer != null)
+        _timer?.Stop();
+        _timer?.Dispose();
+        _timer = null;
+    }
+
+    private void OnAnswerTextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (!_answered)
         {
-            _timer.Stop();
-            _timer.Dispose();
-            _timer = null;
+            AnswerBorder.Stroke = Color.FromArgb("#00E5FF");
         }
     }
 
-    private void OnTimeExpired()
+    private void OnSubmitClicked(object sender, EventArgs e)
     {
         if (_answered) return;
-        _answered = true;
-        HighlightCorrectAnswer();
-        NextButton.IsVisible = true;
+        ProcessAnswer(AnswerEntry.Text);
     }
 
-    private async void OnOptionClicked(object sender, TappedEventArgs e)
+    private void OnActionClicked(object sender, EventArgs e)
+    {
+        if (!_answered)
+        {
+            ProcessAnswer(AnswerEntry.Text);
+        }
+        else
+        {
+            _currentIndex++;
+            LoadQuestion();
+        }
+    }
+
+    private void ProcessAnswer(string? userAnswer)
     {
         if (_answered) return;
         _answered = true;
         StopTimer();
+        AnswerEntry.IsEnabled = false;
 
-        if (sender is Border border)
+        var currentQ = _questions[_currentIndex];
+        bool isCorrect = !string.IsNullOrWhiteSpace(userAnswer) &&
+                         userAnswer.Trim().Equals(currentQ.EnglishWord.Trim(), StringComparison.OrdinalIgnoreCase);
+
+        if (isCorrect)
         {
-            string selected = "";
-            if (border == OptionBorder0) selected = OptionBtn0.Text;
-            else if (border == OptionBorder1) selected = OptionBtn1.Text;
-            else if (border == OptionBorder2) selected = OptionBtn2.Text;
-            else if (border == OptionBorder3) selected = OptionBtn3.Text;
+            _score += 10;
+            ScoreLabel.Text = _score.ToString();
 
-            var currentQ = _questions[_currentIndex];
+            AnswerBorder.Stroke = Color.FromArgb("#10B981");
+            FeedbackLabel.Text = "إجابة صحيحة! 🎉";
+            FeedbackLabel.TextColor = Color.FromArgb("#10B981");
+            FeedbackLabel.IsVisible = true;
+        }
+        else
+        {
+            AnswerBorder.Stroke = Color.FromArgb("#EF4444");
+            FeedbackLabel.Text = $"إجابة خاطئة! الكلمة الصحيحة هي: {currentQ.EnglishWord}";
+            FeedbackLabel.TextColor = Color.FromArgb("#EF4444");
+            FeedbackLabel.IsVisible = true;
+        }
 
-            if (selected == currentQ.CorrectAnswer)
-            {
-                border.BackgroundColor = Color.FromArgb("#10B981"); // Green
-                border.Stroke = Color.FromArgb("#10B981");
-                _score += 10;
-                ScoreLabel.Text = _score.ToString();
-            }
-            else
-            {
-                border.BackgroundColor = Color.FromArgb("#EF4444"); // Red
-                border.Stroke = Color.FromArgb("#EF4444");
-                HighlightCorrectAnswer();
-            }
-
-            if (_isMultiplayer && _hubConnection != null)
+        // Multiplayer score update
+        if (_isMultiplayer && _hubConnection != null)
+        {
+            _ = Task.Run(async () =>
             {
                 try
                 {
-                    await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, $"SCORE:{_score}");
+                    await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, "SCORE:" + _score);
                 }
                 catch { }
-            }
+            });
         }
 
-        NextButton.IsVisible = true;
-    }
-
-    private void HighlightCorrectAnswer()
-    {
-        var correct = _questions[_currentIndex].CorrectAnswer;
-
-        if (OptionBtn0.Text == correct) { OptionBorder0.BackgroundColor = Color.FromArgb("#10B981"); OptionBorder0.Stroke = Color.FromArgb("#10B981"); }
-        if (OptionBtn1.Text == correct) { OptionBorder1.BackgroundColor = Color.FromArgb("#10B981"); OptionBorder1.Stroke = Color.FromArgb("#10B981"); }
-        if (OptionBtn2.Text == correct) { OptionBorder2.BackgroundColor = Color.FromArgb("#10B981"); OptionBorder2.Stroke = Color.FromArgb("#10B981"); }
-        if (OptionBtn3.Text == correct) { OptionBorder3.BackgroundColor = Color.FromArgb("#10B981"); OptionBorder3.Stroke = Color.FromArgb("#10B981"); }
-    }
-
-    private void ResetOptionButtons()
-    {
-        Border[] borders = { OptionBorder0, OptionBorder1, OptionBorder2, OptionBorder3 };
-        foreach (var b in borders)
+        if (_currentIndex < _questions.Count - 1)
         {
-            b.BackgroundColor = Color.FromArgb("#121B2D"); // مطابقة لخلفية الكارد في الـ XAML الجديد
-            b.Stroke = Color.FromArgb("#23344D");         // مطابقة لحدود الكارد في الـ XAML الجديد
+            ActionButton.Text = "السؤال التالي ➔";
         }
-    }
-
-    private void OnNextClicked(object sender, EventArgs e)
-    {
-        _currentIndex++;
-        LoadQuestion();
+        else
+        {
+            ActionButton.Text = "عرض النتيجة 🏆";
+        }
     }
 
     private async void EndGame()
     {
-        if (_isLeaving) return;
-        _isLeaving = true;
         StopTimer();
 
-        string matchResult = $"رائع جداً! لقد أكملت التحدي وحصلت على {_score} نقطة.";
-        if (_isMultiplayer)
+        if (!_isMultiplayer)
         {
-            if (_score > _opponentScore) matchResult = $"🎉 لقد فزت! \nنقاطك: {_score} \nنقاط الخصم: {_opponentScore}";
-            else if (_score < _opponentScore) matchResult = $"😔 لقد خسرت.. \nنقاطك: {_score} \nنقاط الخصم: {_opponentScore}";
-            else matchResult = $"🤝 تعادل! \nالنقاط: {_score}";
+            await DisplayAlert("انتهاء اللعبة 🏆", $"أحسنت! أنهيت التحدي بنجاح.\nنقاطك الإجمالية: {_score}", "حسناً");
+        }
+        else
+        {
+            string resultMessage;
+            if (_score > _opponentScore)
+            {
+                resultMessage = $"تهانينا! لقد فزت في التحدي 🎉\n\nنقاطك: {_score}\nنقاط {_opponentName}: {_opponentScore}";
+            }
+            else if (_score < _opponentScore)
+            {
+                resultMessage = $"للأسف، خسرت هذا التحدي! 👍\n\nنقاطك: {_score}\nنقاط {_opponentName}: {_opponentScore}";
+            }
+            else
+            {
+                resultMessage = $"تعادل ممتاز بينكما! 🤝\n\nالنقاط: {_score}";
+            }
+
+            await DisplayAlert("نتيجة التحدي 🏁", resultMessage, "حسناً");
         }
 
-        await DisplayAlert("انتهاء التحدي 🎉", matchResult, "حسناً");
+        _isLeaving = true;
         await Navigation.PopModalAsync();
     }
 
     private async void OnBackClicked(object sender, EventArgs e)
     {
-        if (_isLeaving) return;
-        _isLeaving = true;
-        StopTimer();
-
-        if (_isMultiplayer && _hubConnection != null && _currentIndex < _questions.Count)
+        if (GameView.IsVisible && !_isLeaving)
         {
-            try
+            bool confirm = await DisplayAlert("تأكيد الخروج", "هل أنت تأكد من الخروج؟ سيتم إلغاء الجولة الحالية.", "نعم", "لا");
+            if (!confirm) return;
+
+            if (_isMultiplayer && _hubConnection != null)
             {
-                await _hubConnection.InvokeAsync("WithdrawFromDuel", _roomName);
+                try
+                {
+                    await _hubConnection.InvokeAsync("SendDuelWithdrawal", _roomName);
+                }
+                catch { }
             }
-            catch { }
         }
 
-        await Navigation.PopModalAsync();
-    }
-
-    protected override void OnDisappearing()
-    {
-        base.OnDisappearing();
+        _isLeaving = true;
         StopTimer();
+        await Navigation.PopModalAsync();
     }
 }

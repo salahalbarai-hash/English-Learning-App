@@ -32,4 +32,13 @@ public partial class GameHubPage : ContentPage
         // الانتقال المباشر لشاشة تحدي الخيارات
         await Navigation.PushModalAsync(new ChoiceChallengePage());
     }
+
+    private async void OnWritingChallengeTapped(object sender, EventArgs e)
+    {
+        if (_isNavigating) return;
+        _isNavigating = true;
+
+        // الانتقال المباشر لشاشة تحدي الكتابة
+        await Navigation.PushModalAsync(new WritingChallengePage());
+    }
 }

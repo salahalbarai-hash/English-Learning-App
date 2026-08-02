@@ -19,6 +19,7 @@ namespace English
             Routing.RegisterRoute(nameof(Pages.GameHubPage), typeof(Pages.GameHubPage));
             Routing.RegisterRoute(nameof(Pages.SmartInspectorPage), typeof(Pages.SmartInspectorPage));
             Routing.RegisterRoute(nameof(Pages.ChoiceChallengePage), typeof(Pages.ChoiceChallengePage));
+            Routing.RegisterRoute(nameof(Pages.WritingChallengePage), typeof(Pages.WritingChallengePage));
             _gameHub = new GameHub();
 
             string savedUserName = Preferences.Get("UserName", "");
@@ -101,8 +102,56 @@ namespace English
 
                             if (_gameHub.HubConnection != null)
                             {
-                                await Current.Navigation.PushModalAsync(new DuelGamePage(
-                                    _gameHub.HubConnection, roomName, currentUserName, senderName, category, isFirstPlayer: false));
+                                if (category == "تحدي الخيارات")
+                                {
+                                    await Current.Navigation.PushModalAsync(new ChoiceChallengePage());
+                                }
+                                else
+                                {
+                                    await Current.Navigation.PushModalAsync(new DuelGamePage(
+                                        _gameHub.HubConnection, roomName, currentUserName, senderName, category, isFirstPlayer: false));
+                                }
+                            }
+                        }
+                    }
+                });
+            };
+
+            _gameHub.OnChallengeWithWordReceived += (senderName, category, word) =>
+            {
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    if (Current != null)
+                    {
+                        string displayCategory = category switch
+                        {
+                            "ChoiceMulti" => "تحدي الخيارات",
+                            "WritingMulti" => "تحدي الكتابة",
+                            _ => category
+                        };
+                        var popup = new ReceiveChallengePopup(senderName, displayCategory);
+                        var result = await Current.ShowPopupAsync(popup);
+
+                        bool accepted = result is bool b && b;
+
+                        await _gameHub.SendResponseAsync(senderName, accepted, category);
+
+                        if (accepted)
+                        {
+                            string roomName = GetRoomName(currentUserName, senderName);
+
+                            await _gameHub.JoinDuelRoomAsync(roomName);
+
+                            if (_gameHub.HubConnection != null)
+                            {
+                                if (category == "ChoiceMulti")
+                                {
+                                    await Current.Navigation.PushModalAsync(new ChoiceChallengePage(_gameHub.HubConnection, roomName, senderName, word));
+                                }
+                                else if (category == "WritingMulti")
+                                {
+                                    await Current.Navigation.PushModalAsync(new WritingChallengePage(_gameHub.HubConnection, roomName, senderName, word));
+                                }
                             }
                         }
                     }
@@ -121,8 +170,19 @@ namespace English
                         {
                             await _gameHub.HubConnection.InvokeAsync("JoinDuelRoom", roomName);
 
-                            await Current!.Navigation.PushModalAsync(new DuelGamePage(
-                                _gameHub.HubConnection, roomName, currentUserName, responderName, category, isFirstPlayer: true));
+                            if (category == "ChoiceMulti" || category == "WritingMulti")
+                            {
+                                // The sender page will handle it internally
+                            }
+                            else if (category == "تحدي الخيارات")
+                            {
+                                await Current!.Navigation.PushModalAsync(new ChoiceChallengePage());
+                            }
+                            else
+                            {
+                                await Current!.Navigation.PushModalAsync(new DuelGamePage(
+                                    _gameHub.HubConnection, roomName, currentUserName, responderName, category, isFirstPlayer: true));
+                            }
                         }
                     }
                     else
@@ -177,13 +237,7 @@ namespace English
             }
             else
             {
-                // تأكد أن دالة SendChallengeAsync داخل كلاس GameHub تدعم استقبال الكلمة (المعامل الثالث)
-                // إذا لم تكن تدعمه، ستحتاج لإضافته هناك أيضاً.
-                // مؤقتاً، في حال لم تكن موجودة يمكنك دمجهم هكذا: await _gameHub.SendChallengeAsync(targetUser, category);
-                // ولكن يُفضل تحديث السيرفر لاستقبال الكلمة.
-
-                // افترضنا هنا أنك قمت بتحديث GameHub لدعمها
-                await _gameHub.SendChallengeAsync(targetUser, category);
+                await _gameHub.SendChallengeAsync(targetUser, category, word);
             }
         }
 
