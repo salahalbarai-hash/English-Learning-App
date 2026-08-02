@@ -28,6 +28,8 @@ public partial class ChoiceChallengePage : ContentPage
     private int _score = 0;
     private int _opponentScore = 0;
     private System.Timers.Timer? _timer;
+    private System.Timers.Timer? _nextQuestionTimer;
+    private int _nextQuestionTimeLeft = 5;
     private int _timePerQuestion = 5;
     private int _timeLeft = 5;
     private bool _answered = false;
@@ -105,12 +107,17 @@ public partial class ChoiceChallengePage : ContentPage
             {
                 if (withdrawingUser == _opponentName)
                 {
-                    MainThread.BeginInvokeOnMainThread(async () =>
+                    MainThread.BeginInvokeOnMainThread(() =>
                     {
+                        if (_isLeaving) return;
                         StopTimer();
-                        await DisplayAlert("انسحاب اللاعب!", "لقد انسحب الخصم من التحدي. أنت الفائز تلقائياً 🎉", "حسناً");
-                        _isLeaving = true;
-                        await Navigation.PopModalAsync();
+                        StopNextQuestionTimer();
+
+                        WithdrawalTextLabel.Text = $"⚠️ اللاعب {withdrawingUser} انسحب من التحدي!";
+                        WithdrawalBanner.IsVisible = true;
+
+                        NextButton.Text = "العودة للقائمة الرئيسية ➔";
+                        NextButton.IsVisible = true;
                     });
                 }
             });
@@ -286,11 +293,13 @@ public partial class ChoiceChallengePage : ContentPage
                             GameView.IsVisible = true;
                             OpponentScoreContainer.IsVisible = true;
 
+                            await appShell.GameHub.JoinDuelRoomAsync(_roomName);
+
                             SetupMultiplayerCurrentConnection(payloadJson);
 
                             try
                             {
-                                await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, "PAYLOAD:" + payloadJson);
+                                await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, currentUser, "PAYLOAD:" + payloadJson);
                             }
                             catch { }
                         }
@@ -353,6 +362,8 @@ public partial class ChoiceChallengePage : ContentPage
 
     private void LoadQuestion()
     {
+        StopNextQuestionTimer();
+
         if (_currentIndex >= _questions.Count)
         {
             EndGame();
@@ -410,12 +421,60 @@ public partial class ChoiceChallengePage : ContentPage
         }
     }
 
+    private void StartNextQuestionTimer()
+    {
+        StopNextQuestionTimer();
+        if (_isLeaving || (WithdrawalBanner != null && WithdrawalBanner.IsVisible)) return;
+
+        _nextQuestionTimeLeft = 5;
+        string buttonBaseText = (_currentIndex < _questions.Count - 1) ? "السؤال التالي" : "عرض النتيجة";
+        string buttonIcon = (_currentIndex < _questions.Count - 1) ? "➔" : "🏆";
+
+        NextButton.Text = $"{buttonBaseText} ({_nextQuestionTimeLeft})... {buttonIcon}";
+        NextButton.IsVisible = true;
+
+        _nextQuestionTimer = new System.Timers.Timer(1000);
+        _nextQuestionTimer.Elapsed += (s, e) =>
+        {
+            _nextQuestionTimeLeft--;
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                if (_isLeaving || (WithdrawalBanner != null && WithdrawalBanner.IsVisible))
+                {
+                    StopNextQuestionTimer();
+                    return;
+                }
+
+                if (_nextQuestionTimeLeft > 0)
+                {
+                    NextButton.Text = $"{buttonBaseText} ({_nextQuestionTimeLeft})... {buttonIcon}";
+                }
+                else
+                {
+                    StopNextQuestionTimer();
+                    OnNextClicked(this, EventArgs.Empty);
+                }
+            });
+        };
+        _nextQuestionTimer.Start();
+    }
+
+    private void StopNextQuestionTimer()
+    {
+        if (_nextQuestionTimer != null)
+        {
+            _nextQuestionTimer.Stop();
+            _nextQuestionTimer.Dispose();
+            _nextQuestionTimer = null;
+        }
+    }
+
     private void OnTimeExpired()
     {
         if (_answered) return;
         _answered = true;
         HighlightCorrectAnswer();
-        NextButton.IsVisible = true;
+        StartNextQuestionTimer();
     }
 
     private async void OnOptionClicked(object sender, TappedEventArgs e)
@@ -452,13 +511,14 @@ public partial class ChoiceChallengePage : ContentPage
             {
                 try
                 {
-                    await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, $"SCORE:{_score}");
+                    string currentUser = Preferences.Get("UserName", "");
+                    await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, currentUser, $"SCORE:{_score}");
                 }
                 catch { }
             }
         }
 
-        NextButton.IsVisible = true;
+        StartNextQuestionTimer();
     }
 
     private void HighlightCorrectAnswer()
@@ -481,8 +541,18 @@ public partial class ChoiceChallengePage : ContentPage
         }
     }
 
-    private void OnNextClicked(object sender, EventArgs e)
+    private async void OnNextClicked(object sender, EventArgs e)
     {
+        StopNextQuestionTimer();
+
+        if (WithdrawalBanner != null && WithdrawalBanner.IsVisible)
+        {
+            _isLeaving = true;
+            StopTimer();
+            await Navigation.PopModalAsync();
+            return;
+        }
+
         _currentIndex++;
         LoadQuestion();
     }
@@ -505,27 +575,67 @@ public partial class ChoiceChallengePage : ContentPage
         await Navigation.PopModalAsync();
     }
 
-    private async void OnBackClicked(object sender, EventArgs e)
+    private async Task ConfirmExitAsync()
     {
         if (_isLeaving) return;
-        _isLeaving = true;
-        StopTimer();
 
-        if (_isMultiplayer && _hubConnection != null && _currentIndex < _questions.Count)
+        // إذا كانت اللعبة قد انتهت بانسحاب الخصم، اخرج مباشرة دون إظهار رسالة تأكيد
+        if (WithdrawalBanner != null && WithdrawalBanner.IsVisible)
         {
-            try
-            {
-                await _hubConnection.InvokeAsync("WithdrawFromDuel", _roomName);
-            }
-            catch { }
+            _isLeaving = true;
+            StopTimer();
+            StopNextQuestionTimer();
+            await Navigation.PopModalAsync();
+            return;
         }
 
+        if (GameView.IsVisible && _currentIndex < _questions.Count)
+        {
+            string title = _isMultiplayer ? "تأكيد الانسحاب" : "تأكيد الخروج";
+            string message = _isMultiplayer
+                ? "هل أنت متأكد أنك تريد الانسحاب؟ سيتم إنهاء اللعبة واحتساب فوز للخصم."
+                : "هل أنت متأكد أنك تريد الخروج من الجولة؟";
+            string confirmBtn = _isMultiplayer ? "نعم، انسحب" : "نعم";
+
+            bool confirm = await DisplayAlert(title, message, confirmBtn, "إلغاء");
+            if (!confirm) return;
+
+            if (_isMultiplayer && _hubConnection != null)
+            {
+                try
+                {
+                    string currentUser = Preferences.Get("UserName", "");
+                    await _hubConnection.InvokeAsync("SendDuelWithdrawal", _roomName, currentUser);
+                }
+                catch { }
+            }
+        }
+
+        _isLeaving = true;
+        StopTimer();
+        StopNextQuestionTimer();
         await Navigation.PopModalAsync();
+    }
+
+    private async void OnBackClicked(object sender, EventArgs e)
+    {
+        await ConfirmExitAsync();
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        if (GameView.IsVisible && !_isLeaving)
+        {
+            Dispatcher.Dispatch(async () => await ConfirmExitAsync());
+            return true;
+        }
+        return base.OnBackButtonPressed();
     }
 
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
         StopTimer();
+        StopNextQuestionTimer();
     }
 }

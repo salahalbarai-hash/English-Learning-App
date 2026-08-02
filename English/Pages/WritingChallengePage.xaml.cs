@@ -27,6 +27,8 @@ public partial class WritingChallengePage : ContentPage
     private int _score = 0;
     private int _opponentScore = 0;
     private System.Timers.Timer? _timer;
+    private System.Timers.Timer? _nextQuestionTimer;
+    private int _nextQuestionTimeLeft = 5;
     private int _timePerQuestion = 10;
     private int _timeLeft = 10;
     private bool _answered = false;
@@ -104,12 +106,18 @@ public partial class WritingChallengePage : ContentPage
             {
                 if (withdrawingUser == _opponentName)
                 {
-                    MainThread.BeginInvokeOnMainThread(async () =>
+                    MainThread.BeginInvokeOnMainThread(() =>
                     {
+                        if (_isLeaving) return;
                         StopTimer();
-                        await DisplayAlert("انسحاب اللاعب!", "لقد انسحب الخصم من التحدي. أنت الفائز تلقائياً 🎉", "حسناً");
-                        _isLeaving = true;
-                        await Navigation.PopModalAsync();
+                        StopNextQuestionTimer();
+
+                        WithdrawalTextLabel.Text = $"⚠️ اللاعب {withdrawingUser} انسحب من التحدي!";
+                        WithdrawalBanner.IsVisible = true;
+
+                        AnswerEntry.IsEnabled = false;
+                        ActionButton.Text = "العودة للقائمة الرئيسية ➔";
+                        ActionButton.IsVisible = true;
                     });
                 }
             });
@@ -349,6 +357,8 @@ public partial class WritingChallengePage : ContentPage
 
     private void LoadQuestion()
     {
+        StopNextQuestionTimer();
+
         if (_currentIndex >= _questions.Count)
         {
             EndGame();
@@ -410,6 +420,55 @@ public partial class WritingChallengePage : ContentPage
         _timer = null;
     }
 
+    private void StartNextQuestionTimer()
+    {
+        StopNextQuestionTimer();
+        if (_isLeaving || (WithdrawalBanner != null && WithdrawalBanner.IsVisible)) return;
+
+        _nextQuestionTimeLeft = 5;
+        bool isLast = _currentIndex >= _questions.Count - 1;
+        string buttonBaseText = isLast ? "عرض النتيجة" : "السؤال التالي";
+        string buttonIcon = isLast ? "🏆" : "➔";
+
+        ActionButton.Text = $"{buttonBaseText} ({_nextQuestionTimeLeft})... {buttonIcon}";
+
+        _nextQuestionTimer = new System.Timers.Timer(1000);
+        _nextQuestionTimer.Elapsed += (s, e) =>
+        {
+            _nextQuestionTimeLeft--;
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                if (_isLeaving || (WithdrawalBanner != null && WithdrawalBanner.IsVisible))
+                {
+                    StopNextQuestionTimer();
+                    return;
+                }
+
+                if (_nextQuestionTimeLeft > 0)
+                {
+                    ActionButton.Text = $"{buttonBaseText} ({_nextQuestionTimeLeft})... {buttonIcon}";
+                }
+                else
+                {
+                    StopNextQuestionTimer();
+                    _currentIndex++;
+                    LoadQuestion();
+                }
+            });
+        };
+        _nextQuestionTimer.Start();
+    }
+
+    private void StopNextQuestionTimer()
+    {
+        if (_nextQuestionTimer != null)
+        {
+            _nextQuestionTimer.Stop();
+            _nextQuestionTimer.Dispose();
+            _nextQuestionTimer = null;
+        }
+    }
+
     private void OnAnswerTextChanged(object sender, TextChangedEventArgs e)
     {
         if (!_answered)
@@ -424,14 +483,24 @@ public partial class WritingChallengePage : ContentPage
         ProcessAnswer(AnswerEntry.Text);
     }
 
-    private void OnActionClicked(object sender, EventArgs e)
+    private async void OnActionClicked(object sender, EventArgs e)
     {
+        if (WithdrawalBanner != null && WithdrawalBanner.IsVisible)
+        {
+            _isLeaving = true;
+            StopTimer();
+            StopNextQuestionTimer();
+            await Navigation.PopModalAsync();
+            return;
+        }
+
         if (!_answered)
         {
             ProcessAnswer(AnswerEntry.Text);
         }
         else
         {
+            StopNextQuestionTimer();
             _currentIndex++;
             LoadQuestion();
         }
@@ -473,25 +542,20 @@ public partial class WritingChallengePage : ContentPage
             {
                 try
                 {
-                    await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, "SCORE:" + _score);
+                    string currentUser = Preferences.Get("UserName", "");
+                    await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, currentUser, "SCORE:" + _score);
                 }
                 catch { }
             });
         }
 
-        if (_currentIndex < _questions.Count - 1)
-        {
-            ActionButton.Text = "السؤال التالي ➔";
-        }
-        else
-        {
-            ActionButton.Text = "عرض النتيجة 🏆";
-        }
+        StartNextQuestionTimer();
     }
 
     private async void EndGame()
     {
         StopTimer();
+        StopNextQuestionTimer();
 
         if (!_isMultiplayer)
         {
@@ -520,18 +584,37 @@ public partial class WritingChallengePage : ContentPage
         await Navigation.PopModalAsync();
     }
 
-    private async void OnBackClicked(object sender, EventArgs e)
+    private async Task ConfirmExitAsync()
     {
-        if (GameView.IsVisible && !_isLeaving)
+        if (_isLeaving) return;
+
+        // إذا كانت اللعبة قد انتهت بانسحاب الخصم، اخرج مباشرة دون إظهار رسالة تأكيد
+        if (WithdrawalBanner != null && WithdrawalBanner.IsVisible)
         {
-            bool confirm = await DisplayAlert("تأكيد الخروج", "هل أنت تأكد من الخروج؟ سيتم إلغاء الجولة الحالية.", "نعم", "لا");
+            _isLeaving = true;
+            StopTimer();
+            StopNextQuestionTimer();
+            await Navigation.PopModalAsync();
+            return;
+        }
+
+        if (GameView.IsVisible && _currentIndex < _questions.Count)
+        {
+            string title = _isMultiplayer ? "تأكيد الانسحاب" : "تأكيد الخروج";
+            string message = _isMultiplayer
+                ? "هل أنت متأكد أنك تريد الانسحاب؟ سيتم إنهاء اللعبة واحتساب فوز للخصم."
+                : "هل أنت متأكد أنك تريد الخروج من الجولة؟";
+            string confirmBtn = _isMultiplayer ? "نعم، انسحب" : "نعم";
+
+            bool confirm = await DisplayAlert(title, message, confirmBtn, "إلغاء");
             if (!confirm) return;
 
             if (_isMultiplayer && _hubConnection != null)
             {
                 try
                 {
-                    await _hubConnection.InvokeAsync("SendDuelWithdrawal", _roomName);
+                    string currentUser = Preferences.Get("UserName", "");
+                    await _hubConnection.InvokeAsync("SendDuelWithdrawal", _roomName, currentUser);
                 }
                 catch { }
             }
@@ -539,6 +622,29 @@ public partial class WritingChallengePage : ContentPage
 
         _isLeaving = true;
         StopTimer();
+        StopNextQuestionTimer();
         await Navigation.PopModalAsync();
+    }
+
+    private async void OnBackClicked(object sender, EventArgs e)
+    {
+        await ConfirmExitAsync();
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        if (GameView.IsVisible && !_isLeaving)
+        {
+            Dispatcher.Dispatch(async () => await ConfirmExitAsync());
+            return true;
+        }
+        return base.OnBackButtonPressed();
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        StopTimer();
+        StopNextQuestionTimer();
     }
 }
