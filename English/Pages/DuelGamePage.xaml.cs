@@ -30,6 +30,8 @@ public partial class DuelGamePage : ContentPage
         });
     }
 
+    private bool _isLeaving = false;
+
     // 🟢 اعتراض زر الرجوع الفعلي في الهاتف (Hardware Back Button)
     protected override bool OnBackButtonPressed()
     {
@@ -40,10 +42,13 @@ public partial class DuelGamePage : ContentPage
     // 🟢 دالة تأكيد الانسحاب والخروج
     private async Task ConfirmExitAsync()
     {
+        if (_isLeaving) return;
+
         // إذا انتهت اللعبة مسبقاً، اخرج مباشرة بدون تأكيد
         if (_viewModel.IsGameOver)
         {
-            await Navigation.PopModalAsync();
+            _isLeaving = true;
+            await SafePopAsync();
             return;
         }
 
@@ -51,11 +56,28 @@ public partial class DuelGamePage : ContentPage
 
         if (confirm)
         {
+            _isLeaving = true;
             // إرسال طلب الانسحاب للخصم عبر الـ ViewModel
             await _viewModel.SurrenderAsync();
             // العودة للصفحة السابقة
-            await Navigation.PopModalAsync();
+            await SafePopAsync();
         }
+    }
+
+    private async Task SafePopAsync()
+    {
+        try
+        {
+            if (Navigation.ModalStack.Count > 0)
+            {
+                await Navigation.PopModalAsync();
+            }
+            else if (Navigation.NavigationStack.Count > 1)
+            {
+                await Navigation.PopAsync();
+            }
+        }
+        catch { }
     }
 
     protected override void OnDisappearing()

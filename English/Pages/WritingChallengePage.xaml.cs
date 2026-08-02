@@ -483,6 +483,22 @@ public partial class WritingChallengePage : ContentPage
         ProcessAnswer(AnswerEntry.Text);
     }
 
+    private async Task SafePopAsync()
+    {
+        try
+        {
+            if (Navigation.ModalStack.Count > 0)
+            {
+                await Navigation.PopModalAsync();
+            }
+            else if (Navigation.NavigationStack.Count > 1)
+            {
+                await Navigation.PopAsync();
+            }
+        }
+        catch { }
+    }
+
     private async void OnActionClicked(object sender, EventArgs e)
     {
         if (WithdrawalBanner != null && WithdrawalBanner.IsVisible)
@@ -490,7 +506,7 @@ public partial class WritingChallengePage : ContentPage
             _isLeaving = true;
             StopTimer();
             StopNextQuestionTimer();
-            await Navigation.PopModalAsync();
+            await SafePopAsync();
             return;
         }
 
@@ -581,7 +597,7 @@ public partial class WritingChallengePage : ContentPage
         }
 
         _isLeaving = true;
-        await Navigation.PopModalAsync();
+        await SafePopAsync();
     }
 
     private async Task ConfirmExitAsync()
@@ -594,7 +610,7 @@ public partial class WritingChallengePage : ContentPage
             _isLeaving = true;
             StopTimer();
             StopNextQuestionTimer();
-            await Navigation.PopModalAsync();
+            await SafePopAsync();
             return;
         }
 
@@ -623,7 +639,7 @@ public partial class WritingChallengePage : ContentPage
         _isLeaving = true;
         StopTimer();
         StopNextQuestionTimer();
-        await Navigation.PopModalAsync();
+        await SafePopAsync();
     }
 
     private async void OnBackClicked(object sender, EventArgs e)

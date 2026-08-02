@@ -10,7 +10,7 @@
             Stroke="#333752"
             StrokeThickness="2"
             StrokeShape="RoundRectangle 24"
-            Padding="24"
+            Padding="20"
             WidthRequest="340"
             HorizontalOptions="Center"
             VerticalOptions="Center">
@@ -19,21 +19,31 @@
             <Shadow Brush="#00E5FF" Offset="0,0" Radius="15" Opacity="0.15"/>
         </Border.Shadow>
 
-        <VerticalStackLayout Spacing="18">
+        <VerticalStackLayout Spacing="14">
 
             <!-- الهيدر -->
-            <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
-                <Label Text="تحدي صديق" 
-                       FontSize="22" 
-                       FontAttributes="Bold" 
-                       TextColor="#F8F9FA" 
-                       HorizontalOptions="Center"/>
-                <Label x:Name="CategorySubtitleLabel"
-                       FontSize="13" 
-                       TextColor="#00E5FF" 
-                       HorizontalOptions="Center"
-                       FontAttributes="Bold"/>
-            </VerticalStackLayout>
+            <Label x:Name="CategorySubtitleLabel"
+                   FontSize="14" 
+                   TextColor="#00E5FF" 
+                   HorizontalOptions="Center"
+                   FontAttributes="Bold"/>
+
+            <!-- حقل البحث عن صديق -->
+            <Border BackgroundColor="#1E1F30"
+                    Stroke="#333752"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 14"
+                    Padding="12,2"
+                    HeightRequest="46">
+                <Entry x:Name="SearchEntry"
+                       Placeholder="🔍 بحث عن صديق..."
+                       PlaceholderColor="#64748B"
+                       TextColor="White"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       BackgroundColor="Transparent"
+                       TextChanged="OnSearchTextChanged"/>
+            </Border>
 
             <!-- رسالة في حال عدم وجود أصدقاء -->
             <Label x:Name="EmptyFriendsLabel"
@@ -46,7 +56,7 @@
 
             <!-- قائمة الأصدقاء المتاحين -->
             <CollectionView x:Name="FriendsCollectionView" 
-                            HeightRequest="300"
+                            HeightRequest="240"
                             SelectionMode="Single">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -81,7 +91,7 @@
                     BackgroundColor="#00B4D8"
                     TextColor="#0B1221"
                     CornerRadius="14"
-                    HeightRequest="50"
+                    HeightRequest="48"
                     FontAttributes="Bold"
                     FontSize="16"
                     Clicked="OnSendChallengeClicked">

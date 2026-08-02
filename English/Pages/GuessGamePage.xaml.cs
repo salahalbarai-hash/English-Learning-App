@@ -6,6 +6,8 @@ namespace English.Pages;
 public partial class GuessGamePage : ContentPage
 {
     private GuessGameVM _viewModel;
+    private bool _isLeaving = false;
+
     public GuessGamePage(string selectedCategory)
     {
         InitializeComponent();
@@ -13,6 +15,31 @@ public partial class GuessGamePage : ContentPage
         BindingContext = _viewModel;
         _viewModel.ScrollToBottomRequested = ScrollToBottom;
     }
+
+    private async void OnBackClicked(object sender, EventArgs e)
+    {
+        await ConfirmExitAsync();
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        Dispatcher.Dispatch(async () => await ConfirmExitAsync());
+        return true;
+    }
+
+    private async Task ConfirmExitAsync()
+    {
+        if (_isLeaving) return;
+
+        bool confirm = await DisplayAlert("تأكيد الخروج", "هل أنت متأكد من الخروج من التحدي الحالي؟", "نعم", "لا");
+        if (confirm)
+        {
+            _isLeaving = true;
+            await Navigation.PopModalAsync();
+        }
+    }
+
+   
 
     private void ScrollToBottom()
     {

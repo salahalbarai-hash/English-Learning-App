@@ -21,20 +21,22 @@
                 </LinearGradientBrush>
             </Border.Background>
 
-            <Grid Padding="18" ColumnDefinitions="Auto,*,Auto">
-                <Border WidthRequest="55" HeightRequest="55" BackgroundColor="#252C55" StrokeThickness="0" StrokeShape="RoundRectangle 28">
-                    <Label Text="🧠" FontSize="30" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Grid Padding="18,14" ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                <Button Grid.Column="0" Text="➔" FontSize="18" FontAttributes="Bold" TextColor="White" BackgroundColor="#252C55" WidthRequest="44" HeightRequest="44" CornerRadius="22" Padding="0" Clicked="OnBackClicked" VerticalOptions="Center"/>
+
+                <Border Grid.Column="1" WidthRequest="48" HeightRequest="48" BackgroundColor="#252C55" StrokeThickness="0" StrokeShape="RoundRectangle 24" VerticalOptions="Center">
+                    <Label Text="🧠" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center"/>
                 </Border>
 
-                <VerticalStackLayout Grid.Column="1" Margin="15,0" VerticalOptions="Center">
-                    <Label Text="المفتش الذكي" FontSize="21" FontFamily="CairoBold" TextColor="White"/>
-                    <Label Text="اكتشف الكلمة السرية" FontSize="13" TextColor="#A5B4FC" FontFamily="CairoRegular"/>
+                <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="2">
+                    <Label Text="المفتش الذكي" FontSize="19" FontFamily="CairoBold" TextColor="White"/>
+                    <Label Text="اكتشف الكلمة السرية" FontSize="12" TextColor="#A5B4FC" FontFamily="CairoRegular"/>
                 </VerticalStackLayout>
 
-                <Border Grid.Column="2" BackgroundColor="#4F46E5" Stroke="#818CF8" StrokeThickness="1" Padding="12,6" StrokeShape="RoundRectangle 18">
+                <Border Grid.Column="3" BackgroundColor="#4F46E5" Stroke="#818CF8" StrokeThickness="1" Padding="10,6" StrokeShape="RoundRectangle 16" VerticalOptions="Center">
                     <HorizontalStackLayout Spacing="6">
-                        <Label Text="❤️" FontSize="16"/>
-                        <Label Text="{Binding RemainingAttempts,StringFormat='{0}/20'}" FontSize="16" FontFamily="CairoBold" TextColor="White"/>
+                        <Label Text="❤️" FontSize="15"/>
+                        <Label Text="{Binding RemainingAttempts,StringFormat='{0}/20'}" FontSize="15" FontFamily="CairoBold" TextColor="White"/>
                     </HorizontalStackLayout>
                 </Border>
             </Grid>

@@ -203,6 +203,12 @@ public partial class SmartInspectorPage : ContentPage
                 {
                     if (Shell.Current is AppShell appShell)
                     {
+                        string currentUser = Preferences.Get("UserName", "");
+                        if (appShell.GameHub != null && (appShell.GameHub.HubConnection == null || appShell.GameHub.HubConnection.State != Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected))
+                        {
+                            await appShell.GameHub.ConnectAsync(currentUser);
+                        }
+
                         // إرسال الطلب للسيرفر 
                         await appShell.GameHub.SendChallengeAsync(targetFriend, _selectedCategoryItem.Name);
 
@@ -236,7 +242,6 @@ public partial class SmartInspectorPage : ContentPage
                             }
                             else if (statusResult == "Rejected")
                             {
-                                // الصديق رفض
                                 await Toast.Make($"{targetFriend} رفض التحدي أو هو مشغول حالياً.").Show();
                             }
                             else if (statusResult == "Cancel")
@@ -250,7 +255,7 @@ public partial class SmartInspectorPage : ContentPage
             }
             catch (Exception ex)
             {
-                await DisplayAlert("خطأ في الاتصال", "تعذر بدء التحدي. يرجى التحقق من اتصالك والمحاولة مرة أخرى.", "حسناً");
+                await DisplayAlert("خطأ في الاتصال", $"تعذر بدء التحدي: {ex.Message}", "حسناً");
                 Console.WriteLine($"Error in multiplayer game start: {ex.Message}");
             }
         }
@@ -270,10 +275,5 @@ public partial class SmartInspectorPage : ContentPage
 
         // تحويل المصفوفة إلى قائمة وإرجاعها
         return [.. friendsArray];
-    }
-
-    private async void OnBackClicked(object sender, EventArgs e)
-    {
-        await Navigation.PopModalAsync();
-    }
+    }    
 }

@@ -543,6 +543,22 @@ public partial class ChoiceChallengePage : ContentPage
         }
     }
 
+    private async Task SafePopAsync()
+    {
+        try
+        {
+            if (Navigation.ModalStack.Count > 0)
+            {
+                await Navigation.PopModalAsync();
+            }
+            else if (Navigation.NavigationStack.Count > 1)
+            {
+                await Navigation.PopAsync();
+            }
+        }
+        catch { }
+    }
+
     private async void OnNextClicked(object sender, EventArgs e)
     {
         StopNextQuestionTimer();
@@ -551,7 +567,7 @@ public partial class ChoiceChallengePage : ContentPage
         {
             _isLeaving = true;
             StopTimer();
-            await Navigation.PopModalAsync();
+            await SafePopAsync();
             return;
         }
 
@@ -574,7 +590,7 @@ public partial class ChoiceChallengePage : ContentPage
         }
 
         await DisplayAlert("انتهاء التحدي 🎉", matchResult, "حسناً");
-        await Navigation.PopModalAsync();
+        await SafePopAsync();
     }
 
     private async Task ConfirmExitAsync()
@@ -587,7 +603,7 @@ public partial class ChoiceChallengePage : ContentPage
             _isLeaving = true;
             StopTimer();
             StopNextQuestionTimer();
-            await Navigation.PopModalAsync();
+            await SafePopAsync();
             return;
         }
 
@@ -616,7 +632,7 @@ public partial class ChoiceChallengePage : ContentPage
         _isLeaving = true;
         StopTimer();
         StopNextQuestionTimer();
-        await Navigation.PopModalAsync();
+        await SafePopAsync();
     }
 
     private async void OnBackClicked(object sender, EventArgs e)
