@@ -1,4 +1,5 @@
-﻿using English.Models;
+﻿using CommunityToolkit.Maui.Core;
+using English.Models;
 using English.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -34,7 +35,6 @@ namespace English.ViewModels
         }
 
         public LeadersPageVM() { }
-
         public async Task LoadLeadersAsync()
         {
             if (IsBusy) return;

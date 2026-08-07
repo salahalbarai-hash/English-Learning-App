@@ -12,6 +12,7 @@ namespace English
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
+                .UseMauiCommunityToolkitMediaElement()
                 .UseSkiaSharp()
                 .ConfigureFonts(fonts =>
                 {

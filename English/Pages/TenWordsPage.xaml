@@ -6,18 +6,17 @@
              Title="قاموس انجليش">
 
     <Grid>
+
         <Grid Padding="20" RowDefinitions="Auto,*">
 
+            <!-- Header -->
+            <!-- Header -->
             <Border Grid.Row="0"
-                    StrokeThickness="1.5"
-                    StrokeShape="RoundRectangle 25"
-                    Margin="0,0,0,25"
-                    Padding="22,18"
-                    BackgroundColor="#161E2E">
-
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnHeaderTapped" NumberOfTapsRequired="1"/>
-                </Border.GestureRecognizers>
+        StrokeThickness="1.5"
+        StrokeShape="RoundRectangle 25"
+        Margin="0,0,0,25"
+        Padding="22,18"
+        BackgroundColor="#161E2E">
 
                 <Border.Stroke>
                     <LinearGradientBrush EndPoint="1,0">
@@ -26,95 +25,204 @@
                     </LinearGradientBrush>
                 </Border.Stroke>
 
-                <Grid RowDefinitions="Auto,Auto">
-                    <Label Text="{Binding ProgressStatus}"
-                           FontSize="13"
-                           TextColor="#2DD4BF"
+
+                <Grid>
+
+
+                    <!-- زر الفيديو الصغير -->
+                    <Button Text="🎬"
+                WidthRequest="36"
+        HeightRequest="36"
+        CornerRadius="17"
+        BackgroundColor="#25FFFFFF"
+        TextColor="#38BDF8"
+        BorderColor="#38BDF8"
+        BorderWidth="1"
+        FontSize="16"
+        Padding="0"
+        HorizontalOptions="End"
+        VerticalOptions="Start"
+                Clicked="OnHeaderTapped"/>
+
+
+
+                    <!-- محتوى الهيدر -->
+                    <Grid RowDefinitions="Auto,Auto"
+              VerticalOptions="Center">
+
+
+                        <Label Text="{Binding ProgressStatus}"
+                   FontSize="13"
+                   TextColor="#2DD4BF"
+                   FontFamily="CairoBold"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   MaxLines="2"
+                   Margin="0,0,0,15"/>
+
+
+
+                        <!-- Progress -->
+                        <Grid Grid.Row="1"
+                  ColumnDefinitions="*,Auto"
+                  ColumnSpacing="15">
+
+
+                            <Grid>
+
+
+                                <!-- الخلفية -->
+                                <Border HeightRequest="14"
+                            BackgroundColor="#0F172A"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="0"/>
+
+
+
+                                <!-- التقدم -->
+                                <Border x:Name="ProgressBar"
+                            HeightRequest="14"
+                            WidthRequest="{Binding ProgressWidth}"
+                            HorizontalOptions="Start"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="0">
+
+
+                                    <Border.Background>
+                                        <LinearGradientBrush EndPoint="1,0">
+
+                                            <GradientStop Color="#2DD4BF"
+                                              Offset="0"/>
+
+                                            <GradientStop Color="#38BDF8"
+                                              Offset="1"/>
+
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+
+
+
+                                    <Border.Shadow>
+                                        <Shadow Brush="#2DD4BF"
+                                    Opacity="0.6"
+                                    Radius="10"
+                                    Offset="0,0"/>
+                                    </Border.Shadow>
+
+
+                                </Border>
+
+
+                            </Grid>
+
+
+
+                            <!-- العدد -->
+                            <HorizontalStackLayout Grid.Column="1"
+                                       VerticalOptions="Center">
+
+
+                                <Label Text="{Binding MemorizedWordsCount}"
+                           TextColor="#38BDF8"
+                           FontSize="18"
+                           FontFamily="CairoBold"/>
+
+
+                                <Label Text="/1000"
+                           TextColor="#64748B"
+                           FontSize="14"
                            FontFamily="CairoBold"
-                           HorizontalOptions="Center"
-                           HorizontalTextAlignment="Center"
-                           MaxLines="2"
-                           LineBreakMode="WordWrap"
-                           Margin="0,0,0,15"/>
+                           Margin="2,0,0,0"
+                           VerticalOptions="End"/>
 
-                    <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="15">
-                        <Grid Grid.Column="0">
-                            <Border HeightRequest="14"
-                                    BackgroundColor="#0F172A"
-                                    StrokeShape="RoundRectangle 10"
-                                    StrokeThickness="0"/>
 
-                            <Border x:Name="ProgressBar"
-                                    HeightRequest="14"
-                                    WidthRequest="{Binding ProgressWidth}"
-                                    HorizontalOptions="Start"
-                                    StrokeShape="RoundRectangle 10"
-                                    StrokeThickness="0">
-                                <Border.Background>
-                                    <LinearGradientBrush EndPoint="1,0">
-                                        <GradientStop Color="#2DD4BF" Offset="0" />
-                                        <GradientStop Color="#38BDF8" Offset="1" />
-                                    </LinearGradientBrush>
-                                </Border.Background>
-                                <Border.Shadow>
-                                    <Shadow Brush="#2DD4BF" Opacity="0.6" Radius="10" Offset="0,0"/>
-                                </Border.Shadow>
-                            </Border>
+                            </HorizontalStackLayout>
+
+
                         </Grid>
 
-                        <HorizontalStackLayout Grid.Column="1" VerticalOptions="Center">
-                            <Label Text="{Binding MemorizedWordsCount}"
-                                   TextColor="#38BDF8"
-                                   FontSize="18"
-                                   FontFamily="CairoBold" />
-                            <Label Text="/1000"
-                                   TextColor="#64748B"
-                                   FontSize="14"
-                                   FontFamily="CairoBold"
-                                   Margin="2,0,0,0"
-                                   VerticalOptions="End" />
-                        </HorizontalStackLayout>
+
                     </Grid>
+
+
                 </Grid>
+
+
             </Border>
 
+            <!-- الكلمات -->
             <CollectionView x:Name="CV"
                             Grid.Row="1"
                             ItemsSource="{Binding Titles}"
                             SelectionMode="None">
+
+
                 <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="1" VerticalItemSpacing="18"/>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="1"
+                                     VerticalItemSpacing="18"/>
                 </CollectionView.ItemsLayout>
 
+
                 <CollectionView.ItemTemplate>
+
                     <DataTemplate>
+
                         <Grid Padding="5">
+
                             <Border StrokeThickness="2"
                                     StrokeShape="RoundRectangle 22"
                                     Padding="25"
                                     BackgroundColor="#1E293B">
+
+
                                 <Border.Stroke>
                                     <LinearGradientBrush EndPoint="1,0">
-                                        <GradientStop Color="#38BDF8" Offset="0.1" />
-                                        <GradientStop Color="#818CF8" Offset="1.0" />
+
+                                        <GradientStop Color="#38BDF8"
+                                                      Offset="0.1"/>
+
+                                        <GradientStop Color="#818CF8"
+                                                      Offset="1.0"/>
+
                                     </LinearGradientBrush>
                                 </Border.Stroke>
+
+
+
                                 <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnWordTapped" NumberOfTapsRequired="1"/>
-                                    <TapGestureRecognizer Tapped="OnWordLanguageTapped" NumberOfTapsRequired="2"/>
+
+                                    <TapGestureRecognizer Tapped="OnWordTapped"/>
+
+                                    <TapGestureRecognizer Tapped="OnWordLanguageTapped"
+                                                          NumberOfTapsRequired="2"/>
+
                                 </Border.GestureRecognizers>
+
+
+
                                 <Label Text="{Binding DisplayText}"
                                        TextColor="{Binding DisplayColor}"
                                        FontSize="22"
                                        FontFamily="CairoBold"
                                        HorizontalOptions="Center"/>
+
+
                             </Border>
+
                         </Grid>
+
                     </DataTemplate>
+
                 </CollectionView.ItemTemplate>
 
+
+
                 <CollectionView.Footer>
+
                     <VerticalStackLayout Padding="0,30,0,50">
+
+
                         <Button Text="إبدأ التحدي ⚡"
                                 HeightRequest="65"
                                 WidthRequest="240"
@@ -124,27 +232,51 @@
                                 Clicked="QuizButton_Clicked"
                                 FontFamily="CairoBold"
                                 FontSize="20"/>
+
+
                     </VerticalStackLayout>
+
                 </CollectionView.Footer>
+
+
             </CollectionView>
+
+
         </Grid>
 
+
+
+        <!-- Loading -->
         <Border x:Name="LoadingOverlay"
-                BackgroundColor="#CC0B0F1A" 
+                BackgroundColor="#CC0B0F1A"
                 IsVisible="False"
                 ZIndex="100"
                 StrokeThickness="0">
-            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+
+
+            <VerticalStackLayout VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="20">
+
+
                 <ActivityIndicator IsRunning="True"
                                    Color="#38BDF8"
                                    WidthRequest="60"
-                                   HeightRequest="60" />
+                                   HeightRequest="60"/>
+
+
                 <Label Text="جاري تحديث إنجازك..."
                        TextColor="#38BDF8"
                        FontSize="16"
-                       FontFamily="CairoBold"
-                       HorizontalOptions="Center" />
+                       FontFamily="CairoBold"/>
+
+
             </VerticalStackLayout>
+
+
         </Border>
+
+
     </Grid>
+
 </ContentPage>

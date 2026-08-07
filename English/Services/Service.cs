@@ -12,12 +12,12 @@ namespace English.Services
         private static int _adCounter = 0;
         public static bool IsAdShowing { get; private set; }
 
-        private static readonly string ApiUrl = //Preferences.Get("ApiUrl", "");
-#if DEBUG
-            "http://192.168.8.139:5005/";
-#else
-            Preferences.Get("ApiUrl", "");
-#endif
+        private static readonly string ApiUrl = Preferences.Get("ApiUrl", "");
+//#if DEBUG
+//            "http://192.168.8.139:5005/";
+//#else
+//            Preferences.Get("ApiUrl", "");
+//#endif
 
         // ========================
         // Users
@@ -92,6 +92,49 @@ namespace English.Services
             }
 
             return JsonConvert.DeserializeObject<string>(response.Content) ?? "";
+        }
+
+        public static async Task<string> AskAIAsync(string prompt)
+        {
+            try
+            {
+                string apiKey = await GetApiKey();
+                if (string.IsNullOrEmpty(apiKey))
+                    return string.Empty;
+
+                var client = new RestClient();
+                var request = new RestRequest($"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key={apiKey}", Method.Post);
+                request.AddHeader("Content-Type", "application/json");
+
+                var body = new
+                {
+                    contents = new[]
+                    {
+                        new
+                        {
+                            parts = new[]
+                            {
+                                new { text = prompt }
+                            }
+                        }
+                    }
+                };
+
+                request.AddJsonBody(body);
+
+                var response = await client.ExecuteAsync(request);
+                if (!response.IsSuccessful || string.IsNullOrEmpty(response.Content))
+                    return string.Empty;
+
+                var json = JObject.Parse(response.Content);
+                var text = json["candidates"]?[0]?["content"]?["parts"]?[0]?["text"]?.ToString();
+
+                return text?.Trim() ?? string.Empty;
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
         public static async Task<ApiResult<User>> GetUser(User user)

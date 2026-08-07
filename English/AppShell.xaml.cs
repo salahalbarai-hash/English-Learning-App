@@ -15,10 +15,11 @@ namespace English
             InitializeComponent();
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             Routing.RegisterRoute(nameof(FriendRequestsPage), typeof(FriendRequestsPage));
-            Routing.RegisterRoute("ChatPage", typeof(ChatPage));
-            Routing.RegisterRoute(nameof(Pages.SmartInspectorPage), typeof(Pages.SmartInspectorPage));
-            Routing.RegisterRoute(nameof(Pages.ChoiceChallengePage), typeof(Pages.ChoiceChallengePage));
-            Routing.RegisterRoute(nameof(Pages.WritingChallengePage), typeof(Pages.WritingChallengePage));
+            Routing.RegisterRoute(nameof(ChatPage), typeof(ChatPage));
+            Routing.RegisterRoute(nameof(SmartInspectorPage), typeof(SmartInspectorPage));
+            Routing.RegisterRoute(nameof(ChoiceChallengePage), typeof(ChoiceChallengePage));
+            Routing.RegisterRoute(nameof(WritingChallengePage), typeof(WritingChallengePage));
+            Routing.RegisterRoute(nameof(WordVideosPage), typeof(WordVideosPage));
             _gameHub = new GameHub();
 
             string savedUserName = Preferences.Get("UserName", "");

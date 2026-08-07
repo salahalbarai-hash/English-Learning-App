@@ -259,7 +259,6 @@ public class GuessGameVM : INotifyPropertyChanged
         {
             try
             {
-                // استبدل Service.GetApiKey() بدالة جلب مفتاح API المتوفرة لديك
                 string geminiApiKey = await Service.GetApiKey();
 
                 if (string.IsNullOrEmpty(geminiApiKey))
