@@ -42,14 +42,24 @@ public class GameHub
 
     public async Task ConnectAsync(string userName)
     {
-        string url = Preferences.Get("ApiUrl", "");
-        //#if DEBUG
-        //            "http://192.168.8.139:5005/";
-        //#else
-        //        Preferences.Get("ApiUrl", "");
-        //#endif
-        if (_hubConnection != null && _hubConnection.State == HubConnectionState.Connected)
+        if (string.IsNullOrWhiteSpace(userName))
             return;
+
+        string url = Service.ApiUrl;
+
+        if (_hubConnection != null)
+        {
+            if (_hubConnection.State == HubConnectionState.Connected)
+                return;
+
+            try
+            {
+                await _hubConnection.StopAsync();
+                await _hubConnection.DisposeAsync();
+            }
+            catch { }
+            _hubConnection = null;
+        }
 
         _hubConnection = new HubConnectionBuilder()
             .WithUrl($"{url}gamehub?username={userName}")
@@ -145,18 +155,14 @@ public class GameHub
     // --- دوال التحديات ---
 
     // تم دمج الدالتين وتصحيح الخطأ البرمجي في الأقواس المتداخلة
+    // ✅ الكود الصحيح لتطبيق الهاتف (Client)
     public async Task SendChallengeAsync(string targetUser, string category, string word = "")
     {
         if (_hubConnection?.State == HubConnectionState.Connected)
         {
-            if (string.IsNullOrEmpty(word))
-            {
-                await _hubConnection.InvokeAsync("SendChallenge", targetUser, category);
-            }
-            else
-            {
-                await _hubConnection.InvokeAsync("SendChallenge", targetUser, category, word);
-            }
+            string safeWord = string.IsNullOrEmpty(word) ? "" : word;
+
+            await _hubConnection.InvokeAsync("SendChallenge", targetUser, category, safeWord);
         }
     }
 

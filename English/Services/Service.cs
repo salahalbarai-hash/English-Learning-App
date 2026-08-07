@@ -12,12 +12,12 @@ namespace English.Services
         private static int _adCounter = 0;
         public static bool IsAdShowing { get; private set; }
 
-        private static readonly string ApiUrl = Preferences.Get("ApiUrl", "");
-//#if DEBUG
-//            "http://192.168.8.139:5005/";
-//#else
-//            Preferences.Get("ApiUrl", "");
-//#endif
+        public static string ApiUrl =>
+#if DEBUG
+            "http://192.168.8.140:5005/";
+#else
+            Preferences.Get("ApiUrl", "");
+#endif
 
         // ========================
         // Users
