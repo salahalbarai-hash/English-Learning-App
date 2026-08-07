@@ -16,6 +16,7 @@ public class MessagesFriendItem
 public partial class MessagesPage : ContentPage
 {
     private List<MessagesFriendItem> _allFriends = new();
+    private bool _isNavigating = false;
 
     public MessagesPage()
     {
@@ -31,6 +32,7 @@ public partial class MessagesPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        _isNavigating = false;
 
         // إزالة التحديد عند العودة للصفحة
         FriendsList.SelectedItem = null;
@@ -116,14 +118,23 @@ public partial class MessagesPage : ContentPage
 
     private async void OnFriendSelected(object sender, SelectionChangedEventArgs e)
     {
+        if (_isNavigating) return;
+
         if (e.CurrentSelection.FirstOrDefault() is MessagesFriendItem item)
         {
-            // الانتقال للدردشة أولاً
-            await Shell.Current.GoToAsync($"ChatPage?FriendName={item.Name}");
-
-            // إزالة التحديد بعد الانتقال لتجنب الوميض المزعج
-            if (sender is CollectionView cv)
-                cv.SelectedItem = null;
+            _isNavigating = true;
+            try
+            {
+                // الانتقال للدردشة أولاً
+                await Shell.Current.GoToAsync($"ChatPage?FriendName={item.Name}");
+            }
+            finally
+            {
+                _isNavigating = false;
+                // إزالة التحديد بعد الانتقال لتجنب الوميض المزعج
+                if (sender is CollectionView cv)
+                    cv.SelectedItem = null;
+            }
         }
     }
 }

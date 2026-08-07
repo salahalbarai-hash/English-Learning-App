@@ -9,6 +9,7 @@ namespace English.Pages;
 public partial class TenWordsPage : ContentPage
 {
     private bool _isLoading = false;
+    private bool _isNavigating = false;
     TenWordsVM vm;
 
     public TenWordsPage()
@@ -20,6 +21,7 @@ public partial class TenWordsPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        _isNavigating = false;
 
         int savedWords = Preferences.Get("MemorizedWords", 0);
         if(savedWords > 0)
@@ -63,31 +65,34 @@ public partial class TenWordsPage : ContentPage
 
     private async void QuizButton_Clicked(object sender, EventArgs e)
     {
-        var wordsForExam = vm.Titles.ToList();
+        if (_isNavigating) return;
+        _isNavigating = true;
 
-        if (wordsForExam.Any())
-            await Navigation.PushModalAsync(new ExamTopTenPage(wordsForExam));
+        try
+        {
+            var wordsForExam = vm.Titles.ToList();
+
+            if (wordsForExam.Any())
+                await Navigation.PushModalAsync(new ExamTopTenPage(wordsForExam));
+        }
+        finally
+        {
+            _isNavigating = false;
+        }
     }
 
     private async void OnHeaderTapped(object sender, EventArgs e)
     {
-        await Toast.Make("هذه الميزة قيد التطوير، وستكون متاحة قريبًا لمساعدتك في تثبيت ما تعلمته 📚").Show();
-        //try
-        //{
-        //    int memorizedWords = Preferences.Get("MemorizedWords", 0);
-        //    if (memorizedWords < 30)
-        //    {
-        //        await Toast.Make("احفظ 30 كلمة على الأقل لفتح فيديوهات التعلم 🎬").Show();
-        //        return;
-        //    }
+        if (_isNavigating) return;
+        _isNavigating = true;
 
-
-        //    await Shell.Current.GoToAsync(nameof(WordVideosPage));
-
-        //}
-        //catch (Exception ex)
-        //{
-        //    await Toast.Make(ex.Message).Show();
-        //}
+        try
+        {
+            await Toast.Make("هذه الميزة قيد التطوير، وستكون متاحة قريبًا لمساعدتك في تثبيت ما تعلمته 📚").Show();
+        }
+        finally
+        {
+            _isNavigating = false;
+        }
     }
 }

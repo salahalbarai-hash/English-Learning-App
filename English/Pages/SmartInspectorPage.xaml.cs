@@ -35,6 +35,7 @@ public partial class SmartInspectorPage : ContentPage
     public ObservableCollection<CategoryItem> CategoriesList { get; set; } = new();
     private CategoryItem _selectedCategoryItem;
     private bool _isMultiplayer = false;
+    private bool _isNavigating = false;
 
     // قائمة الفئات المسموح بظهورها (يمكنك التعديل عليها مستقبلاً)
     private readonly List<string> _allowedCategories = new()
@@ -51,6 +52,7 @@ public partial class SmartInspectorPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        _isNavigating = false;
         await LoadCategoriesFastAsync();
     }
 
@@ -172,19 +174,24 @@ public partial class SmartInspectorPage : ContentPage
 
     private async void OnStartGameClicked(object sender, EventArgs e)
     {
-        if (_selectedCategoryItem == null)
-        {
-            await DisplayAlert("تنبيه", "يجب فتح فئة واحدة على الأقل لبدء اللعب!", "حسناً");
-            return;
-        }
+        if (_isNavigating) return;
+        _isNavigating = true;
 
-        if (!_isMultiplayer)
+        try
         {
-            // --- وضع اللعب الفردي ---
-            await Navigation.PushModalAsync(new GuessGamePage(_selectedCategoryItem.Name));
-        }
-        else
-        {
+            if (_selectedCategoryItem == null)
+            {
+                await DisplayAlert("تنبيه", "يجب فتح فئة واحدة على الأقل لبدء اللعب!", "حسناً");
+                return;
+            }
+
+            if (!_isMultiplayer)
+            {
+                // --- وضع اللعب الفردي ---
+                await Toast.Make("هذه الميزة قيد التطوير، وستكون متاحة قريبًا 📚").Show();
+                return;
+            }
+
             // --- وضع تحدي صديق ---
             try
             {
@@ -258,6 +265,10 @@ public partial class SmartInspectorPage : ContentPage
                 await DisplayAlert("خطأ في الاتصال", $"تعذر بدء التحدي: {ex.Message}", "حسناً");
                 Console.WriteLine($"Error in multiplayer game start: {ex.Message}");
             }
+        }
+        finally
+        {
+            _isNavigating = false;
         }
     }
 
