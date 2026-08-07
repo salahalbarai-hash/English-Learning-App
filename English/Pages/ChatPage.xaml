@@ -2,71 +2,116 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="English.Pages.ChatPage"
-             BackgroundColor="{AppThemeBinding Light=#EFEAE2, Dark=#0B141A}"
+             BackgroundColor="#F8FAFC"
              NavigationPage.HasNavigationBar="False">
-    <!-- إخفاء شريط التنقل الافتراضي -->
 
     <Grid RowDefinitions="Auto, *, Auto">
 
-        <!-- 🟢 1. ترويسة علوية احترافية (Custom Header) -->
-        <Frame Grid.Row="0" 
-               BackgroundColor="{AppThemeBinding Light=#00A884, Dark=#202C33}" 
-               Padding="10,25,10,10" 
-               HasShadow="True" 
-               CornerRadius="0" 
-               BorderColor="Transparent">
+        <!-- 🟢 1. ترويسة علوية ناصعة وعصرية (Header) -->
+        <Border Grid.Row="0" BackgroundColor="#F4F7FB" Stroke="#E2E8F0" StrokeThickness="1" Padding="12,35,12,12">
+
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,1" Radius="10" Opacity="0.03"/>
+            </Border.Shadow>
 
             <Grid ColumnDefinitions="Auto, Auto, *, Auto">
-                <!-- صورة الصديق ونقطة الاتصال المدمجة باحترافية -->
-                <Grid Grid.Column="1" WidthRequest="46" HeightRequest="46" Margin="10,0" VerticalOptions="Center">
-                    <Border WidthRequest="42" HeightRequest="42" StrokeShape="RoundRectangle 21" StrokeThickness="0" 
-                            BackgroundColor="{AppThemeBinding Light=#DFDFDF, Dark=#6B7C85}" VerticalOptions="Center" HorizontalOptions="Center">
-                        <Label x:Name="FriendInitialLabel" Text="?" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" 
-                               TextColor="{AppThemeBinding Light=#374151, Dark=#FFFFFF}" FontSize="18"/>
+
+                <!-- صورة الصديق ونقطة الاتصال -->
+                <Grid Grid.Column="1" 
+                      WidthRequest="48" 
+                      HeightRequest="48" 
+                      Margin="0,0,12,0" 
+                      VerticalOptions="Center">
+
+                    <Border WidthRequest="46" 
+                            HeightRequest="46" 
+                            StrokeShape="RoundRectangle 23" 
+                            StrokeThickness="0" 
+                            BackgroundColor="#6366F1" 
+                            VerticalOptions="Center" 
+                            HorizontalOptions="Center">
+                        <Label x:Name="FriendInitialLabel" 
+                               Text="?" 
+                               HorizontalOptions="Center" 
+                               VerticalOptions="Center" 
+                               FontAttributes="Bold" 
+                               TextColor="#FFFFFF" 
+                               FontSize="19"/>
                     </Border>
 
-                    <!-- نقطة الاتصال المدمجة مع قطع الاحترافي لـ Avatar -->
+                    <!-- نقطة الاتصال المدمجة -->
                     <Border x:Name="OnlineStatusIndicator" 
-                            WidthRequest="14" HeightRequest="14" StrokeShape="RoundRectangle 7" Padding="0" 
+                            WidthRequest="14" 
+                            HeightRequest="14" 
+                            StrokeShape="RoundRectangle 7" 
+                            Padding="0" 
                             BackgroundColor="#EF4444" 
-                            Stroke="{AppThemeBinding Light=#00A884, Dark=#202C33}" StrokeThickness="2"
-                            HorizontalOptions="End" VerticalOptions="End" Margin="0,0,1,1" />
+                            Stroke="#FFFFFF" 
+                            StrokeThickness="2.5"
+                            HorizontalOptions="End" 
+                            VerticalOptions="End" />
                 </Grid>
 
                 <!-- اسم الصديق وحالته -->
                 <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="2">
-                    <Label x:Name="FriendNameTitle" Text="جاري التحميل..." FontAttributes="Bold" FontSize="17" 
-                           TextColor="{AppThemeBinding Light=White, Dark=#E9EDEF}" />
-                    <Label x:Name="FriendStatusLabel" Text="تحقق من الاتصال..." FontSize="13" 
-                           TextColor="{AppThemeBinding Light=#D1D5DB, Dark=#8696A0}" />
+                    <Label x:Name="FriendNameTitle" 
+                           Text="جاري التحميل..." 
+                           FontAttributes="Bold" 
+                           FontSize="17" 
+                           TextColor="#0F172A" />
+                    <Label x:Name="FriendStatusLabel" 
+                           Text="تحقق من الاتصال..." 
+                           FontSize="12" 
+                           TextColor="#64748B" />
                 </VerticalStackLayout>
             </Grid>
-        </Frame>
+        </Border>
 
         <!-- 🟢 2. قائمة الرسائل (الدردشة) -->
-        <CollectionView x:Name="MessagesList" Grid.Row="1" Margin="10">
+        <CollectionView x:Name="MessagesList" 
+                        Grid.Row="1"
+                        BackgroundColor="#F4F7FB">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Padding="0,4">
-                        <Frame HasShadow="False" 
-                               CornerRadius="12"
-                               Padding="10,6"
-                               BackgroundColor="{Binding BubbleColor}"
-                               HorizontalOptions="{Binding BubbleAlignment}"
-                               MaximumWidthRequest="280">
+                    <Grid Padding="0,5">
 
-                            <!-- ترتيب النص وفيه الوقت وحالة الرسالة -->
-                            <Grid RowDefinitions="Auto, Auto">
+                        <!-- فقاعة الرسالة -->
+                        <Border StrokeThickness="0"
+                                Padding="12,9"
+                                BackgroundColor="{Binding BubbleColor}"
+                                HorizontalOptions="{Binding BubbleAlignment}"
+                                MaximumWidthRequest="300"
+                                StrokeShape="RoundRectangle 16">
+
+                            <Border.Shadow>
+                                <Shadow Brush="#000000"
+            Offset="0,1"
+            Radius="5"
+            Opacity="0.04"/>
+                            </Border.Shadow>
+
+                            <Grid RowDefinitions="Auto, Auto" RowSpacing="3">
+
                                 <!-- نص الرسالة -->
-                                <!-- تم تعديل لون النص ليتوافق مع الوضع الداكن -->
-                                <Label Grid.Row="0" Text="{Binding Content}" FontSize="15" 
-                                       TextColor="{AppThemeBinding Light=Black, Dark=#E9EDEF}" Margin="0,0,0,2"/>
+                                <Label Grid.Row="0" 
+                                       Text="{Binding Content}" 
+                                       FontSize="15" 
+                                       LineBreakMode="WordWrap"
+                                       TextColor="#0F172A" 
+                                       Margin="0,0,0,2"/>
 
                                 <!-- الوقت وحالة القراءة -->
-                                <HorizontalStackLayout Grid.Row="1" HorizontalOptions="End" Spacing="4">
-                                    <Label Text="{Binding TimeString}" FontSize="11" 
-                                           TextColor="{AppThemeBinding Light=#8E8E93, Dark=#8696A0}" VerticalOptions="Center"/>
-                                    <!-- علامة الصح -->
+                                <HorizontalStackLayout Grid.Row="1" 
+                                                       HorizontalOptions="End" 
+                                                       Spacing="4" 
+                                                       VerticalOptions="Center">
+
+                                    <Label Text="{Binding TimeString}" 
+                                           FontSize="10" 
+                                           TextColor="#64748B" 
+                                           VerticalOptions="Center"/>
+
+                                    <!-- علامة صح الاستلام والقراءة -->
                                     <Label Text="{Binding StatusIconText}" 
                                            TextColor="{Binding StatusIconColor}" 
                                            FontSize="12" 
@@ -75,32 +120,61 @@
                                            FontAttributes="Bold"/>
                                 </HorizontalStackLayout>
                             </Grid>
-                        </Frame>
+                        </Border>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- 🟢 3. منطقة إدخال النص السفلية (عصرية) -->
-        <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Padding="10" 
-              BackgroundColor="{AppThemeBinding Light=#EFEAE2, Dark=#0B141A}">
+        <!-- 🟢 3. شريط إدخال النص السفي (Message Composer) -->
+        <Border Grid.Row="2"
+        BackgroundColor="#F8FAFC"
+        Stroke="#E2E8F0"
+        StrokeThickness="1"
+        Padding="12,10,12,15">
 
-            <Frame Grid.Column="0" Padding="15,0" CornerRadius="24" HasShadow="False" 
-                   BackgroundColor="{AppThemeBinding Light=White, Dark=#2A3942}" HeightRequest="48" VerticalOptions="Center">
-                <Entry x:Name="MessageEntry" 
-                       Placeholder="المراسلة..." 
-                       PlaceholderColor="{AppThemeBinding Light=#667781, Dark=#8696A0}"
-                       TextColor="{AppThemeBinding Light=Black, Dark=#E9EDEF}"
-                       BackgroundColor="Transparent" 
-                       ClearButtonVisibility="Never"
-                       VerticalOptions="Center" />
-            </Frame>
+            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
 
-            <Frame Grid.Column="1" WidthRequest="48" HeightRequest="48" CornerRadius="24" 
-                   BackgroundColor="{AppThemeBinding Light=#00A884, Dark=#00A884}" HasShadow="False" Padding="0" Margin="8,0,0,0">
-                <ImageButton Source="send.png" BackgroundColor="Transparent" Clicked="OnSendClicked" WidthRequest="22" HeightRequest="22" HorizontalOptions="Center" VerticalOptions="Center" />
-            </Frame>
-        </Grid>
+                <Border Grid.Column="0" 
+                        Padding="16,0" 
+                        StrokeShape="RoundRectangle 24" 
+                        Stroke="#D9E2EC"
+                        StrokeThickness="1"
+                        BackgroundColor="#EEF2F7" 
+                        HeightRequest="48" 
+                        VerticalOptions="Center">
+                    <Entry x:Name="MessageEntry" 
+                           Placeholder="اكتب رسالتك هنا..." 
+                           PlaceholderColor="#94A3B8"
+                           TextColor="#0F172A"
+                           FontSize="15"
+                           BackgroundColor="Transparent" 
+                           ClearButtonVisibility="Never"
+                           VerticalOptions="Center" />
+                </Border>
+
+                <!-- زر الإرسال -->
+                <Border Grid.Column="1" 
+                        WidthRequest="48" 
+                        HeightRequest="48" 
+                        StrokeShape="RoundRectangle 24" 
+                        BackgroundColor="#5B6EF5" 
+                        StrokeThickness="0"
+                        VerticalOptions="Center">
+                    <Border.Shadow>
+                        <Shadow Brush="#5B6EF5" Offset="0,3" Radius="8" Opacity="0.15"/>
+                    </Border.Shadow>
+
+                    <ImageButton Source="send.png" 
+                                 BackgroundColor="Transparent" 
+                                 Clicked="OnSendClicked" 
+                                 WidthRequest="22" 
+                                 HeightRequest="22" 
+                                 HorizontalOptions="Center" 
+                                 VerticalOptions="Center" />
+                </Border>
+            </Grid>
+        </Border>
 
     </Grid>
 </ContentPage>

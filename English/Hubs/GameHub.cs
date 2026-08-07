@@ -42,11 +42,17 @@ public class GameHub
 
     public async Task ConnectAsync(string userName)
     {
+        string url = Preferences.Get("ApiUrl", "");
+        //#if DEBUG
+        //            "http://192.168.8.139:5005/";
+        //#else
+        //        Preferences.Get("ApiUrl", "");
+        //#endif
         if (_hubConnection != null && _hubConnection.State == HubConnectionState.Connected)
             return;
 
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl($"http://192.168.8.139:5005/gamehub?username={userName}")
+            .WithUrl($"{url}gamehub?username={userName}")
             .WithAutomaticReconnect()
             .Build();
 

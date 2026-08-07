@@ -24,7 +24,9 @@ public class ChatBubbleModel
     public LayoutOptions BubbleAlignment => IsMine ? LayoutOptions.End : LayoutOptions.Start;
 
     // أخضر فاتح للمرسل، أبيض للمستقبل
-    public Color BubbleColor => IsMine ? Color.FromArgb("#E7FFDB") : Color.FromArgb("#FFFFFF");
+    public Color BubbleColor => IsMine
+    ? Color.FromArgb("#D1F2D8")
+    : Color.FromArgb("#FFFFFF");
 
     // لون نص أسود/رمادي داكن لضمان الوضوح التام
     public Color TextColor => Color.FromArgb("#111B21");
@@ -39,9 +41,9 @@ public class ChatBubbleModel
     public string StatusIconText => Status switch
     {
         MessageStatus.Pending => "🕒",
-        MessageStatus.Sent => "✔✔",
-        MessageStatus.Delivered => "✔✔",
-        MessageStatus.Read => "✔✔",
+        MessageStatus.Sent => "✓✓",
+        MessageStatus.Delivered => "✓✓",
+        MessageStatus.Read => "✓✓",
         _ => ""
     };
 

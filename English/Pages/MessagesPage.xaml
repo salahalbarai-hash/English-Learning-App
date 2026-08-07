@@ -2,158 +2,139 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="English.Pages.MessagesPage"
-             BackgroundColor="#F5F7FA"
+             BackgroundColor="#FFFFFF"
              NavigationPage.HasNavigationBar="False">
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto, *">
 
-        <!-- البحث -->
-        <Border
-            Grid.Row="0"
-            Margin="15,15,15,10"
-            StrokeThickness="0"
-            BackgroundColor="White"
-            StrokeShape="RoundRectangle 18">
+        <!-- مربع البحث -->
+        <Border Grid.Row="0"
+                Margin="20,20,20,15"
+                StrokeThickness="0"
+                BackgroundColor="#F3F4F6"
+                StrokeShape="RoundRectangle 14"
+                HeightRequest="50">
 
-            <SearchBar
-                x:Name="SearchBarFriends"
-                Placeholder="ابحث عن صديق..."
-                BackgroundColor="Transparent"
-                PlaceholderColor="#9CA3AF"
-                CancelButtonColor="#6366F1"
-                TextColor="#111827"
-                HeightRequest="52"
-                TextChanged="OnSearchTextChanged"/>
+            <SearchBar x:Name="SearchBarFriends"
+                       Placeholder="ابحث عن صديق..."
+                       BackgroundColor="Transparent"
+                       PlaceholderColor="#9CA3AF"
+                       CancelButtonColor="#6366F1"
+                       TextColor="#111827"
+                       VerticalOptions="Center"
+                       TextChanged="OnSearchTextChanged"/>
         </Border>
 
-        <!-- القائمة -->
-        <CollectionView
-            x:Name="FriendsList"
-            Grid.Row="1"
-            Margin="12,0,12,10"
-            SelectionMode="Single"
-            SelectionChanged="OnFriendSelected">
-
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
-            </CollectionView.ItemsLayout>
+        <!-- قائمة الأصدقاء -->
+        <CollectionView x:Name="FriendsList"
+                        Grid.Row="1"
+                        SelectionMode="Single"
+                        SelectionChanged="OnFriendSelected">
 
             <CollectionView.ItemTemplate>
-
                 <DataTemplate>
+                    <Grid BackgroundColor="Transparent">
 
-                    <Border
-                        StrokeThickness="0"
-                        BackgroundColor="White"
-                        StrokeShape="RoundRectangle 18"
-                        Padding="15,12">
+                        <!-- تأثير اللمس الاحترافي -->
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="CommonStates">
+                                <VisualState Name="Normal" />
+                                <VisualState Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="#F9FAFB" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
 
-                        <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Grid ColumnDefinitions="Auto, *, Auto" Padding="20,12,20,12">
 
                             <!-- الصورة ونقطة الاتصال -->
-                            <Grid WidthRequest="58"
-                                  HeightRequest="58">
+                            <Grid Grid.Column="0" 
+                                  WidthRequest="54"
+                                  HeightRequest="54"
+                                  Margin="0,0,15,0">
 
-                                <Frame
-                                    WidthRequest="58"
-                                    HeightRequest="58"
-                                    CornerRadius="29"
-                                    Padding="0"
-                                    BackgroundColor="#6366F1"
-                                    HasShadow="False">
+                                <!-- صورة العرض الدائرية -->
+                                <Border WidthRequest="54"
+                                        HeightRequest="54"
+                                        StrokeShape="RoundRectangle 27"
+                                        StrokeThickness="0"
+                                        BackgroundColor="#6366F1">
+                                    <Label Text="{Binding Initials}"
+                                           FontAttributes="Bold"
+                                           FontSize="20"
+                                           TextColor="White"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
 
-                                    <Label
-                                        Text="{Binding Initials}"
-                                        FontAttributes="Bold"
-                                        FontSize="22"
-                                        TextColor="White"
-                                        HorizontalOptions="Center"
-                                        VerticalOptions="Center"/>
-
-                                </Frame>
-
-                                <!-- نقطة الاتصال الديناميكية المدمجة باحترافية -->
-                                <Border
-                                    WidthRequest="16"
-                                    HeightRequest="16"
-                                    StrokeShape="RoundRectangle 8"
-                                    Padding="0"
-                                    Stroke="White"
-                                    StrokeThickness="2"
-                                    BackgroundColor="{Binding StatusColor}"
-                                    HorizontalOptions="End"
-                                    VerticalOptions="End"/>
-
+                                <!-- نقطة الاتصال المدمجة -->
+                                <Border WidthRequest="16"
+                                        HeightRequest="16"
+                                        StrokeShape="RoundRectangle 8"
+                                        Stroke="#FFFFFF"
+                                        StrokeThickness="2.5"
+                                        BackgroundColor="{Binding StatusColor}"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="End"
+                                        TranslationX="2"
+                                        TranslationY="2"/>
                             </Grid>
 
-                            <!-- الاسم -->
+                            <!-- معلومات الصديق -->
+                            <VerticalStackLayout Grid.Column="1" 
+                                                 VerticalOptions="Center" 
+                                                 Spacing="2">
+                                <Label Text="{Binding Name}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="#111827"/>
 
-                            <VerticalStackLayout
-                                Grid.Column="1"
-                                Padding="15,0"
-                                VerticalOptions="Center">
-
-                                <Label
-                                    Text="{Binding Name}"
-                                    FontSize="17"
-                                    FontAttributes="Bold"
-                                    TextColor="#111827"/>
-
-                                <Label
-                                    Text="{Binding StatusText}"
-                                    FontSize="13"
-                                    TextColor="#6B7280"/>
-
+                                <Label Text="{Binding StatusText}"
+                                       FontSize="13"
+                                       TextColor="#6B7280"/>
                             </VerticalStackLayout>
 
                             <!-- السهم -->
-
-                            <Label
-                                Grid.Column="2"
-                                Text="›"
-                                FontSize="28"
-                                VerticalOptions="Center"
-                                TextColor="#C4C4C4"/>
+                            <Label Grid.Column="2"
+                                   Text="›"
+                                   FontSize="26"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center"
+                                   TextColor="#D1D5DB"
+                                   TranslationY="-2"/>
 
                         </Grid>
 
-                    </Border>
-
+                        <!-- خط فاصل ناعم بين المحادثات -->
+                        <BoxView HeightRequest="1" 
+                                 Color="#F3F4F6" 
+                                 VerticalOptions="End" 
+                                 Margin="89,0,20,0"/>
+                    </Grid>
                 </DataTemplate>
-
             </CollectionView.ItemTemplate>
-
         </CollectionView>
 
-        <!-- لا يوجد بيانات -->
+        <!-- حالة "لا يوجد بيانات" -->
+        <VerticalStackLayout Grid.Row="1"
+                             IsVisible="False"
+                             x:Name="EmptyLabel"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="10">
 
-        <VerticalStackLayout
-            Grid.Row="1"
-            IsVisible="False"
-            x:Name="EmptyLabel"
-            VerticalOptions="Center"
-            HorizontalOptions="Center">
+            <Label Text="💬"
+                   FontSize="64"
+                   HorizontalOptions="Center"
+                   Opacity="0.8"/>
 
-            <Label
-                Text="💬"
-                FontSize="60"
-                HorizontalOptions="Center"/>
-
-            <Label
-                Text="لا يوجد أصدقاء"
-                FontSize="18"
-                FontAttributes="Bold"
-                TextColor="#6B7280"
-                HorizontalOptions="Center"/>
-
-            <Label
-                Text="ابدأ بإضافة أصدقاء لبدء المحادثات."
-                FontSize="14"
-                TextColor="#9CA3AF"
-                HorizontalOptions="Center"/>
-
+            <Label Text="لا توجد محادثات"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   TextColor="#374151"
+                   HorizontalOptions="Center"/>
         </VerticalStackLayout>
-
     </Grid>
-
 </ContentPage>

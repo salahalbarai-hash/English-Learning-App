@@ -1,3 +1,7 @@
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using Microsoft.AspNetCore.SignalR.Client;
+
 namespace English.Pages;
 
 [QueryProperty(nameof(FriendName), "FriendName")]
@@ -21,6 +25,7 @@ public partial class ChatPage : ContentPage
     public ChatPage()
     {
         InitializeComponent();
+
         MessagesList.ItemsSource = Messages;
         _shell = Shell.Current as AppShell;
         _currentUserName = Preferences.Get("UserName", "");
@@ -50,7 +55,6 @@ public partial class ChatPage : ContentPage
         SetupSignalRListeners();
     }
 
-    // إزالة الأحداث عند الخروج من المحادثة لتجنب تكرار الاستماع واستهلاك الذاكرة
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
@@ -72,7 +76,6 @@ public partial class ChatPage : ContentPage
         Shell.Current.GoToAsync("..");
     }
 
-    // 🟢 عندما يدخل الصديق تتحدث الحالة فوراً أمامي
     private void OnFriendConnected(string userName)
     {
         if (userName.Equals(FriendName, StringComparison.OrdinalIgnoreCase))
@@ -80,12 +83,11 @@ public partial class ChatPage : ContentPage
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 FriendStatusLabel.Text = "متصل الآن";
-                OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#22C55E");
+                OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#10B981");
             });
         }
     }
 
-    // 🟢 عندما يخرج الصديق يتم جلب وقت خروجه فوراً
     private void OnFriendDisconnected(string userName)
     {
         if (userName.Equals(FriendName, StringComparison.OrdinalIgnoreCase))
@@ -99,7 +101,6 @@ public partial class ChatPage : ContentPage
 
     private async Task CheckFriendStatus()
     {
-        // إذا كنت غير متصل بالإنترنت، نجعل النص فارغاً
         if (_shell?.GameHub?.HubConnection == null || _shell.GameHub.HubConnection.State != HubConnectionState.Connected)
         {
             FriendStatusLabel.Text = "";
@@ -113,7 +114,7 @@ public partial class ChatPage : ContentPage
             if (onlineUsers.Contains(FriendName, StringComparer.OrdinalIgnoreCase))
             {
                 FriendStatusLabel.Text = "متصل الآن";
-                MainThread.BeginInvokeOnMainThread(() => OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#22C55E"));
+                MainThread.BeginInvokeOnMainThread(() => OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#10B981"));
             }
             else
             {
@@ -127,7 +128,6 @@ public partial class ChatPage : ContentPage
         }
     }
 
-    // 🟢 دالة جلب التاريخ وتنسيقه ليظهر بشكل احترافي (يوم/شهر/سنة + 12 ساعة ص/م)
     private async Task UpdateLastSeenUI()
     {
         try
@@ -164,7 +164,6 @@ public partial class ChatPage : ContentPage
         }
     }
 
-    // 🟢 جلب السجل من السيرفر وتحديث الحالات (قرأها / استلمها)
     private async Task LoadServerChatHistory()
     {
         if (_shell != null && !string.IsNullOrEmpty(FriendName))
@@ -179,7 +178,6 @@ public partial class ChatPage : ContentPage
                     {
                         bool isMine = sm.Sender.Equals(_currentUserName, StringComparison.OrdinalIgnoreCase);
 
-                        // تحديد حالة الرسالة بناءً على قاعدة البيانات
                         MessageStatus status = MessageStatus.Sent;
                         if (sm.IsRead) status = MessageStatus.Read;
                         else if (sm.IsDelivered) status = MessageStatus.Delivered;
@@ -204,26 +202,23 @@ public partial class ChatPage : ContentPage
     {
         if (_shell?.GameHub?.HubConnection != null)
         {
-            // 🟢 عند عودة الإنترنت
             _shell.GameHub.HubConnection.Reconnected += async (connectionId) =>
             {
                 MainThread.BeginInvokeOnMainThread(async () =>
                 {
                     await CheckFriendStatus();
-                    await SendPendingMessages(); // إرسال الرسائل المعلقة تلقائياً
+                    await SendPendingMessages();
                 });
             };
 
-            // 🟢 عند انقطاع الإنترنت
             _shell.GameHub.HubConnection.Closed += async (error) =>
             {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    FriendStatusLabel.Text = ""; // مسح الحالة
+                    FriendStatusLabel.Text = "";
                 });
             };
 
-            // 🟢 استقبال رسالة جديدة
             _shell.GameHub.HubConnection.On<int, string, string>("ReceiveDirectMessage", async (messageId, sender, message) =>
             {
                 if (sender.Equals(FriendName, StringComparison.OrdinalIgnoreCase))
@@ -265,14 +260,13 @@ public partial class ChatPage : ContentPage
                     {
                         var index = Messages.IndexOf(msg);
 
-                        // 🟢 إنشاء نسخة جديدة كلياً لتجبار الواجهة على التحديث اللحظي
                         Messages[index] = new ChatBubbleModel
                         {
                             Id = messageId,
                             Content = msg.Content,
                             Timestamp = msg.Timestamp,
                             IsMine = msg.IsMine,
-                            Status = MessageStatus.Delivered // صحين رمادي
+                            Status = MessageStatus.Delivered
                         };
 
                         SaveMessagesOffline();
@@ -280,7 +274,6 @@ public partial class ChatPage : ContentPage
                 });
             });
 
-            // 🟢 تحديث الرسائل إلى مقروءة (✓✓ أزرق) بدوووون تخريب الشاشة
             _shell.GameHub.HubConnection.On<string>("MessagesReadBy", (friendName) =>
             {
                 if (friendName.Equals(FriendName, StringComparison.OrdinalIgnoreCase))
@@ -293,14 +286,13 @@ public partial class ChatPage : ContentPage
                             var msg = Messages[i];
                             if (msg.IsMine && msg.Status != MessageStatus.Read)
                             {
-                                // 🟢 استبدال الكائن بنسخة جديدة حالتها Read ليتلون بالأزرق فوراً
                                 Messages[i] = new ChatBubbleModel
                                 {
                                     Id = msg.Id,
                                     Content = msg.Content,
                                     Timestamp = msg.Timestamp,
                                     IsMine = msg.IsMine,
-                                    Status = MessageStatus.Read // صحين أزرق
+                                    Status = MessageStatus.Read
                                 };
                                 isChanged = true;
                             }
@@ -312,7 +304,6 @@ public partial class ChatPage : ContentPage
         }
     }
 
-    // 🟢 دالة إرسال الرسائل المعلقة عند عودة الإنترنت
     private async Task SendPendingMessages()
     {
         if (_shell?.GameHub?.HubConnection?.State != HubConnectionState.Connected) return;
@@ -328,12 +319,11 @@ public partial class ChatPage : ContentPage
                 {
                     await _shell.GameHub.HubConnection.InvokeAsync("SendDirectMessage", FriendName, msg.Content);
                     msg.Status = MessageStatus.Sent;
-                    Messages[i] = msg; // تحديث الواجهة بدون قفز
+                    Messages[i] = msg;
                     hasChanges = true;
                 }
                 catch
                 {
-                    // تبقى معلقة
                 }
             }
         }
@@ -346,7 +336,7 @@ public partial class ChatPage : ContentPage
         var text = MessageEntry.Text?.Trim();
         if (string.IsNullOrEmpty(text)) return;
 
-        MessageEntry.Text = string.Empty; // تفريغ النص أولاً
+        MessageEntry.Text = string.Empty;
 
         var newMsg = new ChatBubbleModel
         {
@@ -358,11 +348,9 @@ public partial class ChatPage : ContentPage
 
         Messages.Add(newMsg);
 
-        // استدعاء التمرير بعد إضافة الرسالة
         ScrollToBottom();
         SaveMessagesOffline();
 
-        // محاولة الإرسال للسيرفر
         try
         {
             if (_shell?.GameHub?.HubConnection?.State == HubConnectionState.Connected)
@@ -373,7 +361,7 @@ public partial class ChatPage : ContentPage
                 if (index >= 0)
                 {
                     newMsg.Status = MessageStatus.Sent;
-                    Messages[index] = newMsg; // تحديث ناعم في مكانه بدلاً من مسح القائمة
+                    Messages[index] = newMsg;
                     SaveMessagesOffline();
                 }
             }
@@ -387,12 +375,8 @@ public partial class ChatPage : ContentPage
         {
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                // إعطاء مهلة صغيرة جداً لواجهة المستخدم لإعادة رسم نفسها بعد ظهور الكيبورد
                 await Task.Delay(100);
-
                 var lastMessage = Messages.Last();
-
-                // استخدام animate: false يجعل التمرير فوري ودقيق ولا يتعارض مع حركة الكيبورد
                 MessagesList.ScrollTo(lastMessage, position: ScrollToPosition.End, animate: false);
             });
         }

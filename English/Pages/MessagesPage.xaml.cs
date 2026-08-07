@@ -9,8 +9,8 @@ public class MessagesFriendItem
     public string StatusIcon { get; set; } = "🔴";
     public string StatusText => StatusIcon == "🟢" ? "متصل" : "غير متصل";
 
-    // 🟢 لون نقطة الاتصال: أخضر للمتصل وأحمر للغير متصل
-    public Color StatusColor => StatusIcon == "🟢" ? Color.FromArgb("#22C55E") : Color.FromArgb("#EF4444");
+    // 🟢 لون نقطة الاتصال: أخضر زاهي للمتصل وأحمر هادئ للغير متصل
+    public Color StatusColor => StatusIcon == "🟢" ? Color.FromArgb("#10B981") : Color.FromArgb("#F43F5E");
 }
 
 public partial class MessagesPage : ContentPage
@@ -20,11 +20,21 @@ public partial class MessagesPage : ContentPage
     public MessagesPage()
     {
         InitializeComponent();
+
+        // إجبار الشاشة على الوضع النهاري دائماً للحفاظ على التصميم الزاهي
+        if (Application.Current != null)
+        {
+            Application.Current.UserAppTheme = AppTheme.Light;
+        }
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
+        // إزالة التحديد عند العودة للصفحة
+        FriendsList.SelectedItem = null;
+
         await LoadFriendsAsync();
     }
 
@@ -38,7 +48,6 @@ public partial class MessagesPage : ContentPage
         {
             if (Shell.Current is AppShell appShell)
             {
-                // 1. محاولة جلب البيانات من السيرفر (SignalR)
                 var fetchedFriends = await appShell.GetAllFriendsAsync();
                 var fetchedOnline = await appShell.GetOnlineUsersAsync();
 
@@ -46,14 +55,12 @@ public partial class MessagesPage : ContentPage
                 if (fetchedOnline != null) onlineUsers = fetchedOnline;
             }
 
-            // 2. إذا كانت القائمة فارغة (قد يكون الاتصال ضعيفاً)، جرب جلبها من API
             if (friendsList.Count == 0 && !string.IsNullOrEmpty(userName))
             {
                 var arr = await Services.Service.GetFriendsAsync(userName);
                 if (arr != null) friendsList = arr.ToList();
             }
 
-            // 3. إذا نجحنا في جلب البيانات من الإنترنت، نقوم بتحديث الذاكرة المحلية (الكاش)
             if (friendsList.Count > 0)
             {
                 Preferences.Set("OfflineFriendsCache", string.Join(",", friendsList));
@@ -61,10 +68,9 @@ public partial class MessagesPage : ContentPage
         }
         catch
         {
-            // نتجاهل أي خطأ في الاتصال بالإنترنت هنا لننتقل للخطوة التالية (الوضع غير المتصل)
+            // الوضع غير المتصل
         }
 
-        // 🟢 4. ميزة الواتساب: إذا لم نتمكن من جلب البيانات (المستخدم Offline)، نجلبها من الذاكرة المحلية
         if (friendsList.Count == 0)
         {
             var cachedFriends = Preferences.Get("OfflineFriendsCache", "");
@@ -74,7 +80,6 @@ public partial class MessagesPage : ContentPage
             }
         }
 
-        // 5. تحويل البيانات إلى النموذج وتحديد من المتصل
         _allFriends = friendsList.Select(f =>
         {
             bool isOnline = onlineUsers.Contains(f, StringComparer.OrdinalIgnoreCase);
@@ -85,7 +90,6 @@ public partial class MessagesPage : ContentPage
             };
         }).ToList();
 
-        // 6. ترتيب القائمة (المتصلين أولاً، ثم أبجدياً)
         _allFriends = _allFriends
             .OrderByDescending(f => f.StatusIcon == "🟢")
             .ThenBy(f => f.Name)
@@ -114,12 +118,12 @@ public partial class MessagesPage : ContentPage
     {
         if (e.CurrentSelection.FirstOrDefault() is MessagesFriendItem item)
         {
-            // إزالة التحديد فوراً 
+            // الانتقال للدردشة أولاً
+            await Shell.Current.GoToAsync($"ChatPage?FriendName={item.Name}");
+
+            // إزالة التحديد بعد الانتقال لتجنب الوميض المزعج
             if (sender is CollectionView cv)
                 cv.SelectedItem = null;
-
-            // الانتقال للدردشة
-            await Shell.Current.GoToAsync($"ChatPage?FriendName={item.Name}");
         }
     }
 }

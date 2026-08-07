@@ -88,10 +88,10 @@
                                 <Label Text="{Binding Name}" TextColor="White" FontSize="15" VerticalOptions="Center" FontFamily="CairoBold"/>
                             </HorizontalStackLayout>
 
-                            <!-- زر التحدي يظهر فقط عند اتصال الصديق -->
+                            <!--   {Binding IsOnline} زر التحدي يظهر فقط عند اتصال الصديق -->
                             <Button Grid.Column="1" 
                                     Text="تحدي ⚔️" 
-                                    IsVisible="{Binding IsOnline}"
+                                    IsVisible="False"
                                     BackgroundColor="#F59E0B" 
                                     TextColor="White" 
                                     FontSize="12" 

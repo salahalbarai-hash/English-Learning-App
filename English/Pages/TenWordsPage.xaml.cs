@@ -71,7 +71,7 @@ public partial class TenWordsPage : ContentPage
 
     private async void OnHeaderTapped(object sender, EventArgs e)
     {
-        await Toast.Make("📚 هذه الميزة قيد التطوير، وستكون متاحة قريبًا لمساعدتك في تثبيت ما تعلمته.").Show();
+        await Toast.Make("هذه الميزة قيد التطوير، وستكون متاحة قريبًا لمساعدتك في تثبيت ما تعلمته 📚").Show();
         //try
         //{
         //    int memorizedWords = Preferences.Get("MemorizedWords", 0);
