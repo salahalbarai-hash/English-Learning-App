@@ -335,18 +335,24 @@ public partial class ChoiceChallengePage : ContentPage
     private void GenerateQuestions(int count)
     {
         _questions.Clear();
-        var selectedWords = _memorizedWords.OrderBy(w => Guid.NewGuid()).Take(count).ToList();
-        var allWords = TenWords.All();
-        if (allWords.Count < 4) allWords = _memorizedWords; // fallback
+        var allWordsFromFile = TenWords.GetAllWords();
+        var sourceWords = (_memorizedWords != null && _memorizedWords.Count > 0)
+            ? _memorizedWords
+            : allWordsFromFile;
+
+        if (sourceWords.Count == 0) return;
+
+        var selectedWords = sourceWords.OrderBy(_ => Guid.NewGuid()).Take(count).ToList();
 
         foreach (var word in selectedWords)
         {
             var options = new List<string> { word.ArabicWord };
-            var wrongOptions = allWords
-                .Where(w => w.ArabicWord != word.ArabicWord)
-                .OrderBy(w => Guid.NewGuid())
-                .Take(3)
+            var wrongOptions = allWordsFromFile
+                .Where(w => !string.IsNullOrWhiteSpace(w.ArabicWord) && w.ArabicWord != word.ArabicWord)
                 .Select(w => w.ArabicWord)
+                .Distinct()
+                .OrderBy(_ => Guid.NewGuid())
+                .Take(3)
                 .ToList();
 
             options.AddRange(wrongOptions);
@@ -355,7 +361,7 @@ public partial class ChoiceChallengePage : ContentPage
             {
                 Word = word.EnglishWord,
                 CorrectAnswer = word.ArabicWord,
-                Options = options.OrderBy(o => Guid.NewGuid()).ToList()
+                Options = options.OrderBy(_ => Guid.NewGuid()).ToList()
             });
         }
     }
@@ -485,13 +491,29 @@ public partial class ChoiceChallengePage : ContentPage
         _answered = true;
         StopTimer();
 
-        if (sender is Border border)
+        Border? border = sender as Border;
+        string param = e.Parameter?.ToString() ?? "";
+
+        if (border == null && sender is TapGestureRecognizer tap)
+        {
+            border = tap.Parent as Border;
+        }
+
+        if (border == null)
+        {
+            if (param == "0") border = OptionBorder0;
+            else if (param == "1") border = OptionBorder1;
+            else if (param == "2") border = OptionBorder2;
+            else if (param == "3") border = OptionBorder3;
+        }
+
+        if (border != null)
         {
             string selected = "";
-            if (border == OptionBorder0) selected = OptionBtn0.Text;
-            else if (border == OptionBorder1) selected = OptionBtn1.Text;
-            else if (border == OptionBorder2) selected = OptionBtn2.Text;
-            else if (border == OptionBorder3) selected = OptionBtn3.Text;
+            if (border == OptionBorder0 || param == "0") selected = OptionBtn0.Text;
+            else if (border == OptionBorder1 || param == "1") selected = OptionBtn1.Text;
+            else if (border == OptionBorder2 || param == "2") selected = OptionBtn2.Text;
+            else if (border == OptionBorder3 || param == "3") selected = OptionBtn3.Text;
 
             var currentQ = _questions[_currentIndex];
 
