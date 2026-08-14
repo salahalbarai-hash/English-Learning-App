@@ -9,6 +9,7 @@ namespace English
         private readonly GameHub _gameHub;
         public GameHub GameHub => _gameHub;
         public Action<bool>? OnChallengeResponseReceived;
+        private bool _isEventsSubscribed = false;
 
         public AppShell()
         {
@@ -73,6 +74,9 @@ namespace English
                 return;
 
             await _gameHub.ConnectAsync(currentUserName);
+
+            if (_isEventsSubscribed) return;
+            _isEventsSubscribed = true;
 
             string GetRoomName(string user1, string user2)
             {

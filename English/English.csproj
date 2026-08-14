@@ -16,7 +16,7 @@
 
 		<SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
 
-		<RuntimeIdentifiers>android-arm;android-arm64;android-x64</RuntimeIdentifiers> <!-- android-arm;android-arm64;android-x64 -->
+		<RuntimeIdentifiers>android-arm64;</RuntimeIdentifiers> <!-- android-arm;android-arm64;android-x64 -->
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)' == 'Release|net9.0-android'">

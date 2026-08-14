@@ -304,7 +304,7 @@ public partial class WritingChallengePage : ContentPage
                             {
                                 if (_hubConnection != null)
                                 {
-                                    await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, "PAYLOAD:" + payloadJson);
+                                    await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, currentUser, "PAYLOAD:" + payloadJson);
                                 }
                             }
                             catch { }

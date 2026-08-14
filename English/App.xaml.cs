@@ -7,7 +7,6 @@ namespace English
         public App()
         {
             InitializeComponent();
-            Preferences.Set("MemorizedWords", 100);
         }
         protected override Window CreateWindow(IActivationState? activationState)
         {
