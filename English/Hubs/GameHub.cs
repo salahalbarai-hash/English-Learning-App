@@ -252,4 +252,14 @@ public class GameHub
         }
         return null;
     }
+
+    public async Task<int> GetMemorizedWordsCountAsync(string targetUser)
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+        {
+            try { return await _hubConnection.InvokeAsync<int>("GetMemorizedWordsCount", targetUser); }
+            catch { return 0; }
+        }
+        return 0;
+    }
 }

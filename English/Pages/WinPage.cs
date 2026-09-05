@@ -1,7 +1,4 @@
-using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using English.Models;
-using English.Services;
 using Microsoft.Maui.Controls.Shapes;
 
 namespace English.Pages;

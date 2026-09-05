@@ -1,6 +1,7 @@
 using System.Text.Json;
 using English.Services;
 using English.Models;
+using English.Popups;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
@@ -35,6 +36,8 @@ public partial class ChoiceChallengePage : ContentPage
     private bool _answered = false;
     private bool _isLeaving = false;
     private bool _isMultiplayer = false;
+    private bool _hasLocalFinished = false;
+    private bool _hasOpponentFinished = false;
     private List<WordModel> _memorizedWords = new();
 
     private HubConnection? _hubConnection;
@@ -77,12 +80,29 @@ public partial class ChoiceChallengePage : ContentPage
             {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    if (responder == _opponentName && msg.StartsWith("SCORE:"))
+                    if (responder == _opponentName)
                     {
-                        if (int.TryParse(msg.Replace("SCORE:", ""), out int opScore))
+                        if (msg.StartsWith("SCORE:"))
                         {
-                            _opponentScore = opScore;
-                            OpponentScoreLabel.Text = _opponentScore.ToString();
+                            if (int.TryParse(msg.Replace("SCORE:", ""), out int opScore))
+                            {
+                                _opponentScore = opScore;
+                                OpponentScoreLabel.Text = _opponentScore.ToString();
+                            }
+                        }
+                        else if (msg.StartsWith("FINISHED:"))
+                        {
+                            _hasOpponentFinished = true;
+                            if (int.TryParse(msg.Replace("FINISHED:", ""), out int opScore))
+                            {
+                                _opponentScore = opScore;
+                                OpponentScoreLabel.Text = _opponentScore.ToString();
+                            }
+
+                            if (_hasLocalFinished)
+                            {
+                                ShowFinalMultiplayerResult();
+                            }
                         }
                     }
                     else if (msg.StartsWith("PAYLOAD:") && _questions.Count == 0)
@@ -113,8 +133,24 @@ public partial class ChoiceChallengePage : ContentPage
                         StopTimer();
                         StopNextQuestionTimer();
 
-                        WithdrawalTextLabel.Text = $"⚠️ اللاعب {withdrawingUser} انسحب من التحدي!";
-                        WithdrawalBanner.IsVisible = true;
+                        if (WithdrawalIconLabel != null) WithdrawalIconLabel.Text = "⚠️";
+                        if (WithdrawalTextLabel != null)
+                        {
+                            WithdrawalTextLabel.Text = $"⚠️ اللاعب {withdrawingUser} انسحب من التحدي!";
+                            WithdrawalTextLabel.TextColor = Color.FromArgb("#FCA5A5");
+                        }
+                        if (WithdrawalSubTextLabel != null)
+                        {
+                            WithdrawalSubTextLabel.Text = "🏆 تم إنهاء التحدي واحتساب الفوز لصالحك تلقائياً!";
+                            WithdrawalSubTextLabel.TextColor = Color.FromArgb("#FDE68A");
+                            WithdrawalSubTextLabel.IsVisible = true;
+                        }
+                        if (WithdrawalBanner != null)
+                        {
+                            WithdrawalBanner.BackgroundColor = Color.FromArgb("#2D1517");
+                            WithdrawalBanner.Stroke = Color.FromArgb("#EF4444");
+                            WithdrawalBanner.IsVisible = true;
+                        }
 
                         NextButton.Text = "العودة للقائمة الرئيسية ➔";
                         NextButton.IsVisible = true;
@@ -247,6 +283,12 @@ public partial class ChoiceChallengePage : ContentPage
 
                 if (result is string targetFriend && !string.IsNullOrEmpty(targetFriend))
                 {
+                    int friendWordsCount = await Service.FetchFriendMemorizedWordsCountAsync(targetFriend);
+                    int myWordsCount = _memorizedWords.Count;
+                    int effectiveLimit = (friendWordsCount > 0) ? Math.Min(myWordsCount, friendWordsCount) : myWordsCount;
+
+                    GenerateQuestions(count, effectiveLimit);
+
                     if (Shell.Current is AppShell appShell)
                     {
                         var payload = new GamePayload { Questions = _questions, TimePerQuestion = _timePerQuestion };
@@ -332,13 +374,22 @@ public partial class ChoiceChallengePage : ContentPage
         return [.. friendsArray];
     }
 
-    private void GenerateQuestions(int count)
+    private void GenerateQuestions(int count, int maxAllowedWords = 0)
     {
         _questions.Clear();
         var allWordsFromFile = TenWords.GetAllWords();
-        var sourceWords = (_memorizedWords != null && _memorizedWords.Count > 0)
-            ? _memorizedWords
-            : allWordsFromFile;
+        List<WordModel> sourceWords;
+        if (_memorizedWords != null && _memorizedWords.Count > 0)
+        {
+            int limit = (maxAllowedWords > 0 && maxAllowedWords < _memorizedWords.Count)
+                ? maxAllowedWords
+                : _memorizedWords.Count;
+            sourceWords = _memorizedWords.Take(limit).ToList();
+        }
+        else
+        {
+            sourceWords = allWordsFromFile;
+        }
 
         if (sourceWords.Count == 0) return;
 
@@ -599,19 +650,82 @@ public partial class ChoiceChallengePage : ContentPage
 
     private async void EndGame()
     {
-        if (_isLeaving) return;
-        _isLeaving = true;
         StopTimer();
+        StopNextQuestionTimer();
 
-        string matchResult = $"رائع جداً! لقد أكملت التحدي وحصلت على {_score} نقطة.";
-        if (_isMultiplayer)
+        if (!_isMultiplayer)
         {
-            if (_score > _opponentScore) matchResult = $"🎉 لقد فزت! \nنقاطك: {_score} \nنقاط الخصم: {_opponentScore}";
-            else if (_score < _opponentScore) matchResult = $"😔 لقد خسرت.. \nنقاطك: {_score} \nنقاط الخصم: {_opponentScore}";
-            else matchResult = $"🤝 تعادل! \nالنقاط: {_score}";
+            if (_isLeaving) return;
+            _isLeaving = true;
+            await Navigation.PushModalAsync(new WinPage(_score));
+        }
+        else
+        {
+            _hasLocalFinished = true;
+
+            if (_hubConnection != null)
+            {
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        string currentUser = Preferences.Get("UserName", "");
+                        await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, currentUser, $"FINISHED:{_score}");
+                    }
+                    catch { }
+                });
+            }
+
+            if (_hasOpponentFinished)
+            {
+                ShowFinalMultiplayerResult();
+            }
+            else
+            {
+                ShowWaitingForOpponentUI();
+            }
+        }
+    }
+
+    private void ShowWaitingForOpponentUI()
+    {
+        if (WithdrawalIconLabel != null) WithdrawalIconLabel.Text = "⏳";
+        if (WithdrawalTextLabel != null)
+        {
+            WithdrawalTextLabel.Text = "لقد أنهيت جميع الأسئلة! بانتظار الخصم لإكمال التحدي...";
+            WithdrawalTextLabel.TextColor = Color.FromArgb("#38BDF8");
+        }
+        if (WithdrawalSubTextLabel != null)
+        {
+            WithdrawalSubTextLabel.Text = "سيتم إظهار النتيجة النهائية فور إكمال الطرف الآخر للأسئلة ⏱️";
+            WithdrawalSubTextLabel.TextColor = Color.FromArgb("#94A3B8");
+            WithdrawalSubTextLabel.IsVisible = true;
+        }
+        if (WithdrawalBanner != null)
+        {
+            WithdrawalBanner.BackgroundColor = Color.FromArgb("#0F172A");
+            WithdrawalBanner.Stroke = Color.FromArgb("#0EA5E9");
+            WithdrawalBanner.IsVisible = true;
         }
 
-        await DisplayAlert("انتهاء التحدي 🎉", matchResult, "حسناً");
+        if (NextButton != null)
+        {
+            NextButton.IsVisible = false;
+        }
+    }
+
+    private async void ShowFinalMultiplayerResult()
+    {
+        if (_isLeaving) return;
+        _isLeaving = true;
+
+        StopTimer();
+        StopNextQuestionTimer();
+
+        string myName = Preferences.Get("UserName", "أنا");
+        var resultPopup = new ChallengeResultPopup(myName, _score, _opponentName, _opponentScore);
+        await this.ShowPopupAsync(resultPopup);
+
         await SafePopAsync();
     }
 

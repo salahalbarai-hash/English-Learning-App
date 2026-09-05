@@ -277,7 +277,33 @@ namespace English.Services
 
         // The CreateRequest helper was removed. Use `new RestRequest(endpoint, method)` directly.
 
+        public static async Task<int> FetchFriendMemorizedWordsCountAsync(string friendUserName)
+        {
+            if (string.IsNullOrWhiteSpace(friendUserName)) return 0;
 
+            if (Shell.Current is AppShell appShell && appShell.GameHub != null)
+            {
+                try
+                {
+                    int count = await appShell.GameHub.GetMemorizedWordsCountAsync(friendUserName);
+                    if (count > 0) return count;
+                }
+                catch { }
+            }
+
+            try
+            {
+                var students = await GetStudents();
+                var friend = students?.FirstOrDefault(s => string.Equals(s.UserName, friendUserName, StringComparison.OrdinalIgnoreCase));
+                if (friend != null && friend.MemorizedWords > 0)
+                {
+                    return friend.MemorizedWords;
+                }
+            }
+            catch { }
+
+            return 0;
+        }
 
         private static async Task<JObject> ReadLockFile()
         {

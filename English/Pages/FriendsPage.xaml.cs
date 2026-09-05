@@ -382,11 +382,13 @@ public partial class FriendsPage : ContentPage
             // التحقق أولاً من وجود اتصال عند محاولة إرسال التحدي
             if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
             {
-                await Toast.Make("لا يوجد اتصال بالإنترنت لإرسال التحدي!").Show();
+                await Toast.Make("لا يوجد اتصال بالإنترنت لإرسال التحدي!"). Show();
                 return;
             }
 
             int memorizedCount = Preferences.Get("MemorizedWords", 0);
+            int friendMemorizedCount = await Service.FetchFriendMemorizedWordsCountAsync(friendName);
+            int effectiveMemorizedCount = (friendMemorizedCount > 0) ? Math.Min(memorizedCount, friendMemorizedCount) : memorizedCount;
 
             if (memorizedCount == 0)
             {
@@ -405,7 +407,7 @@ public partial class FriendsPage : ContentPage
                 json = await reader.ReadToEndAsync();
                 doc = JsonDocument.Parse(json);
 
-                var memorizedWords = doc.RootElement.EnumerateArray().Take(memorizedCount);
+                var memorizedWords = doc.RootElement.EnumerateArray().Take(effectiveMemorizedCount);
 
                 allowedCategories = memorizedWords
                     .Where(x => x.TryGetProperty("Category", out var c))
