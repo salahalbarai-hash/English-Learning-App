@@ -1,12 +1,5 @@
-using System.Text.Json;
-using English.Services;
-using English.Models;
 using English.Popups;
-using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Views;
-using Microsoft.AspNetCore.SignalR.Client;
-
 namespace English.Pages;
 
 public partial class WritingChallengePage : ContentPage
@@ -631,8 +624,16 @@ public partial class WritingChallengePage : ContentPage
         if (!_isMultiplayer)
         {
             if (_isLeaving) return;
+
             _isLeaving = true;
-            await Navigation.PushModalAsync(new WinPage(_score));
+
+            var resultPopup = new SingleChallengeResultPopup(
+                _score,
+                _questions.Count);
+
+            await this.ShowPopupAsync(resultPopup);
+
+            await SafePopAsync();
         }
         else
         {

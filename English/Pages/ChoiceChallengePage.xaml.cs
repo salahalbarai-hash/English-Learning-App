@@ -656,8 +656,16 @@ public partial class ChoiceChallengePage : ContentPage
         if (!_isMultiplayer)
         {
             if (_isLeaving) return;
+
             _isLeaving = true;
-            await Navigation.PushModalAsync(new WinPage(_score));
+
+            var resultPopup = new SingleChallengeResultPopup(
+                _score,
+                _questions.Count);
+
+            await this.ShowPopupAsync(resultPopup);
+
+            await SafePopAsync();
         }
         else
         {
@@ -676,7 +684,7 @@ public partial class ChoiceChallengePage : ContentPage
                 });
             }
 
-            if (_hasOpponentFinished)
+            if (_hasOpponentFinished) // في حال الخصم انتهى من الاختبار
             {
                 ShowFinalMultiplayerResult();
             }
