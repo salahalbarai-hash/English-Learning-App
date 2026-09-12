@@ -1,4 +1,4 @@
-﻿namespace English.DataTransferObject
+﻿namespace Shared.DataTransferObject
 {
     public class ChatMessageDto
     {

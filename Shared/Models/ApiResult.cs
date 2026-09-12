@@ -1,4 +1,4 @@
-﻿namespace English.Models
+﻿namespace Shared.Models
 {
     public class ApiResult<T>
     {

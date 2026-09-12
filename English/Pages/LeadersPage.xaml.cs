@@ -30,6 +30,7 @@ public partial class LeadersPage : ContentPage
         try
         {
             int memorizedWords = Preferences.Get("MemorizedWords", 0);
+            long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0);
             long id = Convert.ToInt64(Preferences.Get("ID", "0"));
 
             if (await Service.HasActiveInternetAsync(5))
@@ -48,21 +49,9 @@ public partial class LeadersPage : ContentPage
 
                 User user = result.Data!;
 
-                string res = "0";
+                await UpdateMemorizedWords(id, memorizedWords, user.MemorizedWords);
+                await UpdateFriendsChallengeCount(id, friendsChallengeCount, user.FriendsChallengeCount);
 
-                if (memorizedWords < user.MemorizedWords)
-                {
-                    memorizedWords = user.MemorizedWords;
-                    Preferences.Set("MemorizedWords", memorizedWords);
-                }
-                else
-                {
-                    res = await Service.UpdateMemorizedWords(new User
-                    {
-                        ID = id,
-                        MemorizedWords = memorizedWords
-                    });
-                }
                 // 🔥 هنا تحديث لوحة المتصدرين
                 await ViewModel.LoadLeadersAsync();
             }
@@ -76,6 +65,38 @@ public partial class LeadersPage : ContentPage
         catch (Exception ex)
         {
             await Toast.Make(ex.Message).Show();
+        }
+    }
+
+    private async Task UpdateMemorizedWords(long userId, int localCount, int serverCount)
+    {
+        if (localCount < serverCount)
+        {
+            Preferences.Set("MemorizedWords", serverCount);
+        }
+        else if (localCount > serverCount)
+        {
+            await Service.UpdateMemorizedWords(new User
+            {
+                ID = userId,
+                MemorizedWords = localCount
+            });
+        }
+    }
+
+    private async Task UpdateFriendsChallengeCount(long userId, long localCount, long serverCount)
+    {
+        if (localCount < serverCount)
+        {
+            Preferences.Set("FriendsChallengeCount", serverCount);
+        }
+        else if (localCount > serverCount)
+        {
+            await Service.UpdateFriendsChallengeCount(new User
+            {
+                ID = userId,
+                FriendsChallengeCount = localCount
+            });
         }
     }
 }

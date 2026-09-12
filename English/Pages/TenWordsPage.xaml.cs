@@ -1,7 +1,3 @@
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using English.Models;
-using English.Services;
 using English.ViewModels;
 
 namespace English.Pages;
@@ -23,7 +19,7 @@ public partial class TenWordsPage : ContentPage
         base.OnAppearing();
         _isNavigating = false;
 
-        int savedWords = Preferences.Get("MemorizedWords", 0);
+        long savedWords = Preferences.Get("MemorizedWords", 0);
         if(savedWords > 0)
             vm.MemorizedWordsCount = savedWords;
         else

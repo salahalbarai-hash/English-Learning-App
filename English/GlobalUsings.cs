@@ -9,5 +9,6 @@ global using System.Runtime.CompilerServices;
 global using System.Text;
 global using System.Text.Json;
 global using System.Windows.Input;
-global using English.DataTransferObject;
+global using Shared.Models;
+global using Shared.DataTransferObject;
 global using Microsoft.AspNetCore.SignalR.Client;

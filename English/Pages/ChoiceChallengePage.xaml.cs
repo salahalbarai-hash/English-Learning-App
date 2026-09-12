@@ -1,11 +1,5 @@
-using System.Text.Json;
-using English.Services;
-using English.Models;
 using English.Popups;
-using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Views;
-using Microsoft.AspNetCore.SignalR.Client;
 
 namespace English.Pages;
 
@@ -227,9 +221,9 @@ public partial class ChoiceChallengePage : ContentPage
         int count = 10;
         if (!string.IsNullOrWhiteSpace(WordsCountEntry.Text))
         {
-            if (!int.TryParse(WordsCountEntry.Text, out count) || count <= 0)
+            if (!int.TryParse(WordsCountEntry.Text, out count) || count < 10)
             {
-                await Toast.Make("يرجى إدخال عدد صحيح أكبر من الصفر للكلمات.", ToastDuration.Short).Show();
+                await Toast.Make("عدد الأسئلة يجب ان لا تكون اقل من 10").Show();
                 return;
             }
         }
@@ -240,16 +234,16 @@ public partial class ChoiceChallengePage : ContentPage
             return;
         }
 
-        if (_memorizedWords.Count < 4)
+        if (_memorizedWords.Count < 20)
         {
-            await Toast.Make("يجب أن تحفظ 4 كلمات على الأقل لتتمكن من اللعب.", ToastDuration.Short).Show();
+            await Toast.Make("يجب أن تحفظ 20 كلمة على الأقل لتتمكن من اللعب.", ToastDuration.Short).Show();
             return;
         }
 
         int seconds = 5;
         if (!string.IsNullOrWhiteSpace(TimePerQuestionEntry.Text))
         {
-            if (!int.TryParse(TimePerQuestionEntry.Text, out seconds) || seconds <= 0)
+            if (!int.TryParse(TimePerQuestionEntry.Text, out seconds) || seconds <= 2)
             {
                 await Toast.Make("يرجى إدخال عدد ثوانٍ صحيح للزمن المسموح.", ToastDuration.Short).Show();
                 return;
@@ -270,6 +264,12 @@ public partial class ChoiceChallengePage : ContentPage
             // --- وضع تحدي صديق ---
             try
             {
+                if (!await Service.HasActiveInternetAsync(5))
+                {
+                    await Toast.Make("لا يوجد اتصال بالإنترنت. يرجى التحقق من الاتصال قبل بدء التحدي.").Show();
+                    return;
+                }
+
                 List<string> myFriends = await FetchFriendsFromDatabaseAsync();
 
                 if (myFriends == null || myFriends.Count == 0)
@@ -368,7 +368,7 @@ public partial class ChoiceChallengePage : ContentPage
     {
         var currentUserName = Preferences.Get("UserName", "");
         if (string.IsNullOrEmpty(currentUserName))
-            return new List<string>();
+            return [];
 
         string[] friendsArray = await Service.GetFriendsAsync(currentUserName);
         return [.. friendsArray];

@@ -8,6 +8,7 @@ namespace English
         {
             InitializeComponent();
         }
+
         protected override Window CreateWindow(IActivationState? activationState)
         {
             var isLogin = Preferences.Get("IsLogin", "0");
@@ -47,6 +48,8 @@ namespace English
                 Preferences.Set("Day", "0");
             if (!Preferences.ContainsKey("MemorizedWords"))
                 Preferences.Set("MemorizedWords", 0);
+            if (!Preferences.ContainsKey("Coins"))
+                Preferences.Set("Coins", 0);
         }
         private void SaveJsonFileIfNotExists()
         {

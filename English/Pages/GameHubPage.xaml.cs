@@ -1,3 +1,5 @@
+using CommunityToolkit.Maui.Core;
+
 namespace English.Pages;
 
 public partial class GameHubPage : ContentPage
@@ -12,6 +14,10 @@ public partial class GameHubPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+
+        long challengeCount = Preferences.Get("FriendsChallengeCount", 0);
+        ChallengeCountLabel.Text = challengeCount.ToString();
+
         _isNavigating = false;
     }
 
@@ -29,7 +35,6 @@ public partial class GameHubPage : ContentPage
         if (_isNavigating) return;
         _isNavigating = true;
 
-        // الانتقال المباشر لشاشة تحدي الخيارات
         await Navigation.PushModalAsync(new ChoiceChallengePage());
     }
 
@@ -40,5 +45,10 @@ public partial class GameHubPage : ContentPage
 
         // الانتقال المباشر لشاشة تحدي الكتابة
         await Navigation.PushModalAsync(new WritingChallengePage());
+    }
+
+    private async void OnChallengeFriendTapped(object sender, EventArgs e)
+    {
+        await Toast.Make($"لديك {ChallengeCountLabel.Text} محاولات تحدي صديق ⚔️").Show();
     }
 }

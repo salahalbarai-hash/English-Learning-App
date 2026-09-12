@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+
+  <defs>
+
+    <!-- الذهب الرئيسي -->
+    <radialGradient id="gold" cx="35%" cy="25%" r="80%">
+      <stop offset="0%" stop-color="#FFF4A8"></stop>
+      <stop offset="18%" stop-color="#FFD84A"></stop>
+      <stop offset="45%" stop-color="#F5B927"></stop>
+      <stop offset="72%" stop-color="#E49A08"></stop>
+      <stop offset="100%" stop-color="#B96B00"></stop>
+    </radialGradient>
+
+    <!-- الحافة الجانبية -->
+    <linearGradient id="edge" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#D88900"></stop>
+      <stop offset="45%" stop-color="#A96000"></stop>
+      <stop offset="100%" stop-color="#7C4600"></stop>
+    </linearGradient>
+
+    <!-- الإطار الداخلي -->
+    <linearGradient id="rim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF5B8"></stop>
+      <stop offset="35%" stop-color="#F8C62E"></stop>
+      <stop offset="70%" stop-color="#D98A00"></stop>
+      <stop offset="100%" stop-color="#A96000"></stop>
+    </linearGradient>
+
+    <!-- لمعان -->
+    <linearGradient id="shine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.65"></stop>
+      <stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.12"></stop>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"></stop>
+    </linearGradient>
+
+    <!-- ظل العملة -->
+    <filter id="coinShadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="#6B3F00" flood-opacity="0.55"></feDropShadow>
+    </filter>
+
+    <!-- ظل النص -->
+    <filter id="textShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2" stdDeviation="1.2" flood-color="#7A4700" flood-opacity="0.85"></feDropShadow>
+    </filter>
+
+    <!-- قص اللمعة داخل العملة -->
+    <clipPath id="coinClip">
+      <circle cx="50" cy="48" r="44"></circle>
+    </clipPath>
+
+  </defs>
+
+
+  <!-- ===================================== -->
+  <!-- الظل الخارجي -->
+  <!-- ===================================== -->
+
+  <circle cx="50" cy="52" r="45" fill="#704000" opacity="0.35"></circle>
+
+
+  <!-- ===================================== -->
+  <!-- الحافة السفلية / السماكة 3D -->
+  <!-- ===================================== -->
+
+  <circle cx="50" cy="52" r="45" fill="url(#edge)" filter="url(#coinShadow)"></circle>
+
+
+  <!-- خطوط صغيرة على الحافة لإظهار السماكة -->
+
+  <circle cx="50" cy="52" r="42.5" fill="none" stroke="#8B5100" stroke-width="1.5" opacity="0.8"></circle>
+
+
+  <!-- ===================================== -->
+  <!-- جسم العملة -->
+  <!-- ===================================== -->
+
+  <circle cx="50" cy="48" r="44" fill="url(#gold)"></circle>
+
+
+  <!-- حافة خارجية ذهبية -->
+
+  <circle cx="50" cy="48" r="44" fill="none" stroke="#FFE477" stroke-width="1.5" opacity="0.8"></circle>
+
+
+  <!-- ===================================== -->
+  <!-- الإطار الداخلي -->
+  <!-- ===================================== -->
+
+  <circle cx="50" cy="48" r="36.5" fill="none" stroke="#FFF0A0" stroke-width="3" opacity="0.9"></circle>
+
+  <circle cx="50" cy="48" r="34.5" fill="none" stroke="#B96E00" stroke-width="1.5" opacity="0.85"></circle>
+
+
+  <!-- ===================================== -->
+  <!-- زخرفة دائرية خفيفة -->
+  <!-- ===================================== -->
+
+  <circle cx="50" cy="48" r="31.5" fill="none" stroke="#FFD94A" stroke-width="0.8" stroke-dasharray="1.5 3" opacity="0.45"></circle>
+
+
+  <!-- ===================================== -->
+  <!-- اللمعة الرئيسية -->
+  <!-- ===================================== -->
+
+  <g clip-path="url(#coinClip)">
+
+    <ellipse cx="32" cy="25" rx="29" ry="14" fill="url(#shine)" transform="rotate(-18 32 25)"></ellipse>
+
+    <ellipse cx="25" cy="21" rx="10" ry="4" fill="#FFFFFF" opacity="0.25" transform="rotate(-20 25 21)"></ellipse>
+
+  </g>
+
+
+  <!-- ===================================== -->
+  <!-- رمز En -->
+  <!-- ===================================== -->
+
+  <!-- ظل/عمق خلف النص -->
+
+  <text x="50" y="63" font-family="Arial, sans-serif" font-size="39" font-weight="900" text-anchor="middle" fill="#9A5A00" opacity="0.55">
+    En
+  </text>
+
+
+  <!-- النص الرئيسي -->
+
+  <text x="50" y="61" font-family="Arial, sans-serif" font-size="39" font-weight="900" text-anchor="middle" fill="#FFFFFF" filter="url(#textShadow)">
+    En
+  </text>
+
+
+  <!-- لمعان بسيط على النص -->
+
+  <text x="50" y="60" font-family="Arial, sans-serif" font-size="39" font-weight="900" text-anchor="middle" fill="#FFFFFF" opacity="0.25">
+    En
+  </text>
+
+
+</svg>

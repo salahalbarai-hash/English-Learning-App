@@ -14,6 +14,9 @@ public class WinPage : ContentPage
         int memorizedWords = Preferences.Get("MemorizedWords", 0) + 10;
         Preferences.Set("MemorizedWords", memorizedWords);
 
+        long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0) + 3;
+        Preferences.Set("FriendsChallengeCount", friendsChallengeCount);
+
         NavigationPage.SetHasNavigationBar(this, false);
         this.FlowDirection = FlowDirection.LeftToRight;
 
@@ -82,22 +85,21 @@ public class WinPage : ContentPage
 
             if (await Service.HasActiveInternetAsync(5))
             {
-                int memorizedWords = Preferences.Get("MemorizedWords", 0);
-                string result = await Service.UpdateMemorizedWords(new User
+                string resultMemorizedWords = await Service.UpdateMemorizedWords(new User
                 {
                     ID = id,
                     MemorizedWords = memorizedWords
                 });
 
+                string resultFriendsChallengeCount = await Service.UpdateFriendsChallengeCount(new User
+                {
+                    ID = id,
+                    FriendsChallengeCount = friendsChallengeCount
+                });
+
                 string message = "تم الحفظ بنجاح 🔥";
-                if (result == "1")
-                {
-                    Preferences.Set("TimeFinalExam", time);
-                }
-                else
-                {
+                if (resultMemorizedWords != "1" || resultFriendsChallengeCount != "1")
                     message = "حدث خطأ 😓";
-                }
 
                 await Toast.Make(message, ToastDuration.Short, 14).Show(new CancellationToken());
             }

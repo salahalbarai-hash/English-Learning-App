@@ -11,7 +11,7 @@ namespace English.ViewModels
         public ObservableCollection<WordModel> Titles { get; set; } = [];
 
         [ObservableProperty]
-        private int memorizedWordsCount;
+        private long memorizedWordsCount;
 
         [ObservableProperty]
         private string progressStatus;
@@ -28,10 +28,19 @@ namespace English.ViewModels
             ["أنت في مستوى نادر 🚀", "القمة تقترب 👀", "أنت تتحكم بثقة 💪", "أنت على وشك الإنجاز 🏆", "لم يتبق إلا القليل 👌", "أنت تصنع أسطورة 👑", "أنت تتجاوز الجميع ⚔️", "الاحتراف أصبح واقعاً 🔥"]
         ];
 
-        partial void OnMemorizedWordsCountChanged(int value)
+        partial void OnMemorizedWordsCountChanged(long value)
         {
             LoadDailyWords();
-            UpdateUI(value);
+            UpdateProgressWidth(value);
+            //UpdateUI(value);
+            ProgressStatus = Preferences.Get("Coins", 0).ToString();
+        }
+
+        private void UpdateProgressWidth(long count)
+        {
+            double maxWidth = 220;
+            double ratio = Math.Clamp(count / 1000.0, 0, 1);
+            ProgressWidth = ratio * maxWidth;
         }
 
         private void UpdateUI(int count)

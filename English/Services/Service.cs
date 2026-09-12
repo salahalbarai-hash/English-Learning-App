@@ -1,5 +1,4 @@
-﻿using English.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System.Net;
@@ -14,7 +13,7 @@ namespace English.Services
 
         public static string ApiUrl =>
 #if DEBUG
-            "http://192.168.8.140:5005/";
+            "http://192.168.8.139:5005/";
 #else
             Preferences.Get("ApiUrl", "");
 #endif
@@ -207,6 +206,19 @@ namespace English.Services
                 : string.Empty;
         }
 
+        public static async Task<string> UpdateFriendsChallengeCount(User student)
+        {
+            var client = CreateClient();
+            var request = new RestRequest("Students/UpdateFriendsChallengeCount", Method.Put);
+            request.AddJsonBody(student);
+
+            var response = await client.ExecuteAsync(request);
+
+            return response.StatusCode == HttpStatusCode.OK && response.Content != null
+                ? response.Content.Trim('"')
+                : string.Empty;
+        }
+
         // ========================
         // Internet
         // ========================
@@ -219,7 +231,6 @@ namespace English.Services
                 {
                     Timeout = TimeSpan.FromSeconds(seconds)
                 };
-
                 var response = await client.GetAsync("https://www.google.com/generate_204");
                 return response.IsSuccessStatusCode;
             }

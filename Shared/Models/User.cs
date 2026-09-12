@@ -1,4 +1,4 @@
-﻿namespace English.Models
+﻿namespace Shared.Models
 {
     public class User
     {
@@ -14,6 +14,9 @@
 
         public string? TimeFinalExam { get; set; }
         public int MemorizedWords { get; set; }
+
+        public long Coins { get; set; }
+        public long FriendsChallengeCount { get; set; }
     }
 
 }
