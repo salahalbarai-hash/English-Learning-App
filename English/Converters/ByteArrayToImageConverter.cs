@@ -17,7 +17,9 @@ namespace English.Converters
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            // ConvertBack (ImageSource -> byte[]) is not required for the current app bindings.
+            // Return null instead of throwing to prevent runtime crashes if called.
+            return null;
         }
     }
 }

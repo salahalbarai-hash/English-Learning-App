@@ -21,7 +21,9 @@ namespace English.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            // ConvertBack is not needed for this converter in the UI bindings.
+            // Return null to indicate no value is produced (avoids runtime exceptions).
+            return null;
         }
     }
 }
