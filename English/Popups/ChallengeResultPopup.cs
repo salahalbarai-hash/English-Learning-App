@@ -1,4 +1,3 @@
-using CommunityToolkit.Maui.Views;
 using Microsoft.Maui.Controls.Shapes;
 
 namespace English.Popups;
