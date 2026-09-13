@@ -181,6 +181,18 @@ namespace English.Services
             return response.StatusCode == HttpStatusCode.OK ? "1" : string.Empty;
         }
 
+        public static async Task<string> UpdateCoins(User user)
+        {
+            var client = new RestClient(new RestClientOptions(ApiUrl));
+            var request = new RestRequest("Users/UpdateCoins", Method.Put);
+            request.AddJsonBody(user);
+
+            var response = await client.ExecuteAsync(request);
+            return response.StatusCode == HttpStatusCode.OK && response.Content != null
+                ? response.Content.Trim('"')
+                : string.Empty;
+        }
+
         public static async Task<string> UpdateTimeFinalExam(TimeFinalExamModel model)
         {
             var client = new RestClient(new RestClientOptions(ApiUrl));
@@ -287,6 +299,60 @@ namespace English.Services
         }
 
         // The CreateRequest helper was removed. Use `new RestRequest(endpoint, method)` directly.
+
+        // Pending coins updates storage key
+        private const string PendingCoinsKey = "Pending_Coins_Updates";
+
+        private class PendingCoinsEntry
+        {
+            public long ID { get; set; }
+            public long Coins { get; set; }
+        }
+
+        public static void AddPendingCoinsUpdate(long id, long coins)
+        {
+            try
+            {
+                string json = Preferences.Get(PendingCoinsKey, "[]");
+                var list = System.Text.Json.JsonSerializer.Deserialize<List<PendingCoinsEntry>>(json) ?? new List<PendingCoinsEntry>();
+                list.Add(new PendingCoinsEntry { ID = id, Coins = coins });
+                Preferences.Set(PendingCoinsKey, System.Text.Json.JsonSerializer.Serialize(list));
+            }
+            catch { }
+        }
+
+        public static async Task TrySyncPendingCoinsAsync()
+        {
+            try
+            {
+                if (!await HasActiveInternetAsync(5)) return;
+
+                string json = Preferences.Get(PendingCoinsKey, "[]");
+                var list = System.Text.Json.JsonSerializer.Deserialize<List<PendingCoinsEntry>>(json) ?? new List<PendingCoinsEntry>();
+                if (list.Count == 0) return;
+
+                var remaining = new List<PendingCoinsEntry>();
+
+                foreach (var entry in list)
+                {
+                    try
+                    {
+                        var res = await UpdateCoins(new User { ID = entry.ID, Coins = entry.Coins });
+                        if (res != "1")
+                        {
+                            remaining.Add(entry);
+                        }
+                    }
+                    catch
+                    {
+                        remaining.Add(entry);
+                    }
+                }
+
+                Preferences.Set(PendingCoinsKey, System.Text.Json.JsonSerializer.Serialize(remaining));
+            }
+            catch { }
+        }
 
         public static async Task<int> FetchFriendMemorizedWordsCountAsync(string friendUserName)
         {

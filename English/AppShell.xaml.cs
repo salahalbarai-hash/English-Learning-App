@@ -48,6 +48,8 @@ namespace English
                         try
                         {
                             await StartGameHubAsync(savedUserName);
+                            // Try to sync any pending coin updates when connection is restored
+                            _ = Task.Run(async () => { try { await Service.TrySyncPendingCoinsAsync(); } catch { } });
                         }
                         catch { }
                     });
@@ -97,6 +99,32 @@ namespace English
                         bool accepted = result is bool b && b;
 
                         await _gameHub.SendResponseAsync(senderName, accepted, category);
+
+                        // If current user accepted the challenge, deduct stake coins locally and persist
+                        if (accepted)
+                        {
+                            try
+                            {
+                                // determine stake by category (support Arabic and internal codes)
+                                int stake = 0;
+                                if (category != null && (category.Contains("خيارات") || category.Contains("Choice") || category.Contains("تحدي الخيارات"))) stake = 3;
+                                else if (category != null && (category.Contains("كتابة") || category.Contains("Writing") || category.Contains("تحدي الكتابة"))) stake = 5;
+
+                                if (stake > 0)
+                                {
+                                    long id = Convert.ToInt64(Preferences.Get("ID", "0"));
+                                    long coins = Preferences.Get("Coins", 0) - stake;
+                                    Preferences.Set("Coins", coins);
+
+                                    if (await Service.HasActiveInternetAsync(5))
+                                    {
+                                        var res = await Service.UpdateCoins(new User { ID = id, Coins = coins });
+                                        if (res != "1") Service.AddPendingCoinsUpdate(id, coins);
+                                    }
+                                }
+                            }
+                            catch { }
+                        }
 
                         if (accepted)
                         {

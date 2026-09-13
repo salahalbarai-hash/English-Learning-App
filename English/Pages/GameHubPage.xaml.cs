@@ -15,8 +15,8 @@ public partial class GameHubPage : ContentPage
     {
         base.OnAppearing();
 
-        long challengeCount = Preferences.Get("FriendsChallengeCount", 0);
-        ChallengeCountLabel.Text = challengeCount.ToString();
+        int res = Preferences.Get("FriendsChallengeCount", 0);
+        ChallengeCountLabel.Text = res.ToString();
 
         _isNavigating = false;
     }

@@ -264,6 +264,13 @@ public partial class ChoiceChallengePage : ContentPage
             // --- وضع تحدي صديق ---
             try
             {
+                // Prevent starting friend challenge if no remaining attempts
+                long remaining = Preferences.Get("FriendsChallengeCount", 0);
+                if (remaining <= 0)
+                {
+                    await Toast.Make("لا توجد لديك محاولات لتحدي الأصدقاء ⚠️").Show();
+                    return;
+                }
                 if (!await Service.HasActiveInternetAsync(5))
                 {
                     await Toast.Make("لا يوجد اتصال بالإنترنت. يرجى التحقق من الاتصال قبل بدء التحدي.").Show();
@@ -323,6 +330,45 @@ public partial class ChoiceChallengePage : ContentPage
                         if (waitResult is string status && status == "Accepted")
                         {
                             string currentUser = Preferences.Get("UserName", "");
+                            // --- Challenge accepted: decrement local FriendsChallengeCount (only challenger) and deduct stake coins ---
+                            try
+                            {
+                                long id = Convert.ToInt64(Preferences.Get("ID", "0"));
+                                // decrement remaining friend challenges
+                                long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0);
+                                if (friendsChallengeCount > 0) friendsChallengeCount -= 1;
+                                Preferences.Set("FriendsChallengeCount", friendsChallengeCount);
+
+                                // deduct stake from current user (challenger)
+                                const int stake = 3; // choice challenge
+                                long coins = Preferences.Get("Coins", 0) - stake;
+                                Preferences.Set("Coins", coins);
+
+                                if (await Service.HasActiveInternetAsync(5))
+                                {
+                                    // persist changes to server
+                                    await Service.UpdateFriendsChallengeCount(new User
+                                    {
+                                        ID = id,
+                                        FriendsChallengeCount = friendsChallengeCount
+                                    });
+
+                                    var res = await Service.UpdateCoins(new User
+                                    {
+                                        ID = id,
+                                        Coins = coins
+                                    });
+                                    if (res != "1")
+                                    {
+                                        Service.AddPendingCoinsUpdate(id, coins);
+                                    }
+                                }
+                                else
+                                {
+                                    Service.AddPendingCoinsUpdate(id, coins);
+                                }
+                            }
+                            catch { }
                             _hubConnection = appShell.GameHub.HubConnection;
                             _roomName = string.Compare(currentUser, targetFriend, StringComparison.Ordinal) < 0
                                     ? $"room_{currentUser}_{targetFriend}" : $"room_{targetFriend}_{currentUser}";
@@ -731,6 +777,31 @@ public partial class ChoiceChallengePage : ContentPage
         StopNextQuestionTimer();
 
         string myName = Preferences.Get("UserName", "أنا");
+        // --- Award coins to winner (choice: winner gets 6 coins) ---
+        try
+        {
+            const int reward = 6; // for choice challenge
+            if (_score > _opponentScore)
+            {
+                long id = Convert.ToInt64(Preferences.Get("ID", "0"));
+                long coins = Preferences.Get("Coins", 0) + reward;
+                Preferences.Set("Coins", coins);
+                if (await Service.HasActiveInternetAsync(5))
+                {
+                    var res = await Service.UpdateCoins(new User { ID = id, Coins = coins });
+                    if (res != "1")
+                    {
+                        Service.AddPendingCoinsUpdate(id, coins);
+                    }
+                }
+                else
+                {
+                    Service.AddPendingCoinsUpdate(id, coins);
+                }
+            }
+        }
+        catch { }
+
         var resultPopup = new ChallengeResultPopup(myName, _score, _opponentName, _opponentScore);
         await this.ShowPopupAsync(resultPopup);
 

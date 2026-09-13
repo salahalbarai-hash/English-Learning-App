@@ -208,6 +208,42 @@ public class DuelGameVM : INotifyPropertyChanged, IDisposable
             IsMyTurnToAnswer = false;
             AddMessage("النظام", $"🏆 انتهت اللعبة! الفائز هو: {winnerName}\nالكلمة كانت: {correctWord}", false, true);
             GameStatusText = $"انتهت الجولة بفوز {winnerName}";
+
+            // Award coins to local user if they are the winner
+            try
+            {
+                int reward = 0;
+                if (!string.IsNullOrEmpty(_currentCategory) && _currentCategory.Contains("Choice", StringComparison.OrdinalIgnoreCase)) reward = 6;
+                else if (!string.IsNullOrEmpty(_currentCategory) && _currentCategory.Contains("Writing", StringComparison.OrdinalIgnoreCase)) reward = 10;
+
+                if (reward > 0 && string.Equals(winnerName, _currentUserName, StringComparison.OrdinalIgnoreCase))
+                {
+                    long id = Convert.ToInt64(Preferences.Get("ID", "0"));
+                    long coins = Preferences.Get("Coins", 0) + reward;
+                    Preferences.Set("Coins", coins);
+
+                    _ = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            if (await Service.HasActiveInternetAsync(5))
+                            {
+                                var res = await Service.UpdateCoins(new User { ID = id, Coins = coins });
+                                if (res != "1") Service.AddPendingCoinsUpdate(id, coins);
+                            }
+                            else
+                            {
+                                Service.AddPendingCoinsUpdate(id, coins);
+                            }
+                        }
+                        catch
+                        {
+                            Service.AddPendingCoinsUpdate(id, coins);
+                        }
+                    });
+                }
+            }
+            catch { }
         });
     }
 
