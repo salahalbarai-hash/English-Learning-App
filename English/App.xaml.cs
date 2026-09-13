@@ -49,7 +49,9 @@ namespace English
             if (!Preferences.ContainsKey("MemorizedWords"))
                 Preferences.Set("MemorizedWords", 0);
             if (!Preferences.ContainsKey("Coins"))
-                Preferences.Set("Coins", 0);
+                Preferences.Set("Coins", 0L);
+            if (!Preferences.ContainsKey("FriendsChallengeCount"))
+                Preferences.Set("FriendsChallengeCount", 0L);
         }
         private void SaveJsonFileIfNotExists()
         {

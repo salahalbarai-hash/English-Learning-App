@@ -14,7 +14,7 @@ public class WinPage : ContentPage
         int memorizedWords = Preferences.Get("MemorizedWords", 0) + 10;
         Preferences.Set("MemorizedWords", memorizedWords);
 
-        long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0) + 3;
+        long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0L) + 3;
         Preferences.Set("FriendsChallengeCount", friendsChallengeCount);
 
         NavigationPage.SetHasNavigationBar(this, false);

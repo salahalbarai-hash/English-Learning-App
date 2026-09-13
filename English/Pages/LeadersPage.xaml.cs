@@ -30,7 +30,7 @@ public partial class LeadersPage : ContentPage
         try
         {
             int memorizedWords = Preferences.Get("MemorizedWords", 0);
-            long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0);
+            long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0L);
             long id = Convert.ToInt64(Preferences.Get("ID", "0"));
 
             if (await Service.HasActiveInternetAsync(5))

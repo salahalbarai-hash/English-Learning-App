@@ -219,7 +219,7 @@ public class DuelGameVM : INotifyPropertyChanged, IDisposable
                 if (reward > 0 && string.Equals(winnerName, _currentUserName, StringComparison.OrdinalIgnoreCase))
                 {
                     long id = Convert.ToInt64(Preferences.Get("ID", "0"));
-                    long coins = Preferences.Get("Coins", 0) + reward;
+                    long coins = Preferences.Get("Coins", 0L) + reward;
                     Preferences.Set("Coins", coins);
 
                     _ = Task.Run(async () =>

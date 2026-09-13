@@ -113,7 +113,7 @@ namespace English
                                 if (stake > 0)
                                 {
                                     long id = Convert.ToInt64(Preferences.Get("ID", "0"));
-                                    long coins = Preferences.Get("Coins", 0) - stake;
+                                    long coins = Preferences.Get("Coins", 0L) - stake;
                                     Preferences.Set("Coins", coins);
 
                                     if (await Service.HasActiveInternetAsync(5))

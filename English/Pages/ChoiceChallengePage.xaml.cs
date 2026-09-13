@@ -265,7 +265,7 @@ public partial class ChoiceChallengePage : ContentPage
             try
             {
                 // Prevent starting friend challenge if no remaining attempts
-                long remaining = Preferences.Get("FriendsChallengeCount", 0);
+                long remaining = Preferences.Get("FriendsChallengeCount", 0L);
                 if (remaining <= 0)
                 {
                     await Toast.Make("لا توجد لديك محاولات لتحدي الأصدقاء ⚠️").Show();
@@ -335,13 +335,13 @@ public partial class ChoiceChallengePage : ContentPage
                             {
                                 long id = Convert.ToInt64(Preferences.Get("ID", "0"));
                                 // decrement remaining friend challenges
-                                long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0);
+                                long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0L);
                                 if (friendsChallengeCount > 0) friendsChallengeCount -= 1;
                                 Preferences.Set("FriendsChallengeCount", friendsChallengeCount);
 
                                 // deduct stake from current user (challenger)
                                 const int stake = 3; // choice challenge
-                                long coins = Preferences.Get("Coins", 0) - stake;
+                                long coins = Preferences.Get("Coins", 0L) - stake;
                                 Preferences.Set("Coins", coins);
 
                                 if (await Service.HasActiveInternetAsync(5))
@@ -784,7 +784,7 @@ public partial class ChoiceChallengePage : ContentPage
             if (_score > _opponentScore)
             {
                 long id = Convert.ToInt64(Preferences.Get("ID", "0"));
-                long coins = Preferences.Get("Coins", 0) + reward;
+                long coins = Preferences.Get("Coins", 0L) + reward;
                 Preferences.Set("Coins", coins);
                 if (await Service.HasActiveInternetAsync(5))
                 {
