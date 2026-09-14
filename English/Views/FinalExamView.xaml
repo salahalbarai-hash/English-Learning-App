@@ -4,7 +4,7 @@
              x:Class="English.Views.FinalExamView">
     <VerticalStackLayout>
         <Label 
-            Text="Welcome to .NET MAUI!"
+            Text="Welcome to .NET MAUI! يتن"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
     </VerticalStackLayout>
