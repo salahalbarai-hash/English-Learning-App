@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="English.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:English"
+    xmlns:pages="clr-namespace:English.Pages"
+    Shell.FlyoutBehavior="Disabled"
+    Title="English">
+
+    <TabBar>
+        <ShellContent Title="الكلمات"
+              Icon="home.png"              
+              ContentTemplate="{DataTemplate pages:TenWordsPage}"
+              Route="MainPage"
+              Shell.NavBarIsVisible="False"/>
+
+        <ShellContent Title="المتصدرون"
+              Icon="winner.webp"
+              ContentTemplate="{DataTemplate pages:LeadersPage}"
+              Route="LeadersPage"
+              Shell.NavBarIsVisible="False"/>
+
+        <ShellContent Title="الألعاب"
+                      Icon="game.png"
+                      ContentTemplate="{DataTemplate pages:GameHubPage}"
+                      Route="GameHubPage"
+                      Shell.NavBarIsVisible="False"/>
+
+        <ShellContent Title="المزيد"
+              Icon="more.png"
+              ContentTemplate="{DataTemplate pages:MorePage}"
+              Route="MorePage"
+              Shell.NavBarIsVisible="False"/>
+    </TabBar>
+</Shell>

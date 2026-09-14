@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="English.Views.LoseView"
+             BackgroundColor="White" VerticalOptions="Center">
+    <VerticalStackLayout>
+        <Image Source="loser_cry.GIF" IsAnimationPlaying="True" Margin="15,15,0,100"/>
+        <HorizontalStackLayout 
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Spacing="10">
+            <ImageButton Source="repeat.png" WidthRequest="150" HeightRequest="100" Clicked="RepeatImgBtn_Clicked" BackgroundColor="White"/>
+            <ImageButton Source="home.png" WidthRequest="150" HeightRequest="100" Clicked="HomeImgBtn_Clicked" BackgroundColor="White"/>
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</ContentView>

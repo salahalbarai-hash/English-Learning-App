@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.Views.TopTenListeningQuestionView">
+
+    <VerticalStackLayout Spacing="30" VerticalOptions="Center" Padding="20" BackgroundColor="#0F172A">
+
+        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+            <Button Text="🔊 استمع للجملة"
+                    Clicked="OnListenClicked"
+                    BackgroundColor="#FF3D00"
+                    TextColor="White"
+                    FontFamily="CairoBold"
+                    FontSize="20"
+                    HeightRequest="70"
+                    WidthRequest="240"
+                    CornerRadius="35"
+                    Shadow="{Shadow Brush='#FF3D00', Offset='0,0', Radius=15, Opacity=0.5}"/>
+            <Label Text="اضغط للاستماع ثم اختر الإجابة الصحيحة"
+                   TextColor="#94A3B8"
+                   FontSize="13"
+                   HorizontalTextAlignment="Center"
+                   FontFamily="Cairo"/>
+        </VerticalStackLayout>
+
+        <FlexLayout BindableLayout.ItemsSource="{Binding Path=BindingContext.ShuffledOptions, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                    Wrap="Wrap"
+                    Direction="Row"
+                    JustifyContent="SpaceEvenly"
+                    AlignContent="Center"
+                    AlignItems="Center">
+
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <Border FlexLayout.Basis="45%"
+                            HeightRequest="90"
+                            Margin="8"
+                            Padding="5"
+                            BackgroundColor="#1E293B" 
+                            StrokeThickness="3"
+                            StrokeShape="RoundRectangle 20"
+                            InputTransparent="False">
+                        <Border.Shadow>
+                            <Shadow Brush="#FF3D00" 
+                                    Offset="0,0" 
+                                    Radius="15" 
+                                    Opacity="0.6" />
+                        </Border.Shadow>
+                        <Border.Stroke>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#FF3D00" Offset="0.0" />
+                                <GradientStop Color="#FF8F00" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Stroke>
+                        <Label Text="{Binding .}" 
+                               TextColor="White"
+                               FontSize="18"
+                               FontFamily="CairoBold"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               VerticalTextAlignment="Center"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnOptionSelected_Tapped" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </FlexLayout>
+
+    </VerticalStackLayout>
+</ContentView>

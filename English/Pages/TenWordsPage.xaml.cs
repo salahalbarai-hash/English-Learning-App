@@ -1,0 +1,94 @@
+using English.ViewModels;
+
+namespace English.Pages;
+
+public partial class TenWordsPage : ContentPage
+{
+    private bool _isLoading = false;
+    private bool _isNavigating = false;
+    TenWordsVM vm;
+
+    public TenWordsPage()
+    {
+        InitializeComponent();
+        BindingContext = vm = new TenWordsVM();
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        _isNavigating = false;
+
+        long savedWords = Preferences.Get("MemorizedWords", 0);
+        if(savedWords > 0)
+            vm.MemorizedWordsCount = savedWords;
+        else
+        {
+            vm.ProgressStatus = "عقلك الاَن أرض بكر.. ابدأ بغرس الكلمات! 🌱";
+            vm.LoadDailyWords();
+        }
+        //await Task.Delay(100);
+        //AnimateProgress();
+    }
+
+    private async void OnWordTapped(object sender, TappedEventArgs e)
+    {
+        if (sender is Border border && border.Content is Label label && border.BindingContext is WordModel word)
+        {
+            if (word.Locked) return;
+
+            _ = TextToSpeech.Default.SpeakAsync(word.EnglishWord);
+
+            await label.ScaleTo(1.1, 120, Easing.CubicOut);
+            await label.ScaleTo(1.0, 120, Easing.CubicIn);
+        }
+    }
+
+    private async void OnWordLanguageTapped(object sender, TappedEventArgs e)
+    {
+        if (sender is Border border && border.BindingContext is WordModel word)
+        {
+            if (word.Locked) return;
+
+            if (border.Content is Label label)
+            {
+                await label.RotateXTo(90, 120, Easing.Linear);
+                word.CurrentLanguage = (word.CurrentLanguage == "EN") ? "AR" : "EN";
+                await label.RotateXTo(0, 120, Easing.Linear);
+            }
+        }
+    }
+
+    private async void QuizButton_Clicked(object sender, EventArgs e)
+    {
+        if (_isNavigating) return;
+        _isNavigating = true;
+
+        try
+        {
+            var wordsForExam = vm.Titles.ToList();
+
+            if (wordsForExam.Any())
+                await Navigation.PushModalAsync(new ExamTopTenPage(wordsForExam));
+        }
+        finally
+        {
+            _isNavigating = false;
+        }
+    }
+
+    private async void OnHeaderTapped(object sender, EventArgs e)
+    {
+        if (_isNavigating) return;
+        _isNavigating = true;
+
+        try
+        {
+            await Toast.Make("هذه الميزة قيد التطوير، وستكون متاحة قريبًا لمساعدتك في تثبيت ما تعلمته 📚").Show();
+        }
+        finally
+        {
+            _isNavigating = false;
+        }
+    }
+}

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+           xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+           x:Class="English.Popups.ReceiveFriendRequestPopup"
+           Color="Transparent" >
+
+    <!-- الحاوية الرئيسية للـ Popup -->
+    <Border WidthRequest="320"
+            BackgroundColor="#1E293B"
+            Stroke="#334155"
+            StrokeThickness="1"
+            StrokeShape="RoundRectangle 24"
+            Padding="25"
+            FlowDirection="RightToLeft">
+
+        <VerticalStackLayout Spacing="15" HorizontalOptions="Center">
+
+            <!-- أيقونة علوية دائرية -->
+            <Border HeightRequest="64" 
+                    WidthRequest="64" 
+                    StrokeShape="RoundRectangle 32" 
+                    BackgroundColor="#312E81"
+                    StrokeThickness="0"
+                    HorizontalOptions="Center">
+                <Label Text="👋" 
+                       FontSize="30" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="Center" />
+            </Border>
+
+            <!-- العنوان -->
+            <Label Text="طلب صداقة جديد" 
+                   FontSize="20" 
+                   TextColor="White" 
+                   FontFamily="CairoBold" 
+                   HorizontalOptions="Center" />
+
+            <!-- نص الرسالة (يتم تعبئته من الكود) -->
+            <Label x:Name="MessageLabel" 
+                   TextColor="#94A3B8" 
+                   FontSize="15" 
+                   FontFamily="Cairo" 
+                   HorizontalTextAlignment="Center" 
+                   LineBreakMode="WordWrap" />
+
+            <!-- أزرار الإجراءات -->
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="15" Margin="0, 15, 0, 0">
+
+                <!-- زر الرفض -->
+                <Button Grid.Column="0" 
+                        Text="رفض" 
+                        BackgroundColor="Transparent" 
+                        TextColor="#F87171" 
+                        BorderColor="#F87171"
+                        BorderWidth="1"
+                        CornerRadius="12" 
+                        HeightRequest="45"
+                        FontFamily="CairoBold"
+                        Clicked="OnDeclineClicked"/>
+
+                <!-- زر القبول -->
+                <Button Grid.Column="1" 
+                        Text="قبول ✅" 
+                        BackgroundColor="#6366F1" 
+                        TextColor="White" 
+                        CornerRadius="12" 
+                        HeightRequest="45"
+                        FontFamily="CairoBold"
+                        Clicked="OnAcceptClicked"/>
+            </Grid>
+
+        </VerticalStackLayout>
+    </Border>
+</mct:Popup>

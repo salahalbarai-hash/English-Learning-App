@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.App">
+
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <!-- ========== الألوان الأساسية (الموجودة مسبقاً) ========== -->
+            <Color x:Key="PrimaryColor">#2563EB</Color>
+            <Color x:Key="SecondaryColor">#1E293B</Color>
+            <Color x:Key="TextColor">#111827</Color>
+            <Color x:Key="LightGray">#F3F4F6</Color>
+
+            <!-- ========== ألوان إضافية منقولة من LeadersPage ========== -->
+            <Color x:Key="PrimaryLight">#E9F0FF</Color>
+            <Color x:Key="TextDark">#1E293B</Color>
+            <Color x:Key="TextGray">#64748B</Color>
+            <Color x:Key="CardBg">#FFFFFF</Color>
+            <Color x:Key="RankGold">#FBBF24</Color>
+            <Color x:Key="RankSilver">#94A3B8</Color>
+            <Color x:Key="RankBronze">#D97706</Color>
+            <Color x:Key="RankDefault">#CBD5E1</Color>
+
+            <!-- ========== أنماط الأزرار والحقول (الموجودة مسبقاً) ========== -->
+            <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource PrimaryColor}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="Padding" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+
+            <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource LightGray}" />
+                <Setter Property="TextColor" Value="{StaticResource TextColor}" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="Padding" Value="14" />
+            </Style>
+
+            <Style TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="{StaticResource LightGray}" />
+                <Setter Property="TextColor" Value="{StaticResource TextColor}" />
+                <Setter Property="HeightRequest" Value="50" />
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+
+</Application>

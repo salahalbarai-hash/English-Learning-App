@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.Pages.LeadersPage"
+             BackgroundColor="#F0F4F8"
+             FlowDirection="RightToLeft"
+             Title="لوحة المتصدرين">
+
+    <Grid>
+        <!-- تقسيم الشاشة: الهيدر في صف ثابت، والقائمة في صف قابل للتمرير -->
+        <Grid RowDefinitions="Auto, *">
+
+            <!-- ========================================== -->
+            <!-- 1. الهيدر الفاخر (ثابت لا يتحرك)           -->
+            <!-- ========================================== -->
+            <Border Grid.Row="0"
+                    Margin="0,0,0,15"
+                    HeightRequest="240"
+                    VerticalOptions="Start"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 0,0,45,45">
+
+                <!-- تدرج لوني احترافي جداً (Indigo to Blue) -->
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#4338CA" Offset="0.0"/>
+                        <GradientStop Color="#3B82F6" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+
+                <!-- ظل الهيدر -->
+                <Border.Shadow>
+                    <Shadow Brush="#3B82F6" Radius="25" Offset="0,10" Opacity="0.35"/>
+                </Border.Shadow>
+
+                <Grid>
+                    <!-- زر التحديث (أعلى اليسار - تأثير زجاجي فاخر) -->
+                    <!-- ملاحظة: HorizontalOptions="End" تعني اليسار لأن الصفحة RightToLeft -->
+                    <Button Text="تحديث"
+                            Clicked="RefreshView_Refreshing"
+                            BackgroundColor="#20FFFFFF"
+                            TextColor="White"
+                            BorderColor="#40FFFFFF"
+                            BorderWidth="1.5"
+                            CornerRadius="20"
+                            FontSize="13"
+                            FontFamily="CairoBold"
+                            Padding="16,8"
+                            HorizontalOptions="End"
+                            VerticalOptions="Start"
+                            Margin="0,20,20,0"/>
+
+                    <!-- محتويات الهيدر (النصوص والأيقونة) -->
+                    <VerticalStackLayout VerticalOptions="Center"
+                                         HorizontalOptions="Center"
+                                         Spacing="10"
+                                         Margin="0,20,0,0">
+
+                        <!-- أيقونة الكأس مع خلفية مضيئة -->
+                        <Border WidthRequest="75"
+                                HeightRequest="75"
+                                BackgroundColor="#25FFFFFF"
+                                StrokeThickness="2"
+                                Stroke="#30FFFFFF"
+                                StrokeShape="RoundRectangle 37.5">
+
+                            <Label Text="🏆" FontSize="36" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+
+                        <Label Text="لوحة الشرف" 
+                               FontSize="30" 
+                               FontFamily="CairoBold" 
+                               HorizontalOptions="Center" 
+                               TextColor="White"
+                               CharacterSpacing="1"/>
+
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- ========================================== -->
+            <!-- 2. قائمة المتصدرين (التمرير الحر بدون تداخل)-->
+            <!-- ========================================== -->
+            <!-- تم إزالة RefreshView بالكامل ليكون التحديث من الزر فقط -->
+            <CollectionView Grid.Row="1"
+                            x:Name="CV"
+                            ItemsSource="{Binding TopTenLeaders}"
+                            SelectionMode="None"
+                            MaximumWidthRequest="650"
+                            HorizontalOptions="Center"
+                            Margin="16,0,16,0">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="0,8">
+
+                            <!-- تصميم البطاقة (Clean & Modern 3D Card) -->
+                            <Border BackgroundColor="White"
+                                    StrokeThickness="1.5"
+                                    Stroke="#FFFFFF"
+                                    StrokeShape="RoundRectangle 26"
+                                    HeightRequest="95">
+
+                                <!-- ظل ناعم جداً للبطاقة -->
+                                <Border.Shadow>
+                                    <Shadow Brush="#0F172A" Radius="15" Offset="0,5" Opacity="0.05"/>
+                                </Border.Shadow>
+
+                                <!-- محتوى البطاقة -->
+                                <Grid ColumnDefinitions="70,*,Auto" Padding="12,0" ColumnSpacing="15">
+
+                                    <!-- دائرة الترتيب الفاخرة -->
+                                    <Border Grid.Column="0"
+                                            WidthRequest="55"
+                                            HeightRequest="55"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 27.5"
+                                            VerticalOptions="Center">
+
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="{Binding RankColor}" Offset="0"/>
+                                                <!-- تغميق اللون الثاني قليلاً لإعطاء شكل كروي 3D -->
+                                                <GradientStop Color="{Binding RankColor}" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+
+                                        <Border.Shadow>
+                                            <Shadow Brush="{Binding RankColor}" Radius="8" Offset="0,4" Opacity="0.3"/>
+                                        </Border.Shadow>
+
+                                        <Label Text="{Binding Rank}" TextColor="White" FontSize="20" FontFamily="CairoBold" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
+
+                                    <!-- بيانات المستخدم -->
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="6">
+                                        <Label Text="{Binding UserName}" FontSize="18" FontFamily="CairoBold" TextColor="#1E293B"/>
+
+                                        <!-- شارة الكلمات المحفوظة -->
+                                        <Border BackgroundColor="#F1F5F9" 
+                                                StrokeThickness="0" 
+                                                StrokeShape="RoundRectangle 12" 
+                                                Padding="12,4" 
+                                                HorizontalOptions="Start">
+
+                                            <Label Text="{Binding MemorizedWords, StringFormat='{0} كلمة'}" 
+                                                   FontSize="12" 
+                                                   FontFamily="CairoBold" 
+                                                   TextColor="#6366F1"/>
+                                        </Border>
+                                    </VerticalStackLayout>
+
+                                    <!-- الميداليات -->
+                                    <Grid Grid.Column="2" WidthRequest="50" VerticalOptions="Center">
+                                        <Label Text="🥇" FontSize="32" IsVisible="{Binding IsFirst}" HorizontalOptions="Center"/>
+                                        <Label Text="🥈" FontSize="32" IsVisible="{Binding IsSecond}" HorizontalOptions="Center"/>
+                                        <Label Text="🥉" FontSize="32" IsVisible="{Binding IsThird}" HorizontalOptions="Center"/>
+
+                                        <Border IsVisible="{Binding IsNotTopThree}" 
+                                                BackgroundColor="#FFF1F2" 
+                                                StrokeThickness="0" 
+                                                StrokeShape="RoundRectangle 12" 
+                                                Padding="10,6" 
+                                                HorizontalOptions="Center">
+                                            <Label Text="🔥" FontSize="18"/>
+                                        </Border>
+                                    </Grid>
+
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <!-- مسافة التنفس أسفل القائمة -->
+                <CollectionView.Footer>
+                    <BoxView HeightRequest="50" Color="Transparent"/>
+                </CollectionView.Footer>
+
+            </CollectionView>
+
+        </Grid>
+
+        <!-- ========================================== -->
+        <!-- 3. شاشات الحالات (Overlay) للتحميل والخطأ  -->
+        <!-- ========================================== -->
+        <!-- غطاء زجاجي ضبابي يغطي الشاشة عند التحميل -->
+        <Border BackgroundColor="#FFF"
+                StrokeThickness="0"
+                ZIndex="10"
+                IsVisible="{Binding ShowOverlay}">
+
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="30" Padding="24">
+
+                <!-- حالة جاري التحميل -->
+                <VerticalStackLayout Spacing="20" IsVisible="{Binding IsBusy}">
+                    <ActivityIndicator IsRunning="True" Color="#4338CA" WidthRequest="60" HeightRequest="60"/>
+                    <Label Text="جاري جلب أبطال إنجليش..." FontSize="16" TextColor="#4338CA" FontFamily="CairoBold" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <!-- حالة خطأ الاتصال -->
+                <VerticalStackLayout Spacing="20" IsVisible="{Binding IsErrorVisible}">
+                    <Image Source="no_internet_icon.png" WidthRequest="80" HeightRequest="80" Opacity="0.8"/>
+                    <Label Text="عذراً، تأكد من اتصالك بالإنترنت" FontSize="18" FontFamily="CairoBold" TextColor="#1E293B" HorizontalOptions="Center"/>
+
+                    <Button Text="إعادة المحاولة" 
+                            Clicked="RefreshView_Refreshing" 
+                            BackgroundColor="#4338CA" 
+                            TextColor="White" 
+                            CornerRadius="25" 
+                            Padding="35,14" 
+                            FontSize="15"
+                            FontFamily="CairoBold"/>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
+</ContentPage>

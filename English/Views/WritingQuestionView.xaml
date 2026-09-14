@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="English.Views.WritingQuestionView"
+             BackgroundColor="#F2F5F9" Unloaded="ContentView_Unloaded">
+
+    <Grid RowDefinitions="30*,20*,50*" Padding="20,0">
+        <toolkit:MediaElement Source="{Binding MediaSource}" x:Name="mediaElement" ShouldAutoPlay="True" IsVisible="False"/>
+        <Border Grid.Row="0"
+                BackgroundColor="White"
+                Stroke="#D0D7E5"
+                StrokeThickness="1"
+                Padding="20"
+                Margin="0,20">
+            <Label Text="{Binding CurrentQuestion.Title}"
+                   FontSize="20"
+                   TextColor="#2C3E50"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+        </Border>
+
+        <Grid Grid.Row="1" ColumnDefinitions="80,*" ColumnSpacing="8" HeightRequest="60" VerticalOptions="Start">
+            <Button Text="إرسال"                    
+                    HeightRequest="50"
+                    CornerRadius="25"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    TextColor="White"
+                    BackgroundColor="#3498DB"
+                    Grid.Column="0"
+                    Clicked="Button_Clicked"/>
+            <Border BackgroundColor="White"
+                    Stroke="#D0D7E5"
+                    StrokeThickness="1"
+                    Grid.Column="1">
+                <Entry Placeholder="اكتب إجابتك هنا..."
+                       x:Name="AnswerEntry"
+                       Margin="5"
+                       FontSize="18"
+                       TextColor="#34495E"
+                       FontAttributes="Bold"
+                       ClearButtonVisibility="WhileEditing"/>
+            </Border>
+        </Grid>
+
+    </Grid>
+</ContentView>

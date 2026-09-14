@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="English.Views.ListeningQuestionView"
+             Loaded="ContentView_Loaded" 
+             Unloaded="ContentView_Unloaded"
+             BackgroundColor="#F8FAFC">
+
+    <Grid RowDefinitions="Auto, *, Auto" Padding="24" RowSpacing="20">
+
+        <toolkit:MediaElement Source="{Binding MediaSource}" 
+                              x:Name="mediaElement" 
+                              ShouldAutoPlay="True" 
+                              IsVisible="False"/>
+
+        <VerticalStackLayout Grid.Row="0" Spacing="15" HorizontalOptions="Center">
+            <Label Text="استمع ثم اختر الإجابة" 
+                   HorizontalTextAlignment="Center" 
+                   TextColor="#64748B" 
+                   FontSize="16"
+                   FontFamily="HacenLebanon"/>
+
+            <Border HeightRequest="120" WidthRequest="120" 
+                    StrokeShape="RoundRectangle 60" 
+                    Stroke="#38BDF8" 
+                    StrokeThickness="3"
+                    BackgroundColor="White">
+                <Border.Shadow>
+                    <Shadow Brush="#38BDF8" Offset="0,4" Opacity="0.3" Radius="10"/>
+                </Border.Shadow>
+
+                <ImageButton x:Name="SoundImage" 
+                             Source="speaker0.webp" 
+                             Command="{Binding SpeakCommand}"
+                             Padding="30"
+                             BackgroundColor="Transparent"
+                             Aspect="AspectFit">
+                    <ImageButton.Triggers>
+                        <Trigger TargetType="ImageButton" Property="IsPressed" Value="True">
+                            <Setter Property="Scale" Value="0.9" />
+                        </Trigger>
+                    </ImageButton.Triggers>
+                </ImageButton>
+            </Border>
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="1" Spacing="12" VerticalOptions="Center">
+
+            <Border StrokeShape="RoundRectangle 18" Stroke="#E2E8F0" StrokeThickness="2" BackgroundColor="White">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,2" Opacity="0.05" Radius="5"/>
+                </Border.Shadow>
+                <Button Text="{Binding CurrentQuestion.Options[0]}"
+                        Command="{Binding SelectedCommand}" 
+                        CommandParameter="{Binding CurrentQuestion.Options[0]}"
+                        BackgroundColor="Transparent"
+                        TextColor="#1E293B"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        FontFamily="HacenLebanon"
+                        HeightRequest="80"/>
+            </Border>
+
+            <Border StrokeShape="RoundRectangle 18" Stroke="#E2E8F0" StrokeThickness="2" BackgroundColor="White">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,2" Opacity="0.05" Radius="5"/>
+                </Border.Shadow>
+                <Button Text="{Binding CurrentQuestion.Options[1]}"
+                        Command="{Binding SelectedCommand}" 
+                        CommandParameter="{Binding CurrentQuestion.Options[1]}"
+                        BackgroundColor="Transparent"
+                        TextColor="#1E293B"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        FontFamily="HacenLebanon"
+                        HeightRequest="80"/>
+            </Border>
+
+            <Border StrokeShape="RoundRectangle 18" Stroke="#E2E8F0" StrokeThickness="2" BackgroundColor="White">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,2" Opacity="0.05" Radius="5"/>
+                </Border.Shadow>
+                <Button Text="{Binding CurrentQuestion.Options[2]}"
+                        Command="{Binding SelectedCommand}" 
+                        CommandParameter="{Binding CurrentQuestion.Options[2]}"
+                        BackgroundColor="Transparent"
+                        TextColor="#1E293B"
+                        FontSize="20"
+                        FontAttributes="Bold"
+                        FontFamily="HacenLebanon"
+                        HeightRequest="80"/>
+            </Border>
+
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentView>

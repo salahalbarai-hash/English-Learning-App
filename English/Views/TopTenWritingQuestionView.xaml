@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.Views.TopTenWritingQuestionView">
+
+    <Grid RowDefinitions="Auto, *" 
+          Padding="30" 
+          BackgroundColor="#0B1120" 
+          VerticalOptions="Center">
+
+        <Border Grid.Row="0"
+                BackgroundColor="#111827"
+                StrokeThickness="2"
+                Padding="25,15"
+                HorizontalOptions="Center"
+                StrokeShape="RoundRectangle 20"
+                Margin="0,0,0,40">
+            <Border.Stroke>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#2DD4BF" Offset="0.0" />
+                    <GradientStop Color="#0F172A" Offset="1.0" />
+                </LinearGradientBrush>
+            </Border.Stroke>
+            <Border.Shadow>
+                <Shadow Brush="#2DD4BF" Offset="0,0" Radius="30" Opacity="0.3" />
+            </Border.Shadow>
+            <Label Text="{Binding Path=BindingContext.CurrentWord.ArabicWord, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
+                   TextColor="White" 
+                   FontSize="54" 
+                   HorizontalOptions="Center" 
+                   FontFamily="CairoBold">
+                <Label.Shadow>
+                    <Shadow Brush="#2DD4BF" Offset="0,0" Radius="10" Opacity="0.7" />
+                </Label.Shadow>
+            </Label>
+        </Border>
+
+        <VerticalStackLayout Grid.Row="1" Spacing="25" VerticalOptions="Start">
+            <Label Text="اكتب الترجمة بالإنجليزية"
+                   TextColor="#94A3B8"
+                   FontSize="14"
+                   HorizontalOptions="Center"
+                   FontFamily="Cairo"
+                   Margin="0,0,0,-10"/>
+
+            <Border x:Name="AnswerBorder" 
+                    Stroke="#1E293B"
+                    StrokeThickness="2"
+                    BackgroundColor="#111827"
+                    HeightRequest="70"
+                    StrokeShape="RoundRectangle 15">
+                <Entry x:Name="WordEntry"
+                       Placeholder="Type English here..."
+                       Text="{Binding Path=BindingContext.UserAnswer, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                       FontSize="22"
+                       TextColor="#2DD4BF" 
+                       FontFamily="CairoBold"
+                       PlaceholderColor="#475569"
+                       Keyboard="Plain"
+                       ReturnType="Send" 
+                       Completed="OnCheckAnswer"
+                       HorizontalTextAlignment="Center"
+                       VerticalOptions="Center"
+                       BackgroundColor="Transparent"
+                       Margin="15,0" />
+            </Border>
+
+            <Button Text="تـحقـق"
+                    Clicked="OnCheckAnswer"
+                    BackgroundColor="#2DD4BF"
+                    TextColor="#0B1120" 
+                    FontFamily="CairoBold"
+                    FontSize="20"
+                    HeightRequest="60"
+                    CornerRadius="15">
+                <Button.Shadow>
+                    <Shadow Brush="#2DD4BF" Offset="0,4" Radius="10" Opacity="0.5"/>
+                </Button.Shadow>
+            </Button>
+        </VerticalStackLayout>
+    </Grid>
+</ContentView>

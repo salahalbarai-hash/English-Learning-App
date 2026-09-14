@@ -1,0 +1,14 @@
+﻿global using CommunityToolkit.Maui.Alerts;
+global using CommunityToolkit.Maui.Views;
+global using English.Pages;
+global using English.Services;
+global using English.Models;
+global using System.Collections.ObjectModel;
+global using System.ComponentModel;
+global using System.Runtime.CompilerServices;
+global using System.Text;
+global using System.Text.Json;
+global using System.Windows.Input;
+global using Shared.Models;
+global using Shared.DataTransferObject;
+global using Microsoft.AspNetCore.SignalR.Client;
