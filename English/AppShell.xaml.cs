@@ -1,4 +1,4 @@
-﻿using English.Hubs;
+using English.Hubs;
 using English.Popups;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -190,9 +190,9 @@ namespace English
                 });
             };
 
-            _gameHub.OnChallengeResponseReceived += async (responderName, isAccepted, category) =>
+            _gameHub.OnChallengeResponseReceived += (responderName, isAccepted, category) =>
             {
-                MainThread.BeginInvokeOnMainThread(async () =>
+                _ = MainThread.InvokeOnMainThreadAsync(async () =>
                 {
                     if (isAccepted)
                     {
