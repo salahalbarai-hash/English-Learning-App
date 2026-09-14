@@ -1,41 +1,34 @@
-using FoundationalCSharp.Server.Hubs;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services
+﻿var builder = WebApplication.CreateBuilder(args);
+// إضافة الخدمات
 builder.Services.AddControllers();
-// Configure SignalR with more aggressive keepalive / timeout to detect disconnects faster
-builder.Services.AddSignalR(options =>
-{
-    // server will send ping every 10s
-    options.KeepAliveInterval = TimeSpan.FromSeconds(10);
-    // if client does not respond within 30s consider it disconnected
-    options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
-});
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR();
 
-// Allow CORS for the mobile app (adjust origins in production)
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
+    options.AddPolicy("AllowDynamicOrigins", builder =>
     {
-        policy.AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials()
-              .SetIsOriginAllowed(_ => true); // allow all origins, change for production
+        builder.SetIsOriginAllowed(origin => true) // السماح بأي نطاق ديناميكيًا
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials(); // السماح بالمصادقة عبر الكوكيز والتوكنات المحمية
     });
 });
 
 var app = builder.Build();
 
-app.UseCors();
-app.UseRouting();
+// تفعيل Swagger دائمًا أثناء التطوير
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseCors("AllowAll"); // تطبيق CORS
+//app.UseHttpsRedirection();
 app.UseAuthorization();
+app.UseStaticFiles();
 
 app.MapControllers();
-app.MapHub<GameHub>("/gamehub");
+app.MapHub<ChatHub>("/chatHub");
+app.MapHub<GameHub>("/gameHub");
 
 app.Run();
