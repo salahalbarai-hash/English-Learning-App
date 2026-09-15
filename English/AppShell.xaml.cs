@@ -1,4 +1,4 @@
-﻿using English.Hubs;
+using English.Hubs;
 using English.Popups;
 using Microsoft.AspNetCore.SignalR.Client;
 
@@ -56,18 +56,7 @@ namespace English
                 }
             }
         }
-        public async Task<List<string>> GetAllFriendsAsync()
-        {
-            if (_gameHub != null && _gameHub.HubConnection?.State == Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected)
-            {
-                try
-                {
-                    return await _gameHub.HubConnection.InvokeAsync<List<string>>("GetAllFriends");
-                }
-                catch { return new List<string>(); }
-            }
-            return new List<string>();
-        }
+
         public async Task StartGameHubAsync(string currentUserName)
         {
             if (string.IsNullOrEmpty(currentUserName)) return;
@@ -98,9 +87,7 @@ namespace English
 
                         bool accepted = result is bool b && b;
 
-                        await _gameHub.SendResponseAsync(senderName, accepted, category);
-
-                        // If current user accepted the challenge, deduct stake coins locally and persist
+                        // If current user accepted the challenge, deduct stake coins and FriendsChallengeCount locally and persist
                         if (accepted)
                         {
                             try
@@ -113,18 +100,33 @@ namespace English
                                 if (stake > 0)
                                 {
                                     long id = Convert.ToInt64(Preferences.Get("ID", "0"));
+
+                                    // خصم الكوينز
                                     long coins = Preferences.Get("Coins", 0L) - stake;
                                     Preferences.Set("Coins", coins);
+
+                                    // خصم عدد محاولات تحدي الأصدقاء
+                                    long challengeCount = Preferences.Get("FriendsChallengeCount", 0L);
+                                    if (challengeCount > 0) challengeCount -= 1;
+                                    Preferences.Set("FriendsChallengeCount", challengeCount);
 
                                     if (await Service.HasActiveInternetAsync(5))
                                     {
                                         var res = await Service.UpdateCoins(new User { ID = id, Coins = coins });
                                         if (res != "1") Service.AddPendingCoinsUpdate(id, coins);
+
+                                        await Service.UpdateFriendsChallengeCount(new User { ID = id, FriendsChallengeCount = challengeCount });
+                                    }
+                                    else
+                                    {
+                                        Service.AddPendingCoinsUpdate(id, coins);
                                     }
                                 }
                             }
                             catch { }
                         }
+
+                        await _gameHub.SendResponseAsync(senderName, accepted, category);
 
                         if (accepted)
                         {
@@ -155,6 +157,34 @@ namespace English
                 {
                     if (Current != null)
                     {
+                        // --- تحديد قيمة الرهان حسب نوع التحدي ---
+                        int stake = 0;
+                        if (category == "ChoiceMulti") stake = 3;
+                        else if (category == "WritingMulti") stake = 5;
+
+                        // --- فحص رصيد المُستقبِل قبل عرض popup القبول ---
+                        if (stake > 0)
+                        {
+                            long receiverCoins = Preferences.Get("Coins", 0L);
+                            long receiverChallengeCount = Preferences.Get("FriendsChallengeCount", 0L);
+
+                            if (receiverChallengeCount <= 0)
+                            {
+                                // رفض تلقائي: لا توجد محاولات كافية
+                                await _gameHub.SendResponseAsync(senderName, false, category);
+                                await Toast.Make("لا توجد لديك محاولات كافية لقبول هذا التحدي ⚠️").Show();
+                                return;
+                            }
+
+                            if (receiverCoins < stake)
+                            {
+                                // رفض تلقائي: لا يوجد رصيد كافٍ
+                                await _gameHub.SendResponseAsync(senderName, false, category);
+                                await Toast.Make($"لا يوجد لديك عملات كافية لقبول هذا التحدي (مطلوب {stake} عملات) ⚠️").Show();
+                                return;
+                            }
+                        }
+
                         string displayCategory = category switch
                         {
                             "ChoiceMulti" => "تحدي الخيارات",
@@ -165,6 +195,38 @@ namespace English
                         var result = await Current.ShowPopupAsync(popup);
 
                         bool accepted = result is bool b && b;
+
+                        // --- خصم الكوينز و FriendsChallengeCount عند القبول ---
+                        if (accepted && stake > 0)
+                        {
+                            try
+                            {
+                                long id = Convert.ToInt64(Preferences.Get("ID", "0"));
+
+                                // خصم الكوينز
+                                long coins = Preferences.Get("Coins", 0L) - stake;
+                                Preferences.Set("Coins", coins);
+
+                                // خصم عدد محاولات تحدي الأصدقاء
+                                long challengeCount = Preferences.Get("FriendsChallengeCount", 0L);
+                                if (challengeCount > 0) challengeCount -= 1;
+                                Preferences.Set("FriendsChallengeCount", challengeCount);
+
+                                // حفظ التغييرات على السيرفر
+                                if (await Service.HasActiveInternetAsync(5))
+                                {
+                                    var res = await Service.UpdateCoins(new User { ID = id, Coins = coins });
+                                    if (res != "1") Service.AddPendingCoinsUpdate(id, coins);
+
+                                    await Service.UpdateFriendsChallengeCount(new User { ID = id, FriendsChallengeCount = challengeCount });
+                                }
+                                else
+                                {
+                                    Service.AddPendingCoinsUpdate(id, coins);
+                                }
+                            }
+                            catch { }
+                        }
 
                         await _gameHub.SendResponseAsync(senderName, accepted, category);
 

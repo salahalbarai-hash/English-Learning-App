@@ -9,7 +9,8 @@
     <VerticalStackLayout Padding="20" Spacing="15">
 
         <!-- زر الانتقال لصفحة طلبات الصداقة -->
-        <Button Text="طلبات الصداقة الواردة 📩"
+        <Button x:Name="BtnPendingRequests"
+                Text="طلبات الصداقة الواردة 📩"
                 BackgroundColor="#3B82F6"
                 TextColor="White"
                 CornerRadius="8"

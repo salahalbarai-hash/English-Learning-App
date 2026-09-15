@@ -181,8 +181,22 @@ public partial class FriendsPage : ContentPage
             try
             {
                 var fetchedOnline = await appShell.GetOnlineUsersAsync();
-                var fetchedFriends = await appShell.GetAllFriendsAsync();
+                var fetchedFriends = await appShell.GetFriendsAsync();
                 var fetchedRequests = await appShell.GetSentPendingRequestsAsync();
+                var incomingRequests = await appShell.GetPendingFriendRequestsAsync();
+
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    if (incomingRequests != null && incomingRequests.Count > 0)
+                    {
+                        BtnPendingRequests.IsVisible = true;
+                        BtnPendingRequests.Text = $"طلبات الصداقة ({incomingRequests.Count}) 📩";
+                    }
+                    else
+                    {
+                        BtnPendingRequests.IsVisible = false;
+                    }
+                });
 
                 _onlineUsers = fetchedOnline ?? new List<string>();
 
@@ -346,6 +360,12 @@ public partial class FriendsPage : ContentPage
 
     private async void OnAddFriendClicked(object sender, EventArgs e)
     {
+        if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
+        {
+            await Toast.Make("لا يوجد اتصال بالإنترنت لإرسال طلب الصداقة ⚠️").Show();
+            return;
+        }
+
         if (sender is Button button && button.CommandParameter is string targetUser)
         {
             var currentUser = Preferences.Get("UserName", "");

@@ -1,4 +1,4 @@
-﻿namespace English.Models;
+namespace English.Models;
 
 public enum MessageStatus
 {
@@ -23,16 +23,20 @@ public class ChatBubbleModel
     // خصائص التصميم المتناسقة مع الخلفية الفاتحة
     public LayoutOptions BubbleAlignment => IsMine ? LayoutOptions.End : LayoutOptions.Start;
 
-    // أخضر فاتح للمرسل، أبيض للمستقبل
+    // لون أزرق نيلي للمرسل (أو بنفسجي داكن)، كحلي غامق للمستقبل
     public Color BubbleColor => IsMine
-    ? Color.FromArgb("#D1F2D8")
-    : Color.FromArgb("#FFFFFF");
+    ? Color.FromArgb("#3730A3")
+    : Color.FromArgb("#1E293B");
 
-    // لون نص أسود/رمادي داكن لضمان الوضوح التام
-    public Color TextColor => Color.FromArgb("#111B21");
+    // لون نص أبيض ناصع أو مائل للرمادي لضمان الوضوح التام
+    public Color TextColor => IsMine
+    ? Color.FromArgb("#FFFFFF")
+    : Color.FromArgb("#F8FAFC");
 
     // لون هادئ للوقت
-    public Color TimeColor => Color.FromArgb("#667781");
+    public Color TimeColor => IsMine
+    ? Color.FromArgb("#C7D2FE")
+    : Color.FromArgb("#94A3B8");
 
     // 🟢 تعديل الوقت ليصبح بنظام 12 ساعة مع (ص / م) باللغة العربية
     public string TimeString => Timestamp.ToString("hh:mm tt", new System.Globalization.CultureInfo("ar-SA"));
@@ -47,6 +51,6 @@ public class ChatBubbleModel
         _ => ""
     };
 
-    // لون علامة الصح (أزرق فاتح عند القراءة، رمادي للحالات الأخرى)
-    public Color StatusIconColor => Status == MessageStatus.Read ? Color.FromArgb("#53BDEB") : Color.FromArgb("#8696A0");
+    // لون علامة الصح (سماوي فاتح عند القراءة، رمادي للحالات الأخرى)
+    public Color StatusIconColor => Status == MessageStatus.Read ? Color.FromArgb("#38BDF8") : Color.FromArgb("#94A3B8");
 }

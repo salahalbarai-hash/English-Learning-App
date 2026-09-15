@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System.Data;
 
 namespace FoundationalCSharp.Server.Controllers
@@ -146,6 +146,20 @@ namespace FoundationalCSharp.Server.Controllers
 
             if (u is null)
                 return NotFound(new ApiResult<User> { Success = false, Message = "بيانات الدخول غير صحيحة" });
+
+            return Ok(new ApiResult<User> { Success = true, Data = u });
+        }
+
+        [HttpGet("GetUserByUserName")]
+        public IActionResult GetUserByUserName(string userName)
+        {
+            User? u = DB.GetUser($"SELECT * FROM UsersTbl WHERE UserName = N'{userName}'");
+
+            if (u is null)
+                return NotFound(new ApiResult<User> { Success = false, Message = "لم يتم العثور على المستخدم" });
+
+            // إخفاء كلمة المرور لأسباب أمنية
+            u.Password = null;
 
             return Ok(new ApiResult<User> { Success = true, Data = u });
         }

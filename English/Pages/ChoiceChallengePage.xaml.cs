@@ -264,13 +264,6 @@ public partial class ChoiceChallengePage : ContentPage
             // --- وضع تحدي صديق ---
             try
             {
-                // Prevent starting friend challenge if no remaining attempts
-                long remaining = Preferences.Get("FriendsChallengeCount", 0L);
-                if (remaining <= 0)
-                {
-                    await Toast.Make("لا توجد لديك محاولات لتحدي الأصدقاء ⚠️").Show();
-                    return;
-                }
                 if (!await Service.HasActiveInternetAsync(5))
                 {
                     await Toast.Make("لا يوجد اتصال بالإنترنت. يرجى التحقق من الاتصال قبل بدء التحدي.").Show();

@@ -21,12 +21,6 @@ public partial class MessagesPage : ContentPage
     public MessagesPage()
     {
         InitializeComponent();
-
-        // إجبار الشاشة على الوضع النهاري دائماً للحفاظ على التصميم الزاهي
-        if (Application.Current != null)
-        {
-            Application.Current.UserAppTheme = AppTheme.Light;
-        }
     }
 
     protected override async void OnAppearing()
@@ -50,7 +44,7 @@ public partial class MessagesPage : ContentPage
         {
             if (Shell.Current is AppShell appShell)
             {
-                var fetchedFriends = await appShell.GetAllFriendsAsync();
+                var fetchedFriends = await appShell.GetFriendsAsync();
                 var fetchedOnline = await appShell.GetOnlineUsersAsync();
 
                 if (fetchedFriends != null) friendsList = fetchedFriends;

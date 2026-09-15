@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="English.Pages.MessagesPage"
-             BackgroundColor="#FFFFFF"
+             BackgroundColor="#0B1120"
              NavigationPage.HasNavigationBar="False">
 
     <Grid RowDefinitions="Auto, *">
@@ -11,16 +11,16 @@
         <Border Grid.Row="0"
                 Margin="20,20,20,15"
                 StrokeThickness="0"
-                BackgroundColor="#F3F4F6"
+                BackgroundColor="#151E2F"
                 StrokeShape="RoundRectangle 14"
                 HeightRequest="50">
 
             <SearchBar x:Name="SearchBarFriends"
                        Placeholder="ابحث عن صديق..."
                        BackgroundColor="Transparent"
-                       PlaceholderColor="#9CA3AF"
+                       PlaceholderColor="#64748B"
                        CancelButtonColor="#6366F1"
-                       TextColor="#111827"
+                       TextColor="#F8FAFC"
                        VerticalOptions="Center"
                        TextChanged="OnSearchTextChanged"/>
         </Border>
@@ -41,7 +41,7 @@
                                 <VisualState Name="Normal" />
                                 <VisualState Name="Selected">
                                     <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="#F9FAFB" />
+                                        <Setter Property="BackgroundColor" Value="#1E293B" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
@@ -73,7 +73,7 @@
                                 <Border WidthRequest="16"
                                         HeightRequest="16"
                                         StrokeShape="RoundRectangle 8"
-                                        Stroke="#FFFFFF"
+                                        Stroke="#0B1120"
                                         StrokeThickness="2.5"
                                         BackgroundColor="{Binding StatusColor}"
                                         HorizontalOptions="End"
@@ -89,11 +89,11 @@
                                 <Label Text="{Binding Name}"
                                        FontSize="16"
                                        FontAttributes="Bold"
-                                       TextColor="#111827"/>
+                                       TextColor="#F8FAFC"/>
 
                                 <Label Text="{Binding StatusText}"
                                        FontSize="13"
-                                       TextColor="#6B7280"/>
+                                       TextColor="#94A3B8"/>
                             </VerticalStackLayout>
 
                             <!-- السهم -->
@@ -102,14 +102,14 @@
                                    FontSize="26"
                                    FontAttributes="Bold"
                                    VerticalOptions="Center"
-                                   TextColor="#D1D5DB"
+                                   TextColor="#475569"
                                    TranslationY="-2"/>
 
                         </Grid>
 
                         <!-- خط فاصل ناعم بين المحادثات -->
                         <BoxView HeightRequest="1" 
-                                 Color="#F3F4F6" 
+                                 Color="#1E293B" 
                                  VerticalOptions="End" 
                                  Margin="89,0,20,0"/>
                     </Grid>
@@ -133,7 +133,7 @@
             <Label Text="لا توجد محادثات"
                    FontSize="18"
                    FontAttributes="Bold"
-                   TextColor="#374151"
+                   TextColor="#94A3B8"
                    HorizontalOptions="Center"/>
         </VerticalStackLayout>
     </Grid>

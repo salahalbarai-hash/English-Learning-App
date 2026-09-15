@@ -2,13 +2,13 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="English.Pages.ChatPage"
-             BackgroundColor="#F8FAFC"
+             BackgroundColor="#0B1120"
              NavigationPage.HasNavigationBar="False">
 
     <Grid RowDefinitions="Auto, *, Auto">
 
         <!-- 🟢 1. ترويسة علوية ناصعة وعصرية (Header) -->
-        <Border Grid.Row="0" BackgroundColor="#F4F7FB" Stroke="#E2E8F0" StrokeThickness="1" Padding="12,35,12,12">
+        <Border Grid.Row="0" BackgroundColor="#151E2F" Stroke="#1E293B" StrokeThickness="1" Padding="12,35,12,12">
 
             <Border.Shadow>
                 <Shadow Brush="#000000" Offset="0,1" Radius="10" Opacity="0.03"/>
@@ -58,11 +58,11 @@
                            Text="جاري التحميل..." 
                            FontAttributes="Bold" 
                            FontSize="17" 
-                           TextColor="#0F172A" />
+                           TextColor="#F8FAFC" />
                     <Label x:Name="FriendStatusLabel" 
                            Text="تحقق من الاتصال..." 
                            FontSize="12" 
-                           TextColor="#64748B" />
+                           TextColor="#94A3B8" />
                 </VerticalStackLayout>
             </Grid>
         </Border>
@@ -70,7 +70,7 @@
         <!-- 🟢 2. قائمة الرسائل (الدردشة) -->
         <CollectionView x:Name="MessagesList" 
                         Grid.Row="1"
-                        BackgroundColor="#F4F7FB">
+                        BackgroundColor="#0B1120">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid Padding="0,5">
@@ -97,7 +97,7 @@
                                        Text="{Binding Content}" 
                                        FontSize="15" 
                                        LineBreakMode="WordWrap"
-                                       TextColor="#0F172A" 
+                                       TextColor="{Binding TextColor}" 
                                        Margin="0,0,0,2"/>
 
                                 <!-- الوقت وحالة القراءة -->
@@ -108,7 +108,7 @@
 
                                     <Label Text="{Binding TimeString}" 
                                            FontSize="10" 
-                                           TextColor="#64748B" 
+                                           TextColor="{Binding TimeColor}" 
                                            VerticalOptions="Center"/>
 
                                     <!-- علامة صح الاستلام والقراءة -->
@@ -128,8 +128,8 @@
 
         <!-- 🟢 3. شريط إدخال النص السفي (Message Composer) -->
         <Border Grid.Row="2"
-        BackgroundColor="#F8FAFC"
-        Stroke="#E2E8F0"
+        BackgroundColor="#151E2F"
+        Stroke="#1E293B"
         StrokeThickness="1"
         Padding="12,10,12,15">
 
@@ -138,15 +138,15 @@
                 <Border Grid.Column="0" 
                         Padding="16,0" 
                         StrokeShape="RoundRectangle 24" 
-                        Stroke="#D9E2EC"
+                        Stroke="#334155"
                         StrokeThickness="1"
-                        BackgroundColor="#EEF2F7" 
+                        BackgroundColor="#1E293B" 
                         HeightRequest="48" 
                         VerticalOptions="Center">
                     <Entry x:Name="MessageEntry" 
                            Placeholder="اكتب رسالتك هنا..." 
-                           PlaceholderColor="#94A3B8"
-                           TextColor="#0F172A"
+                           PlaceholderColor="#64748B"
+                           TextColor="#F8FAFC"
                            FontSize="15"
                            BackgroundColor="Transparent" 
                            ClearButtonVisibility="Never"

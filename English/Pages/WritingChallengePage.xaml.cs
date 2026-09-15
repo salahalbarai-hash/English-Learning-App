@@ -268,11 +268,9 @@ public partial class WritingChallengePage : ContentPage
             // --- Friend Challenge Mode ---
             try
             {
-                // Prevent starting friend challenge if no remaining attempts
-                long remaining = Preferences.Get("FriendsChallengeCount", 0L);
-                if (remaining <= 0)
+                if (!await Service.HasActiveInternetAsync(5))
                 {
-                    await Toast.Make("لا توجد لديك محاولات لتحدي الأصدقاء ⚠️").Show();
+                    await Toast.Make("لا يوجد اتصال بالإنترنت. يرجى التحقق من الاتصال قبل بدء التحدي.").Show();
                     return;
                 }
                 List<string> myFriends = await FetchFriendsFromDatabaseAsync();
