@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 namespace FoundationalCSharp.Server
 {
     public class DB
@@ -88,7 +88,8 @@ namespace FoundationalCSharp.Server
                 leaders.Add(new Leader
                 {
                     UserName = Convert.ToString(reader["UserName"]) ?? "",
-                    MemorizedWords = Convert.ToInt32(reader["MemorizedWords"])
+                    MemorizedWords = Convert.ToInt32(reader["MemorizedWords"]),
+                    Coins = Convert.ToInt64(reader["Coins"])
                 });
             }
 

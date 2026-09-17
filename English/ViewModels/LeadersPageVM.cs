@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Core;
 using English.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -52,12 +52,14 @@ namespace English.ViewModels
 
                     if (leaders != null)
                     {
+                        var sortedLeaders = leaders.OrderByDescending(l => l.Coins).ThenByDescending(l => l.MemorizedWords).ToList();
+
                         // تحديث القائمة على الخيط الرئيسي لضمان الظهور الفوري
                         MainThread.BeginInvokeOnMainThread(() =>
                         {
                             TopTenLeaders.Clear();
                             int i = 1;
-                            foreach (var leader in leaders)
+                            foreach (var leader in sortedLeaders)
                             {
                                 leader.Rank = i++;
                                 TopTenLeaders.Add(leader);

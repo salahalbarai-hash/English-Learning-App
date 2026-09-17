@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FoundationalCSharp.Server.Controllers
 {
@@ -9,10 +9,10 @@ namespace FoundationalCSharp.Server.Controllers
         [HttpGet]
         public IActionResult GetStudents()
         {
-            string query = "SELECT UserName, MemorizedWords " +
+            string query = "SELECT UserName, MemorizedWords, Coins " +
                            "FROM UsersTbl " +
-                           "WHERE MemorizedWords > 10 " +
-                           "ORDER BY MemorizedWords DESC";
+                           "WHERE Coins > 0 OR MemorizedWords > 10 " +
+                           "ORDER BY Coins DESC, MemorizedWords DESC";
             Leader[] leaders = DB.QueryAsLeaders(query);
             return Ok(leaders);
         }

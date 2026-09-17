@@ -136,18 +136,38 @@
                                     <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="6">
                                         <Label Text="{Binding UserName}" FontSize="18" FontFamily="CairoBold" TextColor="#1E293B"/>
 
-                                        <!-- شارة الكلمات المحفوظة -->
-                                        <Border BackgroundColor="#F1F5F9" 
-                                                StrokeThickness="0" 
-                                                StrokeShape="RoundRectangle 12" 
-                                                Padding="12,4" 
-                                                HorizontalOptions="Start">
+                                        <!-- الشارات (كلمات + كوينز) -->
+                                        <HorizontalStackLayout Spacing="8">
+                                            <!-- شارة الكلمات المحفوظة -->
+                                            <Border BackgroundColor="#F1F5F9" 
+                                                    StrokeThickness="0" 
+                                                    StrokeShape="RoundRectangle 12" 
+                                                    Padding="10,4">
+                                                <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                                                    <Label Text="📚" FontSize="11" VerticalOptions="Center"/>
+                                                    <Label Text="{Binding MemorizedWords}" 
+                                                           FontSize="12" 
+                                                           FontFamily="CairoBold" 
+                                                           TextColor="#6366F1"
+                                                           VerticalOptions="Center"/>
+                                                </HorizontalStackLayout>
+                                            </Border>
 
-                                            <Label Text="{Binding MemorizedWords, StringFormat='{0} كلمة'}" 
-                                                   FontSize="12" 
-                                                   FontFamily="CairoBold" 
-                                                   TextColor="#6366F1"/>
-                                        </Border>
+                                            <!-- شارة الكوينز -->
+                                            <Border BackgroundColor="#FEF3C7" 
+                                                    StrokeThickness="0" 
+                                                    StrokeShape="RoundRectangle 12" 
+                                                    Padding="10,4">
+                                                <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                                                    <Label Text="🪙" FontSize="11" VerticalOptions="Center"/>
+                                                    <Label Text="{Binding Coins}" 
+                                                           FontSize="12" 
+                                                           FontFamily="CairoBold" 
+                                                           TextColor="#D97706"
+                                                           VerticalOptions="Center"/>
+                                                </HorizontalStackLayout>
+                                            </Border>
+                                        </HorizontalStackLayout>
                                     </VerticalStackLayout>
 
                                     <!-- الميداليات -->

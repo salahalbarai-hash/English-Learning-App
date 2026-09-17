@@ -19,10 +19,9 @@
                 <!-- شبكة ذكية لترتيب العنوان في المنتصف والزر في أقصى اليسار دون التأثير على التوسيط -->
                 <Grid VerticalOptions="Center">
 
-                    <!-- الأيقونة + العنوان (في المنتصف دائماً) -->
+                    <!-- العنوان (في المنتصف دائماً) -->
                     <HorizontalStackLayout HorizontalOptions="Center" Spacing="10" VerticalOptions="Center">
-                        <Label Text="🎮" FontSize="32" VerticalOptions="Center"/>
-                        <Label Text="الألعاب" FontSize="26" FontFamily="CairoBold" TextColor="White" VerticalOptions="Center"/>
+                        <Label Text="التحديات" FontSize="26" FontFamily="CairoBold" TextColor="White" VerticalOptions="Center"/>
                     </HorizontalStackLayout>
 
                     <!-- بادج التحديات (في اليسار) -->
