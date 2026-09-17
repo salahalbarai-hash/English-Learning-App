@@ -7,10 +7,13 @@ public class MessagesFriendItem
         ? "?"
         : string.Join("", Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0].ToString())).ToUpper();
     public string StatusIcon { get; set; } = "🔴";
-    public string StatusText => StatusIcon == "🟢" ? "متصل" : "غير متصل";
+    public string StatusText => StatusIcon == "🟢" ? "متصل الآن" : "غير متصل";
 
     // 🟢 لون نقطة الاتصال: أخضر زاهي للمتصل وأحمر هادئ للغير متصل
     public Color StatusColor => StatusIcon == "🟢" ? Color.FromArgb("#10B981") : Color.FromArgb("#F43F5E");
+
+    // لون نص الحالة: أخضر للمتصل ورمادي للغير متصل
+    public Color StatusTextColor => StatusIcon == "🟢" ? Color.FromArgb("#10B981") : Color.FromArgb("#64748B");
 }
 
 public partial class MessagesPage : ContentPage

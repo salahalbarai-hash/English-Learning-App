@@ -31,6 +31,7 @@ public partial class LeadersPage : ContentPage
         {
             int memorizedWords = Preferences.Get("MemorizedWords", 0);
             long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0L);
+            long coins = Preferences.Get("Coins", 0L);
             long id = Convert.ToInt64(Preferences.Get("ID", "0"));
 
             if (await Service.HasActiveInternetAsync(5))
@@ -49,17 +50,16 @@ public partial class LeadersPage : ContentPage
 
                 User user = result.Data!;
 
-                await UpdateMemorizedWords(id, memorizedWords, user.MemorizedWords);
+                await UpdateMemorizedWords(id, memorizedWords, user.MemorizedWords);            
                 await UpdateFriendsChallengeCount(id, friendsChallengeCount, user.FriendsChallengeCount);
+                await UpdateCoins(id, coins, user.Coins);
 
                 // 🔥 هنا تحديث لوحة المتصدرين
                 await ViewModel.LoadLeadersAsync();
             }
             else
             {
-                await Toast.Make("يرجى الاتصال بالانترنت 📶",
-                    ToastDuration.Short, 14)
-                    .Show(new CancellationToken());
+                await Toast.Make("يرجى الاتصال بالانترنت 📶").Show();
             }
         }
         catch (Exception ex)
@@ -80,6 +80,22 @@ public partial class LeadersPage : ContentPage
             {
                 ID = userId,
                 MemorizedWords = localCount
+            });
+        }
+    }
+
+    private async Task UpdateCoins(long userId, long localCount, long serverCount)
+    {
+        if (localCount < serverCount)
+        {
+            Preferences.Set("Coins", serverCount);
+        }
+        else if (localCount > serverCount)
+        {
+            await Service.UpdateCoins(new User
+            {
+                ID = userId,
+                Coins = localCount
             });
         }
     }

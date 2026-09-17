@@ -18,13 +18,14 @@ public partial class TenWordsPage : ContentPage
     {
         base.OnAppearing();
         _isNavigating = false;
+        vm.ProgressStatus = Preferences.Get("Coins", 0L).ToString();
 
         long savedWords = Preferences.Get("MemorizedWords", 0);
         if(savedWords > 0)
             vm.MemorizedWordsCount = savedWords;
         else
         {
-            vm.ProgressStatus = "عقلك الاَن أرض بكر.. ابدأ بغرس الكلمات! 🌱";
+            //vm.ProgressStatus = "عقلك الاَن أرض بكر.. ابدأ بغرس الكلمات! 🌱";
             vm.LoadDailyWords();
         }
         //await Task.Delay(100);

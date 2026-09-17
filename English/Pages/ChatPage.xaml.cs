@@ -1,12 +1,14 @@
 using System.Collections.ObjectModel;
 using System.Text.Json;
 using Microsoft.AspNetCore.SignalR.Client;
+using CommunityToolkit.Maui.Views;
 
 namespace English.Pages;
 
 [QueryProperty(nameof(FriendName), "FriendName")]
 public partial class ChatPage : ContentPage
 {
+    private bool _ignoreNextTap = false;
     private string _friendName = "";
     public string FriendName
     {
@@ -22,9 +24,55 @@ public partial class ChatPage : ContentPage
     private AppShell? _shell;
     private string _currentUserName = "";
 
+    public System.Windows.Input.ICommand LongPressCommand { get; private set; }
+    public System.Windows.Input.ICommand TapCommand { get; private set; }
+
+    private IDisposable? _receiveSubscription;
+    private IDisposable? _deliveredSubscription;
+    private IDisposable? _readSubscription;
+
+    private bool _isSelectionModeActive = false;
+    public bool IsSelectionModeActive
+    {
+        get => _isSelectionModeActive;
+        set
+        {
+            if (_isSelectionModeActive != value)
+            {
+                _isSelectionModeActive = value;
+                OnPropertyChanged(nameof(IsSelectionModeActive));
+                
+                // تحديث حالة كل رسالة
+                if (Messages != null)
+                {
+                    foreach (var msg in Messages)
+                    {
+                        msg.IsSelectionMode = value;
+                    }
+                }
+            }
+        }
+    }
+
     public ChatPage()
     {
         InitializeComponent();
+
+        LongPressCommand = new Command<ChatBubbleModel>(OnMessageLongPressedCommand);
+        TapCommand = new Command<ChatBubbleModel>(OnMessageTappedCommand);
+
+        Messages.CollectionChanged += (s, e) =>
+        {
+            if (e.NewItems != null)
+            {
+                foreach (ChatBubbleModel item in e.NewItems)
+                {
+                    item.OnTappedAction = OnMessageTappedCommand;
+                    item.OnLongPressedAction = OnMessageLongPressedCommand;
+                    item.IsSelectionMode = IsSelectionModeActive;
+                }
+            }
+        };
 
         MessagesList.ItemsSource = Messages;
         _shell = Shell.Current as AppShell;
@@ -58,10 +106,22 @@ public partial class ChatPage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+        
+        _receiveSubscription?.Dispose();
+        _deliveredSubscription?.Dispose();
+        _readSubscription?.Dispose();
+
         if (_shell?.GameHub != null)
         {
             _shell.GameHub.OnUserConnected -= OnFriendConnected;
             _shell.GameHub.OnUserDisconnected -= OnFriendDisconnected;
+            _shell.GameHub.OnMessageDeleted -= OnMessageDeletedHandler;
+
+            if (_shell.GameHub.HubConnection != null)
+            {
+                _shell.GameHub.HubConnection.Reconnected -= OnHubReconnected;
+                _shell.GameHub.HubConnection.Closed -= OnHubClosed;
+            }
         }
     }
 
@@ -101,30 +161,34 @@ public partial class ChatPage : ContentPage
 
     private async Task CheckFriendStatus()
     {
-        if (_shell?.GameHub?.HubConnection == null || _shell.GameHub.HubConnection.State != HubConnectionState.Connected)
-        {
-            FriendStatusLabel.Text = "";
-            MainThread.BeginInvokeOnMainThread(() => OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#EF4444"));
-            return;
-        }
-
         try
         {
-            var onlineUsers = await _shell?.GetOnlineUsersAsync()!;
-            if (onlineUsers.Contains(FriendName, StringComparer.OrdinalIgnoreCase))
+            // 1. نتحقق مما إذا كان SignalR متصلاً لنجلب حالة الأونلاين اللحظية
+            if (_shell?.GameHub?.HubConnection?.State == HubConnectionState.Connected)
             {
-                FriendStatusLabel.Text = "متصل الآن";
-                MainThread.BeginInvokeOnMainThread(() => OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#10B981"));
+                var onlineUsers = await _shell.GetOnlineUsersAsync();
+                if (onlineUsers != null && onlineUsers.Contains(FriendName, StringComparer.OrdinalIgnoreCase))
+                {
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        FriendStatusLabel.Text = "متصل الآن";
+                        OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#10B981"); // أخضر
+                    });
+                    return; // نتوقف هنا لأننا وجدناه متصلاً
+                }
             }
-            else
-            {
-                await UpdateLastSeenUI();
-            }
+
+            // 2. إذا كان SignalR مفصولاً، أو الصديق غير متصل الآن، نجلب "آخر ظهور" من السيرفر
+            await UpdateLastSeenUI();
         }
         catch
         {
-            FriendStatusLabel.Text = "";
-            MainThread.BeginInvokeOnMainThread(() => OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#EF4444"));
+            // 3. في حالة فشل كل شيء (انقطاع الإنترنت الفعلي عن الجهاز)
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                FriendStatusLabel.Text = "غير متصل (لا يوجد انترنت)";
+                OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#EF4444"); // أحمر
+            });
         }
     }
 
@@ -133,34 +197,41 @@ public partial class ChatPage : ContentPage
         try
         {
             var lastSeen = await _shell?.GetLastSeenAsync(FriendName);
-            MainThread.BeginInvokeOnMainThread(() => OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#EF4444"));
 
-            if (lastSeen.HasValue)
+            MainThread.BeginInvokeOnMainThread(() =>
             {
-                var time = lastSeen.Value;
-                var today = DateTime.Today;
-                var culture = new System.Globalization.CultureInfo("ar-SA");
-                string timeStr = time.ToString("hh:mm tt", culture);
-                string datePart;
+                OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#EF4444");
 
-                if (time.Date == today)
-                    datePart = $"اليوم الساعة {timeStr}";
-                else if (time.Date == today.AddDays(-1))
-                    datePart = $"أمس الساعة {timeStr}";
+                if (lastSeen.HasValue)
+                {
+                    var time = lastSeen.Value.ToLocalTime();
+                    var today = DateTime.Today;
+                    var culture = new System.Globalization.CultureInfo("ar-SA");
+                    string timeStr = time.ToString("hh:mm tt", culture);
+                    string datePart;
+
+                    if (time.Date == today)
+                        datePart = $"اليوم الساعة {timeStr}";
+                    else if (time.Date == today.AddDays(-1))
+                        datePart = $"أمس الساعة {timeStr}";
+                    else
+                        datePart = time.ToString("dd/MM/yyyy hh:mm tt", culture);
+
+                    FriendStatusLabel.Text = $"آخر ظهور: {datePart}";
+                }
                 else
-                    datePart = time.ToString("dd/MM/yyyy hh:mm tt", culture);
-
-                FriendStatusLabel.Text = $"آخر ظهور: {datePart}";
-            }
-            else
-            {
-                FriendStatusLabel.Text = "غير متصل";
-            }
+                {
+                    FriendStatusLabel.Text = "غير متصل";
+                }
+            });
         }
         catch
         {
-            FriendStatusLabel.Text = "غير متصل";
-            MainThread.BeginInvokeOnMainThread(() => OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#EF4444"));
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                FriendStatusLabel.Text = "غير متصل";
+                OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#EF4444");
+            });
         }
     }
 
@@ -171,11 +242,18 @@ public partial class ChatPage : ContentPage
             var serverMessages = await _shell.GetChatHistoryAsync(FriendName);
             if (serverMessages != null && serverMessages.Count > 0)
             {
+                // جلب القائمة السوداء للرسائل المحذوفة محلياً (حذف لدي)
+                string blacklistJson = Preferences.Get("DeletedForMe_List", "[]");
+                var blacklist = JsonSerializer.Deserialize<List<int>>(blacklistJson) ?? new List<int>();
+
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     Messages.Clear();
                     foreach (var sm in serverMessages)
                     {
+                        // تخطي الرسائل التي تم حذفها محلياً
+                        if (blacklist.Contains(sm.Id)) continue;
+
                         bool isMine = sm.Sender.Equals(_currentUserName, StringComparison.OrdinalIgnoreCase);
 
                         MessageStatus status = MessageStatus.Sent;
@@ -198,28 +276,49 @@ public partial class ChatPage : ContentPage
         }
     }
 
+    private async Task OnHubReconnected(string? connectionId)
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await CheckFriendStatus();
+            await SendPendingMessages();
+        });
+    }
+
+    private Task OnHubClosed(Exception? error)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            FriendStatusLabel.Text = "";
+        });
+        return Task.CompletedTask;
+    }
+
+    private void OnMessageDeletedHandler(int msgId)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            var msg = Messages.FirstOrDefault(m => m.Id == msgId);
+            if (msg != null)
+            {
+                Messages.Remove(msg);
+                SaveMessagesOffline();
+            }
+        });
+    }
+
     private void SetupSignalRListeners()
     {
         if (_shell?.GameHub?.HubConnection != null)
         {
-            _shell.GameHub.HubConnection.Reconnected += async (connectionId) =>
-            {
-                MainThread.BeginInvokeOnMainThread(async () =>
-                {
-                    await CheckFriendStatus();
-                    await SendPendingMessages();
-                });
-            };
+            _shell.GameHub.HubConnection.Reconnected -= OnHubReconnected;
+            _shell.GameHub.HubConnection.Reconnected += OnHubReconnected;
+            
+            _shell.GameHub.HubConnection.Closed -= OnHubClosed;
+            _shell.GameHub.HubConnection.Closed += OnHubClosed;
 
-            _shell.GameHub.HubConnection.Closed += async (error) =>
-            {
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    FriendStatusLabel.Text = "";
-                });
-            };
-
-            _shell.GameHub.HubConnection.On<int, string, string>("ReceiveDirectMessage", async (messageId, sender, message) =>
+            _receiveSubscription?.Dispose();
+            _receiveSubscription = _shell.GameHub.HubConnection.On<int, string, string>("ReceiveDirectMessage", async (messageId, sender, message) =>
             {
                 if (sender.Equals(FriendName, StringComparison.OrdinalIgnoreCase))
                 {
@@ -249,7 +348,8 @@ public partial class ChatPage : ContentPage
                 }
             });
 
-            _shell.GameHub.HubConnection.On<int>("MessageDelivered", (messageId) =>
+            _deliveredSubscription?.Dispose();
+            _deliveredSubscription = _shell.GameHub.HubConnection.On<int>("MessageDelivered", (messageId) =>
             {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
@@ -260,21 +360,14 @@ public partial class ChatPage : ContentPage
                     {
                         var index = Messages.IndexOf(msg);
 
-                        Messages[index] = new ChatBubbleModel
-                        {
-                            Id = messageId,
-                            Content = msg.Content,
-                            Timestamp = msg.Timestamp,
-                            IsMine = msg.IsMine,
-                            Status = MessageStatus.Delivered
-                        };
-
+                        msg.Status = MessageStatus.Delivered;
                         SaveMessagesOffline();
                     }
                 });
             });
 
-            _shell.GameHub.HubConnection.On<string>("MessagesReadBy", (friendName) =>
+            _readSubscription?.Dispose();
+            _readSubscription = _shell.GameHub.HubConnection.On<string>("MessagesReadBy", (friendName) =>
             {
                 if (friendName.Equals(FriendName, StringComparison.OrdinalIgnoreCase))
                 {
@@ -286,14 +379,7 @@ public partial class ChatPage : ContentPage
                             var msg = Messages[i];
                             if (msg.IsMine && msg.Status != MessageStatus.Read)
                             {
-                                Messages[i] = new ChatBubbleModel
-                                {
-                                    Id = msg.Id,
-                                    Content = msg.Content,
-                                    Timestamp = msg.Timestamp,
-                                    IsMine = msg.IsMine,
-                                    Status = MessageStatus.Read
-                                };
+                                msg.Status = MessageStatus.Read;
                                 isChanged = true;
                             }
                         }
@@ -301,6 +387,140 @@ public partial class ChatPage : ContentPage
                     });
                 }
             });
+
+            _shell.GameHub.OnMessageDeleted -= OnMessageDeletedHandler;
+            _shell.GameHub.OnMessageDeleted += OnMessageDeletedHandler;
+        }
+    }
+
+    private void OnMessageLongPressedCommand(ChatBubbleModel msg)
+    {
+        if (msg == null)
+            return;
+
+        // هذا الضغط كان LongPress، لذلك أي Tap يأتي مباشرة بعده يجب تجاهله
+        _ignoreNextTap = true;
+
+        if (!IsSelectionModeActive)
+        {
+            // الدخول في وضع التحديد
+            IsSelectionModeActive = true;
+
+            // تحديد الرسالة التي تم الضغط عليها مطولاً
+            msg.IsSelected = true;
+        }
+        else
+        {
+            // في وضع التحديد:
+            // الضغط المطول على رسالة يحددها أو يلغي تحديدها
+            msg.IsSelected = !msg.IsSelected;
+        }
+
+        UpdateSelectionUI();
+    }
+
+    private void OnMessageTappedCommand(ChatBubbleModel msg)
+    {
+        if (msg == null)
+            return;
+
+        // إذا كان هناك Tap ناتج عن LongPress السابق، نتجاهله
+        if (_ignoreNextTap)
+        {
+            _ignoreNextTap = false;
+            return;
+        }
+
+        if (IsSelectionModeActive)
+        {
+            msg.IsSelected = !msg.IsSelected;
+            UpdateSelectionUI();
+        }
+    }
+
+    private void UpdateSelectionUI()
+    {
+        var selectedCount = Messages.Count(m => m.IsSelected);
+        
+        if (selectedCount == 0)
+        {
+            // إغلاق وضع التحديد
+            CloseSelectionMode();
+        }
+        else
+        {
+            NormalHeader.IsVisible = false;
+            SelectionHeader.IsVisible = true;
+            SelectionCountLabel.Text = $"{selectedCount} محدد";
+        }
+    }
+
+    private void CloseSelectionMode()
+    {
+        IsSelectionModeActive = false;
+        NormalHeader.IsVisible = true;
+        SelectionHeader.IsVisible = false;
+
+        foreach (var m in Messages)
+        {
+            m.IsSelected = false;
+        }
+    }
+
+    private void OnCancelSelectionClicked(object sender, EventArgs e)
+    {
+        CloseSelectionMode();
+    }
+
+    private async void OnBulkDeleteClicked(object sender, EventArgs e)
+    {
+        var selectedMessages = Messages.Where(m => m.IsSelected).ToList();
+        if (selectedMessages.Count == 0) return;
+
+        // التحقق مما إذا كان مسموحاً الحذف للجميع (كل الرسائل المحددة يجب أن تكون IsMine)
+        bool canDeleteForEveryone = selectedMessages.All(m => m.IsMine);
+
+        // إظهار نافذة التأكيد المخصصة
+        var popup = new English.Popups.DeleteConfirmPopup(canDeleteForEveryone);
+        var result = await Shell.Current.ShowPopupAsync(popup);
+        
+        string action = result as string ?? "";
+
+        if (action == "DeleteForMe")
+        {
+            string blacklistJson = Preferences.Get("DeletedForMe_List", "[]");
+            var blacklist = JsonSerializer.Deserialize<List<int>>(blacklistJson) ?? new List<int>();
+
+            foreach (var msg in selectedMessages)
+            {
+                if (!blacklist.Contains(msg.Id))
+                {
+                    blacklist.Add(msg.Id);
+                }
+                Messages.Remove(msg);
+            }
+
+            Preferences.Set("DeletedForMe_List", JsonSerializer.Serialize(blacklist));
+            SaveMessagesOffline();
+            CloseSelectionMode();
+        }
+        else if (action == "DeleteForEveryone")
+        {
+            foreach (var msg in selectedMessages)
+            {
+                Messages.Remove(msg);
+                if (_shell?.GameHub != null)
+                {
+                    await _shell.GameHub.DeleteMessageAsync(msg.Id);
+                }
+            }
+            SaveMessagesOffline();
+            CloseSelectionMode();
+        }
+        else
+        {
+            // Cancel
+            CloseSelectionMode();
         }
     }
 
@@ -319,7 +539,6 @@ public partial class ChatPage : ContentPage
                 {
                     await _shell.GameHub.HubConnection.InvokeAsync("SendDirectMessage", FriendName, msg.Content);
                     msg.Status = MessageStatus.Sent;
-                    Messages[i] = msg;
                     hasChanges = true;
                 }
                 catch
@@ -361,7 +580,6 @@ public partial class ChatPage : ContentPage
                 if (index >= 0)
                 {
                     newMsg.Status = MessageStatus.Sent;
-                    Messages[index] = newMsg;
                     SaveMessagesOffline();
                 }
             }
@@ -376,8 +594,11 @@ public partial class ChatPage : ContentPage
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 await Task.Delay(100);
-                var lastMessage = Messages.Last();
-                MessagesList.ScrollTo(lastMessage, position: ScrollToPosition.End, animate: false);
+                var lastMessage = Messages.LastOrDefault();
+                if (lastMessage != null)
+                {
+                    MessagesList.ScrollTo(lastMessage, position: ScrollToPosition.End, animate: false);
+                }
             });
         }
     }

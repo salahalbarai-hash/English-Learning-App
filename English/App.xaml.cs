@@ -7,8 +7,6 @@ namespace English
         public App()
         {
             InitializeComponent();
-            Preferences.Set("Coins", 10L);
-            Preferences.Set("FriendsChallengeCount", 10L);
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

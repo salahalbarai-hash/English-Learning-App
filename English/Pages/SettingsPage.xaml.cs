@@ -1,4 +1,4 @@
-﻿using English.ViewModels;
+using English.ViewModels;
 using Microsoft.Maui.Controls;
 
 namespace English.Pages;
@@ -11,5 +11,10 @@ public partial class SettingsPage : ContentPage
     {
         InitializeComponent();
         BindingContext = vm = new SettingsVM();
+    }
+
+    private async void OnCloseClicked(object sender, EventArgs e)
+    {
+        await Navigation.PopModalAsync();
     }
 }

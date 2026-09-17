@@ -1,176 +1,245 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:local="clr-namespace:English.Pages"
+             xmlns:models="clr-namespace:English.Models"
              x:Class="English.Pages.ChatPage"
+             x:Name="ChatPageRoot"
              BackgroundColor="#0B1120"
              NavigationPage.HasNavigationBar="False">
 
     <Grid RowDefinitions="Auto, *, Auto">
 
-        <!-- 🟢 1. ترويسة علوية ناصعة وعصرية (Header) -->
-        <Border Grid.Row="0" BackgroundColor="#151E2F" Stroke="#1E293B" StrokeThickness="1" Padding="12,35,12,12">
+        <!-- ══════════ 1. ترويسة علوية احترافية (Header) ══════════ -->
+        <!-- الهيدر الطبيعي -->
+        <Border Grid.Row="0" StrokeThickness="0" Padding="0" x:Name="NormalHeader">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#151E2F" Offset="0.0" />
+                    <GradientStop Color="#1A2540" Offset="1.0" />
+                </LinearGradientBrush>
+            </Border.Background>
 
-            <Border.Shadow>
-                <Shadow Brush="#000000" Offset="0,1" Radius="10" Opacity="0.03"/>
-            </Border.Shadow>
+            <Grid ColumnDefinitions="Auto, Auto, *, Auto" Padding="16,40,16,14">
+                <!-- زر الرجوع -->
+                <Border Grid.Column="0" WidthRequest="38" HeightRequest="38" StrokeShape="RoundRectangle 19"
+                        StrokeThickness="1" Stroke="#2A3855" BackgroundColor="#111827"
+                        VerticalOptions="Center" Margin="0,0,12,0">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackClicked"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="❯" FontFamily="CairoBold" FontSize="18" TextColor="#F8FAFC"
+                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Border>
 
-            <Grid ColumnDefinitions="Auto, Auto, *, Auto">
+                <!-- الأفاتار (الصورة الشخصية) -->
+                <Border Grid.Column="1" WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 22"
+                        StrokeThickness="2" Stroke="#38BDF8" BackgroundColor="#1E293B" VerticalOptions="Center">
+                    <Label x:Name="FriendInitialLabel" Text="?" FontSize="18" FontFamily="CairoBold"
+                           TextColor="#F8FAFC" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
 
-                <!-- صورة الصديق ونقطة الاتصال -->
-                <Grid Grid.Column="1" 
-                      WidthRequest="48" 
-                      HeightRequest="48" 
-                      Margin="0,0,12,0" 
-                      VerticalOptions="Center">
-
-                    <Border WidthRequest="46" 
-                            HeightRequest="46" 
-                            StrokeShape="RoundRectangle 23" 
-                            StrokeThickness="0" 
-                            BackgroundColor="#6366F1" 
-                            VerticalOptions="Center" 
-                            HorizontalOptions="Center">
-                        <Label x:Name="FriendInitialLabel" 
-                               Text="?" 
-                               HorizontalOptions="Center" 
-                               VerticalOptions="Center" 
-                               FontAttributes="Bold" 
-                               TextColor="#FFFFFF" 
-                               FontSize="19"/>
-                    </Border>
-
-                    <!-- نقطة الاتصال المدمجة -->
-                    <Border x:Name="OnlineStatusIndicator" 
-                            WidthRequest="14" 
-                            HeightRequest="14" 
-                            StrokeShape="RoundRectangle 7" 
-                            Padding="0" 
-                            BackgroundColor="#EF4444" 
-                            Stroke="#FFFFFF" 
-                            StrokeThickness="2.5"
-                            HorizontalOptions="End" 
-                            VerticalOptions="End" />
-                </Grid>
-
-                <!-- اسم الصديق وحالته -->
-                <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="2">
-                    <Label x:Name="FriendNameTitle" 
-                           Text="جاري التحميل..." 
-                           FontAttributes="Bold" 
-                           FontSize="17" 
-                           TextColor="#F8FAFC" />
-                    <Label x:Name="FriendStatusLabel" 
-                           Text="تحقق من الاتصال..." 
-                           FontSize="12" 
-                           TextColor="#94A3B8" />
+                <!-- معلومات الصديق -->
+                <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" Margin="12,0,0,0">
+                    <Label x:Name="FriendNameTitle" Text="" FontFamily="CairoBold" FontSize="16" TextColor="#F8FAFC" LineBreakMode="TailTruncation" />
+                    <HorizontalStackLayout Spacing="6" Margin="0,2,0,0">
+                        <Border x:Name="OnlineStatusIndicator" WidthRequest="8" HeightRequest="8" StrokeShape="RoundRectangle 4" BackgroundColor="#EF4444" VerticalOptions="Center" />
+                        <Label x:Name="FriendStatusLabel" Text="غير متصل" FontSize="12" TextColor="#94A3B8" />
+                    </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Grid>
         </Border>
 
-        <!-- 🟢 2. قائمة الرسائل (الدردشة) -->
-        <CollectionView x:Name="MessagesList" 
-                        Grid.Row="1"
-                        BackgroundColor="#0B1120">
+        <!-- هيدر التحديد (Selection Header) يظهر عند بدء التحديد -->
+        <Border Grid.Row="0" StrokeThickness="0" Padding="0" x:Name="SelectionHeader" IsVisible="False">
+            <Border.Background>
+                <SolidColorBrush Color="#1E293B" />
+            </Border.Background>
+            <Grid ColumnDefinitions="Auto, *, Auto" Padding="16,40,16,14">
+
+                <!-- زر الإلغاء -->
+                <Border Grid.Column="0" WidthRequest="38" HeightRequest="38" StrokeShape="RoundRectangle 19"
+                        StrokeThickness="0" BackgroundColor="#334155" VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCancelSelectionClicked"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="✕" FontFamily="CairoBold" FontSize="18" TextColor="#F8FAFC"
+                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Border>
+
+                <!-- عدد المحدد -->
+                <Label Grid.Column="1" x:Name="SelectionCountLabel" Text="1 محدد" FontFamily="CairoBold" FontSize="18" TextColor="#F8FAFC" VerticalOptions="Center" HorizontalOptions="Center" />
+
+                <!-- زر الحذف -->
+                <Border Grid.Column="2" WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 22"
+                        StrokeThickness="0" BackgroundColor="#EF4444" VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBulkDeleteClicked"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="🗑️" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ══════════ 2. مساحة عرض الرسائل ══════════ -->
+        <CollectionView Grid.Row="1"
+                        x:Name="MessagesList"
+                        SelectionMode="None"
+                        ItemsUpdatingScrollMode="KeepLastItemInView"
+                        BackgroundColor="Transparent"
+                        Margin="0,10">
+
             <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Padding="0,5">
+                <DataTemplate x:DataType="models:ChatBubbleModel">
 
-                        <!-- فقاعة الرسالة -->
-                        <Border StrokeThickness="0"
-                                Padding="12,9"
-                                BackgroundColor="{Binding BubbleColor}"
-                                HorizontalOptions="{Binding BubbleAlignment}"
-                                MaximumWidthRequest="300"
-                                StrokeShape="RoundRectangle 16">
+                    <!-- 🟢 1. الـ Grid الجذري: هو الوحيد المسموح له بالتقاط اللمس -->
+                    <Grid BackgroundColor="#01000000">
 
-                            <Border.Shadow>
-                                <Shadow Brush="#000000"
-            Offset="0,1"
-            Radius="5"
-            Opacity="0.04"/>
-                            </Border.Shadow>
+                        <Grid.Behaviors>
+                            <toolkit:TouchBehavior LongPressDuration="500"
+                                                   LongPressCommand="{Binding Source={x:Reference ChatPageRoot}, Path=LongPressCommand}"
+                                                   LongPressCommandParameter="{Binding .}"
+                                                   Command="{Binding Source={x:Reference ChatPageRoot}, Path=TapCommand}"
+                                                   CommandParameter="{Binding .}"
+                                                   DefaultAnimationDuration="150"
+                                                   PressedOpacity="0.6" />
+                        </Grid.Behaviors>
 
-                            <Grid RowDefinitions="Auto, Auto" RowSpacing="3">
+                        <!-- 🟢 2. نغلف كل تصميم الرسالة بـ ContentView ونمنعه من سرقة اللمس نهائياً -->
+                        <ContentView InputTransparent="True" Padding="12,4">
+                            <Grid ColumnDefinitions="Auto, *">
 
-                                <!-- نص الرسالة -->
-                                <Label Grid.Row="0" 
-                                       Text="{Binding Content}" 
-                                       FontSize="15" 
-                                       LineBreakMode="WordWrap"
-                                       TextColor="{Binding TextColor}" 
-                                       Margin="0,0,0,2"/>
+                                <!-- مربع الاختيار الدائري (يظهر في وضع التحديد) -->
+                                <Border Grid.Column="0" 
+                        IsVisible="{Binding IsSelectionMode}"
+                        WidthRequest="24" HeightRequest="24"
+                        StrokeShape="RoundRectangle 12"
+                        StrokeThickness="2"
+                        Stroke="#38BDF8"
+                        BackgroundColor="Transparent"
+                        Margin="0,0,10,0" VerticalOptions="Center">
 
-                                <!-- الوقت وحالة القراءة -->
-                                <HorizontalStackLayout Grid.Row="1" 
-                                                       HorizontalOptions="End" 
-                                                       Spacing="4" 
-                                                       VerticalOptions="Center">
+                                    <Label Text="✓" FontSize="14" TextColor="White" IsVisible="{Binding IsSelected}" HorizontalOptions="Center" VerticalOptions="Center"/>
 
-                                    <Label Text="{Binding TimeString}" 
-                                           FontSize="10" 
-                                           TextColor="{Binding TimeColor}" 
-                                           VerticalOptions="Center"/>
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="#38BDF8" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="False">
+                                            <Setter Property="BackgroundColor" Value="Transparent" />
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                </Border>
 
-                                    <!-- علامة صح الاستلام والقراءة -->
-                                    <Label Text="{Binding StatusIconText}" 
-                                           TextColor="{Binding StatusIconColor}" 
-                                           FontSize="12" 
-                                           IsVisible="{Binding IsMine}" 
-                                           VerticalOptions="Center"
-                                           FontAttributes="Bold"/>
-                                </HorizontalStackLayout>
+                                <!-- فقاعة الرسالة -->
+                                <Border Grid.Column="1"
+                        StrokeThickness="0"
+                        Padding="14,10"
+                        BackgroundColor="{Binding BubbleColor}"
+                        HorizontalOptions="{Binding BubbleAlignment}"
+                        MaximumWidthRequest="280"
+                        StrokeShape="RoundRectangle 16">
+
+                                    <Grid RowDefinitions="Auto, Auto" RowSpacing="4">
+
+                                        <!-- نص الرسالة -->
+                                        <Label Grid.Row="0"
+                               Text="{Binding Content}"
+                               FontSize="15" 
+                               LineBreakMode="WordWrap"
+                               TextColor="{Binding TextColor}"
+                               LineHeight="1.4" />
+
+                                        <!-- الوقت وحالة القراءة -->
+                                        <HorizontalStackLayout Grid.Row="1"
+                                               HorizontalOptions="End"
+                                               Spacing="5"
+                                               VerticalOptions="Center">
+
+                                            <Label Text="{Binding TimeString}"
+                                   FontSize="10" 
+                                   TextColor="{Binding TimeColor}"
+                                   VerticalOptions="Center"/>
+
+                                            <!-- علامة صح الاستلام والقراءة -->
+                                            <Path Data="{Binding StatusIconGeometry}"
+                                  Stroke="{Binding StatusIconColor}"
+                                  StrokeThickness="1.5"
+                                  StrokeLineCap="Round"
+                                  StrokeLineJoin="Round"
+                                  Fill="Transparent"
+                                  IsVisible="{Binding IsMine}"
+                                  VerticalOptions="Center"
+                                  HorizontalOptions="Center"
+                                  HeightRequest="14"
+                                  WidthRequest="16"
+                                  Aspect="Uniform" />
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                </Border>
                             </Grid>
-                        </Border>
+                        </ContentView>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- 🟢 3. شريط إدخال النص السفي (Message Composer) -->
+        <!-- ══════════ 3. شريط إدخال النص السفلي ══════════ -->
         <Border Grid.Row="2"
-        BackgroundColor="#151E2F"
-        Stroke="#1E293B"
-        StrokeThickness="1"
-        Padding="12,10,12,15">
+                StrokeThickness="0"
+                Padding="14,10,14,18">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#151E2F" Offset="0.0" />
+                    <GradientStop Color="#111827" Offset="1.0" />
+                </LinearGradientBrush>
+            </Border.Background>
 
-            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10" VerticalOptions="End">
 
-                <Border Grid.Column="0" 
-                        Padding="16,0" 
-                        StrokeShape="RoundRectangle 24" 
-                        Stroke="#334155"
+                <Border Grid.Column="0"
+                        Padding="16,8"
+                        StrokeShape="RoundRectangle 24"
+                        Stroke="#2D3748"
                         StrokeThickness="1"
-                        BackgroundColor="#1E293B" 
-                        HeightRequest="48" 
-                        VerticalOptions="Center">
-                    <Entry x:Name="MessageEntry" 
-                           Placeholder="اكتب رسالتك هنا..." 
-                           PlaceholderColor="#64748B"
-                           TextColor="#F8FAFC"
-                           FontSize="15"
-                           BackgroundColor="Transparent" 
-                           ClearButtonVisibility="Never"
-                           VerticalOptions="Center" />
+                        BackgroundColor="#1E293B"
+                        VerticalOptions="Center"
+                        MinimumHeightRequest="48">
+                    <Editor x:Name="MessageEntry"
+                            Placeholder="اكتب رسالتك هنا..."
+                            PlaceholderColor="#64748B"
+                            TextColor="#F8FAFC"
+                            FontSize="15" FontFamily="CairoBold"
+                            BackgroundColor="Transparent"
+                            AutoSize="TextChanges"
+                            MaximumHeightRequest="120"
+                            VerticalOptions="Center" />
                 </Border>
 
                 <!-- زر الإرسال -->
-                <Border Grid.Column="1" 
-                        WidthRequest="48" 
-                        HeightRequest="48" 
-                        StrokeShape="RoundRectangle 24" 
-                        BackgroundColor="#5B6EF5" 
+                <Border Grid.Column="1"
+                        WidthRequest="48"
+                        HeightRequest="48"
+                        StrokeShape="RoundRectangle 24"
                         StrokeThickness="0"
-                        VerticalOptions="Center">
+                        VerticalOptions="End">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#38BDF8" Offset="0.0" />
+                            <GradientStop Color="#0284C7" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
                     <Border.Shadow>
-                        <Shadow Brush="#5B6EF5" Offset="0,3" Radius="8" Opacity="0.15"/>
+                        <Shadow Brush="#0284C7" Offset="0,3" Radius="10" Opacity="0.3"/>
                     </Border.Shadow>
 
-                    <ImageButton Source="send.png" 
-                                 BackgroundColor="Transparent" 
-                                 Clicked="OnSendClicked" 
-                                 WidthRequest="22" 
-                                 HeightRequest="22" 
-                                 HorizontalOptions="Center" 
+                    <ImageButton Source="send.png"
+                                 BackgroundColor="Transparent"
+                                 Clicked="OnSendClicked"
+                                 WidthRequest="22"
+                                 HeightRequest="22"
+                                 HorizontalOptions="Center"
                                  VerticalOptions="Center" />
                 </Border>
             </Grid>

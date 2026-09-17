@@ -18,7 +18,16 @@ public partial class AboutPage : ContentPage
         await Launcher.OpenAsync(storeLink);
     }
 
-    // دالة زر التواصل معنا (تفتح البريد الإلكتروني)
+    // دالة مشاركة التطبيق
+    private async void OnShareAppClicked(object sender, EventArgs e)
+    {
+        await Share.Default.RequestAsync(new ShareTextRequest
+        {
+            Title = "شارك تطبيق إنجليش",
+            Text = "حمل تطبيق إنجليش الآن وانطلق في رحلة ممتعة لتعلم اللغة الإنجليزية وتنافس مع أصدقائك! 🚀📚\n\nhttps://english.runasp.net/"
+        });
+    }
+
     // دالة زر التواصل معنا (تفتح الواتساب)
     private async void OnContactUsClicked(object sender, EventArgs e)
     {

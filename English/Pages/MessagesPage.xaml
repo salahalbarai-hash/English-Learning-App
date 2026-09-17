@@ -5,29 +5,55 @@
              BackgroundColor="#0B1120"
              NavigationPage.HasNavigationBar="False">
 
-    <Grid RowDefinitions="Auto, *">
+    <Grid RowDefinitions="Auto, Auto, *">
 
-        <!-- مربع البحث -->
-        <Border Grid.Row="0"
-                Margin="20,20,20,15"
+        <!-- ══════════ الترويسة العلوية ══════════ -->
+        <Grid Grid.Row="0" Padding="20,16,20,0">
+            <Grid ColumnDefinitions="*, Auto">
+                <Label Text="المحادثات"
+                       FontSize="26" FontFamily="CairoBold"
+                       TextColor="#F8FAFC"
+                       VerticalOptions="Center" />
+
+                <Border Grid.Column="1"
+                        WidthRequest="42" HeightRequest="42"
+                        StrokeShape="RoundRectangle 21"
+                        StrokeThickness="0"
+                        BackgroundColor="#151E2F"
+                        VerticalOptions="Center">
+                    <Label Text="💬" FontSize="20"
+                           HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- ══════════ مربع البحث ══════════ -->
+        <Border Grid.Row="1"
+                Margin="20,14,20,10"
                 StrokeThickness="0"
                 BackgroundColor="#151E2F"
                 StrokeShape="RoundRectangle 14"
-                HeightRequest="50">
+                HeightRequest="48">
 
-            <SearchBar x:Name="SearchBarFriends"
+            <Grid ColumnDefinitions="Auto, *">
+                <Label Text="🔍" FontSize="16"
+                       Margin="14,0,0,0"
+                       VerticalOptions="Center" Opacity="0.6" />
+                <Entry Grid.Column="1"
+                       x:Name="SearchBarFriends"
                        Placeholder="ابحث عن صديق..."
                        BackgroundColor="Transparent"
                        PlaceholderColor="#64748B"
-                       CancelButtonColor="#6366F1"
                        TextColor="#F8FAFC"
+                       ClearButtonVisibility="WhileEditing"
                        VerticalOptions="Center"
                        TextChanged="OnSearchTextChanged"/>
+            </Grid>
         </Border>
 
-        <!-- قائمة الأصدقاء -->
+        <!-- ══════════ قائمة الأصدقاء ══════════ -->
         <CollectionView x:Name="FriendsList"
-                        Grid.Row="1"
+                        Grid.Row="2"
                         SelectionMode="Single"
                         SelectionChanged="OnFriendSelected">
 
@@ -35,7 +61,7 @@
                 <DataTemplate>
                     <Grid BackgroundColor="Transparent">
 
-                        <!-- تأثير اللمس الاحترافي -->
+                        <!-- تأثير اللمس -->
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="CommonStates">
                                 <VisualState Name="Normal" />
@@ -47,23 +73,28 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-                        <Grid ColumnDefinitions="Auto, *, Auto" Padding="20,12,20,12">
+                        <Grid ColumnDefinitions="Auto, *, Auto" Padding="20,14,20,14">
 
                             <!-- الصورة ونقطة الاتصال -->
-                            <Grid Grid.Column="0" 
-                                  WidthRequest="54"
-                                  HeightRequest="54"
-                                  Margin="0,0,15,0">
+                            <Grid Grid.Column="0"
+                                  WidthRequest="56"
+                                  HeightRequest="56"
+                                  Margin="0,0,14,0">
 
-                                <!-- صورة العرض الدائرية -->
-                                <Border WidthRequest="54"
-                                        HeightRequest="54"
-                                        StrokeShape="RoundRectangle 27"
-                                        StrokeThickness="0"
-                                        BackgroundColor="#6366F1">
+                                <!-- صورة العرض الدائرية مع تدرج لوني -->
+                                <Border WidthRequest="56"
+                                        HeightRequest="56"
+                                        StrokeShape="RoundRectangle 28"
+                                        StrokeThickness="0">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="#6366F1" Offset="0.0" />
+                                            <GradientStop Color="#818CF8" Offset="1.0" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
                                     <Label Text="{Binding Initials}"
                                            FontAttributes="Bold"
-                                           FontSize="20"
+                                           FontSize="20" FontFamily="CairoBold"
                                            TextColor="White"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
@@ -83,57 +114,71 @@
                             </Grid>
 
                             <!-- معلومات الصديق -->
-                            <VerticalStackLayout Grid.Column="1" 
-                                                 VerticalOptions="Center" 
-                                                 Spacing="2">
+                            <VerticalStackLayout Grid.Column="1"
+                                                 VerticalOptions="Center"
+                                                 Spacing="3">
                                 <Label Text="{Binding Name}"
-                                       FontSize="16"
-                                       FontAttributes="Bold"
+                                       FontSize="16" FontFamily="CairoBold"
                                        TextColor="#F8FAFC"/>
 
                                 <Label Text="{Binding StatusText}"
-                                       FontSize="13"
-                                       TextColor="#94A3B8"/>
+                                       FontSize="13" 
+                                       TextColor="{Binding StatusTextColor}"/>
                             </VerticalStackLayout>
 
-                            <!-- السهم -->
-                            <Label Grid.Column="2"
-                                   Text="›"
-                                   FontSize="26"
-                                   FontAttributes="Bold"
-                                   VerticalOptions="Center"
-                                   TextColor="#475569"
-                                   TranslationY="-2"/>
+                            <!-- أيقونة السهم -->
+                            <Border Grid.Column="2"
+                                    WidthRequest="32" HeightRequest="32"
+                                    StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="0"
+                                    BackgroundColor="#1E293B"
+                                    VerticalOptions="Center">
+                                <Label Text="›"
+                                       FontSize="20" FontAttributes="Bold"
+                                       VerticalOptions="Center" HorizontalOptions="Center"
+                                       TextColor="#64748B" />
+                            </Border>
 
                         </Grid>
 
-                        <!-- خط فاصل ناعم بين المحادثات -->
-                        <BoxView HeightRequest="1" 
-                                 Color="#1E293B" 
-                                 VerticalOptions="End" 
-                                 Margin="89,0,20,0"/>
+                        <!-- خط فاصل ناعم -->
+                        <BoxView HeightRequest="0.5"
+                                 Color="#1E293B"
+                                 VerticalOptions="End"
+                                 Margin="90,0,20,0"/>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
         <!-- حالة "لا يوجد بيانات" -->
-        <VerticalStackLayout Grid.Row="1"
+        <VerticalStackLayout Grid.Row="2"
                              IsVisible="False"
                              x:Name="EmptyLabel"
                              VerticalOptions="Center"
                              HorizontalOptions="Center"
-                             Spacing="10">
+                             Spacing="12">
 
-            <Label Text="💬"
-                   FontSize="64"
-                   HorizontalOptions="Center"
-                   Opacity="0.8"/>
+            <Border WidthRequest="90" HeightRequest="90"
+                    StrokeShape="RoundRectangle 45"
+                    StrokeThickness="0"
+                    BackgroundColor="#151E2F"
+                    HorizontalOptions="Center">
+                <Label Text="💬"
+                       FontSize="42"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Opacity="0.7"/>
+            </Border>
 
-            <Label Text="لا توجد محادثات"
-                   FontSize="18"
-                   FontAttributes="Bold"
-                   TextColor="#94A3B8"
+            <Label Text="لا توجد محادثات بعد"
+                   FontSize="18" FontFamily="CairoBold"
+                   TextColor="#64748B"
+                   HorizontalOptions="Center"/>
+
+            <Label Text="أضف أصدقاء لبدء المحادثة"
+                   FontSize="14" 
+                   TextColor="#475569"
                    HorizontalOptions="Center"/>
         </VerticalStackLayout>
     </Grid>

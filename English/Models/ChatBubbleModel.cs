@@ -1,56 +1,111 @@
+using Microsoft.Maui.Controls.Shapes;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System.Text.Json.Serialization; // 🟢 1. أضفنا مكتبة الـ JSON
+
 namespace English.Models;
 
 public enum MessageStatus
 {
-    Pending,   // 🕒 قيد الانتظار (بدون نت)
-    Sent,      // ✓ أرسلت للسيرفر
-    Delivered, // ✓✓ استلمها الطرف الآخر
-    Read       // ✓✓ قرأها الطرف الآخر (أزرق)
+    Pending,
+    Sent,
+    Delivered,
+    Read
 }
 
-public class ChatBubbleModel
+public partial class ChatBubbleModel : ObservableObject
 {
-    // 🟢 تعديل الـ Id ليصبح int ليتطابق مع قاعدة البيانات و ChatMessageDto
-    public int Id { get; set; }
+    [ObservableProperty]
+    [property: JsonIgnore] // تجاهل عند الحفظ
+    private bool isSelected;
 
+    [ObservableProperty]
+    [property: JsonIgnore] // تجاهل عند الحفظ
+    private bool isSelectionMode;
+
+    public int Id { get; set; }
     public string Content { get; set; } = string.Empty;
     public DateTime Timestamp { get; set; }
     public bool IsMine { get; set; }
 
-    // حالة الرسالة
-    public MessageStatus Status { get; set; } = MessageStatus.Pending;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(StatusIconPath))]
+    [NotifyPropertyChangedFor(nameof(StatusIconGeometry))]
+    [NotifyPropertyChangedFor(nameof(StatusIconColor))]
+    private MessageStatus status = MessageStatus.Pending;
 
-    // خصائص التصميم المتناسقة مع الخلفية الفاتحة
+    // 🟢 2. تجاهل الأحداث (الـ Action يسبب Crash مباشر عند الحفظ)
+    [JsonIgnore]
+    public Action<ChatBubbleModel>? OnTappedAction { get; set; }
+
+    [JsonIgnore]
+    public Action<ChatBubbleModel>? OnLongPressedAction { get; set; }
+
+    [RelayCommand]
+    private void Tap() => OnTappedAction?.Invoke(this);
+
+    [RelayCommand]
+    private void LongPress() => OnLongPressedAction?.Invoke(this);
+
+    // 🟢 3. تجاهل جميع الألوان والأشكال والخصائص التجميلية
+    [JsonIgnore]
     public LayoutOptions BubbleAlignment => IsMine ? LayoutOptions.End : LayoutOptions.Start;
 
-    // لون أزرق نيلي للمرسل (أو بنفسجي داكن)، كحلي غامق للمستقبل
+    [JsonIgnore]
     public Color BubbleColor => IsMine
-    ? Color.FromArgb("#3730A3")
-    : Color.FromArgb("#1E293B");
+        ? Color.FromArgb("#1E40AF")
+        : Color.FromArgb("#1E293B");
 
-    // لون نص أبيض ناصع أو مائل للرمادي لضمان الوضوح التام
+    [JsonIgnore]
     public Color TextColor => IsMine
-    ? Color.FromArgb("#FFFFFF")
-    : Color.FromArgb("#F8FAFC");
+        ? Color.FromArgb("#FFFFFF")
+        : Color.FromArgb("#F8FAFC");
 
-    // لون هادئ للوقت
+    [JsonIgnore]
     public Color TimeColor => IsMine
-    ? Color.FromArgb("#C7D2FE")
-    : Color.FromArgb("#94A3B8");
+        ? Color.FromArgb("#C7D2FE")
+        : Color.FromArgb("#94A3B8");
 
-    // 🟢 تعديل الوقت ليصبح بنظام 12 ساعة مع (ص / م) باللغة العربية
+    [JsonIgnore]
     public string TimeString => Timestamp.ToString("hh:mm tt", new System.Globalization.CultureInfo("ar-SA"));
 
-    // أيقونات الحالة (الساعة والصح والصحين)
-    public string StatusIconText => Status switch
+    [JsonIgnore]
+    public string StatusIconPath => Status switch
     {
-        MessageStatus.Pending => "🕒",
-        MessageStatus.Sent => "✓✓",
-        MessageStatus.Delivered => "✓✓",
-        MessageStatus.Read => "✓✓",
+        MessageStatus.Pending => "M12 2A10 10 0 1 0 12 22A10 10 0 1 0 12 2 M12 7v5l3 3",
+        MessageStatus.Sent => "M5 13l4 4L19 7",
+        MessageStatus.Delivered or MessageStatus.Read => "M2 13l4 4L15 7 M9 13l4 4L22 7",
         _ => ""
     };
 
-    // لون علامة الصح (سماوي فاتح عند القراءة، رمادي للحالات الأخرى)
+    private Geometry _statusIconGeometry;
+
+    [JsonIgnore]
+    public Geometry StatusIconGeometry
+    {
+        get
+        {
+            if (_statusIconGeometry != null) return _statusIconGeometry;
+            try
+            {
+                if (string.IsNullOrEmpty(StatusIconPath))
+                    return new PathGeometry();
+
+                _statusIconGeometry = (Geometry)new PathGeometryConverter().ConvertFromInvariantString(StatusIconPath);
+                return _statusIconGeometry;
+            }
+            catch
+            {
+                return new PathGeometry();
+            }
+        }
+    }
+
+    partial void OnStatusChanged(MessageStatus oldValue, MessageStatus newValue)
+    {
+        _statusIconGeometry = null;
+    }
+
+    [JsonIgnore]
     public Color StatusIconColor => Status == MessageStatus.Read ? Color.FromArgb("#38BDF8") : Color.FromArgb("#94A3B8");
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Data;
 
 namespace FoundationalCSharp.Server.Hubs;
@@ -305,6 +305,43 @@ public class GameHub : Hub
         catch (Exception ex)
         {
             Console.WriteLine($"Database Error on SendDirectMessage: {ex.Message}");
+        }
+    }
+
+    // 🟢 دالة لحذف الرسالة من السيرفر وإبلاغ الطرف الآخر
+    public async Task DeleteMessage(int messageId)
+    {
+        string currentUser = _connectedUsers.FirstOrDefault(x => x.Value == Context.ConnectionId).Key ?? "";
+        if (string.IsNullOrEmpty(currentUser)) return;
+
+        try
+        {
+            // جلب المرسل والمستقبل للتحقق من الصلاحية (يمكن لأي منهما حذف الرسالة من المحادثة)
+            string checkSql = $"SELECT SenderId, ReceiverId FROM Messages WHERE Id = {messageId}";
+            DataTable dt = DB.Query(checkSql);
+            if (dt.Rows.Count > 0)
+            {
+                string sender = dt.Rows[0]["SenderId"].ToString() ?? "";
+                string receiver = dt.Rows[0]["ReceiverId"].ToString() ?? "";
+
+                if (currentUser == sender || currentUser == receiver)
+                {
+                    // حذف الرسالة كلياً من قاعدة البيانات
+                    string delSql = $"DELETE FROM Messages WHERE Id = {messageId}";
+                    DB.Exec(delSql);
+
+                    // إبلاغ الطرف الآخر فوراً (إذا كان متصلاً) لكي تختفي من شاشته أيضاً
+                    string otherParty = (currentUser == sender) ? receiver : sender;
+                    if (_connectedUsers.TryGetValue(otherParty, out var otherConnectionId))
+                    {
+                        await Clients.Client(otherConnectionId).SendAsync("MessageDeleted", messageId);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Database Error on DeleteMessage: {ex.Message}");
         }
     }
 

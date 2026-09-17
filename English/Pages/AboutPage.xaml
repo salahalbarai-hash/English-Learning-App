@@ -2,69 +2,241 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="English.Pages.AboutPage"
-             Title="حول التطبيق">
+             Title="حول التطبيق"
+             BackgroundColor="#0B1120"
+             Shell.NavBarIsVisible="False">
 
     <ScrollView>
-        <VerticalStackLayout Spacing="15" Padding="25" HorizontalOptions="Center">
+        <VerticalStackLayout Spacing="0" Padding="0">
 
-            <!-- 1. الشعار -->
-            <!-- تأكد من وضع صورة الشعار في مجلد Resources/Images -->
-            <Image Source="dotnet_bot.png" 
-                   WidthRequest="120" 
-                   HeightRequest="120"
-                   Margin="0, 20, 0, 10"
-                   HorizontalOptions="Center" />
+            <!-- ══════════ القسم العلوي مع تدرج لوني ══════════ -->
+            <Grid HeightRequest="280">
+                <!-- الخلفية المتدرجة -->
+                <BoxView>
+                    <BoxView.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#1E3A5F" Offset="0.0" />
+                            <GradientStop Color="#0B1120" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </BoxView.Background>
+                </BoxView>
 
-            <!-- 2. اسم التطبيق -->
-            <Label Text="تطبيق إنجليش"
-                   FontSize="28"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center" />
+                <!-- الدوائر الزخرفية -->
+                <BoxView CornerRadius="80" WidthRequest="160" HeightRequest="160"
+                         BackgroundColor="#6366F1" Opacity="0.08"
+                         HorizontalOptions="Start" VerticalOptions="Start"
+                         TranslationX="-40" TranslationY="-30" />
+                <BoxView CornerRadius="60" WidthRequest="120" HeightRequest="120"
+                         BackgroundColor="#3B82F6" Opacity="0.06"
+                         HorizontalOptions="End" VerticalOptions="Start"
+                         TranslationX="30" TranslationY="20" />
 
-            <!-- 3. رقم الإصدار -->
-            <Label Text="الإصدار 1.0.0"
-                   FontSize="14"
-                   TextColor="Gray"
-                   HorizontalOptions="Center" />
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="12">
+                    <!-- شعار التطبيق داخل حاوية دائرية -->
+                    <Border StrokeShape="RoundRectangle 35" StrokeThickness="0"
+                            WidthRequest="100" HeightRequest="100"
+                            HorizontalOptions="Center"
+                            Padding="0">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#6366F1" Offset="0.0" />
+                                <GradientStop Color="#3B82F6" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Label Text="📘" FontSize="48"
+                               HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
 
-            <BoxView HeightRequest="1" Color="LightGray" Margin="0,15" />
+                    <!-- اسم التطبيق -->
+                    <Label Text="تطبيق إنجليش"
+                           FontSize="28" FontFamily="CairoBold"
+                           TextColor="White"
+                           HorizontalOptions="Center" />
 
-            <!-- 4. وصف التطبيق -->
-            <Label Text="تطبيق تفاعلي يتيح لك اختبار لغتك الإنجليزية عبر تحدي أصدقائك في مبارزات مباشرة، واكتشاف الكلمات السرية، وتطوير مهاراتك بطريقة ممتعة وتنافسية."
-                   FontSize="16"
-                   HorizontalTextAlignment="Center"
-                   LineBreakMode="WordWrap" />
+                    <!-- رقم الإصدار -->
+                    <Border StrokeShape="RoundRectangle 12" StrokeThickness="0"
+                            BackgroundColor="#1E293B"
+                            Padding="12,6"
+                            HorizontalOptions="Center">
+                        <Label Text="الإصدار 1.0.0  🚀"
+                               FontSize="13" FontFamily="CairoRegular"
+                               TextColor="#94A3B8"
+                               HorizontalOptions="Center" />
+                    </Border>
+                </VerticalStackLayout>
+            </Grid>
 
-            <BoxView HeightRequest="1" Color="LightGray" Margin="0,15" />
+            <!-- ══════════ المحتوى الرئيسي ══════════ -->
+            <VerticalStackLayout Padding="24,20" Spacing="16">
 
-            <!-- 5. أزرار التفاعل -->
-            <Button Text="قيّم التطبيق"
-                    CornerRadius="10"
-                    WidthRequest="220"
-                    BackgroundColor="#2196F3"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    Clicked="OnRateAppClicked"
-                    HorizontalOptions="Center" />
+                <!-- بطاقة وصف التطبيق -->
+                <Border StrokeShape="RoundRectangle 16" StrokeThickness="0"
+                        BackgroundColor="#151E2F" Padding="20">
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="💡" FontSize="18" VerticalOptions="Center" />
+                            <Label Text="عن التطبيق"
+                                   FontSize="17" FontFamily="CairoBold"
+                                   TextColor="#E2E8F0" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Label Text="تطبيق تفاعلي يتيح لك اختبار لغتك الإنجليزية عبر تحدي أصدقائك في مبارزات مباشرة، واكتشاف الكلمات السرية، وتطوير مهاراتك بطريقة ممتعة وتنافسية."
+                               FontSize="14" FontFamily="CairoRegular"
+                               TextColor="#94A3B8"
+                               HorizontalTextAlignment="Center"
+                               LineBreakMode="WordWrap"
+                               LineHeight="1.6" />
+                    </VerticalStackLayout>
+                </Border>
 
-            <Button Text="تواصل معنا"
-                    CornerRadius="10"
-                    WidthRequest="220"
-                    BackgroundColor="Transparent"
-                    TextColor="#2196F3"
-                    BorderColor="#2196F3"
-                    BorderWidth="1"
-                    FontAttributes="Bold"
-                    Clicked="OnContactUsClicked"
-                    HorizontalOptions="Center" />
+                <!-- بطاقات المميزات -->
+                <Label Text="مميزات التطبيق"
+                       FontSize="17" FontFamily="CairoBold"
+                       TextColor="#E2E8F0"
+                       HorizontalOptions="Center"
+                       Margin="0,8,0,0" />
 
-            <!-- 6. حقوق النشر -->
-            <Label Text="© 2026 جميع الحقوق محفوظة"
-                   FontSize="12"
-                   TextColor="Gray"
-                   Margin="0, 40, 0, 0"
-                   HorizontalOptions="Center" />
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto"
+                      ColumnSpacing="12" RowSpacing="12">
 
+                    <!-- ميزة 1 -->
+                    <Border Grid.Row="0" Grid.Column="0"
+                            StrokeShape="RoundRectangle 14" StrokeThickness="0"
+                            BackgroundColor="#151E2F" Padding="16">
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="⚔️" FontSize="28" HorizontalOptions="Center" />
+                            <Label Text="تحدي الأصدقاء"
+                                   FontSize="13" FontFamily="CairoBold"
+                                   TextColor="#E2E8F0" HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="نافس أصدقاءك مباشرة"
+                                   FontSize="11" FontFamily="CairoRegular"
+                                   TextColor="#64748B" HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- ميزة 2 -->
+                    <Border Grid.Row="0" Grid.Column="1"
+                            StrokeShape="RoundRectangle 14" StrokeThickness="0"
+                            BackgroundColor="#151E2F" Padding="16">
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="📝" FontSize="28" HorizontalOptions="Center" />
+                            <Label Text="اختبارات متنوعة"
+                                   FontSize="13" FontFamily="CairoBold"
+                                   TextColor="#E2E8F0" HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="خيارات وكتابة واستماع"
+                                   FontSize="11" FontFamily="CairoRegular"
+                                   TextColor="#64748B" HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- ميزة 3 -->
+                    <Border Grid.Row="1" Grid.Column="0"
+                            StrokeShape="RoundRectangle 14" StrokeThickness="0"
+                            BackgroundColor="#151E2F" Padding="16">
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="🏆" FontSize="28" HorizontalOptions="Center" />
+                            <Label Text="لوحة المتصدرين"
+                                   FontSize="13" FontFamily="CairoBold"
+                                   TextColor="#E2E8F0" HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="تنافس على المركز الأول"
+                                   FontSize="11" FontFamily="CairoRegular"
+                                   TextColor="#64748B" HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- ميزة 4 -->
+                    <Border Grid.Row="1" Grid.Column="1"
+                            StrokeShape="RoundRectangle 14" StrokeThickness="0"
+                            BackgroundColor="#151E2F" Padding="16">
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="💬" FontSize="28" HorizontalOptions="Center" />
+                            <Label Text="دردشة مباشرة"
+                                   FontSize="13" FontFamily="CairoBold"
+                                   TextColor="#E2E8F0" HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="تواصل مع أصدقائك"
+                                   FontSize="11" FontFamily="CairoRegular"
+                                   TextColor="#64748B" HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- ══════════ أزرار التفاعل ══════════ -->
+                <VerticalStackLayout Spacing="12" Margin="0,16,0,0">
+
+                    <!-- زر التقييم -->
+                    <!-- زر التقييم مخفي حالياً -->
+                    <Border StrokeShape="RoundRectangle 14" StrokeThickness="0"
+                            HeightRequest="52"
+                            IsVisible="False"
+                            HorizontalOptions="FillAndExpand">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#6366F1" Offset="0.0" />
+                                <GradientStop Color="#3B82F6" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnRateAppClicked" />
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
+                            <Label Text="⭐" FontSize="18" VerticalOptions="Center" />
+                            <Label Text="قيّم التطبيق" FontSize="16" FontFamily="CairoBold"
+                                   TextColor="White" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- زر مشاركة التطبيق -->
+                    <Border StrokeShape="RoundRectangle 14" StrokeThickness="0"
+                            HeightRequest="52"
+                            BackgroundColor="#1E293B"
+                            HorizontalOptions="FillAndExpand">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnShareAppClicked" />
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
+                            <Label Text="📤" FontSize="18" VerticalOptions="Center" />
+                            <Label Text="شارك التطبيق" FontSize="16" FontFamily="CairoBold"
+                                   TextColor="#E2E8F0" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- زر التواصل -->
+                    <Border StrokeShape="RoundRectangle 14"
+                            Stroke="#2D3748" StrokeThickness="1"
+                            HeightRequest="52"
+                            BackgroundColor="Transparent"
+                            HorizontalOptions="FillAndExpand">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnContactUsClicked" />
+                        </Border.GestureRecognizers>
+                        <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
+                            <Label Text="💬" FontSize="18" VerticalOptions="Center" />
+                            <Label Text="تواصل معنا عبر واتساب" FontSize="15" FontFamily="CairoBold"
+                                   TextColor="#94A3B8" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- ══════════ حقوق النشر ══════════ -->
+                <VerticalStackLayout Spacing="4" Margin="0,24,0,20" HorizontalOptions="Center">
+                    <Label Text="صُنع بـ ❤️ في اليمن"
+                           FontSize="13" FontFamily="CairoRegular"
+                           TextColor="#475569"
+                           HorizontalOptions="Center" />
+                    <Label Text="© 2026 جميع الحقوق محفوظة"
+                           FontSize="12" FontFamily="CairoRegular"
+                           TextColor="#334155"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
 

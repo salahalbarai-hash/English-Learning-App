@@ -2,73 +2,101 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="English.Pages.SettingsPage"
-             BackgroundColor="#F4F7FC"
+             BackgroundColor="#0B1120"
              FlowDirection="RightToLeft">
 
     <Grid>
+        <!-- ══════════ الخلفية العلوية (متدرجة) ══════════ -->
+        <Border VerticalOptions="Start" HeightRequest="160" StrokeThickness="0">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#6366F1" Offset="0.0" />
+                    <GradientStop Color="#3B82F6" Offset="1.0" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
         <ScrollView>
             <VerticalStackLayout Spacing="0" Padding="0,0,0,30">
 
-                <!-- الهيدر (رأس الصفحة) -->
-                <Grid HeightRequest="180" BackgroundColor="#68A5E9">
-                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
-                        <Label Text="" TextColor="White" FontSize="26" FontFamily="CairoBold" HorizontalOptions="Center"/>
-                        <Label Text="" FontAttributes="Bold" TextColor="#E0F0FF" FontSize="20" HorizontalOptions="Center"/>
-                    </VerticalStackLayout>
+                <!-- ══════════ صورة الملف الشخصي ══════════ -->
+                <Grid HeightRequest="120" Margin="0,100,0,0">
+                    <Border WidthRequest="100" HeightRequest="100"
+                            StrokeShape="RoundRectangle 50"
+                            StrokeThickness="4"
+                            Stroke="#0B1120"
+                            BackgroundColor="#1E293B"
+                            HorizontalOptions="Center" VerticalOptions="Center">
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,8" Radius="15" Opacity="0.4"/>
+                        </Border.Shadow>
+                        <Image Source="user.png" WidthRequest="45" HeightRequest="45" VerticalOptions="Center" HorizontalOptions="Center" Opacity="0.8" />
+                    </Border>
                 </Grid>
 
-                <!-- بطاقة إعدادات الحساب الأساسية -->
-                <Border Margin="20,-30,20,20"
-                        StrokeShape="RoundRectangle 25"
-                        StrokeThickness="0"
-                        BackgroundColor="White"
-                        Padding="25,35,25,35">
+                <Label Text="البيانات الشخصية" 
+                       FontFamily="CairoBold"
+                       FontSize="22" 
+                       TextColor="#F8FAFC" 
+                       HorizontalOptions="Center" 
+                       Margin="0,10,0,25" />
 
-                    <Border.Shadow>
-                        <Shadow Brush="Black" Offset="0,10" Radius="20" Opacity="0.08"/>
-                    </Border.Shadow>
+                <!-- ══════════ بطاقة الحقول ══════════ -->
+                <Border Margin="24,0"
+                        StrokeShape="RoundRectangle 24"
+                        StrokeThickness="1"
+                        Stroke="#1E293B"
+                        BackgroundColor="#0F172A"
+                        Padding="24,30">
 
-                    <VerticalStackLayout Spacing="20">
-                        <Label Text="تحديث البيانات الشخصية" TextColor="#333333" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,10"/>
-
+                    <VerticalStackLayout Spacing="22">
+                        
                         <!-- حقل اسم المستخدم -->
                         <VerticalStackLayout Spacing="8">
-                            <Label Text="اسم المستخدم" TextColor="#555555" FontSize="14" FontAttributes="Bold" Margin="5,0,0,0"/>
-                            <Border StrokeShape="RoundRectangle 12" StrokeThickness="1" Stroke="#E8EEF2" BackgroundColor="#F8FAFC" Padding="15,0">
-                                <Entry Text="{Binding UserName}" Placeholder="أدخل اسمك هنا..." BackgroundColor="Transparent" TextColor="#333333" />
+                            <Label Text="اسم المستخدم" TextColor="#94A3B8" FontSize="13" FontAttributes="Bold" Margin="4,0,0,0"/>
+                            <Border StrokeShape="RoundRectangle 16" StrokeThickness="1" Stroke="#334155" BackgroundColor="#1E293B" Padding="16,4">
+                                <Entry Text="{Binding UserName}" Placeholder="أدخل اسمك هنا..." PlaceholderColor="#64748B" BackgroundColor="Transparent" TextColor="#F8FAFC" FontSize="15" />
                             </Border>
                         </VerticalStackLayout>
 
                         <!-- حقل كلمة المرور -->
                         <VerticalStackLayout Spacing="8">
-                            <Label Text="كلمة المرور" TextColor="#555555" FontSize="14" FontAttributes="Bold" Margin="5,0,0,0"/>
-                            <Border StrokeShape="RoundRectangle 12" StrokeThickness="1" Stroke="#E8EEF2" BackgroundColor="#F8FAFC" Padding="15,0">
-                                <Entry Text="{Binding Password}" IsPassword="True" Placeholder="••••••••" BackgroundColor="Transparent" TextColor="#333333" />
+                            <Label Text="كلمة المرور" TextColor="#94A3B8" FontSize="13" FontAttributes="Bold" Margin="4,0,0,0"/>
+                            <Border StrokeShape="RoundRectangle 16" StrokeThickness="1" Stroke="#334155" BackgroundColor="#1E293B" Padding="16,4">
+                                <Entry Text="{Binding Password}" IsPassword="True" Placeholder="••••••••" PlaceholderColor="#64748B" BackgroundColor="Transparent" TextColor="#F8FAFC" FontSize="15" />
                             </Border>
                         </VerticalStackLayout>
 
                         <!-- حقل رقم الهاتف -->
                         <VerticalStackLayout Spacing="8">
-                            <Label Text="رقم الهاتف" TextColor="#555555" FontSize="14" FontAttributes="Bold" Margin="5,0,0,0"/>
-                            <Border StrokeShape="RoundRectangle 12" StrokeThickness="1" Stroke="#E8EEF2" BackgroundColor="#F8FAFC" Padding="15,0">
-                                <Entry Text="{Binding PhoneNumber}" Keyboard="Telephone" Placeholder="مثال: 783982339" BackgroundColor="Transparent" TextColor="#333333" />
+                            <Label Text="رقم الهاتف" TextColor="#94A3B8" FontSize="13" FontAttributes="Bold" Margin="4,0,0,0"/>
+                            <Border StrokeShape="RoundRectangle 16" StrokeThickness="1" Stroke="#334155" BackgroundColor="#1E293B" Padding="16,4">
+                                <Entry Text="{Binding PhoneNumber}" Keyboard="Telephone" Placeholder="مثال: 783982339" PlaceholderColor="#64748B" BackgroundColor="Transparent" TextColor="#F8FAFC" FontSize="15" />
                             </Border>
                         </VerticalStackLayout>
 
-                        <!-- زر حفظ التعديلات (خاص فقط بالبيانات أعلاه) -->
-                        <Button Text="حفظ التعديلات" 
-                                Command="{Binding SaveCustomerInformationCommand}"
-                                BackgroundColor="#68A5E9" 
-                                TextColor="White"
-                                FontSize="18"
-                                FontAttributes="Bold"
-                                CornerRadius="15"
-                                HeightRequest="55"
-                                Margin="0,15,0,0">
-                            <Button.Shadow>
-                                <Shadow Brush="#68A5E9" Offset="0,6" Radius="12" Opacity="0.4"/>
-                            </Button.Shadow>
-                        </Button>
+                        <!-- زر حفظ التعديلات -->
+                        <Border Margin="0,15,0,0"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 16"
+                                HeightRequest="56">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#6366F1" Offset="0.0" />
+                                    <GradientStop Color="#4F46E5" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Border.Shadow>
+                                <Shadow Brush="#6366F1" Offset="0,6" Radius="12" Opacity="0.4"/>
+                            </Border.Shadow>
+                            
+                            <Button Text="حفظ التعديلات" 
+                                    Command="{Binding SaveCustomerInformationCommand}"
+                                    BackgroundColor="Transparent" 
+                                    TextColor="White"
+                                    FontFamily="CairoBold"
+                                    FontSize="16" />
+                        </Border>
 
                     </VerticalStackLayout>
                 </Border>
@@ -76,19 +104,34 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- نافذة التحميل -->
-        <Grid x:Name="LoadingOverlay" BackgroundColor="#90000000" IsVisible="{Binding IsBusy, FallbackValue=False}">
-            <Frame HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="20" BackgroundColor="White" Padding="30" HasShadow="True">
+        <!-- زر الرجوع (إغلاق الشاشة) في الأعلى يميناً (لأن الاتجاه RightToLeft) -->
+        <Border WidthRequest="40" HeightRequest="40" 
+                StrokeShape="RoundRectangle 20" StrokeThickness="0" 
+                BackgroundColor="#20FFFFFF" 
+                HorizontalOptions="Start" VerticalOptions="Start" 
+                Margin="20,40,20,0">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnCloseClicked" />
+            </Border.GestureRecognizers>
+            <Label Text="✕" FontSize="18" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/>
+        </Border>
+
+        <!-- ══════════ نافذة التحميل ══════════ -->
+        <Grid x:Name="LoadingOverlay" BackgroundColor="#900B1120" IsVisible="{Binding IsBusy, FallbackValue=False}">
+            <Border HorizontalOptions="Center" VerticalOptions="Center" StrokeShape="RoundRectangle 20" StrokeThickness="1" Stroke="#1E293B" BackgroundColor="#0F172A" Padding="30">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,10" Radius="30" Opacity="0.5"/>
+                </Border.Shadow>
                 <VerticalStackLayout Spacing="15">
                     <ActivityIndicator x:Name="ActivityIndicator" 
                                        IsRunning="{Binding IsBusy, FallbackValue=False}" 
-                                       Color="#68A5E9" 
-                                       WidthRequest="60" 
-                                       HeightRequest="60" 
+                                       Color="#6366F1" 
+                                       WidthRequest="50" 
+                                       HeightRequest="50" 
                                        HorizontalOptions="Center"/>
-                    <Label Text="جاري حفظ البيانات..." TextColor="#555555" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    <Label Text="جاري حفظ البيانات..." TextColor="#F8FAFC" FontSize="15" FontAttributes="Bold" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
         </Grid>
 
     </Grid>

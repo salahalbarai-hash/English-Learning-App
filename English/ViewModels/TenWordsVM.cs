@@ -33,7 +33,6 @@ namespace English.ViewModels
             LoadDailyWords();
             UpdateProgressWidth(value);
             //UpdateUI(value);
-            ProgressStatus = Preferences.Get("Coins", 0L).ToString();
         }
 
         private void UpdateProgressWidth(long count)

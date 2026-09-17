@@ -46,7 +46,7 @@ public partial class MorePage : ContentPage
                     await Share.Default.RequestAsync(new ShareTextRequest
                     {
                         Title = "مشاركة التطبيق",
-                        Text = "جرب تطبيق تعلم الإنجليزية بطريقة ممتعة"
+                        Text = "حمل تطبيق إنجليش الآن وانطلق في رحلة ممتعة لتعلم اللغة الإنجليزية وتنافس مع أصدقائك! 🚀📚\n\nhttps://english.runasp.net/"
                     });
                     break;
                 case "About":

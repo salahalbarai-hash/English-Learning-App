@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -35,8 +35,9 @@ public class GameHub
     public event Action<string, string, string>? OnSecretWordReceived;
     public event Action<string, string>? OnDuelWinnerReceived;
 
-    // 🟢 إضافة حدث الانسحاب
+    // 🟢 إضافة حدث الانسحاب وحذف الرسائل
     public event Action<string>? OnDuelWithdrawalReceived;
+    public event Action<int>? OnMessageDeleted;
 
     public HubConnection? HubConnection => _hubConnection;
 
@@ -140,6 +141,9 @@ public class GameHub
         // 🟢 الاستماع لحدث الانسحاب القادم من السيرفر
         _hubConnection.On<string>("ReceiveDuelWithdrawal", (withdrawingUser) =>
             OnDuelWithdrawalReceived?.Invoke(withdrawingUser));
+
+        _hubConnection.On<int>("MessageDeleted", (msgId) =>
+            OnMessageDeleted?.Invoke(msgId));
 
         try
         {
@@ -261,5 +265,13 @@ public class GameHub
             catch { return 0; }
         }
         return 0;
+    }
+
+    public async Task DeleteMessageAsync(int messageId)
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+        {
+            await _hubConnection.InvokeAsync("DeleteMessage", messageId);
+        }
     }
 }
