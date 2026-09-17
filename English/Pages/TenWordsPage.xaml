@@ -21,45 +21,42 @@
                 <Shadow Brush="#000000" Opacity="0.25" Radius="12" Offset="0,5"/>
             </Border.Shadow>
 
-            <VerticalStackLayout Spacing="16">
+            <VerticalStackLayout Spacing="12">
 
-                <!-- صف الكوينز بتصميم إبداعي (Pill Badge) -->
-                <Border HorizontalOptions="Center" StrokeThickness="1" Stroke="#263B5E" StrokeShape="RoundRectangle 20" BackgroundColor="#0B111D" Padding="16,8,16,8">
-                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
-                        <Label Text="{Binding ProgressStatus}" FontSize="18" TextColor="#FBBF24" FontFamily="CairoBold" VerticalOptions="Center"/>
-                        <Image Source="coin.png" WidthRequest="24" HeightRequest="24" VerticalOptions="Center" SemanticProperties.Description="أيقونة العملات"/>
-                    </HorizontalStackLayout>
-                </Border>
-
-                <!-- صف التقدم -->
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="15" VerticalOptions="Center">
-
-                    <!-- شريط التقدم -->
-                    <Grid Grid.Column="0" VerticalOptions="Center" FlowDirection="RightToLeft">
-
-                        <Border HeightRequest="14" BackgroundColor="#1E293B" Stroke="#334155" StrokeThickness="1" StrokeShape="RoundRectangle 7"/>
-
-                        <Border x:Name="ProgressBar" HeightRequest="14" WidthRequest="{Binding ProgressWidth}" HorizontalOptions="Start" StrokeShape="RoundRectangle 7" StrokeThickness="0">
-                            <Border.Background>
-                                <LinearGradientBrush StartPoint="1,0" EndPoint="0,0">
-                                    <GradientStop Color="#14B8A6" Offset="0"/>
-                                    <GradientStop Color="#38BDF8" Offset="0.55"/>
-                                    <GradientStop Color="#818CF8" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Border.Background>
-
-                            <Border.Shadow>
-                                <Shadow Brush="#2DD4BF" Opacity="0.5" Radius="8" Offset="0,0"/>
-                            </Border.Shadow>
-                        </Border>
-                    </Grid>
-
-                    <!-- الأرقام -->
-                    <HorizontalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
+                <!-- الصف العلوي: الأرقام والكوينز -->
+                <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                    <!-- الأرقام (اليمين) -->
+                    <HorizontalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="4">
                         <Label Text="{Binding MemorizedWordsCount}" TextColor="#38BDF8" FontSize="18" FontFamily="CairoBold" VerticalOptions="Center"/>
                         <Label Text="/ 1000" TextColor="#64748B" FontSize="14" FontFamily="CairoBold" VerticalOptions="Center" Margin="0,2,0,0"/>
                     </HorizontalStackLayout>
+                    
+                    <!-- الكوينز (اليسار) -->
+                    <Border Grid.Column="1" StrokeThickness="1" Stroke="#263B5E" StrokeShape="RoundRectangle 20" BackgroundColor="#0B111D" Padding="12,4,12,4">
+                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                            <Label Text="{Binding ProgressStatus}" FontSize="16" TextColor="#FBBF24" FontFamily="CairoBold" VerticalOptions="Center"/>
+                            <Image Source="coin.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" SemanticProperties.Description="أيقونة العملات"/>
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
 
+                <!-- شريط التقدم -->
+                <Grid VerticalOptions="Center" FlowDirection="RightToLeft">
+                    <Border HeightRequest="14" BackgroundColor="#1E293B" Stroke="#334155" StrokeThickness="1" StrokeShape="RoundRectangle 7"/>
+
+                    <Border x:Name="ProgressBar" HeightRequest="14" WidthRequest="{Binding ProgressWidth}" HorizontalOptions="Start" StrokeShape="RoundRectangle 7" StrokeThickness="0">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="1,0" EndPoint="0,0">
+                                <GradientStop Color="#14B8A6" Offset="0"/>
+                                <GradientStop Color="#38BDF8" Offset="0.55"/>
+                                <GradientStop Color="#818CF8" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+
+                        <Border.Shadow>
+                            <Shadow Brush="#2DD4BF" Opacity="0.5" Radius="8" Offset="0,0"/>
+                        </Border.Shadow>
+                    </Border>
                 </Grid>
 
             </VerticalStackLayout>

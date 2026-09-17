@@ -1,0 +1,7802 @@
+[
+  {
+    "Id": 1,
+    "EnglishWord": "Hello",
+    "ArabicWord": "مرحبا",
+    "Category": "تحيات ومجاملات"
+  },
+  {
+    "Id": 2,
+    "EnglishWord": "Goodbye",
+    "ArabicWord": "وداعا",
+    "Category": "تحيات ومجاملات"
+  },
+  {
+    "Id": 3,
+    "EnglishWord": "Yes",
+    "ArabicWord": "نعم",
+    "Category": "تحيات ومجاملات"
+  },
+  {
+    "Id": 4,
+    "EnglishWord": "No",
+    "ArabicWord": "لا",
+    "Category": "تحيات ومجاملات"
+  },
+  {
+    "Id": 5,
+    "EnglishWord": "Please",
+    "ArabicWord": "من فضلك",
+    "Category": "تحيات ومجاملات"
+  },
+  {
+    "Id": 6,
+    "EnglishWord": "Thank you",
+    "ArabicWord": "شكرا",
+    "Category": "تحيات ومجاملات"
+  },
+  {
+    "Id": 7,
+    "EnglishWord": "Sorry",
+    "ArabicWord": "اسف",
+    "Category": "تحيات ومجاملات"
+  },
+  {
+    "Id": 8,
+    "EnglishWord": "Excuse me",
+    "ArabicWord": "عفوا",
+    "Category": "تحيات ومجاملات"
+  },
+  {
+    "Id": 9,
+    "EnglishWord": "Welcome",
+    "ArabicWord": "اهلا",
+    "Category": "تحيات ومجاملات"
+  },
+  {
+    "Id": 10,
+    "EnglishWord": "Good",
+    "ArabicWord": "جيد",
+    "Category": "صفات"
+  },
+  {
+    "Id": 11,
+    "EnglishWord": "Bad",
+    "ArabicWord": "سيء",
+    "Category": "صفات"
+  },
+  {
+    "Id": 12,
+    "EnglishWord": "Big",
+    "ArabicWord": "كبير",
+    "Category": "صفات"
+  },
+  {
+    "Id": 13,
+    "EnglishWord": "Small",
+    "ArabicWord": "صغير",
+    "Category": "صفات"
+  },
+  {
+    "Id": 14,
+    "EnglishWord": "Hot",
+    "ArabicWord": "حار",
+    "Category": "صفات"
+  },
+  {
+    "Id": 15,
+    "EnglishWord": "Cold",
+    "ArabicWord": "برد",
+    "Category": "صفات"
+  },
+  {
+    "Id": 16,
+    "EnglishWord": "New",
+    "ArabicWord": "جديد",
+    "Category": "صفات"
+  },
+  {
+    "Id": 17,
+    "EnglishWord": "Old",
+    "ArabicWord": "قديم",
+    "Category": "صفات"
+  },
+  {
+    "Id": 18,
+    "EnglishWord": "Young",
+    "ArabicWord": "شاب",
+    "Category": "صفات"
+  },
+  {
+    "Id": 19,
+    "EnglishWord": "Beautiful",
+    "ArabicWord": "جميل",
+    "Category": "صفات"
+  },
+  {
+    "Id": 20,
+    "EnglishWord": "Ugly",
+    "ArabicWord": "قبيح",
+    "Category": "صفات"
+  },
+  {
+    "Id": 21,
+    "EnglishWord": "Fast",
+    "ArabicWord": "سريع",
+    "Category": "صفات"
+  },
+  {
+    "Id": 22,
+    "EnglishWord": "Slow",
+    "ArabicWord": "بطيء",
+    "Category": "صفات"
+  },
+  {
+    "Id": 23,
+    "EnglishWord": "Happy",
+    "ArabicWord": "سعيد",
+    "Category": "صفات"
+  },
+  {
+    "Id": 24,
+    "EnglishWord": "Sad",
+    "ArabicWord": "حزين",
+    "Category": "صفات"
+  },
+  {
+    "Id": 25,
+    "EnglishWord": "Easy",
+    "ArabicWord": "سهل",
+    "Category": "صفات"
+  },
+  {
+    "Id": 26,
+    "EnglishWord": "Difficult",
+    "ArabicWord": "صعب",
+    "Category": "صفات"
+  },
+  {
+    "Id": 27,
+    "EnglishWord": "Right",
+    "ArabicWord": "صحيح",
+    "Category": "صفات"
+  },
+  {
+    "Id": 28,
+    "EnglishWord": "Wrong",
+    "ArabicWord": "خطا",
+    "Category": "صفات"
+  },
+  {
+    "Id": 29,
+    "EnglishWord": "Water",
+    "ArabicWord": "ماء",
+    "Category": "مشروبات"
+  },
+  {
+    "Id": 30,
+    "EnglishWord": "Food",
+    "ArabicWord": "طعام",
+    "Category": "طعام"
+  },
+  {
+    "Id": 31,
+    "EnglishWord": "Bread",
+    "ArabicWord": "خبز",
+    "Category": "طعام"
+  },
+  {
+    "Id": 32,
+    "EnglishWord": "Meat",
+    "ArabicWord": "لحم",
+    "Category": "طعام"
+  },
+  {
+    "Id": 33,
+    "EnglishWord": "Rice",
+    "ArabicWord": "ارز",
+    "Category": "طعام"
+  },
+  {
+    "Id": 34,
+    "EnglishWord": "Milk",
+    "ArabicWord": "حليب",
+    "Category": "مشروبات"
+  },
+  {
+    "Id": 35,
+    "EnglishWord": "Coffee",
+    "ArabicWord": "قهوه",
+    "Category": "مشروبات"
+  },
+  {
+    "Id": 36,
+    "EnglishWord": "Sugar",
+    "ArabicWord": "سكر",
+    "Category": "طعام"
+  },
+  {
+    "Id": 37,
+    "EnglishWord": "Salt",
+    "ArabicWord": "ملح",
+    "Category": "طعام"
+  },
+  {
+    "Id": 38,
+    "EnglishWord": "Drink",
+    "ArabicWord": "يشرب",
+    "Category": "افعال"
+  },
+  {
+    "Id": 39,
+    "EnglishWord": "Sleep",
+    "ArabicWord": "ينام",
+    "Category": "افعال"
+  },
+  {
+    "Id": 40,
+    "EnglishWord": "Wake up",
+    "ArabicWord": "يستيقظ",
+    "Category": "افعال"
+  },
+  {
+    "Id": 41,
+    "EnglishWord": "Go",
+    "ArabicWord": "يذهب",
+    "Category": "افعال"
+  },
+  {
+    "Id": 42,
+    "EnglishWord": "Come",
+    "ArabicWord": "ياتي",
+    "Category": "افعال"
+  },
+  {
+    "Id": 43,
+    "EnglishWord": "Walk",
+    "ArabicWord": "يمشى",
+    "Category": "افعال"
+  },
+  {
+    "Id": 44,
+    "EnglishWord": "Run",
+    "ArabicWord": "يركض",
+    "Category": "افعال"
+  },
+  {
+    "Id": 45,
+    "EnglishWord": "Sit",
+    "ArabicWord": "يجلس",
+    "Category": "افعال"
+  },
+  {
+    "Id": 46,
+    "EnglishWord": "Stand",
+    "ArabicWord": "يقف",
+    "Category": "افعال"
+  },
+  {
+    "Id": 47,
+    "EnglishWord": "Open",
+    "ArabicWord": "يفتح",
+    "Category": "افعال"
+  },
+  {
+    "Id": 48,
+    "EnglishWord": "Close",
+    "ArabicWord": "يغلق",
+    "Category": "افعال"
+  },
+  {
+    "Id": 49,
+    "EnglishWord": "Read",
+    "ArabicWord": "يقرا",
+    "Category": "افعال"
+  },
+  {
+    "Id": 50,
+    "EnglishWord": "Write",
+    "ArabicWord": "يكتب",
+    "Category": "افعال"
+  },
+  {
+    "Id": 51,
+    "EnglishWord": "Listen",
+    "ArabicWord": "يستمع",
+    "Category": "افعال"
+  },
+  {
+    "Id": 52,
+    "EnglishWord": "Speak",
+    "ArabicWord": "يتكلم",
+    "Category": "افعال"
+  },
+  {
+    "Id": 53,
+    "EnglishWord": "See",
+    "ArabicWord": "يرى",
+    "Category": "افعال"
+  },
+  {
+    "Id": 54,
+    "EnglishWord": "Look",
+    "ArabicWord": "ينظر",
+    "Category": "افعال"
+  },
+  {
+    "Id": 55,
+    "EnglishWord": "Hear",
+    "ArabicWord": "يسمع",
+    "Category": "افعال"
+  },
+  {
+    "Id": 56,
+    "EnglishWord": "Work",
+    "ArabicWord": "يعمل",
+    "Category": "افعال"
+  },
+  {
+    "Id": 57,
+    "EnglishWord": "Play",
+    "ArabicWord": "يلعب",
+    "Category": "افعال"
+  },
+  {
+    "Id": 58,
+    "EnglishWord": "Study",
+    "ArabicWord": "يدرس",
+    "Category": "افعال"
+  },
+  {
+    "Id": 59,
+    "EnglishWord": "Learn",
+    "ArabicWord": "يتعلم",
+    "Category": "افعال"
+  },
+  {
+    "Id": 60,
+    "EnglishWord": "Teach",
+    "ArabicWord": "يعلم",
+    "Category": "افعال"
+  },
+  {
+    "Id": 61,
+    "EnglishWord": "Buy",
+    "ArabicWord": "يشتري",
+    "Category": "افعال"
+  },
+  {
+    "Id": 62,
+    "EnglishWord": "Sell",
+    "ArabicWord": "يبيع",
+    "Category": "افعال"
+  },
+  {
+    "Id": 63,
+    "EnglishWord": "Give",
+    "ArabicWord": "يعطي",
+    "Category": "افعال"
+  },
+  {
+    "Id": 64,
+    "EnglishWord": "Take",
+    "ArabicWord": "ياخذ",
+    "Category": "افعال"
+  },
+  {
+    "Id": 65,
+    "EnglishWord": "Make",
+    "ArabicWord": "يصنع",
+    "Category": "افعال"
+  },
+  {
+    "Id": 66,
+    "EnglishWord": "Do",
+    "ArabicWord": "يفعل",
+    "Category": "افعال"
+  },
+  {
+    "Id": 67,
+    "EnglishWord": "Book",
+    "ArabicWord": "كتاب",
+    "Category": "أدوات مكتبية"
+  },
+  {
+    "Id": 68,
+    "EnglishWord": "Pen",
+    "ArabicWord": "قلم",
+    "Category": "أدوات مكتبية"
+  },
+  {
+    "Id": 69,
+    "EnglishWord": "Paper",
+    "ArabicWord": "ورقه",
+    "Category": "أدوات مكتبية"
+  },
+  {
+    "Id": 70,
+    "EnglishWord": "Table",
+    "ArabicWord": "طاوله",
+    "Category": "منزل وأثاث"
+  },
+  {
+    "Id": 71,
+    "EnglishWord": "Chair",
+    "ArabicWord": "كرسي",
+    "Category": "منزل وأثاث"
+  },
+  {
+    "Id": 72,
+    "EnglishWord": "Door",
+    "ArabicWord": "باب",
+    "Category": "المنزل"
+  },
+  {
+    "Id": 73,
+    "EnglishWord": "Window",
+    "ArabicWord": "نافذه",
+    "Category": "المنزل"
+  },
+  {
+    "Id": 74,
+    "EnglishWord": "Wall",
+    "ArabicWord": "جدار",
+    "Category": "المنزل"
+  },
+  {
+    "Id": 75,
+    "EnglishWord": "Floor",
+    "ArabicWord": "ارضيه",
+    "Category": "المنزل"
+  },
+  {
+    "Id": 76,
+    "EnglishWord": "Ceiling",
+    "ArabicWord": "سقف",
+    "Category": "المنزل"
+  },
+  {
+    "Id": 77,
+    "EnglishWord": "House",
+    "ArabicWord": "منزل",
+    "Category": "المنزل"
+  },
+  {
+    "Id": 78,
+    "EnglishWord": "Room",
+    "ArabicWord": "غرفه",
+    "Category": "منزل وأثاث"
+  },
+  {
+    "Id": 79,
+    "EnglishWord": "Kitchen",
+    "ArabicWord": "مطبخ",
+    "Category": "المنزل"
+  },
+  {
+    "Id": 80,
+    "EnglishWord": "Bathroom",
+    "ArabicWord": "حمام",
+    "Category": "المنزل"
+  },
+  {
+    "Id": 81,
+    "EnglishWord": "Bedroom",
+    "ArabicWord": "غرفه نوم",
+    "Category": "المنزل"
+  },
+  {
+    "Id": 82,
+    "EnglishWord": "Garden",
+    "ArabicWord": "حديقه",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 83,
+    "EnglishWord": "Street",
+    "ArabicWord": "شارع",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 84,
+    "EnglishWord": "City",
+    "ArabicWord": "مدينه",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 85,
+    "EnglishWord": "Country",
+    "ArabicWord": "بلد",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 86,
+    "EnglishWord": "School",
+    "ArabicWord": "مدرسه",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 87,
+    "EnglishWord": "Hospital",
+    "ArabicWord": "مستشفى",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 88,
+    "EnglishWord": "Shop",
+    "ArabicWord": "متجر",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 89,
+    "EnglishWord": "Restaurant",
+    "ArabicWord": "مطعم",
+    "Category": "اماكن"
+  },
+  {
+    "Id": 90,
+    "EnglishWord": "Hotel",
+    "ArabicWord": "فندق",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 91,
+    "EnglishWord": "Airport",
+    "ArabicWord": "مطار",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 92,
+    "EnglishWord": "Station",
+    "ArabicWord": "محطه",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 93,
+    "EnglishWord": "Car",
+    "ArabicWord": "سياره",
+    "Category": "مواصلات"
+  },
+  {
+    "Id": 94,
+    "EnglishWord": "Bus",
+    "ArabicWord": "حافله",
+    "Category": "مواصلات"
+  },
+  {
+    "Id": 95,
+    "EnglishWord": "Train",
+    "ArabicWord": "قطار",
+    "Category": "مواصلات"
+  },
+  {
+    "Id": 96,
+    "EnglishWord": "Plane",
+    "ArabicWord": "طائره",
+    "Category": "مواصلات"
+  },
+  {
+    "Id": 97,
+    "EnglishWord": "Bicycle",
+    "ArabicWord": "دراجه",
+    "Category": "مواصلات"
+  },
+  {
+    "Id": 98,
+    "EnglishWord": "Boat",
+    "ArabicWord": "قارب",
+    "Category": "مواصلات"
+  },
+  {
+    "Id": 99,
+    "EnglishWord": "Taxi",
+    "ArabicWord": "سياره اجره",
+    "Category": "مواصلات"
+  },
+  {
+    "Id": 100,
+    "EnglishWord": "One",
+    "ArabicWord": "واحد",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 101,
+    "EnglishWord": "Two",
+    "ArabicWord": "اثنان",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 102,
+    "EnglishWord": "Three",
+    "ArabicWord": "ثلاثه",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 103,
+    "EnglishWord": "Four",
+    "ArabicWord": "اربعه",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 104,
+    "EnglishWord": "Five",
+    "ArabicWord": "خمسه",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 105,
+    "EnglishWord": "Six",
+    "ArabicWord": "سته",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 106,
+    "EnglishWord": "Seven",
+    "ArabicWord": "سبعه",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 107,
+    "EnglishWord": "Eight",
+    "ArabicWord": "ثمانيه",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 108,
+    "EnglishWord": "Nine",
+    "ArabicWord": "تسعه",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 109,
+    "EnglishWord": "Ten",
+    "ArabicWord": "عشره",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 110,
+    "EnglishWord": "Hundred",
+    "ArabicWord": "مئه",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 111,
+    "EnglishWord": "Thousand",
+    "ArabicWord": "الف",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 112,
+    "EnglishWord": "Red",
+    "ArabicWord": "احمر",
+    "Category": "ألوان"
+  },
+  {
+    "Id": 113,
+    "EnglishWord": "Blue",
+    "ArabicWord": "ازرق",
+    "Category": "ألوان"
+  },
+  {
+    "Id": 114,
+    "EnglishWord": "Green",
+    "ArabicWord": "اخضر",
+    "Category": "ألوان"
+  },
+  {
+    "Id": 115,
+    "EnglishWord": "Yellow",
+    "ArabicWord": "اصفر",
+    "Category": "ألوان"
+  },
+  {
+    "Id": 116,
+    "EnglishWord": "Black",
+    "ArabicWord": "اسود",
+    "Category": "ألوان"
+  },
+  {
+    "Id": 117,
+    "EnglishWord": "White",
+    "ArabicWord": "ابيض",
+    "Category": "ألوان"
+  },
+  {
+    "Id": 118,
+    "EnglishWord": "Brown",
+    "ArabicWord": "بني",
+    "Category": "ألوان"
+  },
+  {
+    "Id": 119,
+    "EnglishWord": "Orange",
+    "ArabicWord": "برتقالي",
+    "Category": "ألوان"
+  },
+  {
+    "Id": 120,
+    "EnglishWord": "Pink",
+    "ArabicWord": "وردي",
+    "Category": "ألوان"
+  },
+  {
+    "Id": 121,
+    "EnglishWord": "Gray",
+    "ArabicWord": "رمادي",
+    "Category": "ألوان"
+  },
+  {
+    "Id": 122,
+    "EnglishWord": "Mother",
+    "ArabicWord": "ام",
+    "Category": "العائلة"
+  },
+  {
+    "Id": 123,
+    "EnglishWord": "Father",
+    "ArabicWord": "اب",
+    "Category": "العائلة"
+  },
+  {
+    "Id": 124,
+    "EnglishWord": "Sister",
+    "ArabicWord": "اخت",
+    "Category": "العائلة"
+  },
+  {
+    "Id": 125,
+    "EnglishWord": "Brother",
+    "ArabicWord": "اخ",
+    "Category": "العائلة"
+  },
+  {
+    "Id": 126,
+    "EnglishWord": "Son",
+    "ArabicWord": "ابن",
+    "Category": "العائلة"
+  },
+  {
+    "Id": 127,
+    "EnglishWord": "Daughter",
+    "ArabicWord": "ابنه",
+    "Category": "العائلة"
+  },
+  {
+    "Id": 128,
+    "EnglishWord": "Husband",
+    "ArabicWord": "زوج",
+    "Category": "العائلة"
+  },
+  {
+    "Id": 129,
+    "EnglishWord": "Wife",
+    "ArabicWord": "زوجه",
+    "Category": "العائلة"
+  },
+  {
+    "Id": 130,
+    "EnglishWord": "Child",
+    "ArabicWord": "طفل",
+    "Category": "العائلة"
+  },
+  {
+    "Id": 131,
+    "EnglishWord": "Baby",
+    "ArabicWord": "رضيع",
+    "Category": "العائلة"
+  },
+  {
+    "Id": 132,
+    "EnglishWord": "Man",
+    "ArabicWord": "رجل",
+    "Category": "العائلة"
+  },
+  {
+    "Id": 133,
+    "EnglishWord": "Woman",
+    "ArabicWord": "امراه",
+    "Category": "العائلة"
+  },
+  {
+    "Id": 134,
+    "EnglishWord": "Boy",
+    "ArabicWord": "ولد",
+    "Category": "العائلة"
+  },
+  {
+    "Id": 135,
+    "EnglishWord": "Girl",
+    "ArabicWord": "بنت",
+    "Category": "العائلة"
+  },
+  {
+    "Id": 136,
+    "EnglishWord": "Friend",
+    "ArabicWord": "صديق",
+    "Category": "مهن"
+  },
+  {
+    "Id": 137,
+    "EnglishWord": "Teacher",
+    "ArabicWord": "معلم",
+    "Category": "مهن"
+  },
+  {
+    "Id": 138,
+    "EnglishWord": "Student",
+    "ArabicWord": "طالب",
+    "Category": "مهن"
+  },
+  {
+    "Id": 139,
+    "EnglishWord": "Doctor",
+    "ArabicWord": "طبيب",
+    "Category": "مهن"
+  },
+  {
+    "Id": 140,
+    "EnglishWord": "Nurse",
+    "ArabicWord": "ممرض",
+    "Category": "مهن وأشخاص"
+  },
+  {
+    "Id": 141,
+    "EnglishWord": "Worker",
+    "ArabicWord": "عامل",
+    "Category": "مهن"
+  },
+  {
+    "Id": 142,
+    "EnglishWord": "Name",
+    "ArabicWord": "اسم",
+    "Category": "معلومات شخصية"
+  },
+  {
+    "Id": 143,
+    "EnglishWord": "Age",
+    "ArabicWord": "عمر",
+    "Category": "معلومات شخصية"
+  },
+  {
+    "Id": 144,
+    "EnglishWord": "Birthday",
+    "ArabicWord": "عيد ميلاد",
+    "Category": "معلومات شخصية"
+  },
+  {
+    "Id": 145,
+    "EnglishWord": "Address",
+    "ArabicWord": "عنوان",
+    "Category": "معلومات شخصية"
+  },
+  {
+    "Id": 146,
+    "EnglishWord": "Phone",
+    "ArabicWord": "هاتف",
+    "Category": "معلومات شخصية"
+  },
+  {
+    "Id": 147,
+    "EnglishWord": "Email",
+    "ArabicWord": "بريد الكتروني",
+    "Category": "معلومات شخصية"
+  },
+  {
+    "Id": 148,
+    "EnglishWord": "Day",
+    "ArabicWord": "يوم",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 149,
+    "EnglishWord": "Night",
+    "ArabicWord": "ليله",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 150,
+    "EnglishWord": "Morning",
+    "ArabicWord": "صباح",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 151,
+    "EnglishWord": "Afternoon",
+    "ArabicWord": "بعد الظهر",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 152,
+    "EnglishWord": "Evening",
+    "ArabicWord": "مساء",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 153,
+    "EnglishWord": "Week",
+    "ArabicWord": "اسبوع",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 154,
+    "EnglishWord": "Month",
+    "ArabicWord": "شهر",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 155,
+    "EnglishWord": "Year",
+    "ArabicWord": "سنه",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 156,
+    "EnglishWord": "Today",
+    "ArabicWord": "اليوم",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 157,
+    "EnglishWord": "Yesterday",
+    "ArabicWord": "امس",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 158,
+    "EnglishWord": "Tomorrow",
+    "ArabicWord": "غدا",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 159,
+    "EnglishWord": "Now",
+    "ArabicWord": "الآن",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 160,
+    "EnglishWord": "Later",
+    "ArabicWord": "لاحقا",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 161,
+    "EnglishWord": "Time",
+    "ArabicWord": "وقت",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 162,
+    "EnglishWord": "Hour",
+    "ArabicWord": "ساعه",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 163,
+    "EnglishWord": "Minute",
+    "ArabicWord": "دقيقه",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 164,
+    "EnglishWord": "Second",
+    "ArabicWord": "ثانيه",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 165,
+    "EnglishWord": "Clock",
+    "ArabicWord": "ساعه حائط",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 166,
+    "EnglishWord": "Watch",
+    "ArabicWord": "ساعه يد",
+    "Category": "الوقت والتاريخ"
+  },
+  {
+    "Id": 167,
+    "EnglishWord": "Money",
+    "ArabicWord": "نقود",
+    "Category": "مال وتسوق"
+  },
+  {
+    "Id": 168,
+    "EnglishWord": "Price",
+    "ArabicWord": "سعر",
+    "Category": "مال وتسوق"
+  },
+  {
+    "Id": 169,
+    "EnglishWord": "Cheap",
+    "ArabicWord": "رخيص",
+    "Category": "مال وتسوق"
+  },
+  {
+    "Id": 170,
+    "EnglishWord": "Expensive",
+    "ArabicWord": "غالي",
+    "Category": "مال وتسوق"
+  },
+  {
+    "Id": 171,
+    "EnglishWord": "Free",
+    "ArabicWord": "مجاني",
+    "Category": "مال وتسوق"
+  },
+  {
+    "Id": 172,
+    "EnglishWord": "Bank",
+    "ArabicWord": "بنك",
+    "Category": "مال وتسوق"
+  },
+  {
+    "Id": 173,
+    "EnglishWord": "Market",
+    "ArabicWord": "سوق",
+    "Category": "مال وتسوق"
+  },
+  {
+    "Id": 174,
+    "EnglishWord": "Store",
+    "ArabicWord": "متجر",
+    "Category": "مال وتسوق"
+  },
+  {
+    "Id": 175,
+    "EnglishWord": "Customer",
+    "ArabicWord": "زبون",
+    "Category": "مال وتسوق"
+  },
+  {
+    "Id": 176,
+    "EnglishWord": "Cashier",
+    "ArabicWord": "امين صندوق",
+    "Category": "مال وتسوق"
+  },
+  {
+    "Id": 177,
+    "EnglishWord": "Weather",
+    "ArabicWord": "طقس",
+    "Category": "الطقس والفلك"
+  },
+  {
+    "Id": 178,
+    "EnglishWord": "Sun",
+    "ArabicWord": "شمس",
+    "Category": "الطقس والفلك"
+  },
+  {
+    "Id": 179,
+    "EnglishWord": "Moon",
+    "ArabicWord": "قمر",
+    "Category": "الطقس والفلك"
+  },
+  {
+    "Id": 180,
+    "EnglishWord": "Star",
+    "ArabicWord": "نجم",
+    "Category": "الطقس والفلك"
+  },
+  {
+    "Id": 181,
+    "EnglishWord": "Sky",
+    "ArabicWord": "سماء",
+    "Category": "الطقس والفلك"
+  },
+  {
+    "Id": 182,
+    "EnglishWord": "Cloud",
+    "ArabicWord": "غيمه",
+    "Category": "الطقس والفلك"
+  },
+  {
+    "Id": 183,
+    "EnglishWord": "Rain",
+    "ArabicWord": "مطر",
+    "Category": "الطقس والفلك"
+  },
+  {
+    "Id": 184,
+    "EnglishWord": "Snow",
+    "ArabicWord": "ثلج",
+    "Category": "الطقس والفلك"
+  },
+  {
+    "Id": 185,
+    "EnglishWord": "Wind",
+    "ArabicWord": "رياح",
+    "Category": "الطقس والفلك"
+  },
+  {
+    "Id": 186,
+    "EnglishWord": "Storm",
+    "ArabicWord": "عاصفه",
+    "Category": "الطقس والفلك"
+  },
+  {
+    "Id": 187,
+    "EnglishWord": "Head",
+    "ArabicWord": "راس",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 188,
+    "EnglishWord": "Face",
+    "ArabicWord": "وجه",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 189,
+    "EnglishWord": "Eye",
+    "ArabicWord": "عين",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 190,
+    "EnglishWord": "Ear",
+    "ArabicWord": "اذن",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 191,
+    "EnglishWord": "Nose",
+    "ArabicWord": "انف",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 192,
+    "EnglishWord": "Mouth",
+    "ArabicWord": "فم",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 193,
+    "EnglishWord": "Tooth",
+    "ArabicWord": "سن",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 194,
+    "EnglishWord": "Tongue",
+    "ArabicWord": "لسان",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 195,
+    "EnglishWord": "Hair",
+    "ArabicWord": "شعر",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 196,
+    "EnglishWord": "Neck",
+    "ArabicWord": "رقبه",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 197,
+    "EnglishWord": "Shoulder",
+    "ArabicWord": "كتف",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 198,
+    "EnglishWord": "Arm",
+    "ArabicWord": "ذراع",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 199,
+    "EnglishWord": "Hand",
+    "ArabicWord": "يد",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 200,
+    "EnglishWord": "Finger",
+    "ArabicWord": "اصبع",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 201,
+    "EnglishWord": "Leg",
+    "ArabicWord": "ساق",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 202,
+    "EnglishWord": "Foot",
+    "ArabicWord": "قدم",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 203,
+    "EnglishWord": "Knee",
+    "ArabicWord": "ركبه",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 204,
+    "EnglishWord": "Back",
+    "ArabicWord": "ظهر",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 205,
+    "EnglishWord": "Stomach",
+    "ArabicWord": "معده",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 206,
+    "EnglishWord": "Heart",
+    "ArabicWord": "قلب",
+    "Category": "أجزاء الجسم"
+  },
+  {
+    "Id": 207,
+    "EnglishWord": "Love",
+    "ArabicWord": "حب",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 208,
+    "EnglishWord": "Hate",
+    "ArabicWord": "كراهيه",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 209,
+    "EnglishWord": "Like",
+    "ArabicWord": "يحب",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 210,
+    "EnglishWord": "Want",
+    "ArabicWord": "يريد",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 211,
+    "EnglishWord": "Need",
+    "ArabicWord": "يحتاج",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 212,
+    "EnglishWord": "Have",
+    "ArabicWord": "يملك",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 213,
+    "EnglishWord": "Know",
+    "ArabicWord": "يعرف",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 214,
+    "EnglishWord": "Think",
+    "ArabicWord": "يفكر",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 215,
+    "EnglishWord": "Feel",
+    "ArabicWord": "يشعر",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 216,
+    "EnglishWord": "Understand",
+    "ArabicWord": "يفهم",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 217,
+    "EnglishWord": "Remember",
+    "ArabicWord": "يتذكر",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 218,
+    "EnglishWord": "Forget",
+    "ArabicWord": "ينسى",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 219,
+    "EnglishWord": "Believe",
+    "ArabicWord": "يؤمن",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 220,
+    "EnglishWord": "Hope",
+    "ArabicWord": "يامل",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 221,
+    "EnglishWord": "Try",
+    "ArabicWord": "يحاول",
+    "Category": "افعال"
+  },
+  {
+    "Id": 222,
+    "EnglishWord": "Help",
+    "ArabicWord": "يساعد",
+    "Category": "افعال"
+  },
+  {
+    "Id": 223,
+    "EnglishWord": "Ask",
+    "ArabicWord": "يسال",
+    "Category": "افعال"
+  },
+  {
+    "Id": 224,
+    "EnglishWord": "Answer",
+    "ArabicWord": "يجيب",
+    "Category": "افعال"
+  },
+  {
+    "Id": 225,
+    "EnglishWord": "Say",
+    "ArabicWord": "يقول",
+    "Category": "افعال"
+  },
+  {
+    "Id": 226,
+    "EnglishWord": "Call",
+    "ArabicWord": "يتصل",
+    "Category": "افعال"
+  },
+  {
+    "Id": 227,
+    "EnglishWord": "Meet",
+    "ArabicWord": "يقابل",
+    "Category": "افعال"
+  },
+  {
+    "Id": 228,
+    "EnglishWord": "Visit",
+    "ArabicWord": "يزور",
+    "Category": "افعال"
+  },
+  {
+    "Id": 229,
+    "EnglishWord": "Wait",
+    "ArabicWord": "ينتظر",
+    "Category": "افعال"
+  },
+  {
+    "Id": 230,
+    "EnglishWord": "Stop",
+    "ArabicWord": "يتوقف",
+    "Category": "افعال"
+  },
+  {
+    "Id": 231,
+    "EnglishWord": "Start",
+    "ArabicWord": "يبدا",
+    "Category": "افعال"
+  },
+  {
+    "Id": 232,
+    "EnglishWord": "Finish",
+    "ArabicWord": "ينهي",
+    "Category": "افعال"
+  },
+  {
+    "Id": 233,
+    "EnglishWord": "Continue",
+    "ArabicWord": "يستمر",
+    "Category": "افعال"
+  },
+  {
+    "Id": 234,
+    "EnglishWord": "Find",
+    "ArabicWord": "يجد",
+    "Category": "افعال"
+  },
+  {
+    "Id": 235,
+    "EnglishWord": "Lose",
+    "ArabicWord": "يخسر",
+    "Category": "افعال"
+  },
+  {
+    "Id": 236,
+    "EnglishWord": "Win",
+    "ArabicWord": "يفوز",
+    "Category": "افعال"
+  },
+  {
+    "Id": 237,
+    "EnglishWord": "Keep",
+    "ArabicWord": "يحتفظ",
+    "Category": "افعال"
+  },
+  {
+    "Id": 238,
+    "EnglishWord": "Leave",
+    "ArabicWord": "يغادر",
+    "Category": "افعال"
+  },
+  {
+    "Id": 239,
+    "EnglishWord": "Stay",
+    "ArabicWord": "يبقى",
+    "Category": "افعال"
+  },
+  {
+    "Id": 240,
+    "EnglishWord": "Return",
+    "ArabicWord": "يعود",
+    "Category": "افعال"
+  },
+  {
+    "Id": 241,
+    "EnglishWord": "Arrive",
+    "ArabicWord": "يصل",
+    "Category": "افعال"
+  },
+  {
+    "Id": 242,
+    "EnglishWord": "Depart",
+    "ArabicWord": "يغادر",
+    "Category": "افعال"
+  },
+  {
+    "Id": 243,
+    "EnglishWord": "Enter",
+    "ArabicWord": "يدخل",
+    "Category": "افعال"
+  },
+  {
+    "Id": 244,
+    "EnglishWord": "Exit",
+    "ArabicWord": "يخرج",
+    "Category": "افعال"
+  },
+  {
+    "Id": 245,
+    "EnglishWord": "Pay",
+    "ArabicWord": "يدفع",
+    "Category": "افعال"
+  },
+  {
+    "Id": 246,
+    "EnglishWord": "Pull",
+    "ArabicWord": "يسحب",
+    "Category": "افعال"
+  },
+  {
+    "Id": 247,
+    "EnglishWord": "Carry",
+    "ArabicWord": "يحمل",
+    "Category": "افعال"
+  },
+  {
+    "Id": 248,
+    "EnglishWord": "Hold",
+    "ArabicWord": "يمسك",
+    "Category": "افعال"
+  },
+  {
+    "Id": 249,
+    "EnglishWord": "Put",
+    "ArabicWord": "يضع",
+    "Category": "افعال"
+  },
+  {
+    "Id": 250,
+    "EnglishWord": "Throw",
+    "ArabicWord": "يرمي",
+    "Category": "افعال"
+  },
+  {
+    "Id": 251,
+    "EnglishWord": "Catch",
+    "ArabicWord": "يمسك",
+    "Category": "افعال"
+  },
+  {
+    "Id": 252,
+    "EnglishWord": "Break",
+    "ArabicWord": "يكسر",
+    "Category": "افعال"
+  },
+  {
+    "Id": 253,
+    "EnglishWord": "Fix",
+    "ArabicWord": "يصلح",
+    "Category": "افعال"
+  },
+  {
+    "Id": 254,
+    "EnglishWord": "Clean",
+    "ArabicWord": "ينظف",
+    "Category": "افعال"
+  },
+  {
+    "Id": 255,
+    "EnglishWord": "Wash",
+    "ArabicWord": "يغسل",
+    "Category": "افعال"
+  },
+  {
+    "Id": 256,
+    "EnglishWord": "Cook",
+    "ArabicWord": "يطبخ",
+    "Category": "افعال"
+  },
+  {
+    "Id": 257,
+    "EnglishWord": "Cut",
+    "ArabicWord": "يقطع",
+    "Category": "افعال"
+  },
+  {
+    "Id": 258,
+    "EnglishWord": "Fill",
+    "ArabicWord": "يملا",
+    "Category": "افعال"
+  },
+  {
+    "Id": 259,
+    "EnglishWord": "Empty",
+    "ArabicWord": "يفرغ",
+    "Category": "افعال"
+  },
+  {
+    "Id": 260,
+    "EnglishWord": "Wear",
+    "ArabicWord": "يلبس",
+    "Category": "افعال"
+  },
+  {
+    "Id": 261,
+    "EnglishWord": "Dress",
+    "ArabicWord": "فستان",
+    "Category": "ملابس وإكسسوارات"
+  },
+  {
+    "Id": 262,
+    "EnglishWord": "Shirt",
+    "ArabicWord": "قميص",
+    "Category": "ملابس وإكسسوارات"
+  },
+  {
+    "Id": 263,
+    "EnglishWord": "Pants",
+    "ArabicWord": "بنطال",
+    "Category": "ملابس وإكسسوارات"
+  },
+  {
+    "Id": 264,
+    "EnglishWord": "Shoes",
+    "ArabicWord": "حذاء",
+    "Category": "ملابس وإكسسوارات"
+  },
+  {
+    "Id": 265,
+    "EnglishWord": "Socks",
+    "ArabicWord": "جوارب",
+    "Category": "ملابس وإكسسوارات"
+  },
+  {
+    "Id": 266,
+    "EnglishWord": "Hat",
+    "ArabicWord": "قبعه",
+    "Category": "ملابس وإكسسوارات"
+  },
+  {
+    "Id": 267,
+    "EnglishWord": "Coat",
+    "ArabicWord": "معطف",
+    "Category": "ملابس وإكسسوارات"
+  },
+  {
+    "Id": 268,
+    "EnglishWord": "Jacket",
+    "ArabicWord": "ستره",
+    "Category": "ملابس وإكسسوارات"
+  },
+  {
+    "Id": 269,
+    "EnglishWord": "Tie",
+    "ArabicWord": "ربطه عنق",
+    "Category": "ملابس وإكسسوارات"
+  },
+  {
+    "Id": 270,
+    "EnglishWord": "Belt",
+    "ArabicWord": "حزام",
+    "Category": "ملابس وإكسسوارات"
+  },
+  {
+    "Id": 271,
+    "EnglishWord": "Glasses",
+    "ArabicWord": "نظارات",
+    "Category": "ملابس وإكسسوارات"
+  },
+  {
+    "Id": 272,
+    "EnglishWord": "Ring",
+    "ArabicWord": "خاتم",
+    "Category": "ملابس وإكسسوارات"
+  },
+  {
+    "Id": 273,
+    "EnglishWord": "Bag",
+    "ArabicWord": "حقيبه",
+    "Category": "ملابس وإكسسوارات"
+  },
+  {
+    "Id": 274,
+    "EnglishWord": "Umbrella",
+    "ArabicWord": "مظله",
+    "Category": "ملابس وإكسسوارات"
+  },
+  {
+    "Id": 275,
+    "EnglishWord": "Cat",
+    "ArabicWord": "قطه",
+    "Category": "حيوانات"
+  },
+  {
+    "Id": 276,
+    "EnglishWord": "Dog",
+    "ArabicWord": "كلب",
+    "Category": "حيوانات"
+  },
+  {
+    "Id": 277,
+    "EnglishWord": "Bird",
+    "ArabicWord": "طائر",
+    "Category": "حيوانات"
+  },
+  {
+    "Id": 278,
+    "EnglishWord": "Fish",
+    "ArabicWord": "سمكه",
+    "Category": "حيوانات"
+  },
+  {
+    "Id": 279,
+    "EnglishWord": "Horse",
+    "ArabicWord": "حصان",
+    "Category": "حيوانات"
+  },
+  {
+    "Id": 280,
+    "EnglishWord": "Cow",
+    "ArabicWord": "بقره",
+    "Category": "حيوانات"
+  },
+  {
+    "Id": 281,
+    "EnglishWord": "Sheep",
+    "ArabicWord": "خروف",
+    "Category": "حيوانات"
+  },
+  {
+    "Id": 282,
+    "EnglishWord": "Chicken",
+    "ArabicWord": "دجاجه",
+    "Category": "حيوانات"
+  },
+  {
+    "Id": 283,
+    "EnglishWord": "Pig",
+    "ArabicWord": "خنزير",
+    "Category": "حيوانات"
+  },
+  {
+    "Id": 284,
+    "EnglishWord": "Mouse",
+    "ArabicWord": "فار",
+    "Category": "حيوانات"
+  },
+  {
+    "Id": 285,
+    "EnglishWord": "Tree",
+    "ArabicWord": "شجره",
+    "Category": "طبيعة ونباتات"
+  },
+  {
+    "Id": 286,
+    "EnglishWord": "Flower",
+    "ArabicWord": "زهره",
+    "Category": "طبيعة ونباتات"
+  },
+  {
+    "Id": 287,
+    "EnglishWord": "Grass",
+    "ArabicWord": "عشب",
+    "Category": "طبيعة ونباتات"
+  },
+  {
+    "Id": 288,
+    "EnglishWord": "Leaf",
+    "ArabicWord": "ورقه شجر",
+    "Category": "طبيعة ونباتات"
+  },
+  {
+    "Id": 289,
+    "EnglishWord": "Plant",
+    "ArabicWord": "نبات",
+    "Category": "طبيعة ونباتات"
+  },
+  {
+    "Id": 290,
+    "EnglishWord": "Fruit",
+    "ArabicWord": "فاكهه",
+    "Category": "طعام وشراب"
+  },
+  {
+    "Id": 291,
+    "EnglishWord": "Vegetable",
+    "ArabicWord": "خضار",
+    "Category": "طعام وشراب"
+  },
+  {
+    "Id": 292,
+    "EnglishWord": "Apple",
+    "ArabicWord": "تفاحه",
+    "Category": "طعام وشراب"
+  },
+  {
+    "Id": 293,
+    "EnglishWord": "Banana",
+    "ArabicWord": "موز",
+    "Category": "طعام وشراب"
+  },
+  {
+    "Id": 294,
+    "EnglishWord": "Grape",
+    "ArabicWord": "عنب",
+    "Category": "طعام وشراب"
+  },
+  {
+    "Id": 295,
+    "EnglishWord": "Tomato",
+    "ArabicWord": "طماطم",
+    "Category": "طعام وشراب"
+  },
+  {
+    "Id": 296,
+    "EnglishWord": "Potato",
+    "ArabicWord": "بطاطا",
+    "Category": "طعام وشراب"
+  },
+  {
+    "Id": 297,
+    "EnglishWord": "Onion",
+    "ArabicWord": "بصل",
+    "Category": "طعام وشراب"
+  },
+  {
+    "Id": 298,
+    "EnglishWord": "Carrot",
+    "ArabicWord": "جزر",
+    "Category": "طعام وشراب"
+  },
+  {
+    "Id": 299,
+    "EnglishWord": "Breakfast",
+    "ArabicWord": "فطور",
+    "Category": "طعام وشراب"
+  },
+  {
+    "Id": 300,
+    "EnglishWord": "Lunch",
+    "ArabicWord": "غداء",
+    "Category": "طعام وشراب"
+  },
+  {
+    "Id": 301,
+    "EnglishWord": "Dinner",
+    "ArabicWord": "عشاء",
+    "Category": "طعام وشراب"
+  },
+  {
+    "Id": 302,
+    "EnglishWord": "Meal",
+    "ArabicWord": "وجبه",
+    "Category": "طعام وشراب"
+  },
+  {
+    "Id": 303,
+    "EnglishWord": "Snack",
+    "ArabicWord": "وجبه خفيفه",
+    "Category": "طعام وشراب"
+  },
+  {
+    "Id": 304,
+    "EnglishWord": "Hungry",
+    "ArabicWord": "جائع",
+    "Category": "صفات"
+  },
+  {
+    "Id": 305,
+    "EnglishWord": "Thirsty",
+    "ArabicWord": "عطشان",
+    "Category": "صفات"
+  },
+  {
+    "Id": 306,
+    "EnglishWord": "Full",
+    "ArabicWord": "شبعان",
+    "Category": "صفات"
+  },
+  {
+    "Id": 307,
+    "EnglishWord": "Tired",
+    "ArabicWord": "متعب",
+    "Category": "صفات"
+  },
+  {
+    "Id": 308,
+    "EnglishWord": "Sick",
+    "ArabicWord": "مريض",
+    "Category": "صفات"
+  },
+  {
+    "Id": 309,
+    "EnglishWord": "Healthy",
+    "ArabicWord": "صحي",
+    "Category": "صفات"
+  },
+  {
+    "Id": 310,
+    "EnglishWord": "Strong",
+    "ArabicWord": "قوي",
+    "Category": "صفات"
+  },
+  {
+    "Id": 311,
+    "EnglishWord": "Weak",
+    "ArabicWord": "ضعيف",
+    "Category": "صفات"
+  },
+  {
+    "Id": 312,
+    "EnglishWord": "Tall",
+    "ArabicWord": "طويل",
+    "Category": "صفات"
+  },
+  {
+    "Id": 313,
+    "EnglishWord": "Short",
+    "ArabicWord": "قصير",
+    "Category": "صفات"
+  },
+  {
+    "Id": 314,
+    "EnglishWord": "Fat",
+    "ArabicWord": "سمين",
+    "Category": "صفات"
+  },
+  {
+    "Id": 315,
+    "EnglishWord": "Thin",
+    "ArabicWord": "نحيف",
+    "Category": "صفات"
+  },
+  {
+    "Id": 316,
+    "EnglishWord": "Heavy",
+    "ArabicWord": "ثقيل",
+    "Category": "صفات"
+  },
+  {
+    "Id": 317,
+    "EnglishWord": "Light",
+    "ArabicWord": "خفيف",
+    "Category": "صفات"
+  },
+  {
+    "Id": 318,
+    "EnglishWord": "Hard",
+    "ArabicWord": "صعب / صلب",
+    "Category": "صفات"
+  },
+  {
+    "Id": 319,
+    "EnglishWord": "Soft",
+    "ArabicWord": "ناعم",
+    "Category": "صفات"
+  },
+  {
+    "Id": 320,
+    "EnglishWord": "Loud",
+    "ArabicWord": "عال (صوت)",
+    "Category": "صفات"
+  },
+  {
+    "Id": 321,
+    "EnglishWord": "Quiet",
+    "ArabicWord": "هادئ",
+    "Category": "صفات"
+  },
+  {
+    "Id": 322,
+    "EnglishWord": "Dirty",
+    "ArabicWord": "وسخ",
+    "Category": "صفات"
+  },
+  {
+    "Id": 323,
+    "EnglishWord": "Long",
+    "ArabicWord": "طويل",
+    "Category": "صفات"
+  },
+  {
+    "Id": 324,
+    "EnglishWord": "Wide",
+    "ArabicWord": "عريض",
+    "Category": "صفات"
+  },
+  {
+    "Id": 325,
+    "EnglishWord": "Narrow",
+    "ArabicWord": "ضيق",
+    "Category": "صفات"
+  },
+  {
+    "Id": 326,
+    "EnglishWord": "High",
+    "ArabicWord": "عالي",
+    "Category": "صفات"
+  },
+  {
+    "Id": 327,
+    "EnglishWord": "Low",
+    "ArabicWord": "منخفض",
+    "Category": "صفات"
+  },
+  {
+    "Id": 328,
+    "EnglishWord": "Deep",
+    "ArabicWord": "عميق",
+    "Category": "صفات"
+  },
+  {
+    "Id": 329,
+    "EnglishWord": "Shallow",
+    "ArabicWord": "ضحل",
+    "Category": "صفات"
+  },
+  {
+    "Id": 330,
+    "EnglishWord": "Rich",
+    "ArabicWord": "غني",
+    "Category": "صفات"
+  },
+  {
+    "Id": 331,
+    "EnglishWord": "Poor",
+    "ArabicWord": "فقير",
+    "Category": "صفات"
+  },
+  {
+    "Id": 332,
+    "EnglishWord": "Same",
+    "ArabicWord": "نفس الشيء",
+    "Category": "صفات"
+  },
+  {
+    "Id": 333,
+    "EnglishWord": "Different",
+    "ArabicWord": "مختلف",
+    "Category": "صفات"
+  },
+  {
+    "Id": 334,
+    "EnglishWord": "Similar",
+    "ArabicWord": "مشابه",
+    "Category": "صفات"
+  },
+  {
+    "Id": 335,
+    "EnglishWord": "All",
+    "ArabicWord": "كل",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 336,
+    "EnglishWord": "Some",
+    "ArabicWord": "بعض",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 337,
+    "EnglishWord": "Many",
+    "ArabicWord": "كثير",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 338,
+    "EnglishWord": "Few",
+    "ArabicWord": "قليل",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 339,
+    "EnglishWord": "Much",
+    "ArabicWord": "كثير",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 340,
+    "EnglishWord": "Little",
+    "ArabicWord": "قليل",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 341,
+    "EnglishWord": "More",
+    "ArabicWord": "اكثر",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 342,
+    "EnglishWord": "Less",
+    "ArabicWord": "اقل",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 343,
+    "EnglishWord": "Most",
+    "ArabicWord": "معظم",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 344,
+    "EnglishWord": "Every",
+    "ArabicWord": "كل",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 345,
+    "EnglishWord": "Each",
+    "ArabicWord": "كل واحد",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 346,
+    "EnglishWord": "Both",
+    "ArabicWord": "كلاهما",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 347,
+    "EnglishWord": "Either",
+    "ArabicWord": "اي من الاثنين",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 348,
+    "EnglishWord": "Neither",
+    "ArabicWord": "لا هذا ولا ذاك",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 349,
+    "EnglishWord": "Other",
+    "ArabicWord": "آخر",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 350,
+    "EnglishWord": "Another",
+    "ArabicWord": "آخر",
+    "Category": "محددات وكميات"
+  },
+  {
+    "Id": 351,
+    "EnglishWord": "Next",
+    "ArabicWord": "التالي",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 352,
+    "EnglishWord": "Last",
+    "ArabicWord": "الاخير",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 353,
+    "EnglishWord": "First",
+    "ArabicWord": "الاول",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 354,
+    "EnglishWord": "Third",
+    "ArabicWord": "الثالث",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 355,
+    "EnglishWord": "Always",
+    "ArabicWord": "دائما",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 356,
+    "EnglishWord": "Never",
+    "ArabicWord": "ابدا",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 357,
+    "EnglishWord": "Sometimes",
+    "ArabicWord": "احيانا",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 358,
+    "EnglishWord": "Often",
+    "ArabicWord": "غالبا",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 359,
+    "EnglishWord": "Usually",
+    "ArabicWord": "عاده",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 360,
+    "EnglishWord": "Rarely",
+    "ArabicWord": "نادرا",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 361,
+    "EnglishWord": "Again",
+    "ArabicWord": "مره اخرى",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 362,
+    "EnglishWord": "Still",
+    "ArabicWord": "ما زال",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 363,
+    "EnglishWord": "Already",
+    "ArabicWord": "بالفعل",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 364,
+    "EnglishWord": "Yet",
+    "ArabicWord": "بعد",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 365,
+    "EnglishWord": "Soon",
+    "ArabicWord": "قريبا",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 366,
+    "EnglishWord": "Late",
+    "ArabicWord": "متاخر",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 367,
+    "EnglishWord": "Early",
+    "ArabicWord": "مبكر",
+    "Category": "ظروف"
+  },
+  {
+    "Id": 368,
+    "EnglishWord": "Here",
+    "ArabicWord": "هنا",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 369,
+    "EnglishWord": "There",
+    "ArabicWord": "هناك",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 370,
+    "EnglishWord": "Everywhere",
+    "ArabicWord": "في كل مكان",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 371,
+    "EnglishWord": "Nowhere",
+    "ArabicWord": "لا مكان",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 372,
+    "EnglishWord": "Somewhere",
+    "ArabicWord": "في مكان ما",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 373,
+    "EnglishWord": "Anywhere",
+    "ArabicWord": "اي مكان",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 374,
+    "EnglishWord": "Near",
+    "ArabicWord": "قريب",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 375,
+    "EnglishWord": "Far",
+    "ArabicWord": "بعيد",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 376,
+    "EnglishWord": "Inside",
+    "ArabicWord": "داخل",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 377,
+    "EnglishWord": "Outside",
+    "ArabicWord": "خارج",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 378,
+    "EnglishWord": "Above",
+    "ArabicWord": "فوق",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 379,
+    "EnglishWord": "Below",
+    "ArabicWord": "تحت",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 380,
+    "EnglishWord": "Over",
+    "ArabicWord": "فوق",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 381,
+    "EnglishWord": "Under",
+    "ArabicWord": "تحت",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 382,
+    "EnglishWord": "Behind",
+    "ArabicWord": "خلف",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 383,
+    "EnglishWord": "Front",
+    "ArabicWord": "امام",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 384,
+    "EnglishWord": "Between",
+    "ArabicWord": "بين",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 385,
+    "EnglishWord": "Among",
+    "ArabicWord": "بين (اكثر من اثنين)",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 386,
+    "EnglishWord": "Beside",
+    "ArabicWord": "بجانب",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 387,
+    "EnglishWord": "Next to",
+    "ArabicWord": "بجوار",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 388,
+    "EnglishWord": "Opposite",
+    "ArabicWord": "مقابل",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 389,
+    "EnglishWord": "Left",
+    "ArabicWord": "يسار",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 390,
+    "EnglishWord": "Up",
+    "ArabicWord": "اعلى",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 391,
+    "EnglishWord": "Down",
+    "ArabicWord": "اسفل",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 392,
+    "EnglishWord": "Forward",
+    "ArabicWord": "للامام",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 393,
+    "EnglishWord": "Backward",
+    "ArabicWord": "للخلف",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 394,
+    "EnglishWord": "North",
+    "ArabicWord": "شمال",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 395,
+    "EnglishWord": "South",
+    "ArabicWord": "جنوب",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 396,
+    "EnglishWord": "East",
+    "ArabicWord": "شرق",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 397,
+    "EnglishWord": "West",
+    "ArabicWord": "غرب",
+    "Category": "أماكن واتجاهات"
+  },
+  {
+    "Id": 398,
+    "EnglishWord": "Music",
+    "ArabicWord": "موسيقى",
+    "Category": "ترفيه وفنون"
+  },
+  {
+    "Id": 399,
+    "EnglishWord": "Song",
+    "ArabicWord": "اغنيه",
+    "Category": "ترفيه وفنون"
+  },
+  {
+    "Id": 400,
+    "EnglishWord": "Dance",
+    "ArabicWord": "رقص",
+    "Category": "ترفيه وفنون"
+  },
+  {
+    "Id": 401,
+    "EnglishWord": "Movie",
+    "ArabicWord": "فيلم",
+    "Category": "ترفيه وفنون"
+  },
+  {
+    "Id": 402,
+    "EnglishWord": "Theater",
+    "ArabicWord": "مسرح",
+    "Category": "ترفيه وفنون"
+  },
+  {
+    "Id": 403,
+    "EnglishWord": "Art",
+    "ArabicWord": "فن",
+    "Category": "ترفيه وفنون"
+  },
+  {
+    "Id": 404,
+    "EnglishWord": "Picture",
+    "ArabicWord": "صوره",
+    "Category": "ترفيه وفنون"
+  },
+  {
+    "Id": 405,
+    "EnglishWord": "Photo",
+    "ArabicWord": "صوره فوتوغرافيه",
+    "Category": "ترفيه وفنون"
+  },
+  {
+    "Id": 406,
+    "EnglishWord": "Camera",
+    "ArabicWord": "كاميرا",
+    "Category": "ترفيه وفنون"
+  },
+  {
+    "Id": 407,
+    "EnglishWord": "Television",
+    "ArabicWord": "تلفاز",
+    "Category": "ترفيه وفنون"
+  },
+  {
+    "Id": 408,
+    "EnglishWord": "Radio",
+    "ArabicWord": "راديو",
+    "Category": "ترفيه وفنون"
+  },
+  {
+    "Id": 409,
+    "EnglishWord": "Computer",
+    "ArabicWord": "كمبيوتر",
+    "Category": "تكنولوجيا وإعلام"
+  },
+  {
+    "Id": 410,
+    "EnglishWord": "Internet",
+    "ArabicWord": "انترنت",
+    "Category": "تكنولوجيا وإعلام"
+  },
+  {
+    "Id": 411,
+    "EnglishWord": "Game",
+    "ArabicWord": "لعبه",
+    "Category": "ترفيه وفنون"
+  },
+  {
+    "Id": 412,
+    "EnglishWord": "Sport",
+    "ArabicWord": "رياضه",
+    "Category": "رياضة"
+  },
+  {
+    "Id": 413,
+    "EnglishWord": "Ball",
+    "ArabicWord": "كره",
+    "Category": "رياضة"
+  },
+  {
+    "Id": 414,
+    "EnglishWord": "Team",
+    "ArabicWord": "فريق",
+    "Category": "رياضة"
+  },
+  {
+    "Id": 415,
+    "EnglishWord": "Player",
+    "ArabicWord": "لاعب",
+    "Category": "رياضة"
+  },
+  {
+    "Id": 416,
+    "EnglishWord": "Newspaper",
+    "ArabicWord": "جريده",
+    "Category": "إعلام ومناسبات"
+  },
+  {
+    "Id": 417,
+    "EnglishWord": "Magazine",
+    "ArabicWord": "مجله",
+    "Category": "إعلام ومناسبات"
+  },
+  {
+    "Id": 418,
+    "EnglishWord": "Letter",
+    "ArabicWord": "رساله",
+    "Category": "إعلام ومناسبات"
+  },
+  {
+    "Id": 419,
+    "EnglishWord": "Card",
+    "ArabicWord": "بطاقه",
+    "Category": "إعلام ومناسبات"
+  },
+  {
+    "Id": 420,
+    "EnglishWord": "Gift",
+    "ArabicWord": "هديه",
+    "Category": "إعلام ومناسبات"
+  },
+  {
+    "Id": 421,
+    "EnglishWord": "Party",
+    "ArabicWord": "حفله",
+    "Category": "إعلام ومناسبات"
+  },
+  {
+    "Id": 422,
+    "EnglishWord": "Holiday",
+    "ArabicWord": "عطله",
+    "Category": "سفر وإجازات"
+  },
+  {
+    "Id": 423,
+    "EnglishWord": "Vacation",
+    "ArabicWord": "اجازه",
+    "Category": "سفر وإجازات"
+  },
+  {
+    "Id": 424,
+    "EnglishWord": "Trip",
+    "ArabicWord": "رحله",
+    "Category": "سفر وإجازات"
+  },
+  {
+    "Id": 425,
+    "EnglishWord": "Travel",
+    "ArabicWord": "سفر",
+    "Category": "سفر وإجازات"
+  },
+  {
+    "Id": 426,
+    "EnglishWord": "Tourist",
+    "ArabicWord": "سائح",
+    "Category": "سفر وإجازات"
+  },
+  {
+    "Id": 427,
+    "EnglishWord": "Beach",
+    "ArabicWord": "شاطئ",
+    "Category": "جغرافيا وطبيعة"
+  },
+  {
+    "Id": 428,
+    "EnglishWord": "Mountain",
+    "ArabicWord": "جبل",
+    "Category": "جغرافيا وطبيعة"
+  },
+  {
+    "Id": 429,
+    "EnglishWord": "River",
+    "ArabicWord": "نهر",
+    "Category": "جغرافيا وطبيعة"
+  },
+  {
+    "Id": 430,
+    "EnglishWord": "Lake",
+    "ArabicWord": "بحيره",
+    "Category": "جغرافيا وطبيعة"
+  },
+  {
+    "Id": 431,
+    "EnglishWord": "Ocean",
+    "ArabicWord": "محيط",
+    "Category": "جغرافيا وطبيعة"
+  },
+  {
+    "Id": 432,
+    "EnglishWord": "Sea",
+    "ArabicWord": "بحر",
+    "Category": "جغرافيا وطبيعة"
+  },
+  {
+    "Id": 433,
+    "EnglishWord": "Island",
+    "ArabicWord": "جزيره",
+    "Category": "جغرافيا وطبيعة"
+  },
+  {
+    "Id": 434,
+    "EnglishWord": "Forest",
+    "ArabicWord": "غابه",
+    "Category": "جغرافيا وطبيعة"
+  },
+  {
+    "Id": 435,
+    "EnglishWord": "Desert",
+    "ArabicWord": "صحراء",
+    "Category": "جغرافيا وطبيعة"
+  },
+  {
+    "Id": 436,
+    "EnglishWord": "Bridge",
+    "ArabicWord": "جسر",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 437,
+    "EnglishWord": "Road",
+    "ArabicWord": "طريق",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 438,
+    "EnglishWord": "Path",
+    "ArabicWord": "ممر",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 439,
+    "EnglishWord": "Map",
+    "ArabicWord": "خريطه",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 440,
+    "EnglishWord": "Direction",
+    "ArabicWord": "اتجاه",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 441,
+    "EnglishWord": "Distance",
+    "ArabicWord": "مسافه",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 442,
+    "EnglishWord": "Corner",
+    "ArabicWord": "زاويه",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 443,
+    "EnglishWord": "Building",
+    "ArabicWord": "مبنى",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 444,
+    "EnglishWord": "Office",
+    "ArabicWord": "مكتب",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 445,
+    "EnglishWord": "Factory",
+    "ArabicWord": "مصنع",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 446,
+    "EnglishWord": "Farm",
+    "ArabicWord": "مزرعه",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 447,
+    "EnglishWord": "Park",
+    "ArabicWord": "حديقه عامه",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 448,
+    "EnglishWord": "Zoo",
+    "ArabicWord": "حديقه حيوانات",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 449,
+    "EnglishWord": "Museum",
+    "ArabicWord": "متحف",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 450,
+    "EnglishWord": "Library",
+    "ArabicWord": "مكتبه",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 451,
+    "EnglishWord": "Church",
+    "ArabicWord": "كنيسه",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 452,
+    "EnglishWord": "Mosque",
+    "ArabicWord": "مسجد",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 453,
+    "EnglishWord": "Temple",
+    "ArabicWord": "معبد",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 454,
+    "EnglishWord": "Palace",
+    "ArabicWord": "قصر",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 455,
+    "EnglishWord": "Castle",
+    "ArabicWord": "قلعه",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 456,
+    "EnglishWord": "Tower",
+    "ArabicWord": "برج",
+    "Category": "أماكن ومباني"
+  },
+  {
+    "Id": 457,
+    "EnglishWord": "Stairs",
+    "ArabicWord": "سلالم",
+    "Category": "منزل وأجزاؤه"
+  },
+  {
+    "Id": 458,
+    "EnglishWord": "Elevator",
+    "ArabicWord": "مصعد",
+    "Category": "منزل وأجزاؤه"
+  },
+  {
+    "Id": 459,
+    "EnglishWord": "Roof",
+    "ArabicWord": "سطح",
+    "Category": "منزل وأجزاؤه"
+  },
+  {
+    "Id": 460,
+    "EnglishWord": "Basement",
+    "ArabicWord": "قبو",
+    "Category": "منزل وأجزاؤه"
+  },
+  {
+    "Id": 461,
+    "EnglishWord": "Balcony",
+    "ArabicWord": "شرفه",
+    "Category": "منزل وأجزاؤه"
+  },
+  {
+    "Id": 462,
+    "EnglishWord": "Garage",
+    "ArabicWord": "مرآب",
+    "Category": "منزل وأجزاؤه"
+  },
+  {
+    "Id": 463,
+    "EnglishWord": "Yard",
+    "ArabicWord": "ساحه",
+    "Category": "منزل وأجزاؤه"
+  },
+  {
+    "Id": 464,
+    "EnglishWord": "Fence",
+    "ArabicWord": "سياج",
+    "Category": "منزل وأجزاؤه"
+  },
+  {
+    "Id": 465,
+    "EnglishWord": "Gate",
+    "ArabicWord": "بوابه",
+    "Category": "منزل وأجزاؤه"
+  },
+  {
+    "Id": 466,
+    "EnglishWord": "Bell",
+    "ArabicWord": "جرس",
+    "Category": "منزل وأجزاؤه"
+  },
+  {
+    "Id": 467,
+    "EnglishWord": "Key",
+    "ArabicWord": "مفتاح",
+    "Category": "منزل وأجزاؤه"
+  },
+  {
+    "Id": 468,
+    "EnglishWord": "Lock",
+    "ArabicWord": "قفل",
+    "Category": "منزل وأجزاؤه"
+  },
+  {
+    "Id": 469,
+    "EnglishWord": "Lamp",
+    "ArabicWord": "مصباح",
+    "Category": "منزل وأجزاؤه"
+  },
+  {
+    "Id": 470,
+    "EnglishWord": "Candle",
+    "ArabicWord": "شمعه",
+    "Category": "منزل وأجزاؤه"
+  },
+  {
+    "Id": 471,
+    "EnglishWord": "Fire",
+    "ArabicWord": "نار",
+    "Category": "مواد وظواهر"
+  },
+  {
+    "Id": 472,
+    "EnglishWord": "Smoke",
+    "ArabicWord": "دخان",
+    "Category": "مواد وظواهر"
+  },
+  {
+    "Id": 473,
+    "EnglishWord": "Ice",
+    "ArabicWord": "جليد",
+    "Category": "مواد وظواهر"
+  },
+  {
+    "Id": 474,
+    "EnglishWord": "Glass",
+    "ArabicWord": "زجاج",
+    "Category": "أدوات ومواد"
+  },
+  {
+    "Id": 475,
+    "EnglishWord": "Bottle",
+    "ArabicWord": "زجاجه",
+    "Category": "أدوات ومواد"
+  },
+  {
+    "Id": 476,
+    "EnglishWord": "Cup",
+    "ArabicWord": "كوب",
+    "Category": "أدوات المطبخ"
+  },
+  {
+    "Id": 477,
+    "EnglishWord": "Plate",
+    "ArabicWord": "صحن",
+    "Category": "أدوات المطبخ"
+  },
+  {
+    "Id": 478,
+    "EnglishWord": "Bowl",
+    "ArabicWord": "وعاء",
+    "Category": "أدوات المطبخ"
+  },
+  {
+    "Id": 479,
+    "EnglishWord": "Spoon",
+    "ArabicWord": "ملعقه",
+    "Category": "أدوات المطبخ"
+  },
+  {
+    "Id": 480,
+    "EnglishWord": "Fork",
+    "ArabicWord": "شوكه",
+    "Category": "أدوات المطبخ"
+  },
+  {
+    "Id": 481,
+    "EnglishWord": "Knife",
+    "ArabicWord": "سكين",
+    "Category": "أدوات المطبخ"
+  },
+  {
+    "Id": 482,
+    "EnglishWord": "Pot",
+    "ArabicWord": "قدر",
+    "Category": "أدوات المطبخ"
+  },
+  {
+    "Id": 483,
+    "EnglishWord": "Pan",
+    "ArabicWord": "مقلاه",
+    "Category": "أدوات المطبخ"
+  },
+  {
+    "Id": 484,
+    "EnglishWord": "Stove",
+    "ArabicWord": "موقد",
+    "Category": "أدوات المطبخ"
+  },
+  {
+    "Id": 485,
+    "EnglishWord": "Oven",
+    "ArabicWord": "فرن",
+    "Category": "أدوات المطبخ"
+  },
+  {
+    "Id": 486,
+    "EnglishWord": "Refrigerator",
+    "ArabicWord": "ثلاجه",
+    "Category": "أدوات المطبخ"
+  },
+  {
+    "Id": 487,
+    "EnglishWord": "Sink",
+    "ArabicWord": "حوض",
+    "Category": "أدوات المطبخ والحمام"
+  },
+  {
+    "Id": 488,
+    "EnglishWord": "Towel",
+    "ArabicWord": "منشفه",
+    "Category": "أدوات الحمام"
+  },
+  {
+    "Id": 489,
+    "EnglishWord": "Soap",
+    "ArabicWord": "صابون",
+    "Category": "أدوات الحمام"
+  },
+  {
+    "Id": 490,
+    "EnglishWord": "Shampoo",
+    "ArabicWord": "شامبو",
+    "Category": "أدوات الحمام"
+  },
+  {
+    "Id": 491,
+    "EnglishWord": "Toothbrush",
+    "ArabicWord": "فرشاه اسنان",
+    "Category": "أدوات الحمام"
+  },
+  {
+    "Id": 492,
+    "EnglishWord": "Toothpaste",
+    "ArabicWord": "معجون اسنان",
+    "Category": "أدوات الحمام"
+  },
+  {
+    "Id": 493,
+    "EnglishWord": "Mirror",
+    "ArabicWord": "مراه",
+    "Category": "أدوات متنوعة"
+  },
+  {
+    "Id": 494,
+    "EnglishWord": "Comb",
+    "ArabicWord": "مشط",
+    "Category": "أدوات متنوعة"
+  },
+  {
+    "Id": 495,
+    "EnglishWord": "Brush",
+    "ArabicWord": "فرشاه",
+    "Category": "أدوات متنوعة"
+  },
+  {
+    "Id": 496,
+    "EnglishWord": "Scissors",
+    "ArabicWord": "مقص",
+    "Category": "أدوات متنوعة"
+  },
+  {
+    "Id": 497,
+    "EnglishWord": "Needle",
+    "ArabicWord": "ابره",
+    "Category": "أدوات متنوعة"
+  },
+  {
+    "Id": 498,
+    "EnglishWord": "Thread",
+    "ArabicWord": "خيط",
+    "Category": "أدوات متنوعة"
+  },
+  {
+    "Id": 499,
+    "EnglishWord": "Button",
+    "ArabicWord": "زر",
+    "Category": "أدوات متنوعة"
+  },
+  {
+    "Id": 500,
+    "EnglishWord": "Pocket",
+    "ArabicWord": "جيب",
+    "Category": "أدوات وملابس"
+  },
+  {
+    "Id": 501,
+    "EnglishWord": "Zip",
+    "ArabicWord": "سحاب",
+    "Category": "أدوات وملابس"
+  },
+  {
+    "Id": 502,
+    "EnglishWord": "Cloth",
+    "ArabicWord": "قماش",
+    "Category": "مواد خام"
+  },
+  {
+    "Id": 503,
+    "EnglishWord": "Cotton",
+    "ArabicWord": "قطن",
+    "Category": "مواد خام"
+  },
+  {
+    "Id": 504,
+    "EnglishWord": "Wool",
+    "ArabicWord": "صوف",
+    "Category": "مواد خام"
+  },
+  {
+    "Id": 505,
+    "EnglishWord": "Silk",
+    "ArabicWord": "حرير",
+    "Category": "مواد خام"
+  },
+  {
+    "Id": 506,
+    "EnglishWord": "Leather",
+    "ArabicWord": "جلد",
+    "Category": "مواد خام"
+  },
+  {
+    "Id": 507,
+    "EnglishWord": "Plastic",
+    "ArabicWord": "بلاستيك",
+    "Category": "مواد خام"
+  },
+  {
+    "Id": 508,
+    "EnglishWord": "Metal",
+    "ArabicWord": "معدن",
+    "Category": "مواد خام"
+  },
+  {
+    "Id": 509,
+    "EnglishWord": "Wood",
+    "ArabicWord": "خشب",
+    "Category": "مواد خام"
+  },
+  {
+    "Id": 510,
+    "EnglishWord": "Stone",
+    "ArabicWord": "حجر",
+    "Category": "مواد خام وطبيعة"
+  },
+  {
+    "Id": 511,
+    "EnglishWord": "Sand",
+    "ArabicWord": "رمل",
+    "Category": "مواد خام وطبيعة"
+  },
+  {
+    "Id": 512,
+    "EnglishWord": "Mud",
+    "ArabicWord": "طين",
+    "Category": "مواد خام وطبيعة"
+  },
+  {
+    "Id": 513,
+    "EnglishWord": "Dust",
+    "ArabicWord": "غبار",
+    "Category": "مواد خام وطبيعة"
+  },
+  {
+    "Id": 514,
+    "EnglishWord": "Dirt",
+    "ArabicWord": "تراب",
+    "Category": "مواد خام وطبيعة"
+  },
+  {
+    "Id": 515,
+    "EnglishWord": "Hole",
+    "ArabicWord": "حفره",
+    "Category": "طبيعة وتضاريس"
+  },
+  {
+    "Id": 516,
+    "EnglishWord": "Valley",
+    "ArabicWord": "وادي",
+    "Category": "طبيعة وتضاريس"
+  },
+  {
+    "Id": 517,
+    "EnglishWord": "Cave",
+    "ArabicWord": "كهف",
+    "Category": "طبيعة وتضاريس"
+  },
+  {
+    "Id": 518,
+    "EnglishWord": "Rock",
+    "ArabicWord": "صخره",
+    "Category": "طبيعة وتضاريس"
+  },
+  {
+    "Id": 519,
+    "EnglishWord": "Wave",
+    "ArabicWord": "موجه",
+    "Category": "طبيعة وتضاريس"
+  },
+  {
+    "Id": 520,
+    "EnglishWord": "Ship",
+    "ArabicWord": "سفينه",
+    "Category": "سفر وبحر"
+  },
+  {
+    "Id": 521,
+    "EnglishWord": "Sail",
+    "ArabicWord": "شراع",
+    "Category": "سفر وبحر"
+  },
+  {
+    "Id": 522,
+    "EnglishWord": "Anchor",
+    "ArabicWord": "مرساه",
+    "Category": "سفر وبحر"
+  },
+  {
+    "Id": 523,
+    "EnglishWord": "Captain",
+    "ArabicWord": "قبطان",
+    "Category": "سفر وبحر"
+  },
+  {
+    "Id": 524,
+    "EnglishWord": "Sailor",
+    "ArabicWord": "بحار",
+    "Category": "سفر وبحر"
+  },
+  {
+    "Id": 525,
+    "EnglishWord": "Passenger",
+    "ArabicWord": "راكب",
+    "Category": "سفر ونقل"
+  },
+  {
+    "Id": 526,
+    "EnglishWord": "Ticket",
+    "ArabicWord": "تذكره",
+    "Category": "سفر ونقل"
+  },
+  {
+    "Id": 527,
+    "EnglishWord": "Seat",
+    "ArabicWord": "مقعد",
+    "Category": "سفر ونقل"
+  },
+  {
+    "Id": 528,
+    "EnglishWord": "Luggage",
+    "ArabicWord": "امتعه",
+    "Category": "سفر ونقل"
+  },
+  {
+    "Id": 529,
+    "EnglishWord": "Passport",
+    "ArabicWord": "جواز سفر",
+    "Category": "سفر وقانون"
+  },
+  {
+    "Id": 530,
+    "EnglishWord": "Visa",
+    "ArabicWord": "تاشيره",
+    "Category": "سفر وقانون"
+  },
+  {
+    "Id": 531,
+    "EnglishWord": "Border",
+    "ArabicWord": "حدود",
+    "Category": "سفر وقانون"
+  },
+  {
+    "Id": 532,
+    "EnglishWord": "Custom",
+    "ArabicWord": "جمارك",
+    "Category": "سفر وقانون"
+  },
+  {
+    "Id": 533,
+    "EnglishWord": "Law",
+    "ArabicWord": "قانون",
+    "Category": "قانون وطوارئ"
+  },
+  {
+    "Id": 534,
+    "EnglishWord": "Rule",
+    "ArabicWord": "قاعده",
+    "Category": "قانون وطوارئ"
+  },
+  {
+    "Id": 535,
+    "EnglishWord": "Police",
+    "ArabicWord": "شرطه",
+    "Category": "قانون وطوارئ"
+  },
+  {
+    "Id": 536,
+    "EnglishWord": "Court",
+    "ArabicWord": "محكمه",
+    "Category": "قانون وطوارئ"
+  },
+  {
+    "Id": 537,
+    "EnglishWord": "Judge",
+    "ArabicWord": "قاضي",
+    "Category": "قانون وطوارئ"
+  },
+  {
+    "Id": 538,
+    "EnglishWord": "Lawyer",
+    "ArabicWord": "محامي",
+    "Category": "قانون وطوارئ"
+  },
+  {
+    "Id": 539,
+    "EnglishWord": "Crime",
+    "ArabicWord": "جريمه",
+    "Category": "قانون وطوارئ"
+  },
+  {
+    "Id": 540,
+    "EnglishWord": "Thief",
+    "ArabicWord": "لص",
+    "Category": "قانون وطوارئ"
+  },
+  {
+    "Id": 541,
+    "EnglishWord": "Steal",
+    "ArabicWord": "يسرق",
+    "Category": "قانون وطوارئ"
+  },
+  {
+    "Id": 542,
+    "EnglishWord": "Safe",
+    "ArabicWord": "آمن",
+    "Category": "قانون وطوارئ"
+  },
+  {
+    "Id": 543,
+    "EnglishWord": "Danger",
+    "ArabicWord": "خطر",
+    "Category": "قانون وطوارئ"
+  },
+  {
+    "Id": 544,
+    "EnglishWord": "Accident",
+    "ArabicWord": "حادث",
+    "Category": "قانون وطوارئ"
+  },
+  {
+    "Id": 545,
+    "EnglishWord": "Ambulance",
+    "ArabicWord": "سياره اسعاف",
+    "Category": "قانون وطوارئ"
+  },
+  {
+    "Id": 546,
+    "EnglishWord": "Emergency",
+    "ArabicWord": "طوارئ",
+    "Category": "قانون وطوارئ"
+  },
+  {
+    "Id": 547,
+    "EnglishWord": "Medicine",
+    "ArabicWord": "دواء",
+    "Category": "صحة وطب"
+  },
+  {
+    "Id": 548,
+    "EnglishWord": "Pill",
+    "ArabicWord": "حبه دواء",
+    "Category": "صحة وطب"
+  },
+  {
+    "Id": 549,
+    "EnglishWord": "Clinic",
+    "ArabicWord": "عياده",
+    "Category": "صحة وطب"
+  },
+  {
+    "Id": 550,
+    "EnglishWord": "Patient",
+    "ArabicWord": "مريض",
+    "Category": "صحة وطب"
+  },
+  {
+    "Id": 551,
+    "EnglishWord": "Pain",
+    "ArabicWord": "الم",
+    "Category": "صحة وطب"
+  },
+  {
+    "Id": 552,
+    "EnglishWord": "Hurt",
+    "ArabicWord": "يؤلم",
+    "Category": "صحة وطب"
+  },
+  {
+    "Id": 553,
+    "EnglishWord": "Blood",
+    "ArabicWord": "دم",
+    "Category": "صحة وطب"
+  },
+  {
+    "Id": 554,
+    "EnglishWord": "Bandage",
+    "ArabicWord": "ضماده",
+    "Category": "صحة وطب"
+  },
+  {
+    "Id": 555,
+    "EnglishWord": "Cure",
+    "ArabicWord": "علاج",
+    "Category": "صحة وطب"
+  },
+  {
+    "Id": 556,
+    "EnglishWord": "Rest",
+    "ArabicWord": "راحه",
+    "Category": "صحة وطب"
+  },
+  {
+    "Id": 557,
+    "EnglishWord": "Dream",
+    "ArabicWord": "حلم",
+    "Category": "نوم ووقت"
+  },
+  {
+    "Id": 558,
+    "EnglishWord": "Awake",
+    "ArabicWord": "مستيقظ",
+    "Category": "نوم ووقت"
+  },
+  {
+    "Id": 559,
+    "EnglishWord": "Bed",
+    "ArabicWord": "سرير",
+    "Category": "نوم ووقت"
+  },
+  {
+    "Id": 560,
+    "EnglishWord": "Pillow",
+    "ArabicWord": "وساده",
+    "Category": "نوم ووقت"
+  },
+  {
+    "Id": 561,
+    "EnglishWord": "Blanket",
+    "ArabicWord": "بطانيه",
+    "Category": "نوم ووقت"
+  },
+  {
+    "Id": 562,
+    "EnglishWord": "Sheet",
+    "ArabicWord": "ملاءه",
+    "Category": "نوم ووقت"
+  },
+  {
+    "Id": 563,
+    "EnglishWord": "Mattress",
+    "ArabicWord": "فراش",
+    "Category": "نوم ووقت"
+  },
+  {
+    "Id": 564,
+    "EnglishWord": "Alarm",
+    "ArabicWord": "منبه",
+    "Category": "نوم ووقت"
+  },
+  {
+    "Id": 565,
+    "EnglishWord": "Noon",
+    "ArabicWord": "ظهر",
+    "Category": "أوقات"
+  },
+  {
+    "Id": 566,
+    "EnglishWord": "Midnight",
+    "ArabicWord": "منتصف الليل",
+    "Category": "أوقات"
+  },
+  {
+    "Id": 567,
+    "EnglishWord": "Dawn",
+    "ArabicWord": "فجر",
+    "Category": "أوقات"
+  },
+  {
+    "Id": 568,
+    "EnglishWord": "Dusk",
+    "ArabicWord": "غسق",
+    "Category": "أوقات"
+  },
+  {
+    "Id": 569,
+    "EnglishWord": "Sunrise",
+    "ArabicWord": "شروق",
+    "Category": "أوقات"
+  },
+  {
+    "Id": 570,
+    "EnglishWord": "Sunset",
+    "ArabicWord": "غروب",
+    "Category": "أوقات"
+  },
+  {
+    "Id": 571,
+    "EnglishWord": "Season",
+    "ArabicWord": "موسم",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 572,
+    "EnglishWord": "Spring",
+    "ArabicWord": "ربيع",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 573,
+    "EnglishWord": "Summer",
+    "ArabicWord": "صيف",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 574,
+    "EnglishWord": "Fall",
+    "ArabicWord": "خريف",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 575,
+    "EnglishWord": "Winter",
+    "ArabicWord": "شتاء",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 576,
+    "EnglishWord": "Temperature",
+    "ArabicWord": "درجه حراره",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 577,
+    "EnglishWord": "Warm",
+    "ArabicWord": "دافئ",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 578,
+    "EnglishWord": "Cool",
+    "ArabicWord": "بارد (معتدل)",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 579,
+    "EnglishWord": "Freeze",
+    "ArabicWord": "يتجمد",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 580,
+    "EnglishWord": "Melt",
+    "ArabicWord": "يذوب",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 581,
+    "EnglishWord": "Dry",
+    "ArabicWord": "جاف",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 582,
+    "EnglishWord": "Wet",
+    "ArabicWord": "مبلل",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 583,
+    "EnglishWord": "Humidity",
+    "ArabicWord": "رطوبه",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 584,
+    "EnglishWord": "Fog",
+    "ArabicWord": "ضباب",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 585,
+    "EnglishWord": "Thunder",
+    "ArabicWord": "رعد",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 586,
+    "EnglishWord": "Lightning",
+    "ArabicWord": "برق",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 587,
+    "EnglishWord": "Rainbow",
+    "ArabicWord": "قوس قزح",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 588,
+    "EnglishWord": "Flood",
+    "ArabicWord": "فيضان",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 589,
+    "EnglishWord": "Drought",
+    "ArabicWord": "جفاف",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 590,
+    "EnglishWord": "Earthquake",
+    "ArabicWord": "زلزال",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 591,
+    "EnglishWord": "Volcano",
+    "ArabicWord": "بركان",
+    "Category": "طقس وطبيعة"
+  },
+  {
+    "Id": 592,
+    "EnglishWord": "Nature",
+    "ArabicWord": "طبيعه",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 593,
+    "EnglishWord": "Environment",
+    "ArabicWord": "بيئه",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 594,
+    "EnglishWord": "Earth",
+    "ArabicWord": "ارض",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 595,
+    "EnglishWord": "Planet",
+    "ArabicWord": "كوكب",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 596,
+    "EnglishWord": "Space",
+    "ArabicWord": "فضاء",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 597,
+    "EnglishWord": "Universe",
+    "ArabicWord": "كون",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 598,
+    "EnglishWord": "Galaxy",
+    "ArabicWord": "مجره",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 599,
+    "EnglishWord": "Satellite",
+    "ArabicWord": "قمر صناعي",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 600,
+    "EnglishWord": "Rocket",
+    "ArabicWord": "صاروخ",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 601,
+    "EnglishWord": "Astronaut",
+    "ArabicWord": "رائد فضاء",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 602,
+    "EnglishWord": "Science",
+    "ArabicWord": "علم",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 603,
+    "EnglishWord": "Scientist",
+    "ArabicWord": "عالم",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 604,
+    "EnglishWord": "Research",
+    "ArabicWord": "بحث",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 605,
+    "EnglishWord": "Experiment",
+    "ArabicWord": "تجربه",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 606,
+    "EnglishWord": "Laboratory",
+    "ArabicWord": "مختبر",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 607,
+    "EnglishWord": "Test",
+    "ArabicWord": "اختبار",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 608,
+    "EnglishWord": "Result",
+    "ArabicWord": "نتيجه",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 609,
+    "EnglishWord": "Proof",
+    "ArabicWord": "دليل",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 610,
+    "EnglishWord": "Theory",
+    "ArabicWord": "نظريه",
+    "Category": "علوم وفضاء"
+  },
+  {
+    "Id": 611,
+    "EnglishWord": "Fact",
+    "ArabicWord": "حقيقه",
+    "Category": "مفاهيم مجردة"
+  },
+  {
+    "Id": 612,
+    "EnglishWord": "Truth",
+    "ArabicWord": "حقيقه",
+    "Category": "مفاهيم مجردة"
+  },
+  {
+    "Id": 613,
+    "EnglishWord": "Lie",
+    "ArabicWord": "كذبه",
+    "Category": "مفاهيم مجردة"
+  },
+  {
+    "Id": 614,
+    "EnglishWord": "Honest",
+    "ArabicWord": "صادق",
+    "Category": "صفات ومفاهيم"
+  },
+  {
+    "Id": 615,
+    "EnglishWord": "Dishonest",
+    "ArabicWord": "غير امين",
+    "Category": "صفات ومفاهيم"
+  },
+  {
+    "Id": 616,
+    "EnglishWord": "Trust",
+    "ArabicWord": "ثقه",
+    "Category": "مفاهيم مجردة"
+  },
+  {
+    "Id": 617,
+    "EnglishWord": "Doubt",
+    "ArabicWord": "شك",
+    "Category": "مفاهيم مجردة"
+  },
+  {
+    "Id": 618,
+    "EnglishWord": "Sure",
+    "ArabicWord": "متاكد",
+    "Category": "صفات ومفاهيم"
+  },
+  {
+    "Id": 619,
+    "EnglishWord": "Uncertain",
+    "ArabicWord": "غير متاكد",
+    "Category": "صفات ومفاهيم"
+  },
+  {
+    "Id": 620,
+    "EnglishWord": "Possible",
+    "ArabicWord": "ممكن",
+    "Category": "صفات ومفاهيم"
+  },
+  {
+    "Id": 621,
+    "EnglishWord": "Impossible",
+    "ArabicWord": "مستحيل",
+    "Category": "صفات ومفاهيم"
+  },
+  {
+    "Id": 622,
+    "EnglishWord": "Probable",
+    "ArabicWord": "محتمل",
+    "Category": "صفات ومفاهيم"
+  },
+  {
+    "Id": 623,
+    "EnglishWord": "Maybe",
+    "ArabicWord": "ربما",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 624,
+    "EnglishWord": "Perhaps",
+    "ArabicWord": "ربما",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 625,
+    "EnglishWord": "Certainly",
+    "ArabicWord": "بالتاكيد",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 626,
+    "EnglishWord": "Definitely",
+    "ArabicWord": "قطعا",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 627,
+    "EnglishWord": "Absolutely",
+    "ArabicWord": "تماما",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 628,
+    "EnglishWord": "Exactly",
+    "ArabicWord": "بالضبط",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 629,
+    "EnglishWord": "Almost",
+    "ArabicWord": "تقريبا",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 630,
+    "EnglishWord": "Quite",
+    "ArabicWord": "تماما",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 631,
+    "EnglishWord": "Very",
+    "ArabicWord": "جدا",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 632,
+    "EnglishWord": "Too",
+    "ArabicWord": "جدا / ايضا",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 633,
+    "EnglishWord": "Enough",
+    "ArabicWord": "كافٍ",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 634,
+    "EnglishWord": "Just",
+    "ArabicWord": "فقط",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 635,
+    "EnglishWord": "Only",
+    "ArabicWord": "فقط",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 636,
+    "EnglishWord": "Also",
+    "ArabicWord": "ايضا",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 637,
+    "EnglishWord": "Even",
+    "ArabicWord": "حتى",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 638,
+    "EnglishWord": "Especially",
+    "ArabicWord": "خاصه",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 639,
+    "EnglishWord": "Particularly",
+    "ArabicWord": "بشكل خاص",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 640,
+    "EnglishWord": "Mainly",
+    "ArabicWord": "بشكل رئيسي",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 641,
+    "EnglishWord": "Mostly",
+    "ArabicWord": "في الغالب",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 642,
+    "EnglishWord": "Partly",
+    "ArabicWord": "جزئيا",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 643,
+    "EnglishWord": "Completely",
+    "ArabicWord": "تماما",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 644,
+    "EnglishWord": "Totally",
+    "ArabicWord": "كليا",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 645,
+    "EnglishWord": "Fully",
+    "ArabicWord": "بالكامل",
+    "Category": "ظروف ومحددات"
+  },
+  {
+    "Id": 646,
+    "EnglishWord": "Half",
+    "ArabicWord": "نصف",
+    "Category": "أرقام وكميات"
+  },
+  {
+    "Id": 647,
+    "EnglishWord": "Quarter",
+    "ArabicWord": "ربع",
+    "Category": "أرقام وكميات"
+  },
+  {
+    "Id": 648,
+    "EnglishWord": "Double",
+    "ArabicWord": "ضعف",
+    "Category": "أرقام وكميات"
+  },
+  {
+    "Id": 649,
+    "EnglishWord": "Triple",
+    "ArabicWord": "ثلاثه اضعاف",
+    "Category": "أرقام وكميات"
+  },
+  {
+    "Id": 650,
+    "EnglishWord": "Single",
+    "ArabicWord": "مفرد",
+    "Category": "أرقام وكميات"
+  },
+  {
+    "Id": 651,
+    "EnglishWord": "Pair",
+    "ArabicWord": "زوج",
+    "Category": "أرقام وكميات"
+  },
+  {
+    "Id": 652,
+    "EnglishWord": "Couple",
+    "ArabicWord": "زوجين",
+    "Category": "أرقام وكميات"
+  },
+  {
+    "Id": 653,
+    "EnglishWord": "Group",
+    "ArabicWord": "مجموعه",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 654,
+    "EnglishWord": "Member",
+    "ArabicWord": "عضو",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 655,
+    "EnglishWord": "Leader",
+    "ArabicWord": "قائد",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 656,
+    "EnglishWord": "Boss",
+    "ArabicWord": "رئيس",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 657,
+    "EnglishWord": "Employee",
+    "ArabicWord": "موظف",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 658,
+    "EnglishWord": "Job",
+    "ArabicWord": "وظيفه",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 659,
+    "EnglishWord": "Career",
+    "ArabicWord": "مهنه",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 660,
+    "EnglishWord": "Profession",
+    "ArabicWord": "حرفه",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 661,
+    "EnglishWord": "Business",
+    "ArabicWord": "عمل تجاري",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 662,
+    "EnglishWord": "Company",
+    "ArabicWord": "شركه",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 663,
+    "EnglishWord": "Manager",
+    "ArabicWord": "مدير",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 664,
+    "EnglishWord": "Secretary",
+    "ArabicWord": "سكرتير",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 665,
+    "EnglishWord": "Assistant",
+    "ArabicWord": "مساعد",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 666,
+    "EnglishWord": "Client",
+    "ArabicWord": "عميل",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 667,
+    "EnglishWord": "Seller",
+    "ArabicWord": "بائع",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 668,
+    "EnglishWord": "Buyer",
+    "ArabicWord": "مشتري",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 669,
+    "EnglishWord": "Owner",
+    "ArabicWord": "مالك",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 670,
+    "EnglishWord": "Rent",
+    "ArabicWord": "ايجار",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 671,
+    "EnglishWord": "Lease",
+    "ArabicWord": "عقد ايجار",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 672,
+    "EnglishWord": "Contract",
+    "ArabicWord": "عقد",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 673,
+    "EnglishWord": "Agreement",
+    "ArabicWord": "اتفاق",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 674,
+    "EnglishWord": "Deal",
+    "ArabicWord": "صفقه",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 675,
+    "EnglishWord": "Trade",
+    "ArabicWord": "تجاره",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 676,
+    "EnglishWord": "Export",
+    "ArabicWord": "تصدير",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 677,
+    "EnglishWord": "Import",
+    "ArabicWord": "استيراد",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 678,
+    "EnglishWord": "Product",
+    "ArabicWord": "منتج",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 679,
+    "EnglishWord": "Service",
+    "ArabicWord": "خدمه",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 680,
+    "EnglishWord": "Quality",
+    "ArabicWord": "جوده",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 681,
+    "EnglishWord": "Quantity",
+    "ArabicWord": "كميه",
+    "Category": "أعمال وتجارة"
+  },
+  {
+    "Id": 682,
+    "EnglishWord": "Size",
+    "ArabicWord": "حجم",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 683,
+    "EnglishWord": "Length",
+    "ArabicWord": "طول",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 684,
+    "EnglishWord": "Width",
+    "ArabicWord": "عرض",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 685,
+    "EnglishWord": "Height",
+    "ArabicWord": "ارتفاع",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 686,
+    "EnglishWord": "Depth",
+    "ArabicWord": "عمق",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 687,
+    "EnglishWord": "Weight",
+    "ArabicWord": "وزن",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 688,
+    "EnglishWord": "Measure",
+    "ArabicWord": "يقيس",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 689,
+    "EnglishWord": "Count",
+    "ArabicWord": "يعد",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 690,
+    "EnglishWord": "Calculate",
+    "ArabicWord": "يحسب",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 691,
+    "EnglishWord": "Add",
+    "ArabicWord": "يضيف",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 692,
+    "EnglishWord": "Subtract",
+    "ArabicWord": "يطرح",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 693,
+    "EnglishWord": "Multiply",
+    "ArabicWord": "يضرب",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 694,
+    "EnglishWord": "Divide",
+    "ArabicWord": "يقسم",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 695,
+    "EnglishWord": "Equal",
+    "ArabicWord": "يساوي",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 696,
+    "EnglishWord": "Plus",
+    "ArabicWord": "زائد",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 697,
+    "EnglishWord": "Minus",
+    "ArabicWord": "ناقص",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 698,
+    "EnglishWord": "Total",
+    "ArabicWord": "مجموع",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 699,
+    "EnglishWord": "Sum",
+    "ArabicWord": "حاصل الجمع",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 700,
+    "EnglishWord": "Average",
+    "ArabicWord": "معدل",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 701,
+    "EnglishWord": "Percent",
+    "ArabicWord": "نسبه مئويه",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 702,
+    "EnglishWord": "Fraction",
+    "ArabicWord": "كسر",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 703,
+    "EnglishWord": "Decimal",
+    "ArabicWord": "عشري",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 704,
+    "EnglishWord": "Number",
+    "ArabicWord": "رقم",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 705,
+    "EnglishWord": "Digit",
+    "ArabicWord": "خانه",
+    "Category": "قياسات ورياضيات"
+  },
+  {
+    "Id": 706,
+    "EnglishWord": "Zero",
+    "ArabicWord": "صفر",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 707,
+    "EnglishWord": "Eleven",
+    "ArabicWord": "احد عشر",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 708,
+    "EnglishWord": "Twelve",
+    "ArabicWord": "اثنا عشر",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 709,
+    "EnglishWord": "Thirteen",
+    "ArabicWord": "ثلاثه عشر",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 710,
+    "EnglishWord": "Fourteen",
+    "ArabicWord": "اربعه عشر",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 711,
+    "EnglishWord": "Fifteen",
+    "ArabicWord": "خمسه عشر",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 712,
+    "EnglishWord": "Sixteen",
+    "ArabicWord": "سته عشر",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 713,
+    "EnglishWord": "Seventeen",
+    "ArabicWord": "سبعه عشر",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 714,
+    "EnglishWord": "Eighteen",
+    "ArabicWord": "ثمانيه عشر",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 715,
+    "EnglishWord": "Nineteen",
+    "ArabicWord": "تسعه عشر",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 716,
+    "EnglishWord": "Twenty",
+    "ArabicWord": "عشرون",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 717,
+    "EnglishWord": "Thirty",
+    "ArabicWord": "ثلاثون",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 718,
+    "EnglishWord": "Forty",
+    "ArabicWord": "اربعون",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 719,
+    "EnglishWord": "Fifty",
+    "ArabicWord": "خمسون",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 720,
+    "EnglishWord": "Sixty",
+    "ArabicWord": "ستون",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 721,
+    "EnglishWord": "Seventy",
+    "ArabicWord": "سبعون",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 722,
+    "EnglishWord": "Eighty",
+    "ArabicWord": "ثمانون",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 723,
+    "EnglishWord": "Ninety",
+    "ArabicWord": "تسعون",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 724,
+    "EnglishWord": "Million",
+    "ArabicWord": "مليون",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 725,
+    "EnglishWord": "Billion",
+    "ArabicWord": "مليار",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 726,
+    "EnglishWord": "Trillion",
+    "ArabicWord": "ترليون",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 727,
+    "EnglishWord": "Fourth",
+    "ArabicWord": "الرابع",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 728,
+    "EnglishWord": "Fifth",
+    "ArabicWord": "الخامس",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 729,
+    "EnglishWord": "Sixth",
+    "ArabicWord": "السادس",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 730,
+    "EnglishWord": "Seventh",
+    "ArabicWord": "السابع",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 731,
+    "EnglishWord": "Eighth",
+    "ArabicWord": "الثامن",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 732,
+    "EnglishWord": "Ninth",
+    "ArabicWord": "التاسع",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 733,
+    "EnglishWord": "Tenth",
+    "ArabicWord": "العاشر",
+    "Category": "أرقام"
+  },
+  {
+    "Id": 734,
+    "EnglishWord": "Once",
+    "ArabicWord": "مره واحده",
+    "Category": "ظروف وأرقام"
+  },
+  {
+    "Id": 735,
+    "EnglishWord": "Twice",
+    "ArabicWord": "مرتين",
+    "Category": "ظروف وأرقام"
+  },
+  {
+    "Id": 736,
+    "EnglishWord": "Thrice",
+    "ArabicWord": "ثلاث مرات",
+    "Category": "ظروف وأرقام"
+  },
+  {
+    "Id": 737,
+    "EnglishWord": "Circle",
+    "ArabicWord": "دائره",
+    "Category": "أشكال هندسية"
+  },
+  {
+    "Id": 738,
+    "EnglishWord": "Square",
+    "ArabicWord": "مربع",
+    "Category": "أشكال هندسية"
+  },
+  {
+    "Id": 739,
+    "EnglishWord": "Triangle",
+    "ArabicWord": "مثلث",
+    "Category": "أشكال هندسية"
+  },
+  {
+    "Id": 740,
+    "EnglishWord": "Rectangle",
+    "ArabicWord": "مستطيل",
+    "Category": "أشكال هندسية"
+  },
+  {
+    "Id": 741,
+    "EnglishWord": "Oval",
+    "ArabicWord": "بيضاوي",
+    "Category": "أشكال هندسية"
+  },
+  {
+    "Id": 742,
+    "EnglishWord": "Point",
+    "ArabicWord": "نقطه",
+    "Category": "أشكال هندسية"
+  },
+  {
+    "Id": 743,
+    "EnglishWord": "Line",
+    "ArabicWord": "خط",
+    "Category": "أشكال هندسية"
+  },
+  {
+    "Id": 744,
+    "EnglishWord": "Angle",
+    "ArabicWord": "زاوية",
+    "Category": "أجزاء وأبعاد ومواقع"
+  },
+  {
+    "Id": 745,
+    "EnglishWord": "Side",
+    "ArabicWord": "جانب",
+    "Category": "أجزاء وأبعاد ومواقع"
+  },
+  {
+    "Id": 746,
+    "EnglishWord": "Edge",
+    "ArabicWord": "حافة",
+    "Category": "أجزاء وأبعاد ومواقع"
+  },
+  {
+    "Id": 747,
+    "EnglishWord": "Center",
+    "ArabicWord": "مركز",
+    "Category": "أجزاء وأبعاد ومواقع"
+  },
+  {
+    "Id": 748,
+    "EnglishWord": "Middle",
+    "ArabicWord": "وسط",
+    "Category": "أجزاء وأبعاد ومواقع"
+  },
+  {
+    "Id": 749,
+    "EnglishWord": "Top",
+    "ArabicWord": "قمة",
+    "Category": "أجزاء وأبعاد ومواقع"
+  },
+  {
+    "Id": 750,
+    "EnglishWord": "Bottom",
+    "ArabicWord": "قاع",
+    "Category": "أجزاء وأبعاد ومواقع"
+  },
+  {
+    "Id": 751,
+    "EnglishWord": "Part",
+    "ArabicWord": "جزء",
+    "Category": "أجزاء وأبعاد ومواقع"
+  },
+  {
+    "Id": 752,
+    "EnglishWord": "Piece",
+    "ArabicWord": "قطعة",
+    "Category": "أجزاء وأبعاد ومواقع"
+  },
+  {
+    "Id": 753,
+    "EnglishWord": "Bit",
+    "ArabicWord": "قليل",
+    "Category": "أجزاء وأبعاد ومواقع"
+  },
+  {
+    "Id": 754,
+    "EnglishWord": "Slice",
+    "ArabicWord": "شريحة",
+    "Category": "أجزاء وأبعاد ومواقع"
+  },
+  {
+    "Id": 755,
+    "EnglishWord": "Layer",
+    "ArabicWord": "طبقة",
+    "Category": "أجزاء وأبعاد ومواقع"
+  },
+  {
+    "Id": 756,
+    "EnglishWord": "Section",
+    "ArabicWord": "قسم",
+    "Category": "أجزاء وأبعاد ومواقع"
+  },
+  {
+    "Id": 757,
+    "EnglishWord": "Role",
+    "ArabicWord": "دور",
+    "Category": "مفاهيم عامة وأحداث"
+  },
+  {
+    "Id": 758,
+    "EnglishWord": "Act",
+    "ArabicWord": "فعل",
+    "Category": "مفاهيم عامة وأحداث"
+  },
+  {
+    "Id": 759,
+    "EnglishWord": "Action",
+    "ArabicWord": "عمل",
+    "Category": "مفاهيم عامة وأحداث"
+  },
+  {
+    "Id": 760,
+    "EnglishWord": "Event",
+    "ArabicWord": "حدث",
+    "Category": "مفاهيم عامة وأحداث"
+  },
+  {
+    "Id": 761,
+    "EnglishWord": "Story",
+    "ArabicWord": "قصة",
+    "Category": "معلومات وأخبار"
+  },
+  {
+    "Id": 762,
+    "EnglishWord": "News",
+    "ArabicWord": "أخبار",
+    "Category": "معلومات وأخبار"
+  },
+  {
+    "Id": 763,
+    "EnglishWord": "Information",
+    "ArabicWord": "معلومات",
+    "Category": "معلومات وأخبار"
+  },
+  {
+    "Id": 764,
+    "EnglishWord": "Data",
+    "ArabicWord": "بيانات",
+    "Category": "معرفة وعلوم"
+  },
+  {
+    "Id": 765,
+    "EnglishWord": "Knowledge",
+    "ArabicWord": "معرفة",
+    "Category": "معرفة وعلوم"
+  },
+  {
+    "Id": 766,
+    "EnglishWord": "Wisdom",
+    "ArabicWord": "حكمة",
+    "Category": "معرفة وعلوم"
+  },
+  {
+    "Id": 767,
+    "EnglishWord": "Idea",
+    "ArabicWord": "فكرة",
+    "Category": "العقل والتفكير"
+  },
+  {
+    "Id": 768,
+    "EnglishWord": "Thought",
+    "ArabicWord": "فكرة",
+    "Category": "العقل والتفكير"
+  },
+  {
+    "Id": 769,
+    "EnglishWord": "Mind",
+    "ArabicWord": "عقل",
+    "Category": "العقل والتفكير"
+  },
+  {
+    "Id": 770,
+    "EnglishWord": "Brain",
+    "ArabicWord": "دماغ",
+    "Category": "العقل والتفكير"
+  },
+  {
+    "Id": 771,
+    "EnglishWord": "Memory",
+    "ArabicWord": "ذاكرة",
+    "Category": "العقل والتفكير"
+  },
+  {
+    "Id": 772,
+    "EnglishWord": "Sense",
+    "ArabicWord": "حس",
+    "Category": "مشاعر وحواس"
+  },
+  {
+    "Id": 773,
+    "EnglishWord": "Feeling",
+    "ArabicWord": "شعور",
+    "Category": "مشاعر وحواس"
+  },
+  {
+    "Id": 774,
+    "EnglishWord": "Emotion",
+    "ArabicWord": "عاطفة",
+    "Category": "مشاعر وحواس"
+  },
+  {
+    "Id": 775,
+    "EnglishWord": "Soul",
+    "ArabicWord": "روح",
+    "Category": "روحانيات وحياة"
+  },
+  {
+    "Id": 776,
+    "EnglishWord": "Spirit",
+    "ArabicWord": "روح",
+    "Category": "روحانيات وحياة"
+  },
+  {
+    "Id": 777,
+    "EnglishWord": "Life",
+    "ArabicWord": "حياة",
+    "Category": "حياة وموت وصحة"
+  },
+  {
+    "Id": 778,
+    "EnglishWord": "Death",
+    "ArabicWord": "موت",
+    "Category": "حياة وموت وصحة"
+  },
+  {
+    "Id": 779,
+    "EnglishWord": "Birth",
+    "ArabicWord": "ميلاد",
+    "Category": "حياة وموت وصحة"
+  },
+  {
+    "Id": 780,
+    "EnglishWord": "Health",
+    "ArabicWord": "صحة",
+    "Category": "حياة وموت وصحة"
+  },
+  {
+    "Id": 781,
+    "EnglishWord": "Disease",
+    "ArabicWord": "مرض",
+    "Category": "حياة وموت وصحة"
+  },
+  {
+    "Id": 782,
+    "EnglishWord": "Fear",
+    "ArabicWord": "خوف",
+    "Category": "مشاعر وانفعالات"
+  },
+  {
+    "Id": 783,
+    "EnglishWord": "Anger",
+    "ArabicWord": "غضب",
+    "Category": "مشاعر وانفعالات"
+  },
+  {
+    "Id": 784,
+    "EnglishWord": "Joy",
+    "ArabicWord": "فرح",
+    "Category": "مشاعر وانفعالات"
+  },
+  {
+    "Id": 785,
+    "EnglishWord": "Sadness",
+    "ArabicWord": "حزن",
+    "Category": "مشاعر وانفعالات"
+  },
+  {
+    "Id": 786,
+    "EnglishWord": "Happiness",
+    "ArabicWord": "سعادة",
+    "Category": "مشاعر وانفعالات"
+  },
+  {
+    "Id": 787,
+    "EnglishWord": "Peace",
+    "ArabicWord": "سلام",
+    "Category": "مجتمع وحروب"
+  },
+  {
+    "Id": 788,
+    "EnglishWord": "War",
+    "ArabicWord": "حرب",
+    "Category": "مجتمع وحروب"
+  },
+  {
+    "Id": 789,
+    "EnglishWord": "Power",
+    "ArabicWord": "قوة",
+    "Category": "طاقة وقوة"
+  },
+  {
+    "Id": 790,
+    "EnglishWord": "Energy",
+    "ArabicWord": "طاقة",
+    "Category": "طاقة وقوة"
+  },
+  {
+    "Id": 791,
+    "EnglishWord": "Force",
+    "ArabicWord": "قوة",
+    "Category": "طاقة وقوة"
+  },
+  {
+    "Id": 792,
+    "EnglishWord": "Heat",
+    "ArabicWord": "حرارة",
+    "Category": "طاقة وقوة"
+  },
+  {
+    "Id": 793,
+    "EnglishWord": "Sound",
+    "ArabicWord": "صوت",
+    "Category": "فيزياء وحواس"
+  },
+  {
+    "Id": 794,
+    "EnglishWord": "Color",
+    "ArabicWord": "لون",
+    "Category": "فيزياء وحواس"
+  },
+  {
+    "Id": 795,
+    "EnglishWord": "Future",
+    "ArabicWord": "مستقبل",
+    "Category": "الزمن والأوقات"
+  },
+  {
+    "Id": 796,
+    "EnglishWord": "Past",
+    "ArabicWord": "ماضي",
+    "Category": "الزمن والأوقات"
+  },
+  {
+    "Id": 797,
+    "EnglishWord": "Present",
+    "ArabicWord": "حاضر",
+    "Category": "الزمن والأوقات"
+  },
+  {
+    "Id": 798,
+    "EnglishWord": "Interesting",
+    "ArabicWord": "ممتع",
+    "Category": "صفات ووصف"
+  },
+  {
+    "Id": 799,
+    "EnglishWord": "Exciting",
+    "ArabicWord": "مثير",
+    "Category": "صفات ووصف"
+  },
+  {
+    "Id": 800,
+    "EnglishWord": "Surprise",
+    "ArabicWord": "مفاجأة",
+    "Category": "مشاعر ومفاجآت"
+  },
+  {
+    "Id": 801,
+    "EnglishWord": "Shock",
+    "ArabicWord": "صدمة",
+    "Category": "مشاعر ومفاجآت"
+  },
+  {
+    "Id": 802,
+    "EnglishWord": "Scared",
+    "ArabicWord": "خائف",
+    "Category": "حالات نفسية"
+  },
+  {
+    "Id": 803,
+    "EnglishWord": "Brave",
+    "ArabicWord": "شجاع",
+    "Category": "صفات شخصية"
+  },
+  {
+    "Id": 804,
+    "EnglishWord": "Courage",
+    "ArabicWord": "شجاعة",
+    "Category": "صفات شخصية"
+  },
+  {
+    "Id": 805,
+    "EnglishWord": "Coward",
+    "ArabicWord": "جبان",
+    "Category": "صفات شخصية"
+  },
+  {
+    "Id": 806,
+    "EnglishWord": "Angry",
+    "ArabicWord": "غاضب",
+    "Category": "حالات نفسية"
+  },
+  {
+    "Id": 807,
+    "EnglishWord": "Calm",
+    "ArabicWord": "هادئ",
+    "Category": "حالات نفسية"
+  },
+  {
+    "Id": 808,
+    "EnglishWord": "Nervous",
+    "ArabicWord": "متوتر",
+    "Category": "حالات نفسية"
+  },
+  {
+    "Id": 809,
+    "EnglishWord": "Relaxed",
+    "ArabicWord": "مسترخي",
+    "Category": "حالات نفسية"
+  },
+  {
+    "Id": 810,
+    "EnglishWord": "Stress",
+    "ArabicWord": "ضغط نفسي",
+    "Category": "حالات نفسية"
+  },
+  {
+    "Id": 811,
+    "EnglishWord": "Worry",
+    "ArabicWord": "قلق",
+    "Category": "حالات نفسية"
+  },
+  {
+    "Id": 812,
+    "EnglishWord": "Anxious",
+    "ArabicWord": "قلق",
+    "Category": "حالات نفسية"
+  },
+  {
+    "Id": 813,
+    "EnglishWord": "Comfortable",
+    "ArabicWord": "مرتاح",
+    "Category": "حالات نفسية"
+  },
+  {
+    "Id": 814,
+    "EnglishWord": "Uncomfortable",
+    "ArabicWord": "غير مرتاح",
+    "Category": "حالات نفسية"
+  },
+  {
+    "Id": 815,
+    "EnglishWord": "Pleasure",
+    "ArabicWord": "متعة",
+    "Category": "حالات نفسية"
+  },
+  {
+    "Id": 816,
+    "EnglishWord": "Sorrow",
+    "ArabicWord": "حزن",
+    "Category": "حالات نفسية"
+  },
+  {
+    "Id": 817,
+    "EnglishWord": "Tears",
+    "ArabicWord": "دموع",
+    "Category": "تعبيرات جسدية"
+  },
+  {
+    "Id": 818,
+    "EnglishWord": "Smile",
+    "ArabicWord": "ابتسامة",
+    "Category": "تعبيرات جسدية"
+  },
+  {
+    "Id": 819,
+    "EnglishWord": "Laugh",
+    "ArabicWord": "ضحك",
+    "Category": "تعبيرات جسدية"
+  },
+  {
+    "Id": 820,
+    "EnglishWord": "Cry",
+    "ArabicWord": "بكاء",
+    "Category": "تعبيرات جسدية"
+  },
+  {
+    "Id": 821,
+    "EnglishWord": "Shout",
+    "ArabicWord": "صراخ",
+    "Category": "أصوات وتواصل"
+  },
+  {
+    "Id": 822,
+    "EnglishWord": "Whisper",
+    "ArabicWord": "همس",
+    "Category": "أصوات وتواصل"
+  },
+  {
+    "Id": 823,
+    "EnglishWord": "Scream",
+    "ArabicWord": "صرخة",
+    "Category": "أصوات وتواصل"
+  },
+  {
+    "Id": 824,
+    "EnglishWord": "Voice",
+    "ArabicWord": "صوت",
+    "Category": "أصوات وتواصل"
+  },
+  {
+    "Id": 825,
+    "EnglishWord": "Opinion",
+    "ArabicWord": "رأي",
+    "Category": "تفكير وآراء"
+  },
+  {
+    "Id": 826,
+    "EnglishWord": "View",
+    "ArabicWord": "وجهة نظر",
+    "Category": "تفكير وآراء"
+  },
+  {
+    "Id": 827,
+    "EnglishWord": "Choice",
+    "ArabicWord": "خيار",
+    "Category": "قرارات وخيارات"
+  },
+  {
+    "Id": 828,
+    "EnglishWord": "Option",
+    "ArabicWord": "بديل",
+    "Category": "قرارات وخيارات"
+  },
+  {
+    "Id": 829,
+    "EnglishWord": "Decision",
+    "ArabicWord": "قرار",
+    "Category": "قرارات وخيارات"
+  },
+  {
+    "Id": 830,
+    "EnglishWord": "Plan",
+    "ArabicWord": "خطة",
+    "Category": "خطط وأهداف"
+  },
+  {
+    "Id": 831,
+    "EnglishWord": "Goal",
+    "ArabicWord": "هدف",
+    "Category": "خطط وأهداف"
+  },
+  {
+    "Id": 832,
+    "EnglishWord": "Purpose",
+    "ArabicWord": "غرض",
+    "Category": "خطط وأهداف"
+  },
+  {
+    "Id": 833,
+    "EnglishWord": "Reason",
+    "ArabicWord": "سبب",
+    "Category": "أسباب ونتائج"
+  },
+  {
+    "Id": 834,
+    "EnglishWord": "Cause",
+    "ArabicWord": "سبب",
+    "Category": "أسباب ونتائج"
+  },
+  {
+    "Id": 835,
+    "EnglishWord": "Effect",
+    "ArabicWord": "أثر",
+    "Category": "أسباب ونتائج"
+  },
+  {
+    "Id": 836,
+    "EnglishWord": "Condition",
+    "ArabicWord": "حالة",
+    "Category": "حالات ومواقف"
+  },
+  {
+    "Id": 837,
+    "EnglishWord": "Situation",
+    "ArabicWord": "موقف",
+    "Category": "حالات ومواقف"
+  },
+  {
+    "Id": 838,
+    "EnglishWord": "Problem",
+    "ArabicWord": "مشكلة",
+    "Category": "مشاكل وحلول"
+  },
+  {
+    "Id": 839,
+    "EnglishWord": "Solution",
+    "ArabicWord": "حل",
+    "Category": "مشاكل وحلول"
+  },
+  {
+    "Id": 840,
+    "EnglishWord": "Success",
+    "ArabicWord": "نجاح",
+    "Category": "نجاح وفشل"
+  },
+  {
+    "Id": 841,
+    "EnglishWord": "Failure",
+    "ArabicWord": "فشل",
+    "Category": "نجاح وفشل"
+  },
+  {
+    "Id": 842,
+    "EnglishWord": "Chance",
+    "ArabicWord": "فرصة",
+    "Category": "حظ وقدر"
+  },
+  {
+    "Id": 843,
+    "EnglishWord": "Luck",
+    "ArabicWord": "حظ",
+    "Category": "حظ وقدر"
+  },
+  {
+    "Id": 844,
+    "EnglishWord": "Fate",
+    "ArabicWord": "قدر",
+    "Category": "حظ وقدر"
+  },
+  {
+    "Id": 845,
+    "EnglishWord": "Desire",
+    "ArabicWord": "رغبة",
+    "Category": "رغبات وإرادة"
+  },
+  {
+    "Id": 846,
+    "EnglishWord": "Will",
+    "ArabicWord": "إرادة",
+    "Category": "رغبات وإرادة"
+  },
+  {
+    "Id": 847,
+    "EnglishWord": "Electricity",
+    "ArabicWord": "كهرباء",
+    "Category": "كهرباء وطاقة"
+  },
+  {
+    "Id": 848,
+    "EnglishWord": "Battery",
+    "ArabicWord": "بطارية",
+    "Category": "كهرباء وطاقة"
+  },
+  {
+    "Id": 849,
+    "EnglishWord": "Wire",
+    "ArabicWord": "سلك",
+    "Category": "كهرباء وأدوات"
+  },
+  {
+    "Id": 850,
+    "EnglishWord": "Cable",
+    "ArabicWord": "كابل",
+    "Category": "كهرباء وأدوات"
+  },
+  {
+    "Id": 851,
+    "EnglishWord": "Plug",
+    "ArabicWord": "قابس",
+    "Category": "كهرباء وأدوات"
+  },
+  {
+    "Id": 852,
+    "EnglishWord": "Socket",
+    "ArabicWord": "مقبس",
+    "Category": "كهرباء وأدوات"
+  },
+  {
+    "Id": 853,
+    "EnglishWord": "Switch",
+    "ArabicWord": "مفتاح",
+    "Category": "كهرباء وأدوات"
+  },
+  {
+    "Id": 854,
+    "EnglishWord": "Screen",
+    "ArabicWord": "شاشة",
+    "Category": "تقنية وأجهزة"
+  },
+  {
+    "Id": 855,
+    "EnglishWord": "Keyboard",
+    "ArabicWord": "لوحة مفاتيح",
+    "Category": "تقنية وأجهزة"
+  },
+  {
+    "Id": 856,
+    "EnglishWord": "Printer",
+    "ArabicWord": "طابعة",
+    "Category": "تقنية وأجهزة"
+  },
+  {
+    "Id": 857,
+    "EnglishWord": "Scanner",
+    "ArabicWord": "ماسح ضوئي",
+    "Category": "تقنية وأجهزة"
+  },
+  {
+    "Id": 858,
+    "EnglishWord": "Speaker",
+    "ArabicWord": "مكبر صوت",
+    "Category": "تقنية وأجهزة"
+  },
+  {
+    "Id": 859,
+    "EnglishWord": "Microphone",
+    "ArabicWord": "ميكروفون",
+    "Category": "تقنية وأجهزة"
+  },
+  {
+    "Id": 860,
+    "EnglishWord": "Headphone",
+    "ArabicWord": "سماعة رأس",
+    "Category": "تقنية وأجهزة"
+  },
+  {
+    "Id": 861,
+    "EnglishWord": "Lens",
+    "ArabicWord": "عدسة",
+    "Category": "تصوير وتقنية"
+  },
+  {
+    "Id": 862,
+    "EnglishWord": "Flash",
+    "ArabicWord": "وميض",
+    "Category": "تصوير وتقنية"
+  },
+  {
+    "Id": 863,
+    "EnglishWord": "Video",
+    "ArabicWord": "فيديو",
+    "Category": "وسائط متعددة"
+  },
+  {
+    "Id": 864,
+    "EnglishWord": "Audio",
+    "ArabicWord": "صوت",
+    "Category": "وسائط متعددة"
+  },
+  {
+    "Id": 865,
+    "EnglishWord": "Record",
+    "ArabicWord": "يسجل",
+    "Category": "وسائط متعددة"
+  },
+  {
+    "Id": 866,
+    "EnglishWord": "Pause",
+    "ArabicWord": "إيقاف مؤقت",
+    "Category": "تحكم الوسائط"
+  },
+  {
+    "Id": 867,
+    "EnglishWord": "Previous",
+    "ArabicWord": "السابق",
+    "Category": "تحكم الوسائط"
+  },
+  {
+    "Id": 868,
+    "EnglishWord": "Volume",
+    "ArabicWord": "مستوى الصوت",
+    "Category": "تحكم الوسائط"
+  },
+  {
+    "Id": 869,
+    "EnglishWord": "Mute",
+    "ArabicWord": "كتم الصوت",
+    "Category": "تحكم الوسائط"
+  },
+  {
+    "Id": 870,
+    "EnglishWord": "Channel",
+    "ArabicWord": "قناة",
+    "Category": "بث ووسائط"
+  },
+  {
+    "Id": 871,
+    "EnglishWord": "Program",
+    "ArabicWord": "برنامج",
+    "Category": "حاسوب وبرمجيات"
+  },
+  {
+    "Id": 872,
+    "EnglishWord": "Software",
+    "ArabicWord": "برمجيات",
+    "Category": "حاسوب وبرمجيات"
+  },
+  {
+    "Id": 873,
+    "EnglishWord": "Hardware",
+    "ArabicWord": "عتاد",
+    "Category": "حاسوب وبرمجيات"
+  },
+  {
+    "Id": 874,
+    "EnglishWord": "Network",
+    "ArabicWord": "شبكة",
+    "Category": "شبكات واتصال"
+  },
+  {
+    "Id": 875,
+    "EnglishWord": "Connection",
+    "ArabicWord": "اتصال",
+    "Category": "شبكات واتصال"
+  },
+  {
+    "Id": 876,
+    "EnglishWord": "Wireless",
+    "ArabicWord": "لاسلكي",
+    "Category": "شبكات واتصال"
+  },
+  {
+    "Id": 877,
+    "EnglishWord": "Signal",
+    "ArabicWord": "إشارة",
+    "Category": "شبكات واتصال"
+  },
+  {
+    "Id": 878,
+    "EnglishWord": "File",
+    "ArabicWord": "ملف",
+    "Category": "ملفات ومجلدات"
+  },
+  {
+    "Id": 879,
+    "EnglishWord": "Folder",
+    "ArabicWord": "مجلد",
+    "Category": "ملفات ومجلدات"
+  },
+  {
+    "Id": 880,
+    "EnglishWord": "Document",
+    "ArabicWord": "وثيقة",
+    "Category": "ملفات ومجلدات"
+  },
+  {
+    "Id": 881,
+    "EnglishWord": "Image",
+    "ArabicWord": "صورة",
+    "Category": "ملفات ومجلدات"
+  },
+  {
+    "Id": 882,
+    "EnglishWord": "Link",
+    "ArabicWord": "رابط",
+    "Category": "إنترنت ومواقع"
+  },
+  {
+    "Id": 883,
+    "EnglishWord": "Website",
+    "ArabicWord": "موقع إلكتروني",
+    "Category": "إنترنت ومواقع"
+  },
+  {
+    "Id": 884,
+    "EnglishWord": "Browser",
+    "ArabicWord": "متصفح",
+    "Category": "إنترنت ومواقع"
+  },
+  {
+    "Id": 885,
+    "EnglishWord": "Search",
+    "ArabicWord": "بحث",
+    "Category": "إنترنت ومواقع"
+  },
+  {
+    "Id": 886,
+    "EnglishWord": "Download",
+    "ArabicWord": "تحميل",
+    "Category": "إنترنت ومواقع"
+  },
+  {
+    "Id": 887,
+    "EnglishWord": "Upload",
+    "ArabicWord": "رفع",
+    "Category": "إنترنت ومواقع"
+  },
+  {
+    "Id": 888,
+    "EnglishWord": "Account",
+    "ArabicWord": "حساب",
+    "Category": "حسابات وإعدادات"
+  },
+  {
+    "Id": 889,
+    "EnglishWord": "Password",
+    "ArabicWord": "كلمة مرور",
+    "Category": "حسابات وإعدادات"
+  },
+  {
+    "Id": 890,
+    "EnglishWord": "Login",
+    "ArabicWord": "تسجيل دخول",
+    "Category": "حسابات وإعدادات"
+  },
+  {
+    "Id": 891,
+    "EnglishWord": "Logout",
+    "ArabicWord": "تسجيل خروج",
+    "Category": "حسابات وإعدادات"
+  },
+  {
+    "Id": 892,
+    "EnglishWord": "Settings",
+    "ArabicWord": "إعدادات",
+    "Category": "حسابات وإعدادات"
+  },
+  {
+    "Id": 893,
+    "EnglishWord": "Profile",
+    "ArabicWord": "ملف شخصي",
+    "Category": "حسابات وإعدادات"
+  },
+  {
+    "Id": 894,
+    "EnglishWord": "Message",
+    "ArabicWord": "رسالة",
+    "Category": "تواصل ومراسلة"
+  },
+  {
+    "Id": 895,
+    "EnglishWord": "Notification",
+    "ArabicWord": "تنبيه",
+    "Category": "تواصل ومراسلة"
+  },
+  {
+    "Id": 896,
+    "EnglishWord": "Share",
+    "ArabicWord": "مشاركة",
+    "Category": "تواصل اجتماعي"
+  },
+  {
+    "Id": 897,
+    "EnglishWord": "Comment",
+    "ArabicWord": "تعليق",
+    "Category": "تواصل اجتماعي"
+  },
+  {
+    "Id": 898,
+    "EnglishWord": "Follow",
+    "ArabicWord": "متابعة",
+    "Category": "تواصل اجتماعي"
+  },
+  {
+    "Id": 899,
+    "EnglishWord": "Block",
+    "ArabicWord": "حظر",
+    "Category": "تواصل اجتماعي"
+  },
+  {
+    "Id": 900,
+    "EnglishWord": "Delete",
+    "ArabicWord": "حذف",
+    "Category": "أدوات وتحكم"
+  },
+  {
+    "Id": 901,
+    "EnglishWord": "Edit",
+    "ArabicWord": "تعديل",
+    "Category": "أدوات وتحكم"
+  },
+  {
+    "Id": 902,
+    "EnglishWord": "Save",
+    "ArabicWord": "حفظ",
+    "Category": "أدوات وتحكم"
+  },
+  {
+    "Id": 903,
+    "EnglishWord": "Copy",
+    "ArabicWord": "نسخ",
+    "Category": "أدوات وتحكم"
+  },
+  {
+    "Id": 904,
+    "EnglishWord": "Paste",
+    "ArabicWord": "لصق",
+    "Category": "أدوات وتحكم"
+  },
+  {
+    "Id": 905,
+    "EnglishWord": "Print",
+    "ArabicWord": "طباعة",
+    "Category": "أدوات وتحكم"
+  },
+  {
+    "Id": 906,
+    "EnglishWord": "Scan",
+    "ArabicWord": "مسح ضوئي",
+    "Category": "أدوات وتحكم"
+  },
+  {
+    "Id": 907,
+    "EnglishWord": "Error",
+    "ArabicWord": "خطأ",
+    "Category": "أخطاء وتنبيهات"
+  },
+  {
+    "Id": 908,
+    "EnglishWord": "Warning",
+    "ArabicWord": "تحذير",
+    "Category": "أخطاء وتنبيهات"
+  },
+  {
+    "Id": 909,
+    "EnglishWord": "Admit",
+    "ArabicWord": "يعترف",
+    "Category": "افعال وأحداث"
+  },
+  {
+    "Id": 910,
+    "EnglishWord": "Adopt",
+    "ArabicWord": "يتبنى",
+    "Category": "افعال وأحداث"
+  },
+  {
+    "Id": 911,
+    "EnglishWord": "Adult",
+    "ArabicWord": "بالغ",
+    "Category": "أشخاص وصفات"
+  },
+  {
+    "Id": 912,
+    "EnglishWord": "Advance",
+    "ArabicWord": "يتقدم",
+    "Category": "افعال وحركة"
+  },
+  {
+    "Id": 913,
+    "EnglishWord": "Advanced",
+    "ArabicWord": "متقدم",
+    "Category": "صفات"
+  },
+  {
+    "Id": 914,
+    "EnglishWord": "Advantage",
+    "ArabicWord": "ميزة",
+    "Category": "صفات ومميزات"
+  },
+  {
+    "Id": 915,
+    "EnglishWord": "Adventure",
+    "ArabicWord": "مغامرة",
+    "Category": "أسماء وأحداث"
+  },
+  {
+    "Id": 916,
+    "EnglishWord": "Advertise",
+    "ArabicWord": "يعلن",
+    "Category": "أعمال وإعلان"
+  },
+  {
+    "Id": 917,
+    "EnglishWord": "Advertisement",
+    "ArabicWord": "إعلان",
+    "Category": "أعمال وإعلان"
+  },
+  {
+    "Id": 918,
+    "EnglishWord": "Advice",
+    "ArabicWord": "نصيحة",
+    "Category": "معلومات ونصائح"
+  },
+  {
+    "Id": 919,
+    "EnglishWord": "Advise",
+    "ArabicWord": "ينصح",
+    "Category": "افعال وتواصل"
+  },
+  {
+    "Id": 920,
+    "EnglishWord": "Affair",
+    "ArabicWord": "قضية / شأن",
+    "Category": "مفاهيم عامة"
+  },
+  {
+    "Id": 921,
+    "EnglishWord": "Affect",
+    "ArabicWord": "يؤثر",
+    "Category": "افعال وعلاقات"
+  },
+  {
+    "Id": 922,
+    "EnglishWord": "Afford",
+    "ArabicWord": "يستطيع تحمل",
+    "Category": "افعال ومال"
+  },
+  {
+    "Id": 923,
+    "EnglishWord": "Afraid",
+    "ArabicWord": "خائف",
+    "Category": "حالات نفسية"
+  },
+  {
+    "Id": 924,
+    "EnglishWord": "Afterward",
+    "ArabicWord": "بعد ذلك",
+    "Category": "ظروف وأزمان"
+  },
+  {
+    "Id": 925,
+    "EnglishWord": "Agency",
+    "ArabicWord": "وكالة",
+    "Category": "مؤسسات وشركات"
+  },
+  {
+    "Id": 926,
+    "EnglishWord": "Agent",
+    "ArabicWord": "وكيل",
+    "Category": "أشخاص ومهن"
+  },
+  {
+    "Id": 927,
+    "EnglishWord": "Aggressive",
+    "ArabicWord": "عدواني",
+    "Category": "صفات"
+  },
+  {
+    "Id": 928,
+    "EnglishWord": "Ago",
+    "ArabicWord": "منذ",
+    "Category": "ظروف وأزمان"
+  },
+  {
+    "Id": 929,
+    "EnglishWord": "Agree",
+    "ArabicWord": "يوافق",
+    "Category": "افعال وتواصل"
+  },
+  {
+    "Id": 930,
+    "EnglishWord": "Agriculture",
+    "ArabicWord": "زراعة",
+    "Category": "علوم وقطاعات"
+  },
+  {
+    "Id": 931,
+    "EnglishWord": "Ahead",
+    "ArabicWord": "في المقدمة",
+    "Category": "ظروف وأماكن"
+  },
+  {
+    "Id": 932,
+    "EnglishWord": "Aid",
+    "ArabicWord": "مساعدة",
+    "Category": "مساعدات وخدمات"
+  },
+  {
+    "Id": 933,
+    "EnglishWord": "Aim",
+    "ArabicWord": "هدف",
+    "Category": "أهداف وغايات"
+  },
+  {
+    "Id": 934,
+    "EnglishWord": "Air",
+    "ArabicWord": "هواء",
+    "Category": "طبيعة وعناصر"
+  },
+  {
+    "Id": 935,
+    "EnglishWord": "Aircraft",
+    "ArabicWord": "طائرة",
+    "Category": "وسائل نقل"
+  },
+  {
+    "Id": 936,
+    "EnglishWord": "Airline",
+    "ArabicWord": "خطوط جوية",
+    "Category": "مؤسسات وشركات"
+  },
+  {
+    "Id": 937,
+    "EnglishWord": "Airmail",
+    "ArabicWord": "بريد جوي",
+    "Category": "خدمات بريدية"
+  },
+  {
+    "Id": 938,
+    "EnglishWord": "Album",
+    "ArabicWord": "ألبوم",
+    "Category": "أسماء ومقتنيات"
+  },
+  {
+    "Id": 939,
+    "EnglishWord": "Alcohol",
+    "ArabicWord": "كحول",
+    "Category": "مواد ومواد كيماوية"
+  },
+  {
+    "Id": 940,
+    "EnglishWord": "Alert",
+    "ArabicWord": "تنبيه",
+    "Category": "أخطاء وتنبيهات"
+  },
+  {
+    "Id": 941,
+    "EnglishWord": "Alike",
+    "ArabicWord": "متشابه",
+    "Category": "صفات"
+  },
+  {
+    "Id": 942,
+    "EnglishWord": "Alive",
+    "ArabicWord": "على قيد الحياة",
+    "Category": "صفات وحالات"
+  },
+  {
+    "Id": 943,
+    "EnglishWord": "Alliance",
+    "ArabicWord": "تحالف",
+    "Category": "مؤسسات وعلاقات"
+  },
+  {
+    "Id": 944,
+    "EnglishWord": "Allow",
+    "ArabicWord": "يسمح",
+    "Category": "افعال"
+  },
+  {
+    "Id": 945,
+    "EnglishWord": "Ally",
+    "ArabicWord": "حليف",
+    "Category": "علاقات وأشخاص"
+  },
+  {
+    "Id": 946,
+    "EnglishWord": "Alone",
+    "ArabicWord": "وحيد",
+    "Category": "صفات وحالات"
+  },
+  {
+    "Id": 947,
+    "EnglishWord": "Along",
+    "ArabicWord": "على طول",
+    "Category": "ظروف وحروف جر"
+  },
+  {
+    "Id": 948,
+    "EnglishWord": "Aloud",
+    "ArabicWord": "بصوت عالٍ",
+    "Category": "ظروف وأحوال"
+  },
+  {
+    "Id": 949,
+    "EnglishWord": "Alphabet",
+    "ArabicWord": "أبجدية",
+    "Category": "لغة وعلوم"
+  },
+  {
+    "Id": 950,
+    "EnglishWord": "Alter",
+    "ArabicWord": "يغير",
+    "Category": "افعال"
+  },
+  {
+    "Id": 951,
+    "EnglishWord": "Alternative",
+    "ArabicWord": "بديل",
+    "Category": "خيارات وبدائل"
+  },
+  {
+    "Id": 952,
+    "EnglishWord": "Although",
+    "ArabicWord": "بالرغم من",
+    "Category": "أدوات ربط"
+  },
+  {
+    "Id": 953,
+    "EnglishWord": "Altogether",
+    "ArabicWord": "بشكل كامل",
+    "Category": "ظروف وأحوال"
+  },
+  {
+    "Id": 954,
+    "EnglishWord": "Amaze",
+    "ArabicWord": "يدهش",
+    "Category": "افعال ومشاعر"
+  },
+  {
+    "Id": 955,
+    "EnglishWord": "Ambassador",
+    "ArabicWord": "سفير",
+    "Category": "أشخاص ومناصب"
+  },
+  {
+    "Id": 956,
+    "EnglishWord": "Ambiguity",
+    "ArabicWord": "غموض",
+    "Category": "مفاهيم وصفات"
+  },
+  {
+    "Id": 957,
+    "EnglishWord": "Ambiguous",
+    "ArabicWord": "غامض",
+    "Category": "صفات"
+  },
+  {
+    "Id": 958,
+    "EnglishWord": "Ambition",
+    "ArabicWord": "طموح",
+    "Category": "مفاهيم وصفات"
+  },
+  {
+    "Id": 959,
+    "EnglishWord": "Amend",
+    "ArabicWord": "يعدل",
+    "Category": "افعال"
+  },
+  {
+    "Id": 960,
+    "EnglishWord": "Amendment",
+    "ArabicWord": "تعديل",
+    "Category": "أسماء ومصطلحات"
+  },
+  {
+    "Id": 961,
+    "EnglishWord": "Assure",
+    "ArabicWord": "يؤكد",
+    "Category": "افعال"
+  },
+  {
+    "Id": 962,
+    "EnglishWord": "Astonish",
+    "ArabicWord": "يدهش",
+    "Category": "افعال"
+  },
+  {
+    "Id": 963,
+    "EnglishWord": "Athlete",
+    "ArabicWord": "رياضي",
+    "Category": "أشخاص ومهن"
+  },
+  {
+    "Id": 964,
+    "EnglishWord": "Atmosphere",
+    "ArabicWord": "جو",
+    "Category": "بيئة وفضاء"
+  },
+  {
+    "Id": 965,
+    "EnglishWord": "Attach",
+    "ArabicWord": "يرفق",
+    "Category": "افعال"
+  },
+  {
+    "Id": 966,
+    "EnglishWord": "Attack",
+    "ArabicWord": "هجوم",
+    "Category": "افعال وأحداث"
+  },
+  {
+    "Id": 967,
+    "EnglishWord": "Attain",
+    "ArabicWord": "يحقق",
+    "Category": "افعال"
+  },
+  {
+    "Id": 968,
+    "EnglishWord": "Attempt",
+    "ArabicWord": "محاولة",
+    "Category": "افعال وأسماء"
+  },
+  {
+    "Id": 969,
+    "EnglishWord": "Attend",
+    "ArabicWord": "يحضر",
+    "Category": "افعال"
+  },
+  {
+    "Id": 970,
+    "EnglishWord": "Attention",
+    "ArabicWord": "انتباه",
+    "Category": "مفاهيم ومشاعر"
+  },
+  {
+    "Id": 971,
+    "EnglishWord": "Attitude",
+    "ArabicWord": "موقف",
+    "Category": "صفات ومواقف"
+  },
+  {
+    "Id": 972,
+    "EnglishWord": "Attract",
+    "ArabicWord": "يجذب",
+    "Category": "افعال"
+  },
+  {
+    "Id": 973,
+    "EnglishWord": "Attraction",
+    "ArabicWord": "جاذبية",
+    "Category": "مفاهيم وعلوم"
+  },
+  {
+    "Id": 974,
+    "EnglishWord": "Attractive",
+    "ArabicWord": "جذاب",
+    "Category": "صفات"
+  },
+  {
+    "Id": 975,
+    "EnglishWord": "Attribute",
+    "ArabicWord": "سمة",
+    "Category": "صفات وخصائص"
+  },
+  {
+    "Id": 976,
+    "EnglishWord": "Auction",
+    "ArabicWord": "مزاد",
+    "Category": "أعمال وأسماء"
+  },
+  {
+    "Id": 977,
+    "EnglishWord": "Audience",
+    "ArabicWord": "جمهور",
+    "Category": "أشخاص ومجموعات"
+  },
+  {
+    "Id": 978,
+    "EnglishWord": "August",
+    "ArabicWord": "أغسطس",
+    "Category": "أشهر وأزمان"
+  },
+  {
+    "Id": 979,
+    "EnglishWord": "Aunt",
+    "ArabicWord": "عمة / خالة",
+    "Category": "أقارب وعائلات"
+  },
+  {
+    "Id": 980,
+    "EnglishWord": "Author",
+    "ArabicWord": "مؤلف",
+    "Category": "أشخاص ومهن"
+  },
+  {
+    "Id": 981,
+    "EnglishWord": "Authority",
+    "ArabicWord": "سلطة",
+    "Category": "مؤسسات وسلطات"
+  },
+  {
+    "Id": 982,
+    "EnglishWord": "Authorize",
+    "ArabicWord": "يرخص",
+    "Category": "افعال"
+  },
+  {
+    "Id": 983,
+    "EnglishWord": "Auto",
+    "ArabicWord": "سيارة",
+    "Category": "وسائل نقل"
+  },
+  {
+    "Id": 984,
+    "EnglishWord": "Automatic",
+    "ArabicWord": "تلقائي",
+    "Category": "صفات"
+  },
+  {
+    "Id": 985,
+    "EnglishWord": "Autumn",
+    "ArabicWord": "خريف",
+    "Category": "فصول السنة"
+  },
+  {
+    "Id": 986,
+    "EnglishWord": "Available",
+    "ArabicWord": "متاح",
+    "Category": "صفات"
+  },
+  {
+    "Id": 987,
+    "EnglishWord": "Avenue",
+    "ArabicWord": "شارع",
+    "Category": "أماكن وطرق"
+  },
+  {
+    "Id": 988,
+    "EnglishWord": "Avoid",
+    "ArabicWord": "يتجنب",
+    "Category": "افعال"
+  },
+  {
+    "Id": 989,
+    "EnglishWord": "Await",
+    "ArabicWord": "ينتظر",
+    "Category": "افعال"
+  },
+  {
+    "Id": 990,
+    "EnglishWord": "Award",
+    "ArabicWord": "جائزة",
+    "Category": "أسماء ومكافآت"
+  },
+  {
+    "Id": 991,
+    "EnglishWord": "Aware",
+    "ArabicWord": "مدرك",
+    "Category": "صفات"
+  },
+  {
+    "Id": 992,
+    "EnglishWord": "Awareness",
+    "ArabicWord": "وعي",
+    "Category": "مفاهيم"
+  },
+  {
+    "Id": 993,
+    "EnglishWord": "Away",
+    "ArabicWord": "بعيداً",
+    "Category": "ظروف وأماكن"
+  },
+  {
+    "Id": 994,
+    "EnglishWord": "Awful",
+    "ArabicWord": "فظيع",
+    "Category": "صفات"
+  },
+  {
+    "Id": 995,
+    "EnglishWord": "Awkward",
+    "ArabicWord": "مُحرج",
+    "Category": "صفات"
+  },
+  {
+    "Id": 996,
+    "EnglishWord": "Bachelor",
+    "ArabicWord": "عازب",
+    "Category": "أشخاص وحالات"
+  },
+  {
+    "Id": 997,
+    "EnglishWord": "Background",
+    "ArabicWord": "خلفية",
+    "Category": "تصميم ومواضيع"
+  },
+  {
+    "Id": 998,
+    "EnglishWord": "Bacon",
+    "ArabicWord": "لحم خنزير مقدد",
+    "Category": "أطعمة"
+  },
+  {
+    "Id": 999,
+    "EnglishWord": "Badge",
+    "ArabicWord": "شارة",
+    "Category": "أسماء وأدوات"
+  },
+  {
+    "Id": 1000,
+    "EnglishWord": "Badly",
+    "ArabicWord": "بشكل سيء",
+    "Category": "ظروف وأحوال"
+  },
+  {
+    "Id": 1001,
+    "EnglishWord": "Baggage",
+    "ArabicWord": "امتعه",
+    "Category": "السفر والتنقل"
+  },
+  {
+    "Id": 1002,
+    "EnglishWord": "Bake",
+    "ArabicWord": "يخبز",
+    "Category": "الطعام والطبخ"
+  },
+  {
+    "Id": 1003,
+    "EnglishWord": "Baker",
+    "ArabicWord": "خباز",
+    "Category": "الطعام والطبخ"
+  },
+  {
+    "Id": 1004,
+    "EnglishWord": "Balance",
+    "ArabicWord": "توازن",
+    "Category": "التوازن والحياة"
+  },
+  {
+    "Id": 1005,
+    "EnglishWord": "Bald",
+    "ArabicWord": "اصلع",
+    "Category": "الصفات الشخصية"
+  },
+  {
+    "Id": 1006,
+    "EnglishWord": "Ballet",
+    "ArabicWord": "باليه",
+    "Category": "الفنون"
+  },
+  {
+    "Id": 1007,
+    "EnglishWord": "Balloon",
+    "ArabicWord": "بالون",
+    "Category": "الأشياء اليومية"
+  },
+  {
+    "Id": 1008,
+    "EnglishWord": "Ban",
+    "ArabicWord": "حظر",
+    "Category": "القوانين والأنظمة"
+  },
+  {
+    "Id": 1009,
+    "EnglishWord": "Band",
+    "ArabicWord": "فرقه/شريط",
+    "Category": "الموسيقى والأشياء"
+  },
+  {
+    "Id": 1010,
+    "EnglishWord": "Banker",
+    "ArabicWord": "مصرفي",
+    "Category": "المال والأعمال"
+  },
+  {
+    "Id": 1011,
+    "EnglishWord": "Bankruptcy",
+    "ArabicWord": "افلاس",
+    "Category": "المال والأعمال"
+  },
+  {
+    "Id": 1012,
+    "EnglishWord": "Bar",
+    "ArabicWord": "حانه/قضيب",
+    "Category": "أماكن وأشياء"
+  },
+  {
+    "Id": 1013,
+    "EnglishWord": "Barber",
+    "ArabicWord": "حلاق",
+    "Category": "المهن"
+  },
+  {
+    "Id": 1014,
+    "EnglishWord": "Bare",
+    "ArabicWord": "عاري",
+    "Category": "الصفات والحالات"
+  },
+  {
+    "Id": 1015,
+    "EnglishWord": "Barely",
+    "ArabicWord": "بالكاد",
+    "Category": "الكميات والدرجات"
+  },
+  {
+    "Id": 1016,
+    "EnglishWord": "Bargain",
+    "ArabicWord": "صفقه",
+    "Category": "التجارة والشراء"
+  },
+  {
+    "Id": 1017,
+    "EnglishWord": "Bark",
+    "ArabicWord": "ينبح",
+    "Category": "الحيوانات"
+  },
+  {
+    "Id": 1018,
+    "EnglishWord": "Barrel",
+    "ArabicWord": "برميل",
+    "Category": "الأشياء اليومية"
+  },
+  {
+    "Id": 1019,
+    "EnglishWord": "Base",
+    "ArabicWord": "قاعده",
+    "Category": "الأشكال والمواقع"
+  },
+  {
+    "Id": 1020,
+    "EnglishWord": "Baseball",
+    "ArabicWord": "بيسبول",
+    "Category": "الرياضة"
+  },
+  {
+    "Id": 1021,
+    "EnglishWord": "Basic",
+    "ArabicWord": "اساسي",
+    "Category": "الصفات العامة"
+  },
+  {
+    "Id": 1022,
+    "EnglishWord": "Basically",
+    "ArabicWord": "اساسا",
+    "Category": "الكلمات العامة"
+  },
+  {
+    "Id": 1023,
+    "EnglishWord": "Basin",
+    "ArabicWord": "حوض",
+    "Category": "المنزل والأدوات"
+  },
+  {
+    "Id": 1024,
+    "EnglishWord": "Basis",
+    "ArabicWord": "اساس",
+    "Category": "الأفكار والمفاهيم"
+  },
+  {
+    "Id": 1025,
+    "EnglishWord": "Basket",
+    "ArabicWord": "سله",
+    "Category": "الأشياء اليومية"
+  },
+  {
+    "Id": 1026,
+    "EnglishWord": "Basketball",
+    "ArabicWord": "كره سله",
+    "Category": "الرياضة"
+  },
+  {
+    "Id": 1027,
+    "EnglishWord": "Bat",
+    "ArabicWord": "مضرب/خفاش",
+    "Category": "الرياضة والحيوانات"
+  },
+  {
+    "Id": 1028,
+    "EnglishWord": "Bath",
+    "ArabicWord": "استحمام",
+    "Category": "النظافة والعناية الشخصية"
+  },
+  {
+    "Id": 1029,
+    "EnglishWord": "Battle",
+    "ArabicWord": "معركه",
+    "Category": "الحروب والصراعات"
+  },
+  {
+    "Id": 1030,
+    "EnglishWord": "Beam",
+    "ArabicWord": "شعاع",
+    "Category": "العلوم والطبيعة"
+  },
+  {
+    "Id": 1031,
+    "EnglishWord": "Bean",
+    "ArabicWord": "فاصوليا",
+    "Category": "الطعام"
+  },
+  {
+    "Id": 1032,
+    "EnglishWord": "Bear",
+    "ArabicWord": "دب/يتحمل",
+    "Category": "الحيوانات والصفات"
+  },
+  {
+    "Id": 1033,
+    "EnglishWord": "Beard",
+    "ArabicWord": "لحيه",
+    "Category": "الجسم والمظهر"
+  },
+  {
+    "Id": 1034,
+    "EnglishWord": "Beast",
+    "ArabicWord": "وحش",
+    "Category": "الحيوانات"
+  },
+  {
+    "Id": 1035,
+    "EnglishWord": "Beat",
+    "ArabicWord": "يهزم/ينبض",
+    "Category": "الافعال والحركة"
+  },
+  {
+    "Id": 1036,
+    "EnglishWord": "Beauty",
+    "ArabicWord": "جمال",
+    "Category": "الجمال والمظهر"
+  },
+  {
+    "Id": 1037,
+    "EnglishWord": "Because",
+    "ArabicWord": "بسبب",
+    "Category": "الكلمات العامة"
+  },
+  {
+    "Id": 1038,
+    "EnglishWord": "Become",
+    "ArabicWord": "يصبح",
+    "Category": "الافعال العامة"
+  },
+  {
+    "Id": 1039,
+    "EnglishWord": "Bee",
+    "ArabicWord": "نحله",
+    "Category": "الحيوانات"
+  },
+  {
+    "Id": 1040,
+    "EnglishWord": "Beef",
+    "ArabicWord": "لحم بقر",
+    "Category": "الطعام"
+  },
+  {
+    "Id": 1041,
+    "EnglishWord": "Beer",
+    "ArabicWord": "بيره",
+    "Category": "المشروبات"
+  },
+  {
+    "Id": 1042,
+    "EnglishWord": "Before",
+    "ArabicWord": "قبل",
+    "Category": "الزمن"
+  },
+  {
+    "Id": 1043,
+    "EnglishWord": "Beg",
+    "ArabicWord": "يتوسل",
+    "Category": "المشاعر والتصرفات"
+  },
+  {
+    "Id": 1044,
+    "EnglishWord": "Begg",
+    "ArabicWord": "شحاذ",
+    "Category": "الأشخاص والمهن"
+  },
+  {
+    "Id": 1045,
+    "EnglishWord": "Begin",
+    "ArabicWord": "يبدا",
+    "Category": "الافعال العامة"
+  },
+  {
+    "Id": 1046,
+    "EnglishWord": "Beginning",
+    "ArabicWord": "بدايه",
+    "Category": "الزمن والمراحل"
+  },
+  {
+    "Id": 1047,
+    "EnglishWord": "Behalf",
+    "ArabicWord": "نيابه عن",
+    "Category": "الكلمات العامة"
+  },
+  {
+    "Id": 1048,
+    "EnglishWord": "Behave",
+    "ArabicWord": "يتصرف",
+    "Category": "السلوك والتصرفات"
+  },
+  {
+    "Id": 1049,
+    "EnglishWord": "Behavior",
+    "ArabicWord": "سلوك",
+    "Category": "السلوك والتصرفات"
+  },
+  {
+    "Id": 1050,
+    "EnglishWord": "Being",
+    "ArabicWord": "كائن",
+    "Category": "الحياة والكائنات"
+  },
+  {
+    "Id": 1051,
+    "EnglishWord": "Belief",
+    "ArabicWord": "اعتقاد",
+    "Category": "الأفكار والمعتقدات"
+  },
+  {
+    "Id": 1052,
+    "EnglishWord": "Bench",
+    "ArabicWord": "مقعد",
+    "Category": "الأثاث والأشياء"
+  },
+  {
+    "Id": 1053,
+    "EnglishWord": "Bend",
+    "ArabicWord": "ينحني",
+    "Category": "الحركة والافعال"
+  },
+  {
+    "Id": 1054,
+    "EnglishWord": "Beneath",
+    "ArabicWord": "تحت",
+    "Category": "الاتجاهات والمواقع"
+  },
+  {
+    "Id": 1055,
+    "EnglishWord": "Benefit",
+    "ArabicWord": "فائده",
+    "Category": "الأعمال والحياة"
+  },
+  {
+    "Id": 1056,
+    "EnglishWord": "Bent",
+    "ArabicWord": "منحنٍ",
+    "Category": "الأشكال والحالات"
+  },
+  {
+    "Id": 1057,
+    "EnglishWord": "Berry",
+    "ArabicWord": "توت",
+    "Category": "الفواكه والطعام"
+  },
+  {
+    "Id": 1058,
+    "EnglishWord": "Besides",
+    "ArabicWord": "بالاضافه الى",
+    "Category": "الكلمات العامة"
+  },
+  {
+    "Id": 1059,
+    "EnglishWord": "Best",
+    "ArabicWord": "الافضل",
+    "Category": "المقارنة والصفات"
+  },
+  {
+    "Id": 1060,
+    "EnglishWord": "Bet",
+    "ArabicWord": "يراهن",
+    "Category": "الألعاب والمال"
+  },
+  {
+    "Id": 1061,
+    "EnglishWord": "Better",
+    "ArabicWord": "افضل",
+    "Category": "المقارنة والصفات"
+  },
+  {
+    "Id": 1062,
+    "EnglishWord": "Surface",
+    "ArabicWord": "سطح",
+    "Category": "الأشكال والمواقع"
+  },
+  {
+    "Id": 1063,
+    "EnglishWord": "Level",
+    "ArabicWord": "مستوى",
+    "Category": "المستويات والدرجات"
+  },
+  {
+    "Id": 1064,
+    "EnglishWord": "Grade",
+    "ArabicWord": "درجه",
+    "Category": "التعليم والتقييم"
+  },
+  {
+    "Id": 1065,
+    "EnglishWord": "Class",
+    "ArabicWord": "صف",
+    "Category": "التعليم"
+  },
+  {
+    "Id": 1066,
+    "EnglishWord": "Course",
+    "ArabicWord": "دوره",
+    "Category": "التعليم"
+  },
+  {
+    "Id": 1067,
+    "EnglishWord": "Lesson",
+    "ArabicWord": "درس",
+    "Category": "التعليم"
+  },
+  {
+    "Id": 1068,
+    "EnglishWord": "Subject",
+    "ArabicWord": "ماده دراسيه",
+    "Category": "التعليم"
+  },
+  {
+    "Id": 1069,
+    "EnglishWord": "Mathematics",
+    "ArabicWord": "رياضيات",
+    "Category": "العلوم والدراسة"
+  },
+  {
+    "Id": 1070,
+    "EnglishWord": "History",
+    "ArabicWord": "تاريخ",
+    "Category": "العلوم والدراسة"
+  },
+  {
+    "Id": 1071,
+    "EnglishWord": "Geography",
+    "ArabicWord": "جغرافيا",
+    "Category": "العلوم والدراسة"
+  },
+  {
+    "Id": 1072,
+    "EnglishWord": "Language",
+    "ArabicWord": "لغه",
+    "Category": "اللغات والتواصل"
+  },
+  {
+    "Id": 1073,
+    "EnglishWord": "Grammar",
+    "ArabicWord": "قواعد",
+    "Category": "اللغات والتواصل"
+  },
+  {
+    "Id": 1074,
+    "EnglishWord": "Vocabulary",
+    "ArabicWord": "مفردات",
+    "Category": "اللغات والتواصل"
+  },
+  {
+    "Id": 1075,
+    "EnglishWord": "Sentence",
+    "ArabicWord": "جمله",
+    "Category": "اللغات والتواصل"
+  },
+  {
+    "Id": 1076,
+    "EnglishWord": "Word",
+    "ArabicWord": "كلمه",
+    "Category": "اللغات والتواصل"
+  },
+  {
+    "Id": 1077,
+    "EnglishWord": "Spelling",
+    "ArabicWord": "املاء",
+    "Category": "اللغات والتواصل"
+  },
+  {
+    "Id": 1078,
+    "EnglishWord": "Pronunciation",
+    "ArabicWord": "نطق",
+    "Category": "اللغات والتواصل"
+  },
+  {
+    "Id": 1079,
+    "EnglishWord": "Accent",
+    "ArabicWord": "لهجه",
+    "Category": "اللغات والتواصل"
+  },
+  {
+    "Id": 1080,
+    "EnglishWord": "Translation",
+    "ArabicWord": "ترجمه",
+    "Category": "اللغات والتواصل"
+  },
+  {
+    "Id": 1081,
+    "EnglishWord": "Meaning",
+    "ArabicWord": "معنى",
+    "Category": "اللغات والتواصل"
+  },
+  {
+    "Id": 1082,
+    "EnglishWord": "Definition",
+    "ArabicWord": "تعريف",
+    "Category": "اللغات والتواصل"
+  },
+  {
+    "Id": 1083,
+    "EnglishWord": "Example",
+    "ArabicWord": "مثال",
+    "Category": "التعلم والمعرفة"
+  },
+  {
+    "Id": 1084,
+    "EnglishWord": "Question",
+    "ArabicWord": "سؤال",
+    "Category": "التعلم والمعرفة"
+  },
+  {
+    "Id": 1085,
+    "EnglishWord": "Intelligence",
+    "ArabicWord": "ذكاء",
+    "Category": "العقل والقدرات"
+  },
+  {
+    "Id": 1086,
+    "EnglishWord": "Smart",
+    "ArabicWord": "ذكي",
+    "Category": "العقل والقدرات"
+  },
+  {
+    "Id": 1087,
+    "EnglishWord": "Stupid",
+    "ArabicWord": "غبي",
+    "Category": "العقل والقدرات"
+  },
+  {
+    "Id": 1088,
+    "EnglishWord": "Clever",
+    "ArabicWord": "ذكي",
+    "Category": "العقل والقدرات"
+  },
+  {
+    "Id": 1089,
+    "EnglishWord": "Wise",
+    "ArabicWord": "حكيم",
+    "Category": "العقل والقدرات"
+  },
+  {
+    "Id": 1090,
+    "EnglishWord": "Foolish",
+    "ArabicWord": "احمق",
+    "Category": "العقل والقدرات"
+  },
+  {
+    "Id": 1091,
+    "EnglishWord": "Careful",
+    "ArabicWord": "حذر",
+    "Category": "الصفات الشخصية"
+  },
+  {
+    "Id": 1092,
+    "EnglishWord": "Careless",
+    "ArabicWord": "مهمل",
+    "Category": "الصفات الشخصية"
+  },
+  {
+    "Id": 1093,
+    "EnglishWord": "Focus",
+    "ArabicWord": "تركيز",
+    "Category": "العقل والتفكير"
+  },
+  {
+    "Id": 1094,
+    "EnglishWord": "Concentrate",
+    "ArabicWord": "يركز",
+    "Category": "العقل والتفكير"
+  },
+  {
+    "Id": 1095,
+    "EnglishWord": "Distract",
+    "ArabicWord": "يشتت",
+    "Category": "العقل والتفكير"
+  },
+  {
+    "Id": 1096,
+    "EnglishWord": "Interest",
+    "ArabicWord": "اهتمام",
+    "Category": "المشاعر والاهتمامات"
+  },
+  {
+    "Id": 1097,
+    "EnglishWord": "Boring",
+    "ArabicWord": "ممل",
+    "Category": "المشاعر والصفات"
+  },
+  {
+    "Id": 1098,
+    "EnglishWord": "Silent",
+    "ArabicWord": "صامت",
+    "Category": "الأصوات والتواصل"
+  },
+  {
+    "Id": 1099,
+    "EnglishWord": "Noise",
+    "ArabicWord": "ضوضاء",
+    "Category": "الأصوات والتواصل"
+  },
+  {
+    "Id": 1100,
+    "EnglishWord": "Sing",
+    "ArabicWord": "يغني",
+    "Category": "الفنون والموسيقى"
+  },
+  {
+    "Id": 1101,
+    "EnglishWord": "Paint",
+    "ArabicWord": "يرسم/يدهن",
+    "Category": "الفنون والإبداع"
+  },
+  {
+    "Id": 1102,
+    "EnglishWord": "Draw",
+    "ArabicWord": "يرسم",
+    "Category": "الفنون والإبداع"
+  },
+  {
+    "Id": 1103,
+    "EnglishWord": "Stage",
+    "ArabicWord": "خشبه المسرح",
+    "Category": "الفنون والمسرح"
+  },
+  {
+    "Id": 1104,
+    "EnglishWord": "Actor",
+    "ArabicWord": "ممثل",
+    "Category": "الفنون والمسرح"
+  },
+  {
+    "Id": 1105,
+    "EnglishWord": "Actress",
+    "ArabicWord": "ممثله",
+    "Category": "الفنون والمسرح"
+  },
+  {
+    "Id": 1106,
+    "EnglishWord": "Director",
+    "ArabicWord": "مخرج",
+    "Category": "الفنون والمسرح"
+  },
+  {
+    "Id": 1107,
+    "EnglishWord": "Applaud",
+    "ArabicWord": "يصفق",
+    "Category": "الفنون والمسرح"
+  },
+  {
+    "Id": 1108,
+    "EnglishWord": "Performance",
+    "ArabicWord": "اداء",
+    "Category": "الفنون والمسرح"
+  },
+  {
+    "Id": 1109,
+    "EnglishWord": "Review",
+    "ArabicWord": "مراجعه/نقد",
+    "Category": "الإعلام والتقييم"
+  },
+  {
+    "Id": 1110,
+    "EnglishWord": "Famous",
+    "ArabicWord": "مشهور",
+    "Category": "الشخصية والمجتمع"
+  },
+  {
+    "Id": 1111,
+    "EnglishWord": "Popular",
+    "ArabicWord": "شائع/محبوب",
+    "Category": "الشخصية والمجتمع"
+  },
+  {
+    "Id": 1112,
+    "EnglishWord": "Celebrity",
+    "ArabicWord": "شخص مشهور",
+    "Category": "الشخصية والمجتمع"
+  },
+  {
+    "Id": 1113,
+    "EnglishWord": "Fan",
+    "ArabicWord": "معجب",
+    "Category": "الشخصية والمجتمع"
+  },
+  {
+    "Id": 1114,
+    "EnglishWord": "Score",
+    "ArabicWord": "نتيجه/يسجل",
+    "Category": "الرياضة والمنافسة"
+  },
+  {
+    "Id": 1115,
+    "EnglishWord": "Race",
+    "ArabicWord": "سباق",
+    "Category": "الرياضة والمنافسة"
+  },
+  {
+    "Id": 1116,
+    "EnglishWord": "Jump",
+    "ArabicWord": "يقفز",
+    "Category": "الحركة والرياضة"
+  },
+  {
+    "Id": 1117,
+    "EnglishWord": "Swim",
+    "ArabicWord": "يسبح",
+    "Category": "الحركة والرياضة"
+  },
+  {
+    "Id": 1118,
+    "EnglishWord": "Climb",
+    "ArabicWord": "يتسلق",
+    "Category": "الحركة والرياضة"
+  },
+  {
+    "Id": 1119,
+    "EnglishWord": "Exercise",
+    "ArabicWord": "يتمرن",
+    "Category": "الصحة والرياضة"
+  },
+  {
+    "Id": 1120,
+    "EnglishWord": "Gym",
+    "ArabicWord": "نادي رياضي",
+    "Category": "الصحة والرياضة"
+  },
+  {
+    "Id": 1121,
+    "EnglishWord": "Fit",
+    "ArabicWord": "لياقه",
+    "Category": "الصحة والرياضة"
+  },
+  {
+    "Id": 1122,
+    "EnglishWord": "Wake",
+    "ArabicWord": "يستيقظ",
+    "Category": "الحياة اليومية"
+  },
+  {
+    "Id": 1123,
+    "EnglishWord": "Daily",
+    "ArabicWord": "يومي",
+    "Category": "الزمن والعادات"
+  },
+  {
+    "Id": 1124,
+    "EnglishWord": "Routine",
+    "ArabicWord": "روتين",
+    "Category": "الزمن والعادات"
+  },
+  {
+    "Id": 1125,
+    "EnglishWord": "Habit",
+    "ArabicWord": "عاده",
+    "Category": "الزمن والعادات"
+  },
+  {
+    "Id": 1126,
+    "EnglishWord": "Activity",
+    "ArabicWord": "نشاط",
+    "Category": "الحياة اليومية"
+  },
+  {
+    "Id": 1127,
+    "EnglishWord": "Experience",
+    "ArabicWord": "خبره",
+    "Category": "التعلم والتطوير"
+  },
+  {
+    "Id": 1128,
+    "EnglishWord": "Skill",
+    "ArabicWord": "مهاره",
+    "Category": "التعلم والتطوير"
+  },
+  {
+    "Id": 1129,
+    "EnglishWord": "Talent",
+    "ArabicWord": "موهبه",
+    "Category": "القدرات والمواهب"
+  },
+  {
+    "Id": 1130,
+    "EnglishWord": "Practice",
+    "ArabicWord": "ممارسه",
+    "Category": "التعلم والتطوير"
+  },
+  {
+    "Id": 1131,
+    "EnglishWord": "Modern",
+    "ArabicWord": "حديث",
+    "Category": "الزمن والتطور"
+  },
+  {
+    "Id": 1132,
+    "EnglishWord": "Ancient",
+    "ArabicWord": "قديم",
+    "Category": "التاريخ والزمن"
+  },
+  {
+    "Id": 1133,
+    "EnglishWord": "Change",
+    "ArabicWord": "تغيير",
+    "Category": "التطور والتغيير"
+  },
+  {
+    "Id": 1134,
+    "EnglishWord": "Progress",
+    "ArabicWord": "تقدم",
+    "Category": "التطور والتغيير"
+  },
+  {
+    "Id": 1135,
+    "EnglishWord": "Development",
+    "ArabicWord": "تطوير",
+    "Category": "التطور والتغيير"
+  },
+  {
+    "Id": 1136,
+    "EnglishWord": "Improve",
+    "ArabicWord": "يحسن",
+    "Category": "التطور والتغيير"
+  },
+  {
+    "Id": 1137,
+    "EnglishWord": "Growth",
+    "ArabicWord": "نمو",
+    "Category": "التطور والتغيير"
+  },
+  {
+    "Id": 1138,
+    "EnglishWord": "Decrease",
+    "ArabicWord": "نقصان",
+    "Category": "الكميات والمقارنة"
+  },
+  {
+    "Id": 1139,
+    "EnglishWord": "Increase",
+    "ArabicWord": "زياده",
+    "Category": "الكميات والمقارنة"
+  },
+  {
+    "Id": 1140,
+    "EnglishWord": "Amount",
+    "ArabicWord": "كميه",
+    "Category": "الكميات والمقارنة"
+  },
+  {
+    "Id": 1141,
+    "EnglishWord": "Least",
+    "ArabicWord": "الاقل",
+    "Category": "الكميات والمقارنة"
+  },
+  {
+    "Id": 1142,
+    "EnglishWord": "Charger",
+    "ArabicWord": "شاحن",
+    "Category": "التقنية والأجهزة"
+  },
+  {
+    "Id": 1143,
+    "EnglishWord": "Education",
+    "ArabicWord": "تعليم",
+    "Category": "التعليم"
+  },
+  {
+    "Id": 1144,
+    "EnglishWord": "College",
+    "ArabicWord": "كليه",
+    "Category": "التعليم"
+  },
+  {
+    "Id": 1145,
+    "EnglishWord": "University",
+    "ArabicWord": "جامعه",
+    "Category": "التعليم"
+  },
+  {
+    "Id": 1146,
+    "EnglishWord": "Professor",
+    "ArabicWord": "استاذ جامعي",
+    "Category": "التعليم"
+  },
+  {
+    "Id": 1147,
+    "EnglishWord": "Principal",
+    "ArabicWord": "مدير مدرسه",
+    "Category": "التعليم"
+  },
+  {
+    "Id": 1148,
+    "EnglishWord": "Degree",
+    "ArabicWord": "درجه علميه",
+    "Category": "التعليم"
+  },
+  {
+    "Id": 1149,
+    "EnglishWord": "Diploma",
+    "ArabicWord": "دبلوم",
+    "Category": "التعليم"
+  },
+  {
+    "Id": 1150,
+    "EnglishWord": "Exam",
+    "ArabicWord": "امتحان",
+    "Category": "التعليم"
+  },
+  {
+    "Id": 1151,
+    "EnglishWord": "Pass",
+    "ArabicWord": "ينجح",
+    "Category": "التعليم والاختبارات"
+  },
+  {
+    "Id": 1152,
+    "EnglishWord": "Fail",
+    "ArabicWord": "يرسب",
+    "Category": "التعليم والاختبارات"
+  },
+  {
+    "Id": 1153,
+    "EnglishWord": "Textbook",
+    "ArabicWord": "كتاب مدرسي",
+    "Category": "التعليم والأدوات الدراسية"
+  },
+  {
+    "Id": 1154,
+    "EnglishWord": "Notebook",
+    "ArabicWord": "دفتر",
+    "Category": "التعليم والأدوات الدراسية"
+  },
+  {
+    "Id": 1155,
+    "EnglishWord": "Pencil",
+    "ArabicWord": "قلم رصاص",
+    "Category": "التعليم والأدوات الدراسية"
+  },
+  {
+    "Id": 1156,
+    "EnglishWord": "Eraser",
+    "ArabicWord": "ممحاه",
+    "Category": "التعليم والأدوات الدراسية"
+  },
+  {
+    "Id": 1157,
+    "EnglishWord": "Ruler",
+    "ArabicWord": "مسطره",
+    "Category": "التعليم والأدوات الدراسية"
+  },
+  {
+    "Id": 1158,
+    "EnglishWord": "Homework",
+    "ArabicWord": "واجب منزلي",
+    "Category": "التعليم والأدوات الدراسية"
+  },
+  {
+    "Id": 1159,
+    "EnglishWord": "Schedule",
+    "ArabicWord": "جدول",
+    "Category": "التنظيم والتخطيط"
+  },
+  {
+    "Id": 1160,
+    "EnglishWord": "Math",
+    "ArabicWord": "رياضيات",
+    "Category": "العلوم والدراسة"
+  },
+  {
+    "Id": 1161,
+    "EnglishWord": "Reading",
+    "ArabicWord": "قراءه",
+    "Category": "مهارات اللغة"
+  },
+  {
+    "Id": 1162,
+    "EnglishWord": "Writing",
+    "ArabicWord": "كتابه",
+    "Category": "مهارات اللغة"
+  },
+  {
+    "Id": 1163,
+    "EnglishWord": "Speaking",
+    "ArabicWord": "تحدث",
+    "Category": "مهارات اللغة"
+  },
+  {
+    "Id": 1164,
+    "EnglishWord": "Listening",
+    "ArabicWord": "استماع",
+    "Category": "مهارات اللغة"
+  },
+  {
+    "Id": 1165,
+    "EnglishWord": "Conversation",
+    "ArabicWord": "محادثه",
+    "Category": "مهارات اللغة"
+  },
+  {
+    "Id": 1166,
+    "EnglishWord": "Mistake",
+    "ArabicWord": "خطا",
+    "Category": "التعلم والتطوير"
+  },
+  {
+    "Id": 1167,
+    "EnglishWord": "Correction",
+    "ArabicWord": "تصحيح",
+    "Category": "التعلم والتطوير"
+  },
+  {
+    "Id": 1168,
+    "EnglishWord": "Improvement",
+    "ArabicWord": "تحسن",
+    "Category": "التعلم والتطوير"
+  },
+  {
+    "Id": 1169,
+    "EnglishWord": "Ability",
+    "ArabicWord": "قدره",
+    "Category": "القدرات والمهارات"
+  },
+  {
+    "Id": 1170,
+    "EnglishWord": "Creative",
+    "ArabicWord": "مبدع",
+    "Category": "القدرات والمهارات"
+  },
+  {
+    "Id": 1171,
+    "EnglishWord": "Original",
+    "ArabicWord": "اصلي",
+    "Category": "الصفات والمقارنة"
+  },
+  {
+    "Id": 1172,
+    "EnglishWord": "Common",
+    "ArabicWord": "شائع",
+    "Category": "الصفات والمقارنة"
+  },
+  {
+    "Id": 1173,
+    "EnglishWord": "Rare",
+    "ArabicWord": "نادر",
+    "Category": "الصفات والمقارنة"
+  },
+  {
+    "Id": 1174,
+    "EnglishWord": "Unique",
+    "ArabicWord": "فريد",
+    "Category": "الصفات والمقارنة"
+  },
+  {
+    "Id": 1175,
+    "EnglishWord": "Special",
+    "ArabicWord": "خاص",
+    "Category": "الصفات والمقارنة"
+  },
+  {
+    "Id": 1176,
+    "EnglishWord": "Normal",
+    "ArabicWord": "طبيعي",
+    "Category": "الصفات والمقارنة"
+  },
+  {
+    "Id": 1177,
+    "EnglishWord": "Strange",
+    "ArabicWord": "غريب",
+    "Category": "الصفات والمقارنة"
+  },
+  {
+    "Id": 1178,
+    "EnglishWord": "Weekly",
+    "ArabicWord": "اسبوعي",
+    "Category": "الزمن"
+  },
+  {
+    "Id": 1179,
+    "EnglishWord": "Monthly",
+    "ArabicWord": "شهري",
+    "Category": "الزمن"
+  },
+  {
+    "Id": 1180,
+    "EnglishWord": "Yearly",
+    "ArabicWord": "سنوي",
+    "Category": "الزمن"
+  },
+  {
+    "Id": 1181,
+    "EnglishWord": "Meeting",
+    "ArabicWord": "اجتماع",
+    "Category": "العمل والتواصل"
+  },
+  {
+    "Id": 1182,
+    "EnglishWord": "Arrange",
+    "ArabicWord": "يرتب",
+    "Category": "التنظيم والتخطيط"
+  },
+  {
+    "Id": 1183,
+    "EnglishWord": "Arrangement",
+    "ArabicWord": "ترتيب",
+    "Category": "التنظيم والتخطيط"
+  },
+  {
+    "Id": 1184,
+    "EnglishWord": "Arrest",
+    "ArabicWord": "يعتقل",
+    "Category": "القانون والجريمة"
+  },
+  {
+    "Id": 1185,
+    "EnglishWord": "Arrival",
+    "ArabicWord": "وصول",
+    "Category": "السفر والتنقل"
+  },
+  {
+    "Id": 1186,
+    "EnglishWord": "Arrow",
+    "ArabicWord": "سهم",
+    "Category": "الأشياء والأدوات"
+  },
+  {
+    "Id": 1187,
+    "EnglishWord": "Article",
+    "ArabicWord": "مقاله",
+    "Category": "الكتابة والإعلام"
+  },
+  {
+    "Id": 1188,
+    "EnglishWord": "Artificial",
+    "ArabicWord": "صناعي",
+    "Category": "العلوم والتقنية"
+  },
+  {
+    "Id": 1189,
+    "EnglishWord": "Artist",
+    "ArabicWord": "فنان",
+    "Category": "الفنون والإبداع"
+  },
+  {
+    "Id": 1190,
+    "EnglishWord": "Artistic",
+    "ArabicWord": "فني",
+    "Category": "الفنون والإبداع"
+  },
+  {
+    "Id": 1191,
+    "EnglishWord": "Ashamed",
+    "ArabicWord": "خجلان",
+    "Category": "المشاعر"
+  },
+  {
+    "Id": 1192,
+    "EnglishWord": "Aside",
+    "ArabicWord": "جانبا",
+    "Category": "الاتجاهات والمواقع"
+  },
+  {
+    "Id": 1193,
+    "EnglishWord": "Asleep",
+    "ArabicWord": "نائم",
+    "Category": "الحياة اليومية"
+  },
+  {
+    "Id": 1194,
+    "EnglishWord": "Aspect",
+    "ArabicWord": "جانب",
+    "Category": "الأفكار والمفاهيم"
+  },
+  {
+    "Id": 1195,
+    "EnglishWord": "Assembly",
+    "ArabicWord": "تجمع",
+    "Category": "المجتمع والتواصل"
+  },
+  {
+    "Id": 1196,
+    "EnglishWord": "Assess",
+    "ArabicWord": "يقيّم",
+    "Category": "التقييم والتعليم"
+  },
+  {
+    "Id": 1197,
+    "EnglishWord": "Assessment",
+    "ArabicWord": "تقييم",
+    "Category": "التقييم والتعليم"
+  },
+  {
+    "Id": 1198,
+    "EnglishWord": "Asset",
+    "ArabicWord": "اصل/ميزه",
+    "Category": "المال والأعمال"
+  },
+  {
+    "Id": 1199,
+    "EnglishWord": "Assign",
+    "ArabicWord": "يعين/يكلف",
+    "Category": "العمل والتنظيم"
+  },
+  {
+    "Id": 1200,
+    "EnglishWord": "Assignment",
+    "ArabicWord": "مهمه",
+    "Category": "العمل والتعليم"
+  },
+  {
+    "Id": 1201,
+    "EnglishWord": "Assist",
+    "ArabicWord": "يساعد",
+    "Category": "مساعدة وتعاون"
+  },
+  {
+    "Id": 1202,
+    "EnglishWord": "Assistance",
+    "ArabicWord": "مساعده",
+    "Category": "مساعدة وتعاون"
+  },
+  {
+    "Id": 1203,
+    "EnglishWord": "Associate",
+    "ArabicWord": "يربط/شريك",
+    "Category": "علاقات وشراكات"
+  },
+  {
+    "Id": 1204,
+    "EnglishWord": "Association",
+    "ArabicWord": "جمعيه",
+    "Category": "مجتمع ومنظمات"
+  },
+  {
+    "Id": 1205,
+    "EnglishWord": "Assume",
+    "ArabicWord": "يفترض",
+    "Category": "تفكير وافتراضات"
+  },
+  {
+    "Id": 1206,
+    "EnglishWord": "Assumption",
+    "ArabicWord": "افتراض",
+    "Category": "تفكير وافتراضات"
+  },
+  {
+    "Id": 1207,
+    "EnglishWord": "Audit",
+    "ArabicWord": "تدقيق حسابات",
+    "Category": "مال وأعمال"
+  },
+  {
+    "Id": 1208,
+    "EnglishWord": "Audition",
+    "ArabicWord": "اختبار اداء",
+    "Category": "فن وترفيه"
+  },
+  {
+    "Id": 1209,
+    "EnglishWord": "Breast",
+    "ArabicWord": "صدر",
+    "Category": "جسم الإنسان"
+  },
+  {
+    "Id": 1210,
+    "EnglishWord": "Breath",
+    "ArabicWord": "نفس",
+    "Category": "جسم وصحة"
+  },
+  {
+    "Id": 1211,
+    "EnglishWord": "Breathe",
+    "ArabicWord": "يتنفس",
+    "Category": "جسم وصحة"
+  },
+  {
+    "Id": 1212,
+    "EnglishWord": "Breed",
+    "ArabicWord": "سلاله/يربي",
+    "Category": "حيوانات وطبيعة"
+  },
+  {
+    "Id": 1213,
+    "EnglishWord": "Breeze",
+    "ArabicWord": "نسيم",
+    "Category": "الطقس والطبيعة"
+  },
+  {
+    "Id": 1214,
+    "EnglishWord": "Brick",
+    "ArabicWord": "طوب",
+    "Category": "بناء ومواد"
+  },
+  {
+    "Id": 1215,
+    "EnglishWord": "Bride",
+    "ArabicWord": "عروس",
+    "Category": "عائلة ومناسبات"
+  },
+  {
+    "Id": 1216,
+    "EnglishWord": "Brief",
+    "ArabicWord": "موجز",
+    "Category": "وصف وأفكار"
+  },
+  {
+    "Id": 1217,
+    "EnglishWord": "Briefly",
+    "ArabicWord": "بايجاز",
+    "Category": "وصف وأفكار"
+  },
+  {
+    "Id": 1218,
+    "EnglishWord": "Bright",
+    "ArabicWord": "لامع",
+    "Category": "صفات"
+  },
+  {
+    "Id": 1219,
+    "EnglishWord": "Brilliant",
+    "ArabicWord": "عبقري/متالق",
+    "Category": "صفات وقدرات"
+  },
+  {
+    "Id": 1220,
+    "EnglishWord": "Bring",
+    "ArabicWord": "يحضر",
+    "Category": "افعال يومية"
+  },
+  {
+    "Id": 1221,
+    "EnglishWord": "Broad",
+    "ArabicWord": "عريض",
+    "Category": "صفات وأحجام"
+  },
+  {
+    "Id": 1222,
+    "EnglishWord": "Broadcast",
+    "ArabicWord": "بث",
+    "Category": "إعلام وتقنية"
+  },
+  {
+    "Id": 1223,
+    "EnglishWord": "Broken",
+    "ArabicWord": "مكسور",
+    "Category": "حالات ووصف"
+  },
+  {
+    "Id": 1224,
+    "EnglishWord": "Bronze",
+    "ArabicWord": "برونز",
+    "Category": "معادن وألوان"
+  },
+  {
+    "Id": 1225,
+    "EnglishWord": "Brow",
+    "ArabicWord": "حاجب",
+    "Category": "جسم الإنسان"
+  },
+  {
+    "Id": 1226,
+    "EnglishWord": "Bubble",
+    "ArabicWord": "فقاعه",
+    "Category": "أشياء يومية"
+  },
+  {
+    "Id": 1227,
+    "EnglishWord": "Bucket",
+    "ArabicWord": "دلو",
+    "Category": "أدوات منزلية"
+  },
+  {
+    "Id": 1228,
+    "EnglishWord": "Budget",
+    "ArabicWord": "ميزانيه",
+    "Category": "مال وأعمال"
+  },
+  {
+    "Id": 1229,
+    "EnglishWord": "Build",
+    "ArabicWord": "يبني",
+    "Category": "بناء وأعمال"
+  },
+  {
+    "Id": 1230,
+    "EnglishWord": "Bullet",
+    "ArabicWord": "رصاصه",
+    "Category": "أشياء وأدوات"
+  },
+  {
+    "Id": 1231,
+    "EnglishWord": "Bunch",
+    "ArabicWord": "حزمه",
+    "Category": "كميات وأشكال"
+  },
+  {
+    "Id": 1232,
+    "EnglishWord": "Burden",
+    "ArabicWord": "عبء",
+    "Category": "مشاعر وحالات"
+  },
+  {
+    "Id": 1233,
+    "EnglishWord": "Bureau",
+    "ArabicWord": "مكتب",
+    "Category": "أماكن وأعمال"
+  },
+  {
+    "Id": 1234,
+    "EnglishWord": "Burn",
+    "ArabicWord": "يحرق",
+    "Category": "افعال"
+  },
+  {
+    "Id": 1235,
+    "EnglishWord": "Burst",
+    "ArabicWord": "ينفجر",
+    "Category": "افعال وحوادث"
+  },
+  {
+    "Id": 1236,
+    "EnglishWord": "Bury",
+    "ArabicWord": "يدفن",
+    "Category": "افعال"
+  },
+  {
+    "Id": 1237,
+    "EnglishWord": "Bush",
+    "ArabicWord": "شجيره",
+    "Category": "نباتات وطبيعة"
+  },
+  {
+    "Id": 1238,
+    "EnglishWord": "Busy",
+    "ArabicWord": "مشغول",
+    "Category": "صفات وحالات"
+  },
+  {
+    "Id": 1239,
+    "EnglishWord": "Butcher",
+    "ArabicWord": "جزار",
+    "Category": "مهن"
+  },
+  {
+    "Id": 1240,
+    "EnglishWord": "Butter",
+    "ArabicWord": "زبده",
+    "Category": "طعام"
+  },
+  {
+    "Id": 1241,
+    "EnglishWord": "Butterfly",
+    "ArabicWord": "فراشه",
+    "Category": "حيوانات وطبيعة"
+  },
+  {
+    "Id": 1242,
+    "EnglishWord": "Cab",
+    "ArabicWord": "سياره اجره",
+    "Category": "مواصلات"
+  },
+  {
+    "Id": 1243,
+    "EnglishWord": "Cabin",
+    "ArabicWord": "كوخ/مقصوره",
+    "Category": "أماكن ومساكن"
+  },
+  {
+    "Id": 1244,
+    "EnglishWord": "Cabinet",
+    "ArabicWord": "خزانه/مجلس وزراء",
+    "Category": "أثاث وحكومة"
+  },
+  {
+    "Id": 1245,
+    "EnglishWord": "Cage",
+    "ArabicWord": "قفس",
+    "Category": "حيوانات وأدوات"
+  },
+  {
+    "Id": 1246,
+    "EnglishWord": "Cake",
+    "ArabicWord": "كعكه",
+    "Category": "طعام وحلويات"
+  },
+  {
+    "Id": 1247,
+    "EnglishWord": "Calculation",
+    "ArabicWord": "حساب",
+    "Category": "رياضيات وتعليم"
+  },
+  {
+    "Id": 1248,
+    "EnglishWord": "Calendar",
+    "ArabicWord": "تقويم",
+    "Category": "وقت وتنظيم"
+  },
+  {
+    "Id": 1249,
+    "EnglishWord": "Camp",
+    "ArabicWord": "مخيم",
+    "Category": "أماكن ورحلات"
+  },
+  {
+    "Id": 1250,
+    "EnglishWord": "Campaign",
+    "ArabicWord": "حمله",
+    "Category": "أعمال ومجتمع"
+  },
+  {
+    "Id": 1251,
+    "EnglishWord": "Campus",
+    "ArabicWord": "حرم جامعي",
+    "Category": "تعليم"
+  },
+  {
+    "Id": 1252,
+    "EnglishWord": "Canal",
+    "ArabicWord": "قناه",
+    "Category": "أماكن وطبيعة"
+  },
+  {
+    "Id": 1253,
+    "EnglishWord": "Cancel",
+    "ArabicWord": "يلغي",
+    "Category": "افعال"
+  },
+  {
+    "Id": 1254,
+    "EnglishWord": "Cancer",
+    "ArabicWord": "سرطان",
+    "Category": "صحة وطب"
+  },
+  {
+    "Id": 1255,
+    "EnglishWord": "Candidate",
+    "ArabicWord": "مرشح",
+    "Category": "مجتمع وسياسة"
+  },
+  {
+    "Id": 1256,
+    "EnglishWord": "Candy",
+    "ArabicWord": "حلوى",
+    "Category": "طعام وحلويات"
+  },
+  {
+    "Id": 1257,
+    "EnglishWord": "Canvas",
+    "ArabicWord": "قماش كنفا",
+    "Category": "مواد وفنون"
+  },
+  {
+    "Id": 1258,
+    "EnglishWord": "Cap",
+    "ArabicWord": "قبعه",
+    "Category": "ملابس"
+  },
+  {
+    "Id": 1259,
+    "EnglishWord": "Capable",
+    "ArabicWord": "قادر",
+    "Category": "صفات وقدرات"
+  },
+  {
+    "Id": 1260,
+    "EnglishWord": "Capacity",
+    "ArabicWord": "سعه",
+    "Category": "قياس وكميات"
+  },
+  {
+    "Id": 1261,
+    "EnglishWord": "Cape",
+    "ArabicWord": "راس (جغرافي)",
+    "Category": "جغرافيا وطبيعة"
+  },
+  {
+    "Id": 1262,
+    "EnglishWord": "Capital",
+    "ArabicWord": "عاصمه/راس مال",
+    "Category": "مال وجغرافيا"
+  },
+  {
+    "Id": 1263,
+    "EnglishWord": "Capture",
+    "ArabicWord": "يلتقط",
+    "Category": "افعال"
+  },
+  {
+    "Id": 1264,
+    "EnglishWord": "Carbon",
+    "ArabicWord": "كربون",
+    "Category": "علوم ومواد"
+  },
+  {
+    "Id": 1265,
+    "EnglishWord": "Care",
+    "ArabicWord": "عنايه/يهتم",
+    "Category": "مشاعر وعلاقات"
+  },
+  {
+    "Id": 1266,
+    "EnglishWord": "Cargo",
+    "ArabicWord": "شحن",
+    "Category": "نقل وتجارة"
+  },
+  {
+    "Id": 1267,
+    "EnglishWord": "Carpenter",
+    "ArabicWord": "نجار",
+    "Category": "مهن"
+  },
+  {
+    "Id": 1268,
+    "EnglishWord": "Carpet",
+    "ArabicWord": "سجاده",
+    "Category": "أدوات منزلية"
+  },
+  {
+    "Id": 1269,
+    "EnglishWord": "Carriage",
+    "ArabicWord": "عربه",
+    "Category": "مواصلات"
+  },
+  {
+    "Id": 1270,
+    "EnglishWord": "Carrier",
+    "ArabicWord": "ناقل",
+    "Category": "نقل وأعمال"
+  },
+  {
+    "Id": 1271,
+    "EnglishWord": "Cart",
+    "ArabicWord": "عربه",
+    "Category": "مواصلات وأدوات"
+  },
+  {
+    "Id": 1272,
+    "EnglishWord": "Carve",
+    "ArabicWord": "ينحت",
+    "Category": "فنون وحرف"
+  },
+  {
+    "Id": 1273,
+    "EnglishWord": "Case",
+    "ArabicWord": "حاله/قضيه",
+    "Category": "حالات وقضايا"
+  },
+  {
+    "Id": 1274,
+    "EnglishWord": "Cash",
+    "ArabicWord": "نقد",
+    "Category": "مال"
+  },
+  {
+    "Id": 1275,
+    "EnglishWord": "Cassette",
+    "ArabicWord": "كاسيت",
+    "Category": "تقنية وإعلام"
+  },
+  {
+    "Id": 1276,
+    "EnglishWord": "Celebrate",
+    "ArabicWord": "يحتفل",
+    "Category": "مناسبات"
+  },
+  {
+    "Id": 1277,
+    "EnglishWord": "Celebration",
+    "ArabicWord": "احتفال",
+    "Category": "مناسبات"
+  },
+  {
+    "Id": 1278,
+    "EnglishWord": "Cell",
+    "ArabicWord": "خليه",
+    "Category": "علوم"
+  },
+  {
+    "Id": 1279,
+    "EnglishWord": "Cellar",
+    "ArabicWord": "قبو",
+    "Category": "أماكن"
+  },
+  {
+    "Id": 1280,
+    "EnglishWord": "Cement",
+    "ArabicWord": "اسمنت",
+    "Category": "بناء ومواد"
+  },
+  {
+    "Id": 1281,
+    "EnglishWord": "Cemetery",
+    "ArabicWord": "مقبره",
+    "Category": "أماكن"
+  },
+  {
+    "Id": 1282,
+    "EnglishWord": "Censor",
+    "ArabicWord": "رقيب",
+    "Category": "مجتمع وإعلام"
+  },
+  {
+    "Id": 1283,
+    "EnglishWord": "Census",
+    "ArabicWord": "تعداد سكاني",
+    "Category": "مجتمع وإحصاء"
+  },
+  {
+    "Id": 1284,
+    "EnglishWord": "Central",
+    "ArabicWord": "مركزي",
+    "Category": "صفات ومواقع"
+  },
+  {
+    "Id": 1285,
+    "EnglishWord": "Century",
+    "ArabicWord": "قرن",
+    "Category": "وقت وتاريخ"
+  },
+  {
+    "Id": 1286,
+    "EnglishWord": "Ceremony",
+    "ArabicWord": "مراسم",
+    "Category": "مناسبات"
+  },
+  {
+    "Id": 1287,
+    "EnglishWord": "Certain",
+    "ArabicWord": "مؤكد",
+    "Category": "صفات وحالات"
+  },
+  {
+    "Id": 1288,
+    "EnglishWord": "Certificate",
+    "ArabicWord": "شهاده",
+    "Category": "تعليم ووثائق"
+  },
+  {
+    "Id": 1289,
+    "EnglishWord": "Chain",
+    "ArabicWord": "سلسله",
+    "Category": "أشياء وأدوات"
+  },
+  {
+    "Id": 1290,
+    "EnglishWord": "Chairman",
+    "ArabicWord": "رئيس مجلس اداره",
+    "Category": "إدارة وأعمال"
+  },
+  {
+    "Id": 1291,
+    "EnglishWord": "Chalk",
+    "ArabicWord": "طباشير",
+    "Category": "تعليم وأدوات"
+  },
+  {
+    "Id": 1292,
+    "EnglishWord": "Challenge",
+    "ArabicWord": "تحدي",
+    "Category": "تحديات ونجاح"
+  },
+  {
+    "Id": 1293,
+    "EnglishWord": "Chamber",
+    "ArabicWord": "غرفه/حجره",
+    "Category": "أماكن"
+  },
+  {
+    "Id": 1294,
+    "EnglishWord": "Champion",
+    "ArabicWord": "بطل",
+    "Category": "رياضة ونجاح"
+  },
+  {
+    "Id": 1295,
+    "EnglishWord": "Championship",
+    "ArabicWord": "بطوله",
+    "Category": "رياضة"
+  },
+  {
+    "Id": 1296,
+    "EnglishWord": "Chapter",
+    "ArabicWord": "فصل (في كتاب)",
+    "Category": "تعليم وكتب"
+  },
+  {
+    "Id": 1297,
+    "EnglishWord": "Character",
+    "ArabicWord": "شخصيه",
+    "Category": "صفات وشخصيات"
+  },
+  {
+    "Id": 1298,
+    "EnglishWord": "Characteristic",
+    "ArabicWord": "سمه",
+    "Category": "صفات"
+  },
+  {
+    "Id": 1299,
+    "EnglishWord": "Charcoal",
+    "ArabicWord": "فحم",
+    "Category": "مواد وطبيعة"
+  },
+  {
+    "Id": 1300,
+    "EnglishWord": "Charge",
+    "ArabicWord": "تهمه/يشحن",
+    "Category": "مال وتقنية"
+  }
+]
