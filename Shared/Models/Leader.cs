@@ -1,4 +1,4 @@
-﻿namespace Shared.Models
+namespace Shared.Models
 {
     public class Leader
     {
@@ -7,6 +7,7 @@
         public string? TimeFinalExam { get; set; }
 
         public int MemorizedWords { get; set; }
+        public long Coins { get; set; }
 
         public int Rank { get; set; }
 
