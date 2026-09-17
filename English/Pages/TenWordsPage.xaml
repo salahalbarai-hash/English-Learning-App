@@ -28,7 +28,8 @@
                     <!-- الأرقام (اليمين) -->
                     <HorizontalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="4">
                         <Label Text="{Binding MemorizedWordsCount}" TextColor="#38BDF8" FontSize="18" FontFamily="CairoBold" VerticalOptions="Center"/>
-                        <Label Text="/ 1000" TextColor="#64748B" FontSize="14" FontFamily="CairoBold" VerticalOptions="Center" Margin="0,2,0,0"/>
+                        <Label Text="/" TextColor="#64748B" FontSize="14" FontFamily="CairoBold" VerticalOptions="Center" Margin="0,2,0,0"/>
+                        <Label Text="{Binding CurrentGoal}" TextColor="#64748B" FontSize="14" FontFamily="CairoBold" VerticalOptions="Center" Margin="0,2,0,0"/>
                     </HorizontalStackLayout>
                     
                     <!-- الكوينز (اليسار) -->

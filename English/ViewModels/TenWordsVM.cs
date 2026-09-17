@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using English.Models;
 using English.Services;
 using System;
@@ -12,6 +12,9 @@ namespace English.ViewModels
 
         [ObservableProperty]
         private long memorizedWordsCount;
+
+        [ObservableProperty]
+        private long currentGoal;
 
         [ObservableProperty]
         private string progressStatus;
@@ -37,8 +40,14 @@ namespace English.ViewModels
 
         private void UpdateProgressWidth(long count)
         {
+            CurrentGoal = 1000;
+            if (count >= 1000) CurrentGoal = 2000;
+            if (count >= 2000) CurrentGoal = 3000;
+            if (count >= 3000) CurrentGoal = 4000;
+            if (count >= 4000) CurrentGoal = 5000;
+
             double maxWidth = 220;
-            double ratio = Math.Clamp(count / 1000.0, 0, 1);
+            double ratio = Math.Clamp((double)count / CurrentGoal, 0, 1);
             ProgressWidth = ratio * maxWidth;
         }
 
@@ -46,15 +55,15 @@ namespace English.ViewModels
         {
             double maxWidth = 220;
 
-            double ratio = Math.Clamp(count / 1000.0, 0, 1);
+            double ratio = Math.Clamp(count / 5000.0, 0, 1);
             ProgressWidth = ratio * maxWidth;
-            if (count >= 1000)
+            if (count >= 5000)
             {
                 ProgressStatus = "أسطوري! فككت شفرة اللغة بنجاح! 👑";
                 return;
             }
 
-            int phaseIndex = Math.Min(count / 200, Phases.Length - 1);
+            int phaseIndex = Math.Min(count / 1000, Phases.Length - 1);
             var phase = Phases[phaseIndex];
 
             int level = count / 10;
