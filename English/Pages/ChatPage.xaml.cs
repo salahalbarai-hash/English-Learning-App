@@ -8,7 +8,7 @@ namespace English.Pages;
 [QueryProperty(nameof(FriendName), "FriendName")]
 public partial class ChatPage : ContentPage
 {
-    private bool _ignoreNextTap = false;
+    private volatile bool _ignoreNextTap = false;
     private string _friendName = "";
     public string FriendName
     {
@@ -403,11 +403,12 @@ public partial class ChatPage : ContentPage
 
         if (!IsSelectionModeActive)
         {
+            // تحديد الرسالة أولاً قبل تفعيل وضع التحديد
+            // هذا يضمن أن selectedCount > 0 عند استدعاء UpdateSelectionUI
+            msg.IsSelected = true;
+
             // الدخول في وضع التحديد
             IsSelectionModeActive = true;
-
-            // تحديد الرسالة التي تم الضغط عليها مطولاً
-            msg.IsSelected = true;
         }
         else
         {
@@ -615,7 +616,14 @@ public partial class ChatPage : ContentPage
                 if (savedMsgs != null && Messages.Count == 0)
                 {
                     Messages.Clear();
-                    foreach (var msg in savedMsgs) Messages.Add(msg);
+                    foreach (var msg in savedMsgs)
+                    {
+                        // يجب تعيين الـ Actions يدوياً لأن JsonIgnore يمنع حفظها
+                        msg.OnTappedAction = OnMessageTappedCommand;
+                        msg.OnLongPressedAction = OnMessageLongPressedCommand;
+                        msg.IsSelectionMode = IsSelectionModeActive;
+                        Messages.Add(msg);
+                    }
                     ScrollToBottom();
                 }
             }
