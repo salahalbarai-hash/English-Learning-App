@@ -43,7 +43,7 @@
                 </Grid>
 
                 <!-- الوصف -->
-                <Label Text="استمتع بألعاب تعليمية ممتعة لتطوير مهاراتك في اللغة الإنجليزية" FontSize="12" FontFamily="CairoRegular" FontAttributes="Bold" TextColor="#94A3B8" HorizontalTextAlignment="Center" LineBreakMode="WordWrap"/>
+                <Label Text="استمتع بتحديات تعليمية ممتعة لتطوير مهاراتك في اللغة الإنجليزية" FontSize="12" FontFamily="CairoRegular" FontAttributes="Bold" TextColor="#94A3B8" HorizontalTextAlignment="Center" LineBreakMode="WordWrap"/>
 
             </VerticalStackLayout>
         </Border>
