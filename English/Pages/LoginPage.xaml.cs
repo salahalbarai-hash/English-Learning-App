@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Alerts;
 using English.Models;
 using English.Services;
 
@@ -89,6 +89,8 @@ public partial class LoginPage : ContentPage
         Preferences.Set("Day", "0");
         Preferences.Set("ImagesDownloaded", false);
         Preferences.Set("MemorizedWords", user.MemorizedWords);
+        Preferences.Set("Coins", user.Coins);
+        Preferences.Set("FriendsChallengeCount", user.FriendsChallengeCount);
     }
 
     private async Task LoginSuccess(string username)

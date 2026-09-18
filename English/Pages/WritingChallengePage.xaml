@@ -86,14 +86,14 @@
                         <VerticalStackLayout Spacing="8">
                             <Label Text="عدد الأسئلة:" FontSize="13" FontFamily="CairoRegular" TextColor="#94A3B8"/>
                             <Border BackgroundColor="#0B1320" Stroke="#1E293B" StrokeThickness="1" StrokeShape="RoundRectangle 12" Padding="14,2">
-                                <Entry x:Name="WordsCountEntry" Text="10" Keyboard="Numeric" TextColor="White" FontFamily="CairoBold" FontSize="16" BackgroundColor="Transparent"/>
+                                <Entry x:Name="WordsCountEntry" Text="10" IsReadOnly="True" Keyboard="Numeric" TextColor="#64748B" FontFamily="CairoBold" FontSize="16" BackgroundColor="Transparent"/>
                             </Border>
                         </VerticalStackLayout>
 
                         <VerticalStackLayout Spacing="8">
                             <Label Text="الزمن لكل سؤال (ثواني):" FontSize="13" FontFamily="CairoRegular" TextColor="#94A3B8"/>
                             <Border BackgroundColor="#0B1320" Stroke="#1E293B" StrokeThickness="1" StrokeShape="RoundRectangle 12" Padding="14,2">
-                                <Entry x:Name="TimePerQuestionEntry" Text="10" Keyboard="Numeric" TextColor="White" FontFamily="CairoBold" FontSize="16" BackgroundColor="Transparent"/>
+                                <Entry x:Name="TimePerQuestionEntry" Text="10" IsReadOnly="True" Keyboard="Numeric" TextColor="#64748B" FontFamily="CairoBold" FontSize="16" BackgroundColor="Transparent"/>
                             </Border>
                         </VerticalStackLayout>
                     </VerticalStackLayout>

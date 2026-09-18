@@ -12,7 +12,7 @@ public partial class WritingChallengePage : ContentPage
 
     private class WritingGamePayload
     {
-        public List<WritingQuestionItem> Questions { get; set; } = new();
+        public List<WritingQuestionItem> Questions { get; set; } = [];
         public int TimePerQuestion { get; set; }
     }
 
@@ -277,7 +277,19 @@ public partial class WritingChallengePage : ContentPage
 
                 if (myFriends == null || myFriends.Count == 0)
                 {
-                    await DisplayAlert("عذراً", "ليس لديك أصدقاء مضافين حالياً لتحديهم. قم بإضافة أصدقاء أولاً!", "حسناً");
+                    await Toast.Make("ليس لديك أصدقاء مضافين حتى الآن.").Show();
+                    return;
+                }
+
+                if (Application.Current?.MainPage is AppShell appShellForOnline)
+                {
+                    var onlineUsers = await appShellForOnline.GetOnlineUsersAsync() ?? new List<string>();
+                    myFriends = myFriends.Where(f => onlineUsers.Contains(f, StringComparer.OrdinalIgnoreCase)).ToList();
+                }
+
+                if (myFriends.Count == 0)
+                {
+                    await Toast.Make("لا يوجد أي صديق متصل حالياً لتحديه.").Show();
                     return;
                 }
 
