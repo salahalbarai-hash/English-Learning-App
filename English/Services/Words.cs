@@ -1,4 +1,4 @@
-﻿using English.Models;
+using English.Models;
 using Microsoft.Maui.Storage;
 using Newtonsoft.Json.Linq;
 using System;
@@ -12,14 +12,23 @@ namespace English.Services
     {
         private static readonly string FilePath = Path.Combine(FileSystem.AppDataDirectory, "LockFile.json");
 
-        public static List<WordModel> Tag(string tag)
+        public static async Task<List<WordModel>> TagAsync(string tag)
         {
-            if (!File.Exists(FilePath))
+            JObject lockData;
+            try
             {
-                File.WriteAllText(FilePath, "{}");
-            }
+                if (!File.Exists(FilePath))
+                {
+                    await File.WriteAllTextAsync(FilePath, "{}");
+                }
 
-            var lockData = JObject.Parse(File.ReadAllText(FilePath));
+                var fileContent = await File.ReadAllTextAsync(FilePath);
+                lockData = JObject.Parse(fileContent);
+            }
+            catch
+            {
+                lockData = new JObject();
+            }
 
             var words = new List<WordModel>
             {
@@ -72,11 +81,19 @@ namespace English.Services
             return words.Where(w => w.Tag == tag).ToList();
         }
 
-        public static bool AllValuesAreFalse()
+        public static async Task<bool> AllValuesAreFalseAsync()
         {
-            if (!File.Exists(FilePath)) return true;
-            var lockData = JObject.Parse(File.ReadAllText(FilePath));
-            return lockData.Properties().Where(p => p.Value.Type == JTokenType.Boolean).All(p => !p.Value.Value<bool>());
+            try
+            {
+                if (!File.Exists(FilePath)) return true;
+                var content = await File.ReadAllTextAsync(FilePath);
+                var lockData = JObject.Parse(content);
+                return lockData.Properties().Where(p => p.Value.Type == JTokenType.Boolean).All(p => !p.Value.Value<bool>());
+            }
+            catch
+            {
+                return true;
+            }
         }
     }
 }

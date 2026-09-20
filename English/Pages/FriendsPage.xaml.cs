@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -74,8 +75,8 @@ public class FriendItem : INotifyPropertyChanged
 
 public partial class FriendsPage : ContentPage
 {
-    private List<OnlineUserItem> _onlineUserItems = new();
-    private List<FriendItem> _friendItems = new();
+    private ObservableCollection<OnlineUserItem> _onlineUserItems = new();
+    private ObservableCollection<FriendItem> _friendItems = new();
 
     private List<string> _onlineUsers = new();
     private List<string> _friends = new();
@@ -235,23 +236,29 @@ public partial class FriendsPage : ContentPage
                         && !_sentRequests.Contains(user, StringComparer.OrdinalIgnoreCase))
             .ToList();
 
-        _onlineUserItems = availableOnlineUsers.Select(user => new OnlineUserItem
+        _onlineUserItems.Clear();
+        foreach (var user in availableOnlineUsers)
         {
-            Name = user,
-            ButtonText = "إضافة ➕",
-            IsButtonEnabled = true,
-            ButtonBgColor = Color.FromArgb("#6366F1")
-        }).ToList();
+            _onlineUserItems.Add(new OnlineUserItem
+            {
+                Name = user,
+                ButtonText = "إضافة ➕",
+                IsButtonEnabled = true,
+                ButtonBgColor = Color.FromArgb("#6366F1")
+            });
+        }
 
-        _friendItems = _friends.Select(friend => {
+        _friendItems.Clear();
+        foreach (var friend in _friends)
+        {
             bool isOnline = _onlineUsers.Contains(friend, StringComparer.OrdinalIgnoreCase);
-            return new FriendItem
+            _friendItems.Add(new FriendItem
             {
                 Name = friend,
                 StatusIcon = isOnline ? "🟢" : "🔴",
                 IsOnline = isOnline
-            };
-        }).ToList();
+            });
+        }
 
         RefreshUI();
     }
@@ -300,18 +307,22 @@ public partial class FriendsPage : ContentPage
                 friend.IsOnline = false;
             }
 
-            _onlineUserItems.RemoveAll(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
+            var itemsToRemove = _onlineUserItems.Where(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase)).ToList();
+            foreach (var item in itemsToRemove)
+            {
+                _onlineUserItems.Remove(item);
+            }
             RefreshUI();
         });
     }
 
     private void RefreshUI()
     {
-        OnlineUsersList.ItemsSource = null;
-        OnlineUsersList.ItemsSource = _onlineUserItems;
+        if (OnlineUsersList.ItemsSource != _onlineUserItems)
+            OnlineUsersList.ItemsSource = _onlineUserItems;
 
-        FriendsList.ItemsSource = null;
-        FriendsList.ItemsSource = _friendItems;
+        if (FriendsList.ItemsSource != _friendItems)
+            FriendsList.ItemsSource = _friendItems;
 
         OnSearchTextChanged(SearchBox, new TextChangedEventArgs(string.Empty, SearchBox.Text));
     }

@@ -31,7 +31,7 @@ public partial class LoginPage : ContentPage
             SetBusy(true);
 
             // التحقق من تسجيل سابق محلي
-            if (IsLocalUserValid(username, password))
+            if (await IsLocalUserValidAsync(username, password))
             {
                 await LoginSuccess(username);
                 return;
@@ -56,7 +56,7 @@ public partial class LoginPage : ContentPage
                 return;
             }
             User user = result.Data!;
-            SaveUserPreferences(user);
+            await SaveUserPreferencesAsync(user);
             await LoginSuccess(user.UserName!);
         }
         catch (Exception ex)
@@ -69,19 +69,20 @@ public partial class LoginPage : ContentPage
         }
     }
 
-    private bool IsLocalUserValid(string username, string password)
+    private async Task<bool> IsLocalUserValidAsync(string username, string password)
     {
         if (!Preferences.ContainsKey("UserName")) return false;
 
+        var storedPassword = await SecureStorage.GetAsync("Password") ?? "";
         return Preferences.Get("UserName", "") == username &&
-               Preferences.Get("Password", "") == password;
+               storedPassword == password;
     }
 
-    private void SaveUserPreferences(User user)
+    private async Task SaveUserPreferencesAsync(User user)
     {
         Preferences.Set("ID", user.ID.ToString());
         Preferences.Set("UserName", user.UserName);
-        Preferences.Set("Password", user.Password);
+        await SecureStorage.SetAsync("Password", user.Password ?? "");
         Preferences.Set("PhoneNumber", user.PhoneNumber);
         Preferences.Set("YER", user.YER);
         Preferences.Set("TimeFinalExam", user.TimeFinalExam);

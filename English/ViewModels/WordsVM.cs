@@ -1,4 +1,4 @@
-﻿using English.Models;
+using English.Models;
 using English.Services;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +10,10 @@ namespace English.ViewModels
     {
         public List<WordModel> Titles { get; set; } = new List<WordModel>();
 
-        public WordsVM()
+        public async Task LoadAsync()
         {
             // جلب الكلمات حسب المجموعة الحالية
-            var words = Words.Tag(GlobalVariables.CurrentGroup);
+            var words = await Words.TagAsync(GlobalVariables.CurrentGroup);
 
             Titles.AddRange(words.Select(title =>
             {

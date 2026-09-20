@@ -57,7 +57,7 @@
                 FontSize="16"
                 Clicked="FindLearningVideo_Clicked"/>
 
-        <!-- Video (MediaElement instead of WebView) -->
+        <!-- Video (YouTube embed via WebView) -->
         <Border Grid.Row="2"
                 BackgroundColor="Black"
                 StrokeThickness="0"

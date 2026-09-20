@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using English.Services;
 using English.ViewModels;
@@ -12,10 +12,15 @@ public partial class GroupPage : ContentPage
     public GroupPage()
     {
         InitializeComponent();
-        BindingContext = vm = new WordsVM();
-        // إعداد الإعلانات
-        //InterstitialAd.isAdShowing = false;
-        //RewardedAd.isAdShowing = false;
+        vm = new WordsVM();
+        BindingContext = vm;
+        // إعداد غير متزامن لتحميل الكلمات
+        _ = InitAsync();
+    }
+
+    private async Task InitAsync()
+    {
+        await vm.LoadAsync();
     }
 
     /// <summary>
@@ -90,7 +95,7 @@ public partial class GroupPage : ContentPage
     /// <summary>
     /// تبديل لغة الكلمة عند الضغط
     /// </summary>
-    private void OnWordLanguageTapped(object sender, TappedEventArgs e)
+    private async void OnWordLanguageTapped(object sender, TappedEventArgs e)
     {
         if (ActivityIndicator.IsRunning)
             return;
@@ -104,7 +109,8 @@ public partial class GroupPage : ContentPage
         // تعيين الكلمة الإنجليزية إذا كانت مجهولة
         if (wordModel.EnglishWord == "?")
         {
-            wordModel.EnglishWord = Words.Tag(GlobalVariables.CurrentGroup)
+            var words = await Words.TagAsync(GlobalVariables.CurrentGroup);
+            wordModel.EnglishWord = words
                 .FirstOrDefault(i => i.ArabicWord == titleLbl.ClassId)?.EnglishWord;
         }
 

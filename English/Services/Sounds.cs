@@ -1,4 +1,4 @@
-﻿using Plugin.Maui.Audio;
+using Plugin.Maui.Audio;
 using System;
 
 namespace English.Models
@@ -34,6 +34,11 @@ namespace English.Models
                 var stream = await FileSystem.OpenAppPackageFileAsync(fileName);
                 var player = AudioManager.Current.CreatePlayer(stream);
 
+                player.PlaybackEnded += (s, e) =>
+                {
+                    player.Dispose();
+                    stream.Dispose();
+                };
                 player.Play();
             }
             catch (Exception ex)

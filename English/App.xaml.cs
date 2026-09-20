@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace English
 {
@@ -20,6 +20,7 @@ namespace English
             else
             {
                 SetPreferences();
+                SaveJsonFileIfNotExists();
                 return new Window(new LoginPage());
             }
         }

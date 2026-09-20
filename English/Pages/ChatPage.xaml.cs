@@ -196,7 +196,7 @@ public partial class ChatPage : ContentPage
     {
         try
         {
-            var lastSeen = await _shell?.GetLastSeenAsync(FriendName);
+            var lastSeen = _shell != null ? await _shell.GetLastSeenAsync(FriendName) : null;
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
@@ -606,13 +606,15 @@ public partial class ChatPage : ContentPage
 
     private void LoadOfflineMessages()
     {
-        string cacheKey = $"ChatHistory_{FriendName}";
-        var json = Preferences.Get(cacheKey, string.Empty);
-        if (!string.IsNullOrEmpty(json))
+        string filePath = Path.Combine(FileSystem.AppDataDirectory, $"chat_{FriendName}.json");
+        if (!File.Exists(filePath)) return;
+
+        try
         {
-            try
+            var json = File.ReadAllText(filePath);
+            if (!string.IsNullOrEmpty(json))
             {
-                var savedMsgs = JsonSerializer.Deserialize<ObservableCollection<ChatBubbleModel>>(json);
+                var savedMsgs = JsonSerializer.Deserialize<List<ChatBubbleModel>>(json);
                 if (savedMsgs != null && Messages.Count == 0)
                 {
                     Messages.Clear();
@@ -627,14 +629,18 @@ public partial class ChatPage : ContentPage
                     ScrollToBottom();
                 }
             }
-            catch { }
         }
+        catch { }
     }
 
     private void SaveMessagesOffline()
     {
-        string cacheKey = $"ChatHistory_{FriendName}";
-        string json = JsonSerializer.Serialize(Messages);
-        Preferences.Set(cacheKey, json);
+        try
+        {
+            string filePath = Path.Combine(FileSystem.AppDataDirectory, $"chat_{FriendName}.json");
+            string json = JsonSerializer.Serialize(Messages);
+            File.WriteAllText(filePath, json);
+        }
+        catch { }
     }
 }

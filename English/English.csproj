@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net9.0-android</TargetFramework>
 
@@ -16,7 +16,7 @@
 
 		<SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
 
-		<RuntimeIdentifiers>android-arm;</RuntimeIdentifiers> <!-- android-arm;android-arm64;android-x64 -->
+
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)' == 'Release|net9.0-android'">
@@ -86,7 +86,7 @@
 		<PackageReference Include="SkiaSharp" Version="3.119.1" />
 		<PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="2.0.0" />
 		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.9" />
-		<PackageReference Include="YoutubeExplode" Version="6.6.0" />
+		
 	</ItemGroup>
 
 	<ItemGroup>

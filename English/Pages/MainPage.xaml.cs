@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Alerts;
 using English.Services;
 
 namespace English.Pages;
@@ -21,7 +21,7 @@ public partial class MainPage : ContentPage
         {
             GlobalVariables.CurrentTitle = "Final Exam";
 
-            if (Words.AllValuesAreFalse())
+            if (await Words.AllValuesAreFalseAsync())
                 await Navigation.PushModalAsync(new ExamPage());
             else
                 await Toast.Make("يجب إكمال جميع المجموعات").Show();

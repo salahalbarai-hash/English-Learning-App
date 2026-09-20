@@ -270,18 +270,21 @@ namespace English
                             }
                             else if (category == "تحدي الخيارات")
                             {
-                                await Current!.Navigation.PushModalAsync(new ChoiceChallengePage());
+                                if (Current != null)
+                                    await Current.Navigation.PushModalAsync(new ChoiceChallengePage());
                             }
                             else
                             {
-                                await Current!.Navigation.PushModalAsync(new DuelGamePage(
-                                    _gameHub.HubConnection, roomName, currentUserName, responderName, category, isFirstPlayer: true));
+                                if (Current != null)
+                                    await Current.Navigation.PushModalAsync(new DuelGamePage(
+                                        _gameHub.HubConnection, roomName, currentUserName, responderName, category, isFirstPlayer: true));
                             }
                         }
                     }
                     else
                     {
-                        await Current!.DisplayAlert("اعتذار", $"{responderName} اعتذر أو رفض التحدي حالياً.", "حسناً");
+                        if (Current != null)
+                            await Current.DisplayAlert("اعتذار", $"{responderName} اعتذر أو رفض التحدي حالياً.", "حسناً");
                     }
                 });
             };

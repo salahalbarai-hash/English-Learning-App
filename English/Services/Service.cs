@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System.Net;
@@ -360,9 +360,19 @@ namespace English.Services
         // Helpers
         // ========================
 
+        private static RestClient? _restClient;
+        private static string? _lastApiUrl;
+
         private static RestClient CreateClient()
         {
-            return new RestClient(new RestClientOptions(ApiUrl));
+            var currentUrl = ApiUrl;
+            if (_restClient == null || _lastApiUrl != currentUrl)
+            {
+                _restClient?.Dispose();
+                _restClient = new RestClient(new RestClientOptions(currentUrl));
+                _lastApiUrl = currentUrl;
+            }
+            return _restClient;
         }
 
         // The CreateRequest helper was removed. Use `new RestRequest(endpoint, method)` directly.
