@@ -391,7 +391,11 @@ public partial class FriendsPage : ContentPage
                 await appShell.SendFriendRequestAsync(targetUser);
             }
 
-            _onlineUserItems.RemoveAll(u => u.Name.Equals(targetUser, StringComparison.OrdinalIgnoreCase));
+            var itemToRemove = _onlineUserItems.FirstOrDefault(u => u.Name.Equals(targetUser, StringComparison.OrdinalIgnoreCase));
+            if (itemToRemove != null)
+            {
+                _onlineUserItems.Remove(itemToRemove);
+            }
 
             // إضافة المستخدم لطلبات الصداقة المرسلة وحفظها محلياً
             if (!_sentRequests.Contains(targetUser, StringComparer.OrdinalIgnoreCase))
