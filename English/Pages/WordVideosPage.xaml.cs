@@ -1,6 +1,5 @@
 using System.Text.Json;
 using CommunityToolkit.Maui.Alerts;
-using YoutubeExplode;
 
 namespace English.Pages;
 
@@ -114,12 +113,30 @@ https://www.youtube.com/watch?v=VIDEO_ID
                 await Toast.Make("تعذر جلب رابط الفيديو").Show();
                 return;
             }
-            var streamUrl = await Get360StreamUrl(videoUrl);
 
-            if (!string.IsNullOrEmpty(streamUrl))
+            // Extract Video ID from https://www.youtube.com/watch?v=VIDEO_ID
+            string videoId = string.Empty;
+            if (videoUrl.Contains("watch?v="))
             {
-                VideoPlayer.Source = streamUrl;
-                VideoPlayer.Play();
+                var parts = videoUrl.Split("watch?v=");
+                if (parts.Length > 1)
+                {
+                    videoId = parts[1].Split('&')[0];
+                }
+            }
+            else if (videoUrl.Contains("youtu.be/"))
+            {
+                var parts = videoUrl.Split("youtu.be/");
+                if (parts.Length > 1)
+                {
+                    videoId = parts[1].Split('?')[0];
+                }
+            }
+
+            if (!string.IsNullOrEmpty(videoId))
+            {
+                string embedUrl = $"https://www.youtube.com/embed/{videoId}?autoplay=1";
+                VideoWebView.Source = embedUrl;
             }
             else
             {
@@ -137,33 +154,6 @@ https://www.youtube.com/watch?v=VIDEO_ID
         }
     }
 
-    private async Task<string?> Get360StreamUrl(string videoUrl)
-    {
-        try
-        {
-            var youtube = new YoutubeClient();
-
-            var video = await youtube.Videos.GetAsync(videoUrl);
-
-            var manifest = await youtube.Videos.Streams.GetManifestAsync(video.Id);
-
-            var stream = manifest
-                .GetMuxedStreams()
-                .Where(x => x.VideoQuality.MaxHeight <= 360)
-                .OrderByDescending(x => x.VideoQuality.MaxHeight)
-                .FirstOrDefault()
-                ?? manifest.GetMuxedStreams()
-                    .OrderByDescending(x => x.VideoQuality.MaxHeight)
-                    .FirstOrDefault();
-
-            return stream?.Url;
-        }
-        catch(Exception ex)
-        {
-            string errorMessage = ex.Message;
-            return null;
-        }
-    }
 }
 
 public class SearchVideoAsyncResult

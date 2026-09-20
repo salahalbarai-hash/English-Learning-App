@@ -63,11 +63,9 @@
                 StrokeThickness="0"
                 StrokeShape="RoundRectangle 25">
 
-            <toolkit:MediaElement x:Name="VideoPlayer"
-                                  ShouldAutoPlay="True"
-                                  Aspect="AspectFit"
-                                  HorizontalOptions="Fill"
-                                  VerticalOptions="Fill" />
+            <WebView x:Name="VideoWebView"
+                     HorizontalOptions="Fill"
+                     VerticalOptions="Fill" />
 
         </Border>
 
