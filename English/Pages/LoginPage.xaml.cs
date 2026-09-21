@@ -1,6 +1,7 @@
 using CommunityToolkit.Maui.Alerts;
 using English.Models;
 using English.Services;
+using English.Helpers;
 
 namespace English.Pages;
 
@@ -107,6 +108,12 @@ public partial class LoginPage : ContentPage
         }
 
         await Toast.Make("تم تسجيل الدخول بنجاح 😊").Show();
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        this.AnimatePageInAsync();
     }
 
     private void SetBusy(bool value)

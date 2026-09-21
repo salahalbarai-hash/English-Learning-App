@@ -267,11 +267,21 @@ public class GameHub
         return 0;
     }
 
-    public async Task DeleteMessageAsync(int messageId)
+    public async Task<bool> DeleteMessageAsync(int messageId)
     {
         if (_hubConnection?.State == HubConnectionState.Connected)
         {
-            await _hubConnection.InvokeAsync("DeleteMessage", messageId);
+            try
+            {
+                await _hubConnection.InvokeAsync("DeleteMessage", messageId);
+                return true;
+            }
+            catch
+            {
+                // الخادم رفض الحذف (ربما الرسالة قديمة جداً)
+                return false;
+            }
         }
+        return false;
     }
 }

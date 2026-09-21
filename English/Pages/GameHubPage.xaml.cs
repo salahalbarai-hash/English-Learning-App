@@ -1,4 +1,6 @@
 using CommunityToolkit.Maui.Core;
+using English.Services;
+using English.Helpers;
 
 namespace English.Pages;
 
@@ -14,6 +16,8 @@ public partial class GameHubPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+
+        this.AnimatePageInAsync();
 
         ChallengeCountLabel.Text = Preferences.Get("FriendsChallengeCount", 0L).ToString();
         _isNavigating = false;

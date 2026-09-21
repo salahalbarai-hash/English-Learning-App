@@ -2,13 +2,16 @@ using System.Collections.ObjectModel;
 using System.Text.Json;
 using Microsoft.AspNetCore.SignalR.Client;
 using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Alerts;
+using English.Helpers;
 
 namespace English.Pages;
 
 [QueryProperty(nameof(FriendName), "FriendName")]
 public partial class ChatPage : ContentPage
 {
-    private volatile bool _ignoreNextTap = false;
+    private DateTime _lastLongPressTime = DateTime.MinValue;
     private string _friendName = "";
     public string FriendName
     {
@@ -82,6 +85,7 @@ public partial class ChatPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        this.AnimatePageInAsync();
 
         // 1. استرجاع الرسائل من التخزين المحلي فوراً (Offline)
         LoadOfflineMessages();
@@ -398,8 +402,8 @@ public partial class ChatPage : ContentPage
         if (msg == null)
             return;
 
-        // هذا الضغط كان LongPress، لذلك أي Tap يأتي مباشرة بعده يجب تجاهله
-        _ignoreNextTap = true;
+        // هذا الضغط كان LongPress، نسجل الوقت لنتجاهل أي Tap يأتي مباشرة بعده
+        _lastLongPressTime = DateTime.Now;
 
         if (!IsSelectionModeActive)
         {
@@ -425,10 +429,9 @@ public partial class ChatPage : ContentPage
         if (msg == null)
             return;
 
-        // إذا كان هناك Tap ناتج عن LongPress السابق، نتجاهله
-        if (_ignoreNextTap)
+        // نتجاهل الحدث إذا كان جزءاً من ضغطة مطولة للتو (خلال نصف ثانية)
+        if ((DateTime.Now - _lastLongPressTime).TotalMilliseconds < 500)
         {
-            _ignoreNextTap = false;
             return;
         }
 
@@ -507,14 +510,33 @@ public partial class ChatPage : ContentPage
         }
         else if (action == "DeleteForEveryone")
         {
+            string blacklistJson = Preferences.Get("DeletedForMe_List", "[]");
+            var blacklist = JsonSerializer.Deserialize<List<int>>(blacklistJson) ?? new List<int>();
+            bool blacklistChanged = false;
+
             foreach (var msg in selectedMessages)
             {
                 Messages.Remove(msg);
                 if (_shell?.GameHub != null)
                 {
-                    await _shell.GameHub.DeleteMessageAsync(msg.Id);
+                    bool success = await _shell.GameHub.DeleteMessageAsync(msg.Id);
+                    if (!success)
+                    {
+                        // إذا رفض السيرفر الحذف (مثلاً الرسالة قديمة جداً)، نقوم بحذفها محلياً على الأقل
+                        if (!blacklist.Contains(msg.Id))
+                        {
+                            blacklist.Add(msg.Id);
+                            blacklistChanged = true;
+                        }
+                    }
                 }
             }
+
+            if (blacklistChanged)
+            {
+                Preferences.Set("DeletedForMe_List", JsonSerializer.Serialize(blacklist));
+            }
+
             SaveMessagesOffline();
             CloseSelectionMode();
         }

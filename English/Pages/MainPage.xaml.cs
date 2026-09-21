@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Alerts;
 using English.Services;
+using English.Helpers;
 
 namespace English.Pages;
 
@@ -40,5 +41,6 @@ public partial class MainPage : ContentPage
     {
         base.OnAppearing();
         TimeFinalExam.Text = Preferences.Get("TimeFinalExam", "00:00:00");
+        this.AnimatePageInAsync();
     }
 }

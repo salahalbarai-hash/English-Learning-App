@@ -2,6 +2,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using English.Services;
 using English.ViewModels;
+using English.Helpers;
 
 namespace English.Pages;
 
@@ -137,5 +138,11 @@ public partial class GroupPage : ContentPage
     {
         BindingContext = null;
         BindingContext = vm;
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        this.AnimatePageInAsync();
     }
 }
