@@ -252,7 +252,11 @@ public partial class ChatPage : ContentPage
 
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
+                    // لتفادي خلل الـ CollectionView في MAUI (Ghost items) الذي يمنع التحديد السليم
+                    // نقوم بفصل الـ ItemsSource مؤقتاً قبل مسح وإضافة العناصر
+                    MessagesList.ItemsSource = null;
                     Messages.Clear();
+
                     foreach (var sm in serverMessages)
                     {
                         // تخطي الرسائل التي تم حذفها محلياً
@@ -273,6 +277,9 @@ public partial class ChatPage : ContentPage
                             Status = status
                         });
                     }
+                    
+                    // إعادة ربط القائمة
+                    MessagesList.ItemsSource = Messages;
                     ScrollToBottom();
                     SaveMessagesOffline();
                 });
@@ -402,6 +409,9 @@ public partial class ChatPage : ContentPage
         if (msg == null)
             return;
 
+        // جلب النسخة الحقيقية الموجودة في القائمة حالياً (لتفادي مشكلة تواجد نسخ قديمة في الذاكرة)
+        var realMsg = Messages.FirstOrDefault(m => m.Id == msg.Id) ?? msg;
+
         // هذا الضغط كان LongPress، نسجل الوقت لنتجاهل أي Tap يأتي مباشرة بعده
         _lastLongPressTime = DateTime.Now;
 
@@ -409,7 +419,7 @@ public partial class ChatPage : ContentPage
         {
             // تحديد الرسالة أولاً قبل تفعيل وضع التحديد
             // هذا يضمن أن selectedCount > 0 عند استدعاء UpdateSelectionUI
-            msg.IsSelected = true;
+            realMsg.IsSelected = true;
 
             // الدخول في وضع التحديد
             IsSelectionModeActive = true;
@@ -418,7 +428,7 @@ public partial class ChatPage : ContentPage
         {
             // في وضع التحديد:
             // الضغط المطول على رسالة يحددها أو يلغي تحديدها
-            msg.IsSelected = !msg.IsSelected;
+            realMsg.IsSelected = !realMsg.IsSelected;
         }
 
         UpdateSelectionUI();
@@ -437,7 +447,8 @@ public partial class ChatPage : ContentPage
 
         if (IsSelectionModeActive)
         {
-            msg.IsSelected = !msg.IsSelected;
+            var realMsg = Messages.FirstOrDefault(m => m.Id == msg.Id) ?? msg;
+            realMsg.IsSelected = !realMsg.IsSelected;
             UpdateSelectionUI();
         }
     }
