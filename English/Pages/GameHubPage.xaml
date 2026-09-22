@@ -51,7 +51,7 @@
 
         <!-- 🟢 2. قائمة بطاقات الألعاب التفاعلية (Cards) -->
         <ScrollView Grid.Row="1" Padding="20,16">
-            <VerticalStackLayout Spacing="18">
+            <VerticalStackLayout x:Name="CardsLayout" Spacing="18">
 
                 <!-- 🧠 بطاقة اللعبة الأولى: المفتش الذكي -->
                 <Border Stroke="#312E81" StrokeThickness="1.5" BackgroundColor="#1E1B4B" StrokeShape="RoundRectangle 20" Padding="18">

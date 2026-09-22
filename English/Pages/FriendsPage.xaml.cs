@@ -1,10 +1,4 @@
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text.Json;
 using English.Helpers;
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Views;
 using English.Popups;
 
 namespace English.Pages;

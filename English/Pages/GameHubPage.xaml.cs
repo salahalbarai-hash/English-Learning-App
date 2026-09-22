@@ -11,16 +11,38 @@ public partial class GameHubPage : ContentPage
     public GameHubPage()
     {
         InitializeComponent();
+
+        // إخفاء كروت الألعاب فقط (بدون الهدير) لتفادي الوميض
+        foreach (var child in CardsLayout.Children.OfType<VisualElement>())
+        {
+            child.Opacity = 0;
+            child.TranslationY = 40;
+        }
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        this.AnimatePageInAsync();
-
         ChallengeCountLabel.Text = Preferences.Get("FriendsChallengeCount", 0L).ToString();
         _isNavigating = false;
+
+        // حركة متتالية (Staggered Animation) لكروت الألعاب فقط (الهدير يبقى ثابتاً)
+        await Task.Delay(100);
+        int staggerDelay = 0;
+        foreach (var child in CardsLayout.Children.OfType<VisualElement>())
+        {
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(staggerDelay);
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    child.FadeTo(1, 500, Easing.SpringOut);
+                    child.TranslateTo(0, 0, 500, Easing.SpringOut);
+                });
+            });
+            staggerDelay += 80;
+        }
     }
 
     private async void OnSmartInspectorTapped(object sender, EventArgs e)
