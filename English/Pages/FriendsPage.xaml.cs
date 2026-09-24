@@ -86,6 +86,16 @@ public partial class FriendsPage : ContentPage
     public FriendsPage()
     {
         InitializeComponent();
+
+        // إخفاء العناصر لتفادي الوميض (Flashing)
+        if (this.Content is Layout rootLayout)
+        {
+            foreach (var child in rootLayout.Children.OfType<VisualElement>())
+            {
+                child.Opacity = 0;
+                child.TranslationY = 40;
+            }
+        }
     }
 
     protected override async void OnAppearing()

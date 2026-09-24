@@ -15,6 +15,10 @@ public enum MessageStatus
 
 public partial class ChatBubbleModel : ObservableObject
 {
+    // 🟢 كاش ثابت (Static) لتخزين أشكال أيقونات الحالة بدلاً من إنشاء واحدة لكل رسالة
+    private static readonly Dictionary<string, Geometry> _geometryCache = new();
+    private static readonly PathGeometryConverter _converter = new();
+
     [ObservableProperty]
     [property: JsonIgnore] // تجاهل عند الحفظ
     private bool isSelected;
@@ -34,18 +38,7 @@ public partial class ChatBubbleModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(StatusIconColor))]
     private MessageStatus status = MessageStatus.Pending;
 
-    // 🟢 2. تجاهل الأحداث (الـ Action يسبب Crash مباشر عند الحفظ)
-    [JsonIgnore]
-    public Action<ChatBubbleModel>? OnTappedAction { get; set; }
 
-    [JsonIgnore]
-    public Action<ChatBubbleModel>? OnLongPressedAction { get; set; }
-
-    [RelayCommand]
-    private void Tap() => OnTappedAction?.Invoke(this);
-
-    [RelayCommand]
-    private void LongPress() => OnLongPressedAction?.Invoke(this);
 
     // 🟢 3. تجاهل جميع الألوان والأشكال والخصائص التجميلية
     [JsonIgnore]
@@ -78,21 +71,24 @@ public partial class ChatBubbleModel : ObservableObject
         _ => ""
     };
 
-    private Geometry _statusIconGeometry;
-
     [JsonIgnore]
     public Geometry StatusIconGeometry
     {
         get
         {
-            if (_statusIconGeometry != null) return _statusIconGeometry;
+            var path = StatusIconPath;
+            if (string.IsNullOrEmpty(path))
+                return new PathGeometry();
+
+            // استخدام الكاش الثابت: إذا تم تحويل هذا المسار سابقاً نعيد النتيجة مباشرة
+            if (_geometryCache.TryGetValue(path, out var cached))
+                return cached;
+
             try
             {
-                if (string.IsNullOrEmpty(StatusIconPath))
-                    return new PathGeometry();
-
-                _statusIconGeometry = (Geometry)new PathGeometryConverter().ConvertFromInvariantString(StatusIconPath);
-                return _statusIconGeometry;
+                var geometry = (Geometry)_converter.ConvertFromInvariantString(path);
+                _geometryCache[path] = geometry;
+                return geometry;
             }
             catch
             {
@@ -103,7 +99,7 @@ public partial class ChatBubbleModel : ObservableObject
 
     partial void OnStatusChanged(MessageStatus oldValue, MessageStatus newValue)
     {
-        _statusIconGeometry = null;
+        // لا حاجة لمسح الكاش بعد الآن لأنه ثابت ومشترك
     }
 
     [JsonIgnore]

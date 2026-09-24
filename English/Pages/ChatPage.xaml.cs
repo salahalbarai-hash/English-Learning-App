@@ -1,9 +1,3 @@
-using System.Collections.ObjectModel;
-using System.Text.Json;
-using Microsoft.AspNetCore.SignalR.Client;
-using CommunityToolkit.Maui.Views;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Alerts;
 using English.Helpers;
 
 namespace English.Pages;
@@ -23,16 +17,24 @@ public partial class ChatPage : ContentPage
         }
     }
 
-    public ObservableCollection<ChatBubbleModel> Messages { get; set; } = new();
+    public ObservableCollection<ChatBubbleModel> Messages { get; set; } = [];
     private AppShell? _shell;
     private string _currentUserName = "";
 
-    public System.Windows.Input.ICommand LongPressCommand { get; private set; }
-    public System.Windows.Input.ICommand TapCommand { get; private set; }
+    public ICommand LongPressCommand { get; private set; }
+    public ICommand TapCommand { get; private set; }
 
     private IDisposable? _receiveSubscription;
     private IDisposable? _deliveredSubscription;
     private IDisposable? _readSubscription;
+
+    // 🟢 متغيرات التحميل المتدرج (Pagination)
+    private const int PageSize = 50;
+    private int _serverSkip = 0;
+    private bool _hasMoreServerMessages = true;
+    private bool _isLoadingMore = false;
+    private List<ChatBubbleModel>? _allOfflineMessages; // كل الرسائل المحلية
+    private int _offlineLoadedCount = 0;
 
     private bool _isSelectionModeActive = false;
     public bool IsSelectionModeActive
@@ -44,7 +46,7 @@ public partial class ChatPage : ContentPage
             {
                 _isSelectionModeActive = value;
                 OnPropertyChanged(nameof(IsSelectionModeActive));
-                
+
                 // تحديث حالة كل رسالة
                 if (Messages != null)
                 {
@@ -70,8 +72,6 @@ public partial class ChatPage : ContentPage
             {
                 foreach (ChatBubbleModel item in e.NewItems)
                 {
-                    item.OnTappedAction = OnMessageTappedCommand;
-                    item.OnLongPressedAction = OnMessageLongPressedCommand;
                     item.IsSelectionMode = IsSelectionModeActive;
                 }
             }
@@ -80,6 +80,16 @@ public partial class ChatPage : ContentPage
         MessagesList.ItemsSource = Messages;
         _shell = Shell.Current as AppShell;
         _currentUserName = Preferences.Get("UserName", "");
+
+        // إخفاء العناصر في البداية لتفادي الخلل البصري (الوميض) قبل بدء الأنيميشن
+        if (this.Content is Layout rootLayout)
+        {
+            foreach (var child in rootLayout.Children.OfType<VisualElement>())
+            {
+                child.Opacity = 0;
+                child.TranslationY = 40;
+            }
+        }
     }
 
     protected override async void OnAppearing()
@@ -87,7 +97,7 @@ public partial class ChatPage : ContentPage
         base.OnAppearing();
         this.AnimatePageInAsync();
 
-        // 1. استرجاع الرسائل من التخزين المحلي فوراً (Offline)
+        // 1. استرجاع آخر 50 رسالة من التخزين المحلي فوراً (Offline)
         LoadOfflineMessages();
 
         // 2. ربط أحداث الاتصال والانفصال اللحظية
@@ -100,7 +110,7 @@ public partial class ChatPage : ContentPage
         // 3. التحقق من اتصال الصديق الحالي أو آخر ظهور
         await CheckFriendStatus();
 
-        // 4. جلب السجل الحقيقي من السيرفر ومزامنة حالات القراءة والاستلام
+        // 4. جلب آخر 50 رسالة من السيرفر ومزامنة حالات القراءة والاستلام
         await LoadServerChatHistory();
 
         // 5. تفعيل مستمعات SignalR للرسائل والحالات
@@ -110,7 +120,7 @@ public partial class ChatPage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
-        
+
         _receiveSubscription?.Dispose();
         _deliveredSubscription?.Dispose();
         _readSubscription?.Dispose();
@@ -181,8 +191,6 @@ public partial class ChatPage : ContentPage
                     return; // نتوقف هنا لأننا وجدناه متصلاً
                 }
             }
-
-            // 2. إذا كان SignalR مفصولاً، أو الصديق غير متصل الآن، نجلب "آخر ظهور" من السيرفر
             await UpdateLastSeenUI();
         }
         catch
@@ -239,36 +247,106 @@ public partial class ChatPage : ContentPage
         }
     }
 
+    // 🟢 تحميل آخر 50 رسالة من السيرفر (التحميل المتدرج)
     private async Task LoadServerChatHistory()
     {
         if (_shell != null && !string.IsNullOrEmpty(FriendName))
         {
-            var serverMessages = await _shell.GetChatHistoryAsync(FriendName);
+            _serverSkip = 0;
+            var serverMessages = await _shell.GetChatHistoryAsync(FriendName, skip: 0, take: PageSize);
             if (serverMessages != null && serverMessages.Count > 0)
             {
                 // جلب القائمة السوداء للرسائل المحذوفة محلياً (حذف لدي)
                 string blacklistJson = Preferences.Get("DeletedForMe_List", "[]");
                 var blacklist = JsonSerializer.Deserialize<List<int>>(blacklistJson) ?? new List<int>();
 
+                // تجهيز قائمة الرسائل الجديدة في الخلفية (بدون تحديث الواجهة)
+                var newMessages = new List<ChatBubbleModel>();
+                foreach (var sm in serverMessages)
+                {
+                    // تخطي الرسائل التي تم حذفها محلياً
+                    if (blacklist.Contains(sm.Id)) continue;
+
+                    bool isMine = sm.Sender.Equals(_currentUserName, StringComparison.OrdinalIgnoreCase);
+
+                    MessageStatus status = MessageStatus.Sent;
+                    if (sm.IsRead) status = MessageStatus.Read;
+                    else if (sm.IsDelivered) status = MessageStatus.Delivered;
+
+                    newMessages.Add(new ChatBubbleModel
+                    {
+                        Id = sm.Id,
+                        Content = sm.Content,
+                        Timestamp = sm.Timestamp,
+                        IsMine = isMine,
+                        Status = status
+                    });
+                }
+
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    // لتفادي خلل الـ CollectionView في MAUI (Ghost items) الذي يمنع التحديد السليم
-                    // نقوم بفصل الـ ItemsSource مؤقتاً قبل مسح وإضافة العناصر
+                    // 🟢 Batch Insert: فصل الـ ItemsSource، ثم ملء القائمة، ثم إعادة الربط
+                    // هذا يحدث تحديث واحد فقط للواجهة بدلاً من تحديث لكل رسالة!
                     MessagesList.ItemsSource = null;
                     Messages.Clear();
 
-                    foreach (var sm in serverMessages)
+                    foreach (var msg in newMessages)
                     {
-                        // تخطي الرسائل التي تم حذفها محلياً
+                        Messages.Add(msg);
+                    }
+
+                    // إعادة ربط القائمة
+                    MessagesList.ItemsSource = Messages;
+                    ScrollToBottom();
+                    SaveMessagesOffline();
+
+                    // تحديث حالة التحميل المتدرج
+                    _serverSkip = serverMessages.Count;
+                    _hasMoreServerMessages = serverMessages.Count >= PageSize;
+                    LoadMoreButton.IsVisible = _hasMoreServerMessages;
+                });
+            }
+            else
+            {
+                // لا توجد رسائل من السيرفر، نعتمد على المحلي فقط
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    _hasMoreServerMessages = false;
+                    LoadMoreButton.IsVisible = _allOfflineMessages != null && _offlineLoadedCount < _allOfflineMessages.Count;
+                });
+            }
+        }
+    }
+
+    // 🟢 زر "تحميل المزيد" - يجلب رسائل أقدم من السيرفر أو من الملف المحلي
+    private async void OnLoadMoreClicked(object sender, EventArgs e)
+    {
+        if (_isLoadingMore) return;
+        _isLoadingMore = true;
+        LoadMoreButton.Text = "جارِ التحميل...";
+
+        try
+        {
+            if (_hasMoreServerMessages && _shell != null)
+            {
+                var olderMessages = await _shell.GetChatHistoryAsync(FriendName, skip: _serverSkip, take: PageSize);
+                if (olderMessages != null && olderMessages.Count > 0)
+                {
+                    string blacklistJson = Preferences.Get("DeletedForMe_List", "[]");
+                    var blacklist = JsonSerializer.Deserialize<List<int>>(blacklistJson) ?? new List<int>();
+
+                    var newItems = new List<ChatBubbleModel>();
+                    foreach (var sm in olderMessages)
+                    {
                         if (blacklist.Contains(sm.Id)) continue;
+                        if (Messages.Any(m => m.Id == sm.Id)) continue; // تجنب التكرار
 
                         bool isMine = sm.Sender.Equals(_currentUserName, StringComparison.OrdinalIgnoreCase);
-
                         MessageStatus status = MessageStatus.Sent;
                         if (sm.IsRead) status = MessageStatus.Read;
                         else if (sm.IsDelivered) status = MessageStatus.Delivered;
 
-                        Messages.Add(new ChatBubbleModel
+                        newItems.Add(new ChatBubbleModel
                         {
                             Id = sm.Id,
                             Content = sm.Content,
@@ -277,13 +355,50 @@ public partial class ChatPage : ContentPage
                             Status = status
                         });
                     }
-                    
-                    // إعادة ربط القائمة
-                    MessagesList.ItemsSource = Messages;
-                    ScrollToBottom();
-                    SaveMessagesOffline();
+
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        // إدراج الرسائل القديمة في بداية القائمة
+                        for (int i = newItems.Count - 1; i >= 0; i--)
+                        {
+                            Messages.Insert(0, newItems[i]);
+                        }
+
+                        _serverSkip += olderMessages.Count;
+                        _hasMoreServerMessages = olderMessages.Count >= PageSize;
+                        LoadMoreButton.IsVisible = _hasMoreServerMessages;
+                        SaveMessagesOffline();
+                    });
+                }
+                else
+                {
+                    _hasMoreServerMessages = false;
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        LoadMoreButton.IsVisible = false;
+                    });
+                }
+            }
+            else if (_allOfflineMessages != null && _offlineLoadedCount < _allOfflineMessages.Count)
+            {
+                // تحميل المزيد من الرسائل المحلية
+                LoadMoreOfflineMessages();
+            }
+            else
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    LoadMoreButton.IsVisible = false;
                 });
             }
+        }
+        finally
+        {
+            _isLoadingMore = false;
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                LoadMoreButton.Text = "⬆️ تحميل رسائل أقدم";
+            });
         }
     }
 
@@ -324,7 +439,7 @@ public partial class ChatPage : ContentPage
         {
             _shell.GameHub.HubConnection.Reconnected -= OnHubReconnected;
             _shell.GameHub.HubConnection.Reconnected += OnHubReconnected;
-            
+
             _shell.GameHub.HubConnection.Closed -= OnHubClosed;
             _shell.GameHub.HubConnection.Closed += OnHubClosed;
 
@@ -456,7 +571,7 @@ public partial class ChatPage : ContentPage
     private void UpdateSelectionUI()
     {
         var selectedCount = Messages.Count(m => m.IsSelected);
-        
+
         if (selectedCount == 0)
         {
             // إغلاق وضع التحديد
@@ -498,7 +613,7 @@ public partial class ChatPage : ContentPage
         // إظهار نافذة التأكيد المخصصة
         var popup = new English.Popups.DeleteConfirmPopup(canDeleteForEveryone);
         var result = await Shell.Current.ShowPopupAsync(popup);
-        
+
         string action = result as string ?? "";
 
         if (action == "DeleteForMe")
@@ -508,7 +623,7 @@ public partial class ChatPage : ContentPage
 
             foreach (var msg in selectedMessages)
             {
-                if (!blacklist.Contains(msg.Id))
+                if (msg.Id > 0 && !blacklist.Contains(msg.Id))
                 {
                     blacklist.Add(msg.Id);
                 }
@@ -528,7 +643,7 @@ public partial class ChatPage : ContentPage
             foreach (var msg in selectedMessages)
             {
                 Messages.Remove(msg);
-                if (_shell?.GameHub != null)
+                if (msg.Id > 0 && _shell?.GameHub != null)
                 {
                     bool success = await _shell.GameHub.DeleteMessageAsync(msg.Id);
                     if (!success)
@@ -637,6 +752,7 @@ public partial class ChatPage : ContentPage
         }
     }
 
+    // 🟢 تحميل آخر 50 رسالة فقط من الملف المحلي (بدلاً من كل الرسائل)
     private void LoadOfflineMessages()
     {
         string filePath = Path.Combine(FileSystem.AppDataDirectory, $"chat_{FriendName}.json");
@@ -647,23 +763,64 @@ public partial class ChatPage : ContentPage
             var json = File.ReadAllText(filePath);
             if (!string.IsNullOrEmpty(json))
             {
-                var savedMsgs = JsonSerializer.Deserialize<List<ChatBubbleModel>>(json);
-                if (savedMsgs != null && Messages.Count == 0)
+                _allOfflineMessages = JsonSerializer.Deserialize<List<ChatBubbleModel>>(json);
+                if (_allOfflineMessages != null && _allOfflineMessages.Count > 0 && Messages.Count == 0)
                 {
+                    // 🟢 نأخذ فقط آخر PageSize رسالة للعرض السريع
+                    int startIndex = Math.Max(0, _allOfflineMessages.Count - PageSize);
+                    var recentMessages = _allOfflineMessages.Skip(startIndex).ToList();
+                    _offlineLoadedCount = recentMessages.Count;
+
+                    // 🟢 Batch Insert: فصل وربط مرة واحدة
+                    MessagesList.ItemsSource = null;
                     Messages.Clear();
-                    foreach (var msg in savedMsgs)
+                    foreach (var msg in recentMessages)
                     {
-                        // يجب تعيين الـ Actions يدوياً لأن JsonIgnore يمنع حفظها
-                        msg.OnTappedAction = OnMessageTappedCommand;
-                        msg.OnLongPressedAction = OnMessageLongPressedCommand;
-                        msg.IsSelectionMode = IsSelectionModeActive;
                         Messages.Add(msg);
                     }
+                    MessagesList.ItemsSource = Messages;
+
+                    // إظهار زر "تحميل المزيد" إذا كانت هناك رسائل أقدم
+                    LoadMoreButton.IsVisible = _allOfflineMessages.Count > PageSize;
                     ScrollToBottom();
                 }
             }
         }
         catch { }
+    }
+
+    // 🟢 تحميل دفعة إضافية من الرسائل المحلية القديمة
+    private void LoadMoreOfflineMessages()
+    {
+        if (_allOfflineMessages == null) return;
+
+        int totalMessages = _allOfflineMessages.Count;
+        int alreadyShown = _offlineLoadedCount;
+        int remaining = totalMessages - alreadyShown;
+
+        if (remaining <= 0)
+        {
+            MainThread.BeginInvokeOnMainThread(() => LoadMoreButton.IsVisible = false);
+            return;
+        }
+
+        int toLoad = Math.Min(PageSize, remaining);
+        int startIndex = totalMessages - alreadyShown - toLoad;
+        if (startIndex < 0) startIndex = 0;
+
+        var olderMessages = _allOfflineMessages.Skip(startIndex).Take(toLoad).ToList();
+
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            for (int i = olderMessages.Count - 1; i >= 0; i--)
+            {
+                var msg = olderMessages[i];
+                Messages.Insert(0, msg);
+            }
+
+            _offlineLoadedCount += toLoad;
+            LoadMoreButton.IsVisible = _offlineLoadedCount < totalMessages;
+        });
     }
 
     private void SaveMessagesOffline()

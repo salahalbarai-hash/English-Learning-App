@@ -1,7 +1,3 @@
-using CommunityToolkit.Maui.Core;
-using English.Services;
-using English.Helpers;
-
 namespace English.Pages;
 
 public partial class GameHubPage : ContentPage
@@ -12,7 +8,6 @@ public partial class GameHubPage : ContentPage
     {
         InitializeComponent();
 
-        // إخفاء كروت الألعاب فقط (بدون الهدير) لتفادي الوميض
         foreach (var child in CardsLayout.Children.OfType<VisualElement>())
         {
             child.Opacity = 0;

@@ -90,6 +90,21 @@
                         BackgroundColor="Transparent"
                         Margin="0,10">
 
+            <!-- 🟢 زر "تحميل المزيد" في أعلى المحادثة -->
+            <CollectionView.Header>
+                <Button x:Name="LoadMoreButton"
+                        Text="⬆️ تحميل رسائل أقدم"
+                        FontFamily="CairoBold"
+                        FontSize="13"
+                        TextColor="#94A3B8"
+                        BackgroundColor="#1E293B"
+                        CornerRadius="20"
+                        HeightRequest="40"
+                        Margin="60,8"
+                        IsVisible="False"
+                        Clicked="OnLoadMoreClicked" />
+            </CollectionView.Header>
+
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:ChatBubbleModel">
 

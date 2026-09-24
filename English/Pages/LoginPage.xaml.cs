@@ -12,6 +12,16 @@ public partial class LoginPage : ContentPage
     public LoginPage()
     {
         InitializeComponent();
+
+        // إخفاء العناصر لتفادي الوميض (Flashing)
+        if (this.Content is Layout rootLayout)
+        {
+            foreach (var child in rootLayout.Children.OfType<VisualElement>())
+            {
+                child.Opacity = 0;
+                child.TranslationY = 40;
+            }
+        }
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)
@@ -99,6 +109,16 @@ public partial class LoginPage : ContentPage
     {
         if (Application.Current?.Windows.Count > 0)
         {
+            // فصل الاتصال القديم لمنع تكرار الأحداث وتسريب الذاكرة (Memory Leak)
+            if (Application.Current.Windows[0].Page is AppShell oldShell)
+            {
+                try
+                {
+                    await oldShell.GameHub.DisconnectAsync();
+                }
+                catch { }
+            }
+
             // 1. إنشاء و تعيين AppShell كصفحة رئيسية جديدة
             var appShell = new AppShell();
             Application.Current.Windows[0].Page = appShell;

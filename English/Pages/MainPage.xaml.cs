@@ -9,6 +9,16 @@ public partial class MainPage : ContentPage
     public MainPage()
     {
         InitializeComponent();
+
+        // إخفاء العناصر لتفادي الوميض (Flashing)
+        if (this.Content is Layout rootLayout)
+        {
+            foreach (var child in rootLayout.Children.OfType<VisualElement>())
+            {
+                child.Opacity = 0;
+                child.TranslationY = 40;
+            }
+        }
     }
 
     private async void Button_Clicked(object sender, EventArgs e)

@@ -345,22 +345,31 @@ public class GameHub : Hub
         }
     }
 
-    // 🟢 2. جلب سجل المحادثة مع إرجاع معرف الرسالة وحالتها
-    public List<ChatMessageDto> GetChatHistory(string targetUser)
+    // 🟢 2. جلب سجل المحادثة مع دعم التحميل المتدرج (Pagination)
+    // skip: عدد الرسائل التي يتم تخطيها (للصفحات القديمة)
+    // take: عدد الرسائل المطلوب جلبها (افتراضياً 50)
+    public List<ChatMessageDto> GetChatHistory(string targetUser, int skip = 0, int take = 50)
     {
         string currentUser = _connectedUsers.FirstOrDefault(x => x.Value == Context.ConnectionId).Key ?? "";
         var messages = new List<ChatMessageDto>();
 
         if (string.IsNullOrEmpty(currentUser)) return messages;
 
+        // تقييد الحد الأقصى للرسائل المطلوبة لمنع إساءة الاستخدام
+        if (take > 200) take = 200;
+        if (take < 1) take = 50;
+        if (skip < 0) skip = 0;
+
         try
         {
+            // نستخدم ORDER BY Id DESC لجلب الأحدث أولاً، ثم OFFSET/FETCH للصفحات
             string sql = $@"
                 SELECT Id, SenderId, ReceiverId, Content, Timestamp, IsDelivered, IsRead 
                 FROM Messages 
                 WHERE (SenderId = N'{currentUser}' AND ReceiverId = N'{targetUser}')
                    OR (SenderId = N'{targetUser}' AND ReceiverId = N'{currentUser}')
-                ORDER BY Timestamp ASC";
+                ORDER BY Id DESC
+                OFFSET {skip} ROWS FETCH NEXT {take} ROWS ONLY";
 
             DataTable dt = DB.Query(sql);
 
@@ -378,18 +387,24 @@ public class GameHub : Hub
                 });
             }
 
-            // 🟢 بمجرد جلب السيرفر للرسائل وفتح المستخدم للمحادثة، نحدد أن الرسائل الواردة أصبحت مقروءة!
-            string updateSql = $@"
-                UPDATE Messages 
-                SET IsRead = 1, ReadAt = GETDATE(), IsDelivered = 1, DeliveredAt = ISNULL(DeliveredAt, GETDATE())
-                WHERE SenderId = N'{targetUser}' AND ReceiverId = N'{currentUser}' AND IsRead = 0;
-            ";
-            DB.Exec(updateSql);
+            // عكس الترتيب ليكون من الأقدم للأحدث (للعرض الصحيح في الشاشة)
+            messages.Reverse();
 
-            // إبلاغ الطرف الآخر (المرسل) بأن رسائله تمت قراءتها (لتتحول إلى صحين أزرق لديه)
-            if (_connectedUsers.TryGetValue(targetUser, out var senderConnectionId))
+            // 🟢 تحديث حالة القراءة فقط عند تحميل الصفحة الأولى (أحدث الرسائل)
+            if (skip == 0)
             {
-                Clients.Client(senderConnectionId).SendAsync("MessagesReadBy", currentUser);
+                string updateSql = $@"
+                    UPDATE Messages 
+                    SET IsRead = 1, ReadAt = GETDATE(), IsDelivered = 1, DeliveredAt = ISNULL(DeliveredAt, GETDATE())
+                    WHERE SenderId = N'{targetUser}' AND ReceiverId = N'{currentUser}' AND IsRead = 0;
+                ";
+                DB.Exec(updateSql);
+
+                // إبلاغ الطرف الآخر (المرسل) بأن رسائله تمت قراءتها
+                if (_connectedUsers.TryGetValue(targetUser, out var senderConnectionId))
+                {
+                    Clients.Client(senderConnectionId).SendAsync("MessagesReadBy", currentUser);
+                }
             }
         }
         catch (Exception ex)
