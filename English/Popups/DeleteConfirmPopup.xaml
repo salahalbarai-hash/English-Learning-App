@@ -18,34 +18,30 @@
 
         <VerticalStackLayout Spacing="16">
             
-            <Label Text="ماذا تريد أن تفعل؟"
-                   TextColor="#F8FAFC"
+            <Label Text="تأكيد الحذف"
+                   TextColor="#EF4444"
                    FontFamily="CairoBold"
                    FontSize="18"
                    HorizontalOptions="Center"
                    Margin="0,0,0,10"/>
 
-            <!-- زر حذف لدى الجميع -->
-            <Button x:Name="DeleteForEveryoneBtn"
-                    Text="حذف لدى الجميع"
-                    TextColor="#EF4444"
-                    BackgroundColor="#1E293B"
-                    FontFamily="CairoBold"
-                    FontSize="16"
-                    CornerRadius="12"
-                    HeightRequest="52"
-                    Clicked="OnDeleteForEveryoneClicked"/>
+            <Label Text="هل أنت متأكد من حذف هذه الرسائل؟"
+                   TextColor="#F8FAFC"
+                   FontFamily="Cairo"
+                   FontSize="15"
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,20"/>
 
-            <!-- زر حذف لدي -->
-            <Button x:Name="DeleteForMeBtn"
-                    Text="حذف لدي"
+            <!-- زر حذف -->
+            <Button x:Name="DeleteBtn"
+                    Text="حذف"
                     TextColor="#F8FAFC"
-                    BackgroundColor="#1E293B"
+                    BackgroundColor="#EF4444"
                     FontFamily="CairoBold"
                     FontSize="16"
                     CornerRadius="12"
                     HeightRequest="52"
-                    Clicked="OnDeleteForMeClicked"/>
+                    Clicked="OnDeleteClicked"/>
 
             <!-- خط فاصل خفيف -->
             <BoxView HeightRequest="1" Color="#1E293B" Margin="20,5" />

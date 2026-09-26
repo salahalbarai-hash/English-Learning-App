@@ -71,9 +71,7 @@ public partial class ChatPage : ContentPage
             if (e.NewItems != null)
             {
                 foreach (ChatBubbleModel item in e.NewItems)
-                {
                     item.IsSelectionMode = IsSelectionModeActive;
-                }
             }
         };
 
@@ -285,18 +283,30 @@ public partial class ChatPage : ContentPage
 
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
+                    // حفظ حالة التحديد للرسائل الحالية قبل المسح
+                    var previouslySelectedIds = Messages.Where(m => m.IsSelected).Select(m => m.Id).ToList();
+
                     // 🟢 Batch Insert: فصل الـ ItemsSource، ثم ملء القائمة، ثم إعادة الربط
-                    // هذا يحدث تحديث واحد فقط للواجهة بدلاً من تحديث لكل رسالة!
                     MessagesList.ItemsSource = null;
                     Messages.Clear();
 
                     foreach (var msg in newMessages)
                     {
+                        if (previouslySelectedIds.Contains(msg.Id))
+                        {
+                            msg.IsSelected = true;
+                        }
                         Messages.Add(msg);
                     }
 
                     // إعادة ربط القائمة
                     MessagesList.ItemsSource = Messages;
+                    
+                    if (IsSelectionModeActive)
+                    {
+                        UpdateSelectionUI();
+                    }
+                    
                     ScrollToBottom();
                     SaveMessagesOffline();
 
@@ -524,8 +534,8 @@ public partial class ChatPage : ContentPage
         if (msg == null)
             return;
 
-        // جلب النسخة الحقيقية الموجودة في القائمة حالياً (لتفادي مشكلة تواجد نسخ قديمة في الذاكرة)
-        var realMsg = Messages.FirstOrDefault(m => m.Id == msg.Id) ?? msg;
+        // جلب النسخة الحقيقية (نستخدم نفس الكائن إذا كان موجوداً لتفادي تشابه الـ Id=0، أو نبحث بالـ Id في حال كان الكائن قديماً)
+        var realMsg = Messages.Contains(msg) ? msg : (Messages.FirstOrDefault(m => m.Id == msg.Id) ?? msg);
 
         // هذا الضغط كان LongPress، نسجل الوقت لنتجاهل أي Tap يأتي مباشرة بعده
         _lastLongPressTime = DateTime.Now;
@@ -562,7 +572,7 @@ public partial class ChatPage : ContentPage
 
         if (IsSelectionModeActive)
         {
-            var realMsg = Messages.FirstOrDefault(m => m.Id == msg.Id) ?? msg;
+            var realMsg = Messages.Contains(msg) ? msg : (Messages.FirstOrDefault(m => m.Id == msg.Id) ?? msg);
             realMsg.IsSelected = !realMsg.IsSelected;
             UpdateSelectionUI();
         }
@@ -607,16 +617,16 @@ public partial class ChatPage : ContentPage
         var selectedMessages = Messages.Where(m => m.IsSelected).ToList();
         if (selectedMessages.Count == 0) return;
 
-        // التحقق مما إذا كان مسموحاً الحذف للجميع (كل الرسائل المحددة يجب أن تكون IsMine)
-        bool canDeleteForEveryone = selectedMessages.All(m => m.IsMine);
-
         // إظهار نافذة التأكيد المخصصة
-        var popup = new English.Popups.DeleteConfirmPopup(canDeleteForEveryone);
+        var popup = new English.Popups.DeleteConfirmPopup();
         var result = await Shell.Current.ShowPopupAsync(popup);
 
         string action = result as string ?? "";
 
-        if (action == "DeleteForMe")
+        // 🟢 إغلاق وضع التحديد فوراً بمجرد تأكيد الحذف لمنع المستخدم من التفاعل مع رسائل أخرى أثناء الحذف
+        CloseSelectionMode();
+
+        if (action == "Delete")
         {
             string blacklistJson = Preferences.Get("DeletedForMe_List", "[]");
             var blacklist = JsonSerializer.Deserialize<List<int>>(blacklistJson) ?? new List<int>();
@@ -632,44 +642,6 @@ public partial class ChatPage : ContentPage
 
             Preferences.Set("DeletedForMe_List", JsonSerializer.Serialize(blacklist));
             SaveMessagesOffline();
-            CloseSelectionMode();
-        }
-        else if (action == "DeleteForEveryone")
-        {
-            string blacklistJson = Preferences.Get("DeletedForMe_List", "[]");
-            var blacklist = JsonSerializer.Deserialize<List<int>>(blacklistJson) ?? new List<int>();
-            bool blacklistChanged = false;
-
-            foreach (var msg in selectedMessages)
-            {
-                Messages.Remove(msg);
-                if (msg.Id > 0 && _shell?.GameHub != null)
-                {
-                    bool success = await _shell.GameHub.DeleteMessageAsync(msg.Id);
-                    if (!success)
-                    {
-                        // إذا رفض السيرفر الحذف (مثلاً الرسالة قديمة جداً)، نقوم بحذفها محلياً على الأقل
-                        if (!blacklist.Contains(msg.Id))
-                        {
-                            blacklist.Add(msg.Id);
-                            blacklistChanged = true;
-                        }
-                    }
-                }
-            }
-
-            if (blacklistChanged)
-            {
-                Preferences.Set("DeletedForMe_List", JsonSerializer.Serialize(blacklist));
-            }
-
-            SaveMessagesOffline();
-            CloseSelectionMode();
-        }
-        else
-        {
-            // Cancel
-            CloseSelectionMode();
         }
     }
 

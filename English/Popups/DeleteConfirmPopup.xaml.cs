@@ -4,22 +4,14 @@ namespace English.Popups;
 
 public partial class DeleteConfirmPopup : Popup
 {
-    public DeleteConfirmPopup(bool canDeleteForEveryone)
+    public DeleteConfirmPopup()
     {
         InitializeComponent();
-        
-        // إخفاء زر "حذف لدى الجميع" إذا لم يكن مسموحاً (مثلاً رسالة ليست لك)
-        DeleteForEveryoneBtn.IsVisible = canDeleteForEveryone;
     }
 
-    private void OnDeleteForEveryoneClicked(object sender, EventArgs e)
+    private void OnDeleteClicked(object sender, EventArgs e)
     {
-        Close("DeleteForEveryone");
-    }
-
-    private void OnDeleteForMeClicked(object sender, EventArgs e)
-    {
-        Close("DeleteForMe");
+        Close("Delete");
     }
 
     private void OnCancelClicked(object sender, EventArgs e)
