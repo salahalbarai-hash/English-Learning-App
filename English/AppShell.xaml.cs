@@ -386,19 +386,6 @@ namespace English
             return new List<string>();
         }
 
-        // 🟢 إضافة دالة لجلب سجل المحادثة من السيرفر مع دعم التحميل المتدرج
-        public async Task<List<ChatMessageDto>> GetChatHistoryAsync(string targetUser, int skip = 0, int take = 50)
-        {
-            if (_gameHub != null && _gameHub.HubConnection?.State == Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected)
-            {
-                try
-                {
-                    return await _gameHub.HubConnection.InvokeAsync<List<ChatMessageDto>>("GetChatHistory", targetUser, skip, take);
-                }
-                catch { return new List<ChatMessageDto>(); }
-            }
-            return new List<ChatMessageDto>();
-        }
 
         public async Task<DateTime?> GetLastSeenAsync(string targetUser)
         {

@@ -28,10 +28,8 @@ public partial class ChatPage : ContentPage
     private IDisposable? _deliveredSubscription;
     private IDisposable? _readSubscription;
 
-    // 🟢 متغيرات التحميل المتدرج (Pagination)
+    // 🟢 متغيرات التحميل المتدرج المحلي (Local Pagination)
     private const int PageSize = 50;
-    private int _serverSkip = 0;
-    private bool _hasMoreServerMessages = true;
     private bool _isLoadingMore = false;
     private List<ChatBubbleModel>? _allOfflineMessages; // كل الرسائل المحلية
     private int _offlineLoadedCount = 0;
@@ -95,7 +93,7 @@ public partial class ChatPage : ContentPage
         base.OnAppearing();
         this.AnimatePageInAsync();
 
-        // 1. استرجاع آخر 50 رسالة من التخزين المحلي فوراً (Offline)
+        // 1. استرجاع آخر 50 رسالة من التخزين المحلي فوراً
         LoadOfflineMessages();
 
         // 2. ربط أحداث الاتصال والانفصال اللحظية
@@ -108,10 +106,7 @@ public partial class ChatPage : ContentPage
         // 3. التحقق من اتصال الصديق الحالي أو آخر ظهور
         await CheckFriendStatus();
 
-        // 4. جلب آخر 50 رسالة من السيرفر ومزامنة حالات القراءة والاستلام
-        await LoadServerChatHistory();
-
-        // 5. تفعيل مستمعات SignalR للرسائل والحالات
+        // 4. تفعيل مستمعات SignalR للرسائل والحالات
         SetupSignalRListeners();
     }
 
@@ -245,91 +240,8 @@ public partial class ChatPage : ContentPage
         }
     }
 
-    // 🟢 تحميل آخر 50 رسالة من السيرفر (التحميل المتدرج)
-    private async Task LoadServerChatHistory()
-    {
-        if (_shell != null && !string.IsNullOrEmpty(FriendName))
-        {
-            _serverSkip = 0;
-            var serverMessages = await _shell.GetChatHistoryAsync(FriendName, skip: 0, take: PageSize);
-            if (serverMessages != null && serverMessages.Count > 0)
-            {
-                // جلب القائمة السوداء للرسائل المحذوفة محلياً (حذف لدي)
-                string blacklistJson = Preferences.Get("DeletedForMe_List", "[]");
-                var blacklist = JsonSerializer.Deserialize<List<int>>(blacklistJson) ?? new List<int>();
-
-                // تجهيز قائمة الرسائل الجديدة في الخلفية (بدون تحديث الواجهة)
-                var newMessages = new List<ChatBubbleModel>();
-                foreach (var sm in serverMessages)
-                {
-                    // تخطي الرسائل التي تم حذفها محلياً
-                    if (blacklist.Contains(sm.Id)) continue;
-
-                    bool isMine = sm.Sender.Equals(_currentUserName, StringComparison.OrdinalIgnoreCase);
-
-                    MessageStatus status = MessageStatus.Sent;
-                    if (sm.IsRead) status = MessageStatus.Read;
-                    else if (sm.IsDelivered) status = MessageStatus.Delivered;
-
-                    newMessages.Add(new ChatBubbleModel
-                    {
-                        Id = sm.Id,
-                        Content = sm.Content,
-                        Timestamp = sm.Timestamp,
-                        IsMine = isMine,
-                        Status = status
-                    });
-                }
-
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    // حفظ حالة التحديد للرسائل الحالية قبل المسح
-                    var previouslySelectedIds = Messages.Where(m => m.IsSelected).Select(m => m.Id).ToList();
-
-                    // 🟢 Batch Insert: فصل الـ ItemsSource، ثم ملء القائمة، ثم إعادة الربط
-                    MessagesList.ItemsSource = null;
-                    Messages.Clear();
-
-                    foreach (var msg in newMessages)
-                    {
-                        if (previouslySelectedIds.Contains(msg.Id))
-                        {
-                            msg.IsSelected = true;
-                        }
-                        Messages.Add(msg);
-                    }
-
-                    // إعادة ربط القائمة
-                    MessagesList.ItemsSource = Messages;
-                    
-                    if (IsSelectionModeActive)
-                    {
-                        UpdateSelectionUI();
-                    }
-                    
-                    ScrollToBottom();
-                    SaveMessagesOffline();
-
-                    // تحديث حالة التحميل المتدرج
-                    _serverSkip = serverMessages.Count;
-                    _hasMoreServerMessages = serverMessages.Count >= PageSize;
-                    LoadMoreButton.IsVisible = _hasMoreServerMessages;
-                });
-            }
-            else
-            {
-                // لا توجد رسائل من السيرفر، نعتمد على المحلي فقط
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    _hasMoreServerMessages = false;
-                    LoadMoreButton.IsVisible = _allOfflineMessages != null && _offlineLoadedCount < _allOfflineMessages.Count;
-                });
-            }
-        }
-    }
-
-    // 🟢 زر "تحميل المزيد" - يجلب رسائل أقدم من السيرفر أو من الملف المحلي
-    private async void OnLoadMoreClicked(object sender, EventArgs e)
+    // 🟢 زر "تحميل المزيد" - يجلب رسائل أقدم من الملف المحلي
+    private void OnLoadMoreClicked(object sender, EventArgs e)
     {
         if (_isLoadingMore) return;
         _isLoadingMore = true;
@@ -337,59 +249,7 @@ public partial class ChatPage : ContentPage
 
         try
         {
-            if (_hasMoreServerMessages && _shell != null)
-            {
-                var olderMessages = await _shell.GetChatHistoryAsync(FriendName, skip: _serverSkip, take: PageSize);
-                if (olderMessages != null && olderMessages.Count > 0)
-                {
-                    string blacklistJson = Preferences.Get("DeletedForMe_List", "[]");
-                    var blacklist = JsonSerializer.Deserialize<List<int>>(blacklistJson) ?? new List<int>();
-
-                    var newItems = new List<ChatBubbleModel>();
-                    foreach (var sm in olderMessages)
-                    {
-                        if (blacklist.Contains(sm.Id)) continue;
-                        if (Messages.Any(m => m.Id == sm.Id)) continue; // تجنب التكرار
-
-                        bool isMine = sm.Sender.Equals(_currentUserName, StringComparison.OrdinalIgnoreCase);
-                        MessageStatus status = MessageStatus.Sent;
-                        if (sm.IsRead) status = MessageStatus.Read;
-                        else if (sm.IsDelivered) status = MessageStatus.Delivered;
-
-                        newItems.Add(new ChatBubbleModel
-                        {
-                            Id = sm.Id,
-                            Content = sm.Content,
-                            Timestamp = sm.Timestamp,
-                            IsMine = isMine,
-                            Status = status
-                        });
-                    }
-
-                    MainThread.BeginInvokeOnMainThread(() =>
-                    {
-                        // إدراج الرسائل القديمة في بداية القائمة
-                        for (int i = newItems.Count - 1; i >= 0; i--)
-                        {
-                            Messages.Insert(0, newItems[i]);
-                        }
-
-                        _serverSkip += olderMessages.Count;
-                        _hasMoreServerMessages = olderMessages.Count >= PageSize;
-                        LoadMoreButton.IsVisible = _hasMoreServerMessages;
-                        SaveMessagesOffline();
-                    });
-                }
-                else
-                {
-                    _hasMoreServerMessages = false;
-                    MainThread.BeginInvokeOnMainThread(() =>
-                    {
-                        LoadMoreButton.IsVisible = false;
-                    });
-                }
-            }
-            else if (_allOfflineMessages != null && _offlineLoadedCount < _allOfflineMessages.Count)
+            if (_allOfflineMessages != null && _offlineLoadedCount < _allOfflineMessages.Count)
             {
                 // تحميل المزيد من الرسائل المحلية
                 LoadMoreOfflineMessages();
@@ -438,8 +298,9 @@ public partial class ChatPage : ContentPage
             if (msg != null)
             {
                 Messages.Remove(msg);
-                SaveMessagesOffline();
             }
+            _allOfflineMessages?.RemoveAll(m => m.Id == msgId);
+            SaveMessagesOffline();
         });
     }
 
@@ -638,6 +499,7 @@ public partial class ChatPage : ContentPage
                     blacklist.Add(msg.Id);
                 }
                 Messages.Remove(msg);
+                _allOfflineMessages?.RemoveAll(m => m.Id == msg.Id || (m.Content == msg.Content && m.Timestamp == msg.Timestamp && m.IsMine == msg.IsMine));
             }
 
             Preferences.Set("DeletedForMe_List", JsonSerializer.Serialize(blacklist));
@@ -680,6 +542,7 @@ public partial class ChatPage : ContentPage
 
         var newMsg = new ChatBubbleModel
         {
+            Id = Environment.TickCount & int.MaxValue,
             Content = text,
             Timestamp = DateTime.Now,
             IsMine = true,
@@ -724,18 +587,29 @@ public partial class ChatPage : ContentPage
         }
     }
 
-    // 🟢 تحميل آخر 50 رسالة فقط من الملف المحلي (بدلاً من كل الرسائل)
+    // 🟢 تحميل آخر 50 رسالة فقط من الملف المحلي
     private void LoadOfflineMessages()
     {
         string filePath = Path.Combine(FileSystem.AppDataDirectory, $"chat_{FriendName}.json");
-        if (!File.Exists(filePath)) return;
+        if (!File.Exists(filePath))
+        {
+            _allOfflineMessages = new List<ChatBubbleModel>();
+            LoadMoreButton.IsVisible = false;
+            return;
+        }
 
         try
         {
             var json = File.ReadAllText(filePath);
             if (!string.IsNullOrEmpty(json))
             {
-                _allOfflineMessages = JsonSerializer.Deserialize<List<ChatBubbleModel>>(json);
+                // استبعاد الرسائل المحذوفة محلياً
+                string blacklistJson = Preferences.Get("DeletedForMe_List", "[]");
+                var blacklist = JsonSerializer.Deserialize<List<int>>(blacklistJson) ?? new List<int>();
+
+                var allMsgs = JsonSerializer.Deserialize<List<ChatBubbleModel>>(json) ?? new List<ChatBubbleModel>();
+                _allOfflineMessages = allMsgs.Where(m => !blacklist.Contains(m.Id)).ToList();
+
                 if (_allOfflineMessages != null && _allOfflineMessages.Count > 0 && Messages.Count == 0)
                 {
                     // 🟢 نأخذ فقط آخر PageSize رسالة للعرض السريع
@@ -755,6 +629,10 @@ public partial class ChatPage : ContentPage
                     // إظهار زر "تحميل المزيد" إذا كانت هناك رسائل أقدم
                     LoadMoreButton.IsVisible = _allOfflineMessages.Count > PageSize;
                     ScrollToBottom();
+                }
+                else
+                {
+                    LoadMoreButton.IsVisible = false;
                 }
             }
         }
@@ -799,8 +677,33 @@ public partial class ChatPage : ContentPage
     {
         try
         {
+            if (_allOfflineMessages == null)
+            {
+                _allOfflineMessages = new List<ChatBubbleModel>();
+            }
+
+            // مزامنة العناصر الحالية مع القائمة الكاملة
+            foreach (var m in Messages)
+            {
+                var existing = _allOfflineMessages.FirstOrDefault(x => (x.Id != 0 && x.Id == m.Id) || (x.Content == m.Content && x.Timestamp == m.Timestamp && x.IsMine == m.IsMine));
+                if (existing != null)
+                {
+                    existing.Status = m.Status;
+                    existing.Id = m.Id;
+                }
+                else
+                {
+                    _allOfflineMessages.Add(m);
+                }
+            }
+
+            // استبعاد الرسائل المحذوفة
+            string blacklistJson = Preferences.Get("DeletedForMe_List", "[]");
+            var blacklist = JsonSerializer.Deserialize<List<int>>(blacklistJson) ?? new List<int>();
+            _allOfflineMessages.RemoveAll(x => blacklist.Contains(x.Id));
+
             string filePath = Path.Combine(FileSystem.AppDataDirectory, $"chat_{FriendName}.json");
-            string json = JsonSerializer.Serialize(Messages);
+            string json = JsonSerializer.Serialize(_allOfflineMessages);
             File.WriteAllText(filePath, json);
         }
         catch { }

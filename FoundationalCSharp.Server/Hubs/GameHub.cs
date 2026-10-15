@@ -268,177 +268,52 @@ public class GameHub : Hub
         await Clients.OthersInGroup(roomName).SendAsync("ReceiveDuelWithdrawal", withdrawingUser);
     }
 
-    // 🟢 التعديل الأول: إرسال الرسالة مع الاعتماد على كلاس DB واسم المستخدم الفعلي
-    // 🟢 1. إرسال الرسالة مع حفظ حالة التوصيل (IsDelivered) بناءً على اتصال الطرف الآخر
+    // 🟢 إرسال الرسالة بشكل فوري (Relay) دون حفظها في قاعدة البيانات
     public async Task SendDirectMessage(string receiverUser, string content)
     {
         string senderUser = _connectedUsers.FirstOrDefault(x => x.Value == Context.ConnectionId).Key ?? "";
         if (string.IsNullOrEmpty(senderUser)) return;
 
         bool isReceiverOnline = _connectedUsers.TryGetValue(receiverUser, out var targetConnectionId);
-        int deliveredVal = isReceiverOnline ? 1 : 0; // إذا كان متصلاً تصبح مستلمة تلقائياً (صحين رمادي)
+        int messageId = Random.Shared.Next(1, int.MaxValue);
 
-        try
+        // إذا كان الطرف الآخر متصلاً، أرسل له الرسالة مباشرة
+        if (isReceiverOnline && targetConnectionId != null)
         {
-            string safeContent = content.Replace("'", "''");
-            // حفظ الرسالة في القاعدة مع تحديد حالة الاستلام
-            string sql = $@"
-                INSERT INTO Messages (SenderId, ReceiverId, Content, Timestamp, IsDelivered, IsRead, DeliveredAt) 
-                OUTPUT INSERTED.Id
-                VALUES (N'{senderUser}', N'{receiverUser}', N'{safeContent}', GETDATE(), {deliveredVal}, 0, {(isReceiverOnline ? "GETDATE()" : "NULL")});";
-
-            DataTable dt = DB.Query(sql);
-            int messageId = dt.Rows.Count > 0 ? Convert.ToInt32(dt.Rows[0][0]) : 0;
-
-            // إذا كان الطرف الآخر متصلاً، أرسل له الرسالة مباشرة مع معرفها
-            if (isReceiverOnline && targetConnectionId != null)
-            {
-                await Clients.Client(targetConnectionId).SendAsync("ReceiveDirectMessage", messageId, senderUser, content);
-            }
-
-            // إرسال تحديث للحالة للمرسل نفسه ليظهر له (صحين رمادي) إذا استلمها الطرف الآخر
-            if (isReceiverOnline)
-            {
-                await Clients.Caller.SendAsync("MessageDelivered", messageId);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Database Error on SendDirectMessage: {ex.Message}");
+            await Clients.Client(targetConnectionId).SendAsync("ReceiveDirectMessage", messageId, senderUser, content);
+            // إرسال تأكيد الاستلام للمرسل (صحين رمادي)
+            await Clients.Caller.SendAsync("MessageDelivered", messageId);
         }
     }
 
-    // 🟢 دالة لحذف الرسالة من السيرفر وإبلاغ الطرف الآخر
-    public async Task DeleteMessage(int messageId)
+    // 🟢 إبلاغ الطرف الآخر بحذف الرسالة بشكل فوري دون الحاجة لقاعدة البيانات
+    public async Task DeleteMessage(int messageId, string? targetUser = null)
     {
         string currentUser = _connectedUsers.FirstOrDefault(x => x.Value == Context.ConnectionId).Key ?? "";
         if (string.IsNullOrEmpty(currentUser)) return;
 
-        try
+        if (!string.IsNullOrEmpty(targetUser) && _connectedUsers.TryGetValue(targetUser, out var otherConnectionId))
         {
-            // جلب المرسل والمستقبل للتحقق من الصلاحية (يمكن لأي منهما حذف الرسالة من المحادثة)
-            string checkSql = $"SELECT SenderId, ReceiverId FROM Messages WHERE Id = {messageId}";
-            DataTable dt = DB.Query(checkSql);
-            if (dt.Rows.Count > 0)
-            {
-                string sender = dt.Rows[0]["SenderId"].ToString() ?? "";
-                string receiver = dt.Rows[0]["ReceiverId"].ToString() ?? "";
-
-                if (currentUser == sender || currentUser == receiver)
-                {
-                    // حذف الرسالة كلياً من قاعدة البيانات
-                    string delSql = $"DELETE FROM Messages WHERE Id = {messageId}";
-                    DB.Exec(delSql);
-
-                    // إبلاغ الطرف الآخر فوراً (إذا كان متصلاً) لكي تختفي من شاشته أيضاً
-                    string otherParty = (currentUser == sender) ? receiver : sender;
-                    if (_connectedUsers.TryGetValue(otherParty, out var otherConnectionId))
-                    {
-                        await Clients.Client(otherConnectionId).SendAsync("MessageDeleted", messageId);
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Database Error on DeleteMessage: {ex.Message}");
+            await Clients.Client(otherConnectionId).SendAsync("MessageDeleted", messageId);
         }
     }
 
-    // 🟢 2. جلب سجل المحادثة مع دعم التحميل المتدرج (Pagination)
-    // skip: عدد الرسائل التي يتم تخطيها (للصفحات القديمة)
-    // take: عدد الرسائل المطلوب جلبها (افتراضياً 50)
+    // 🟢 الاعتماد على التخزين المحلي فقط للرسائل
     public List<ChatMessageDto> GetChatHistory(string targetUser, int skip = 0, int take = 50)
     {
-        string currentUser = _connectedUsers.FirstOrDefault(x => x.Value == Context.ConnectionId).Key ?? "";
-        var messages = new List<ChatMessageDto>();
-
-        if (string.IsNullOrEmpty(currentUser)) return messages;
-
-        // تقييد الحد الأقصى للرسائل المطلوبة لمنع إساءة الاستخدام
-        if (take > 200) take = 200;
-        if (take < 1) take = 50;
-        if (skip < 0) skip = 0;
-
-        try
-        {
-            // نستخدم ORDER BY Id DESC لجلب الأحدث أولاً، ثم OFFSET/FETCH للصفحات
-            string sql = $@"
-                SELECT Id, SenderId, ReceiverId, Content, Timestamp, IsDelivered, IsRead 
-                FROM Messages 
-                WHERE (SenderId = N'{currentUser}' AND ReceiverId = N'{targetUser}')
-                   OR (SenderId = N'{targetUser}' AND ReceiverId = N'{currentUser}')
-                ORDER BY Id DESC
-                OFFSET {skip} ROWS FETCH NEXT {take} ROWS ONLY";
-
-            DataTable dt = DB.Query(sql);
-
-            foreach (DataRow row in dt.Rows)
-            {
-                messages.Add(new ChatMessageDto
-                {
-                    Id = Convert.ToInt32(row["Id"]),
-                    Sender = row["SenderId"]?.ToString() ?? "",
-                    Receiver = row["ReceiverId"]?.ToString() ?? "",
-                    Content = row["Content"]?.ToString() ?? "",
-                    Timestamp = Convert.ToDateTime(row["Timestamp"]),
-                    IsDelivered = Convert.ToBoolean(row["IsDelivered"]),
-                    IsRead = Convert.ToBoolean(row["IsRead"])
-                });
-            }
-
-            // عكس الترتيب ليكون من الأقدم للأحدث (للعرض الصحيح في الشاشة)
-            messages.Reverse();
-
-            // 🟢 تحديث حالة القراءة فقط عند تحميل الصفحة الأولى (أحدث الرسائل)
-            if (skip == 0)
-            {
-                string updateSql = $@"
-                    UPDATE Messages 
-                    SET IsRead = 1, ReadAt = GETDATE(), IsDelivered = 1, DeliveredAt = ISNULL(DeliveredAt, GETDATE())
-                    WHERE SenderId = N'{targetUser}' AND ReceiverId = N'{currentUser}' AND IsRead = 0;
-                ";
-                DB.Exec(updateSql);
-
-                // إبلاغ الطرف الآخر (المرسل) بأن رسائله تمت قراءتها
-                if (_connectedUsers.TryGetValue(targetUser, out var senderConnectionId))
-                {
-                    Clients.Client(senderConnectionId).SendAsync("MessagesReadBy", currentUser);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Database Error on GetChatHistory: {ex.Message}");
-        }
-
-        return messages;
+        return new List<ChatMessageDto>();
     }
 
-    // 🟢 دالة لتحديث الرسائل إلى مقروءة فوراً عندما يراها المستخدم وهو داخل المحادثة
+    // 🟢 إبلاغ المرسل فوراً بأن رسائله قُرئت دون الحاجة لتحديث قاعدة البيانات
     public async Task MarkMessagesAsRead(string senderUser)
     {
         string currentUser = _connectedUsers.FirstOrDefault(x => x.Value == Context.ConnectionId).Key ?? "";
         if (string.IsNullOrEmpty(currentUser)) return;
 
-        try
+        // إبلاغ المرسل لتتحول الصحين إلى اللون الأزرق لديه
+        if (_connectedUsers.TryGetValue(senderUser, out var senderConnectionId))
         {
-            string updateSql = $@"
-                UPDATE Messages 
-                SET IsRead = 1, ReadAt = GETDATE(), IsDelivered = 1, DeliveredAt = ISNULL(DeliveredAt, GETDATE())
-                WHERE SenderId = N'{senderUser}' AND ReceiverId = N'{currentUser}' AND IsRead = 0;
-            ";
-            DB.Exec(updateSql);
-
-            // إبلاغ المرسل فوراً لتتحول الصحين إلى اللون الأزرق لديه
-            if (_connectedUsers.TryGetValue(senderUser, out var senderConnectionId))
-            {
-                await Clients.Client(senderConnectionId).SendAsync("MessagesReadBy", currentUser);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Database Error on MarkMessagesAsRead: {ex.Message}");
+            await Clients.Client(senderConnectionId).SendAsync("MessagesReadBy", currentUser);
         }
     }
 
