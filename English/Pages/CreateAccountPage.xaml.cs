@@ -1,7 +1,4 @@
-using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using English.Models;
-using English.Services;
 using English.Helpers;
 
 namespace English.Pages;
@@ -61,13 +58,9 @@ public partial class CreateAccountPage : ContentPage
                 return;
             }
 
-            // حفظ البيانات محلياً
-            SaveUserPreferences(user, id);
             await ShowToast("تم إنشاء حسابك بنجاح! مرحباً بك 🎉");
 
-            // الانتقال لصفحة تسجيل الدخول أو التطبيق مباشرة
-            // هنا نعود لصفحة تسجيل الدخول ليدخل المستخدم بياناته لأول مرة
-            Application.Current.MainPage = new LoginPage();
+            Application.Current!.Windows[0].Page = new LoginPage();
         }
         catch (Exception ex)
         {
@@ -94,18 +87,6 @@ public partial class CreateAccountPage : ContentPage
         }
 
         return true;
-    }
-
-    private void SaveUserPreferences(User user, string id)
-    {
-        Preferences.Set("ID", id.Trim('"'));
-        Preferences.Set("UserName", user.UserName);
-        Preferences.Set("Password", user.Password);
-        Preferences.Set("PhoneNumber", user.PhoneNumber);
-        Preferences.Set("YER", "0");
-        Preferences.Set("TimeFinalExam", "00:00:00");
-        Preferences.Set("IsLogin", "1");
-        Preferences.Set("Day", "0");
     }
 
     private async Task ShowToast(string message)

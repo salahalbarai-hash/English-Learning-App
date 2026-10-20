@@ -1,6 +1,3 @@
-using CommunityToolkit.Maui.Alerts;
-using English.Models;
-using English.Services;
 using English.Helpers;
 
 namespace English.Pages;
@@ -30,13 +27,6 @@ public partial class LoginPage : ContentPage
         try
         {
             SetBusy(true);
-
-            // التحقق من تسجيل سابق محلي
-            if (await IsLocalUserValidAsync(username, password))
-            {
-                await LoginSuccess(username);
-                return;
-            }
 
             if (!await Service.HasActiveInternetAsync(5))
             {
@@ -70,15 +60,6 @@ public partial class LoginPage : ContentPage
         }
     }
 
-    private async Task<bool> IsLocalUserValidAsync(string username, string password)
-    {
-        if (!Preferences.ContainsKey("UserName")) return false;
-
-        var storedPassword = await SecureStorage.GetAsync("Password") ?? "";
-        return Preferences.Get("UserName", "") == username &&
-               storedPassword == password;
-    }
-
     private async Task SaveUserPreferencesAsync(User user)
     {
         Preferences.Set("ID", user.ID.ToString());
@@ -87,7 +68,6 @@ public partial class LoginPage : ContentPage
         Preferences.Set("PhoneNumber", user.PhoneNumber);
         Preferences.Set("YER", user.YER);
         Preferences.Set("TimeFinalExam", user.TimeFinalExam);
-        Preferences.Set("IsLogin", "1");
         Preferences.Set("Day", "0");
         Preferences.Set("ImagesDownloaded", false);
         Preferences.Set("MemorizedWords", user.MemorizedWords);
@@ -97,13 +77,16 @@ public partial class LoginPage : ContentPage
 
     private async Task LoginSuccess(string username)
     {
+        Preferences.Set("IsLogin", "1");
+        await Toast.Make("تم تسجيل الدخول بنجاح 😊").Show();
+
         // 🟢 جلب الأصدقاء وحفظهم في الكاش المحلي لضمان وجودهم للأجهزة الجديدة
         try
         {
             var friends = await Service.GetFriendsAsync(username);
             if (friends != null && friends.Length > 0)
             {
-                Preferences.Set("Cached_Friends_List", System.Text.Json.JsonSerializer.Serialize(friends.ToList()));
+                Preferences.Set("Cached_Friends_List", JsonSerializer.Serialize(friends.ToList()));
             }
         }
         catch { }
@@ -127,8 +110,6 @@ public partial class LoginPage : ContentPage
             // 2. بدء اتصال SignalR وربط الأحداث باسم المستخدم الحالي
             await appShell.StartGameHubAsync(username);
         }
-
-        await Toast.Make("تم تسجيل الدخول بنجاح 😊").Show();
     }
 
     protected override void OnAppearing()
@@ -145,13 +126,6 @@ public partial class LoginPage : ContentPage
 
     private async void OnRegisterTapped(object sender, EventArgs e)
     {
-        if (Preferences.ContainsKey("UserName"))
-        {
-            var user = Preferences.Get("UserName", "");
-            await DisplayAlert("", $"أنت مسجل بالفعل باسم: {user}", "موافق");
-            return;
-        }
-
         await Navigation.PushModalAsync(new CreateAccountPage());
     }
 }
