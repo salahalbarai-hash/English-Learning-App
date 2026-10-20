@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="English.Pages.SettingsPage"
              BackgroundColor="#0B1120"
-             FlowDirection="RightToLeft">
+             FlowDirection="RightToLeft"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
 
     <Grid>
         <!-- ══════════ الخلفية العلوية (متدرجة) ══════════ -->

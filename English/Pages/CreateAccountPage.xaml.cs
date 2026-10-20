@@ -105,10 +105,6 @@ public partial class CreateAccountPage : ContentPage
     // دالة العودة عند الضغط على "لديك حساب بالفعل؟"
     private async void OnBackToLoginClicked(object sender, EventArgs e)
     {
-        // إذا كنت تستخدم Navigation.PushModalAsync في الصفحة السابقة:
-        await Navigation.PopModalAsync();
-
-        // أو إذا أردت استبدال الصفحة بالكامل:
-        // Application.Current.MainPage = new LoginPage();
+        await Shell.Current.GoToAsync("..");
     }
 }

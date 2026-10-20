@@ -4,7 +4,9 @@
              x:Class="English.Pages.FriendsPage"
              Title="الأصدقاء"
              FlowDirection="RightToLeft"
-             BackgroundColor="#111827">
+             BackgroundColor="#111827"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
 
     <VerticalStackLayout Padding="20" Spacing="15">
 

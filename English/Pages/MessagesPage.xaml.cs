@@ -1,4 +1,3 @@
-using System.Text.Json;
 using English.Helpers;
 
 namespace English.Pages;
@@ -13,7 +12,6 @@ public partial class MessagesPage : ContentPage
     public MessagesPage()
     {
         InitializeComponent();
-        Shell.SetNavBarIsVisible(this, false);
     }
 
     protected override void OnNavigatedTo(NavigatedToEventArgs args)

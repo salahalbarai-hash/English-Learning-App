@@ -46,10 +46,10 @@ public partial class MorePage : ContentPage
             switch (card.ClassId)
             {
                 case "Profile":
-                    await Navigation.PushModalAsync(new SettingsPage());
+                    await Shell.Current.GoToAsync(nameof(SettingsPage));
                     break;
                 case "Friends":
-                    await Navigation.PushModalAsync(new FriendsPage());
+                    await Shell.Current.GoToAsync(nameof(FriendsPage));
                     break;
                 case "Messages":
                     await Shell.Current.GoToAsync(nameof(MessagesPage));
@@ -62,7 +62,7 @@ public partial class MorePage : ContentPage
                     });
                     break;
                 case "About":
-                    await Navigation.PushModalAsync(new AboutPage());
+                    await Shell.Current.GoToAsync(nameof(AboutPage));
                     break;
                 case "Logout":
                     bool result = await DisplayAlert("تسجيل الخروج", "هل تريد تسجيل الخروج من الحساب؟", "نعم", "إلغاء");

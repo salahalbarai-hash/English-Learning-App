@@ -126,6 +126,6 @@ public partial class LoginPage : ContentPage
 
     private async void OnRegisterTapped(object sender, EventArgs e)
     {
-        await Navigation.PushModalAsync(new CreateAccountPage());
+        await Shell.Current.GoToAsync(nameof(CreateAccountPage));
     }
 }

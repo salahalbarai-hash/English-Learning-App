@@ -1,6 +1,5 @@
 using English.Hubs;
 using English.Popups;
-using Microsoft.AspNetCore.SignalR.Client;
 
 namespace English
 {
@@ -14,11 +13,15 @@ namespace English
         public AppShell()
         {
             InitializeComponent();
+            Routing.RegisterRoute(nameof(AboutPage), typeof(AboutPage));
+            Routing.RegisterRoute(nameof(CreateAccountPage), typeof(CreateAccountPage));
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+            Routing.RegisterRoute(nameof(FriendsPage), typeof(FriendsPage));
             Routing.RegisterRoute(nameof(FriendRequestsPage), typeof(FriendRequestsPage));
             Routing.RegisterRoute(nameof(ChatPage), typeof(ChatPage));
             Routing.RegisterRoute(nameof(MessagesPage), typeof(MessagesPage));
             Routing.RegisterRoute(nameof(SmartInspectorPage), typeof(SmartInspectorPage));
+            Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
             Routing.RegisterRoute(nameof(ChoiceChallengePage), typeof(ChoiceChallengePage));
             Routing.RegisterRoute(nameof(WritingChallengePage), typeof(WritingChallengePage));
             Routing.RegisterRoute(nameof(WordVideosPage), typeof(WordVideosPage));
