@@ -21,6 +21,6 @@ public partial class SettingsPage : ContentPage
 
     private async void OnCloseClicked(object sender, EventArgs e)
     {
-        await Navigation.PopModalAsync();
+        await Shell.Current.GoToAsync("..");
     }
 }

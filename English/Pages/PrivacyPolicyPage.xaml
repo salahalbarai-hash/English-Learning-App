@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.Pages.PrivacyPolicyPage"
+             Title="سياسة الخصوصية"
+             BackgroundColor="#13161C"
+             FlowDirection="RightToLeft"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- ══════════ الشريط العلوي (Header) ══════════ -->
+        <Border Grid.Row="0"
+                BackgroundColor="#1A1F28"
+                StrokeThickness="0"
+                Padding="16,40,16,14">
+            <Grid ColumnDefinitions="45,*,45" VerticalOptions="Center">
+
+                <!-- زر الرجوع -->
+                <Border Grid.Column="0"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        StrokeShape="RoundRectangle 12"
+                        StrokeThickness="1"
+                        Stroke="#2D333F"
+                        BackgroundColor="#22262F"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackClicked" />
+                    </Border.GestureRecognizers>
+                    <Label Text="›"
+                           FontSize="24"
+                           TextColor="#9EA4B0"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Margin="0,-2,0,0"/>
+                </Border>
+
+                <!-- العنوان المركزي -->
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" Spacing="2">
+                    <HorizontalStackLayout Spacing="6" HorizontalOptions="Center">
+                        <Label Text="🛡️" FontSize="18" VerticalOptions="Center"/>
+                        <Label Text="سياسة الخصوصية"
+                               FontSize="18"
+                               FontFamily="CairoBold"
+                               TextColor="#FFFFFF"
+                               VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Label Text="تطبيق إنجليش (English)"
+                           FontSize="11"
+                           FontFamily="CairoRegular"
+                           TextColor="#9EA4B0"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <!-- عنصر موازن للشكل -->
+                <BoxView Grid.Column="2" WidthRequest="40" HeightRequest="40" Color="Transparent"/>
+            </Grid>
+        </Border>
+
+        <!-- ══════════ المحتوى الرئيسي ══════════ -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20,18,20,30" Spacing="16">
+
+                <!-- بطاقة المقدمة -->
+                <Border BackgroundColor="#22262F"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="1"
+                        Stroke="#2D333F"
+                        Padding="18">
+                    <VerticalStackLayout Spacing="10">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="📌" FontSize="18" VerticalOptions="Center"/>
+                            <Label Text="مقدمة عامة"
+                                   FontSize="16"
+                                   FontFamily="CairoBold"
+                                   TextColor="#FFFFFF"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Label Text="نحن في تطبيق «إنجليش» (English) نولي خصوصية بياناتك اهتماماً بالغاً ونتعامل معها بأعلى معايير الأمان والشفافية. توضح هذه السياسة طبيعة البيانات التي نجمعها، وأوجه استخدامها، وحقوقك الكاملة في إدارتها وحذفها وفقاً للمعايير والسياسات العامة لحماية خصوصية المستخدمين."
+                               FontSize="13"
+                               FontFamily="CairoRegular"
+                               TextColor="#9EA4B0"
+                               LineHeight="1.5"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- بطاقة 1: البيانات التي نجمعها -->
+                <Border BackgroundColor="#22262F"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="1"
+                        Stroke="#2D333F"
+                        Padding="18">
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="📋" FontSize="18" VerticalOptions="Center"/>
+                            <Label Text="1. البيانات التي نجمعها"
+                                   FontSize="16"
+                                   FontFamily="CairoBold"
+                                   TextColor="#FFFFFF"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Label Text="لتقديم تجربة تعليمية وتنافسية متكاملة، نقوم بجمع ومعالجة البيانات التالية:"
+                               FontSize="13"
+                               FontFamily="CairoRegular"
+                               TextColor="#9EA4B0"/>
+
+                        <!-- نقطة 1 -->
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="8">
+                            <Label Text="•" FontSize="16" TextColor="#38BDF8" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="بيانات الحساب والملف الشخصي: اسم المستخدم، وكلمة المرور المشفرة بأمان، ورقم الهاتف (اختياري للتحقق والتواصل)."
+                                   FontSize="13" FontFamily="CairoRegular" TextColor="#9EA4B0" LineHeight="1.4"/>
+                        </Grid>
+
+                        <!-- نقطة 2 -->
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="8">
+                            <Label Text="•" FontSize="16" TextColor="#38BDF8" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="تقدم التعلم والإحصائيات: عدد الكلمات الإنجليزية المحفوظة، وتاريخ التقدم اليومي، والكلمات المتقنة."
+                                   FontSize="13" FontFamily="CairoRegular" TextColor="#9EA4B0" LineHeight="1.4"/>
+                        </Grid>
+
+                        <!-- نقطة 3 -->
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="8">
+                            <Label Text="•" FontSize="16" TextColor="#38BDF8" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="نتائج التحديات والمسابقات: سجل مبارزات الأصدقاء، ونتائج تحديات الخيارات والكتابة، والرصيد المكتسب من العملات (Coins)."
+                                   FontSize="13" FontFamily="CairoRegular" TextColor="#9EA4B0" LineHeight="1.4"/>
+                        </Grid>
+
+                        <!-- نقطة 4 -->
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="8">
+                            <Label Text="•" FontSize="16" TextColor="#38BDF8" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="لوحة المتصدرين (Leaderboard): إجمالي النقاط المحققة والترتيب التنافسي العام بين اللاعبين."
+                                   FontSize="13" FontFamily="CairoRegular" TextColor="#9EA4B0" LineHeight="1.4"/>
+                        </Grid>
+
+                        <!-- نقطة 5 -->
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="8">
+                            <Label Text="•" FontSize="16" TextColor="#38BDF8" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="الأصدقاء والرسائل: قائمة الأصدقاء المضافين، وطلبات الصداقة المعلقة، ونصوص الرسائل المتبادلة محلياً وسحابياً لأغراض المحادثة الفورية."
+                                   FontSize="13" FontFamily="CairoRegular" TextColor="#9EA4B0" LineHeight="1.4"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- بطاقة 2: كيفية استخدام البيانات -->
+                <Border BackgroundColor="#22262F"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="1"
+                        Stroke="#2D333F"
+                        Padding="18">
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="⚙️" FontSize="18" VerticalOptions="Center"/>
+                            <Label Text="2. كيفية استخدام البيانات"
+                                   FontSize="16"
+                                   FontFamily="CairoBold"
+                                   TextColor="#FFFFFF"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <Label Text="نستخدم البيانات المجمعة للأغراض التالية فقط:"
+                               FontSize="13"
+                               FontFamily="CairoRegular"
+                               TextColor="#9EA4B0"/>
+
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="8">
+                            <Label Text="✓" FontSize="14" TextColor="#10B981" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="تشغيل وتفعيل الميزات التعليمية وحفظ تقدمك لضمان عدم ضياعه عند تبديل الأجهزة."
+                                   FontSize="13" FontFamily="CairoRegular" TextColor="#9EA4B0" LineHeight="1.4"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="8">
+                            <Label Text="✓" FontSize="14" TextColor="#10B981" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="تمكين نظام التحديات التنافسية الحية بين الأصدقاء وعرض الترتيب المستحق في لوحة المتصدرين."
+                                   FontSize="13" FontFamily="CairoRegular" TextColor="#9EA4B0" LineHeight="1.4"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="8">
+                            <Label Text="✓" FontSize="14" TextColor="#10B981" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="إرسال إشعارات التحديات والرسائل وتوفير خدمة المراسلة الآمنة بين الأصدقاء."
+                                   FontSize="13" FontFamily="CairoRegular" TextColor="#9EA4B0" LineHeight="1.4"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="8">
+                            <Label Text="✓" FontSize="14" TextColor="#10B981" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="مراقبة استقرار الخوادم وتحسين الأداء ومعالجة أي أعطال برمجية طارئة."
+                                   FontSize="13" FontFamily="CairoRegular" TextColor="#9EA4B0" LineHeight="1.4"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- بطاقة 3: أمان وحماية البيانات -->
+                <Border BackgroundColor="#22262F"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="1"
+                        Stroke="#2D333F"
+                        Padding="18">
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="🔒" FontSize="18" VerticalOptions="Center"/>
+                            <Label Text="3. أمان وحماية البيانات"
+                                   FontSize="16"
+                                   FontFamily="CairoBold"
+                                   TextColor="#FFFFFF"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+
+                        <Label Text="نلتزم بأعلى معايير الحماية التقنية للمحافظة على بياناتك:"
+                               FontSize="13" FontFamily="CairoRegular" TextColor="#9EA4B0"/>
+
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="8">
+                            <Label Text="🔹" FontSize="12" TextColor="#38BDF8" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="تشفير كامل لكافة البيانات المتبادلة بين التطبيق والخوادم عبر بروتوكولات التشفير القياسية (HTTPS / TLS)."
+                                   FontSize="13" FontFamily="CairoRegular" TextColor="#9EA4B0" LineHeight="1.4"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="8">
+                            <Label Text="🔹" FontSize="12" TextColor="#38BDF8" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="حفظ البيانات الحساسة على جهازك داخل التخزين الآمن (SecureStorage)."
+                                   FontSize="13" FontFamily="CairoRegular" TextColor="#9EA4B0" LineHeight="1.4"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="8">
+                            <Label Text="🔹" FontSize="12" TextColor="#38BDF8" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="تعهد صارم: لا نقوم ببيع أو تأجير أو مشاركة أي بيانات شخصية تخص المستخدمين مع أي شركات إعلانية أو أطراف خارجية."
+                                   FontSize="13" FontFamily="CairoBold" TextColor="#F87171" LineHeight="1.4"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- بطاقة 4: الاحتفاظ بالبيانات وحذف الحساب -->
+                <Border BackgroundColor="#22262F"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="1.5"
+                        Stroke="#EF4444"
+                        Padding="18">
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="🗑️" FontSize="18" VerticalOptions="Center"/>
+                            <Label Text="4. الاحتفاظ بالبيانات وحذف الحساب نهائياً"
+                                   FontSize="16"
+                                   FontFamily="CairoBold"
+                                   TextColor="#FFFFFF"
+                                   VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+
+                        <Label Text="نحتفظ ببياناتك طالما أن حسابك نشط للاستفادة من مزايا التطبيق. ولديك الحق الكامل في طلب وحذف حسابك وكافة بياناتك المرتبطة به نهائياً في أي وقت وبكل سهولة:"
+                               FontSize="13"
+                               FontFamily="CairoRegular"
+                               TextColor="#9EA4B0"
+                               LineHeight="1.5"/>
+
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="8">
+                            <Label Text="1." FontSize="14" FontFamily="CairoBold" TextColor="#EF4444" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="يمكنك حذف حسابك مباشرة من خلال إعدادات الحساب داخل التطبيق."
+                                   FontSize="13" FontFamily="CairoRegular" TextColor="#9EA4B0" LineHeight="1.4"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="24,*" ColumnSpacing="8">
+                            <Label Text="2." FontSize="14" FontFamily="CairoBold" TextColor="#EF4444" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1"
+                                   Text="عند تأكيد الحذف، يتم مسح كافة سجلاتك، وبيانات ملفك الشخصي، وتقدمك في الكلمات، ورصيد العملات، والمحادثات من خوادمنا بشكل نهائي وفوري دون إمكانية استرجاعها."
+                                   FontSize="13" FontFamily="CairoRegular" TextColor="#9EA4B0" LineHeight="1.4"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- حقوق النشر -->
+                <VerticalStackLayout Spacing="4" Margin="0,10,0,10" HorizontalOptions="Center">
+                    <Label Text="تطبيق إنجليش © 2026"
+                           FontSize="12"
+                           FontFamily="CairoRegular"
+                           TextColor="#64748B"
+                           HorizontalOptions="Center"/>
+                    <Label Text="جميع الحقوق محفوظة"
+                           FontSize="11"
+                           FontFamily="CairoRegular"
+                           TextColor="#475569"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+
+</ContentPage>

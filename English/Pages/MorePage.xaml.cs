@@ -54,6 +54,12 @@ public partial class MorePage : ContentPage
                 case "Messages":
                     await Shell.Current.GoToAsync(nameof(MessagesPage));
                     break;
+                case "PrivacyPolicy":
+                    await Shell.Current.GoToAsync(nameof(PrivacyPolicyPage));
+                    break;
+                case "TermsOfService":
+                    await Shell.Current.GoToAsync(nameof(TermsOfServicePage));
+                    break;
                 case "Share":
                     await Share.Default.RequestAsync(new ShareTextRequest
                     {
