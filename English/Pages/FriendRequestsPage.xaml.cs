@@ -1,3 +1,5 @@
+using English.Helpers;
+
 namespace English.Pages;
 
 public partial class FriendRequestsPage : ContentPage
@@ -12,6 +14,7 @@ public partial class FriendRequestsPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        this.AnimatePageInAsync();
         await LoadRequestsAsync();
     }
 
@@ -33,18 +36,7 @@ public partial class FriendRequestsPage : ContentPage
                 await appShell.AcceptFriendRequestAsync(senderName);
 
                 // 🟢 تحديث الكاش المحلي فوراً بإضافة الصديق الجديد
-                try
-                {
-                    string cachedFriendsJson = Preferences.Get("Cached_Friends_List", "[]");
-                    var friendsList = System.Text.Json.JsonSerializer.Deserialize<List<string>>(cachedFriendsJson) ?? new List<string>();
-
-                    if (!friendsList.Contains(senderName, StringComparer.OrdinalIgnoreCase))
-                    {
-                        friendsList.Add(senderName);
-                        Preferences.Set("Cached_Friends_List", System.Text.Json.JsonSerializer.Serialize(friendsList));
-                    }
-                }
-                catch { }
+                AppShell.AddFriendToLocalCache(senderName);
 
                 _requests.Remove(senderName);
                 RequestsCollectionView.ItemsSource = null;

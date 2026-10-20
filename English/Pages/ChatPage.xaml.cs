@@ -1,5 +1,4 @@
 using English.Helpers;
-
 namespace English.Pages;
 
 [QueryProperty(nameof(FriendName), "FriendName")]
@@ -31,6 +30,8 @@ public partial class ChatPage : ContentPage
     // 🟢 متغيرات التحميل المتدرج المحلي (Local Pagination)
     private const int PageSize = 50;
     private bool _isLoadingMore = false;
+    private bool _isNavigatingBack = false;
+    private CancellationTokenSource? _backCts;
     private List<ChatBubbleModel>? _allOfflineMessages; // كل الرسائل المحلية
     private int _offlineLoadedCount = 0;
 
@@ -76,43 +77,51 @@ public partial class ChatPage : ContentPage
         MessagesList.ItemsSource = Messages;
         _shell = Shell.Current as AppShell;
         _currentUserName = Preferences.Get("UserName", "");
-
-        // إخفاء العناصر في البداية لتفادي الخلل البصري (الوميض) قبل بدء الأنيميشن
-        if (this.Content is Layout rootLayout)
-        {
-            foreach (var child in rootLayout.Children.OfType<VisualElement>())
-            {
-                child.Opacity = 0;
-                child.TranslationY = 40;
-            }
-        }
+        Shell.SetNavBarIsVisible(this, false);
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        this.AnimatePageInAsync();
+        _isNavigatingBack = false;
 
-        // 1. استرجاع آخر 50 رسالة من التخزين المحلي فوراً
+        // 1. استرجاع آخر 50 رسالة من التخزين المحلي فوراً قبل بدء الحركة
+        // لضمان ظهور الرسائل داخل القائمة منذ اللحظة الأولى دون قفزة بصرية
         LoadOfflineMessages();
 
-        // 2. ربط أحداث الاتصال والانفصال اللحظية
+        // 2. بدء حركة ظهور الصفحة فوراً دون تعطيل بقية العمليات (بدون await هنا)
+        // ملاحظة: في صفحات الدردشة يُفضل ContainerOnly لتظهر الصفحة ككتلة واحدة متماسكة،
+        // أو اتركها فارغة ()this.AnimatePageInAsync لتحريك (الشريط العلوي ثم الرسائل ثم حقل الإدخال) بالتتابع
+        var animationTask = this.AnimatePageInAsync(PageAnimationOptions.ContainerOnly);
+
+        // 3. ربط أحداث الاتصال والانفصال اللحظية
         if (_shell?.GameHub != null)
         {
+            // إزالة الاشتراك القديم أولاً لمنع تكرار الاستدعاء عند الخروج والعودة للصفحة
+            _shell.GameHub.OnUserConnected -= OnFriendConnected;
             _shell.GameHub.OnUserConnected += OnFriendConnected;
+
+            _shell.GameHub.OnUserDisconnected -= OnFriendDisconnected;
             _shell.GameHub.OnUserDisconnected += OnFriendDisconnected;
         }
 
-        // 3. التحقق من اتصال الصديق الحالي أو آخر ظهور
-        await CheckFriendStatus();
-
         // 4. تفعيل مستمعات SignalR للرسائل والحالات
         SetupSignalRListeners();
+
+        // 5. التحقق من اتصال الصديق الحالي أو آخر ظهور عبر الشبكة
+        await CheckFriendStatus();
+
+        // 6. انتظار اكتمال الحركة (إن لم تكن قد اكتملت بالفعل أثناء الاتصال بالشبكة)
+        await animationTask;
     }
 
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+
+        _backCts?.Cancel();
+        _backCts?.Dispose();
+        _backCts = null;
 
         _receiveSubscription?.Dispose();
         _deliveredSubscription?.Dispose();
@@ -138,9 +147,88 @@ public partial class ChatPage : ContentPage
         FriendInitialLabel.Text = string.IsNullOrEmpty(FriendName) ? "?" : FriendName[0].ToString().ToUpper();
     }
 
-    private void OnBackClicked(object sender, EventArgs e)
+    protected override bool OnBackButtonPressed()
     {
-        Shell.Current.GoToAsync("..");
+        // 1. إذا كان وضع التحديد مفعلاً، إلغاء التحديد أولاً
+        if (IsSelectionModeActive)
+        {
+            CloseSelectionMode();
+            return true;
+        }
+
+        // إذا كان الانتقال جارياً بالفعل، تجاهل أي نقرات إضافية
+        if (_isNavigatingBack) return true;
+
+        // 2. إذا كان مؤقت الضغطة الأولى يعمل وجاءت ضغطة ثانية سريعة -> رجوع مزدوج مباشر إلى شاشة المزيد
+        if (_backCts != null)
+        {
+            _backCts.Cancel();
+            _backCts.Dispose();
+            _backCts = null;
+            _isNavigatingBack = true;
+
+            Dispatcher.Dispatch(async () =>
+            {
+                try
+                {
+                    // انتقال مباشر أحادي إلى شاشة المزيد دون المرور بمرحلتين متتاليتين لتفادي خلل أندرويد #31935
+                    await Shell.Current.GoToAsync("//MorePage");
+                }
+                catch
+                {
+                    try { await Shell.Current.GoToAsync("../.."); } catch { }
+                }
+                finally
+                {
+                    await Task.Delay(400);
+                    _isNavigatingBack = false;
+                }
+            });
+
+            return true;
+        }
+
+        // 3. الضغطة الأولى: نافذة 220ms للتفريق بين الرجوع لخطوة واحدة والرجوع المزدوج
+        _backCts = new CancellationTokenSource();
+        var cts = _backCts;
+
+        Task.Run(async () =>
+        {
+            try
+            {
+                await Task.Delay(220, cts.Token);
+
+                // إذا انتهت المهلة دون إلغاء، فهذا رجوع عادي لخطوة واحدة (شاشة الرسائل)
+                Dispatcher.Dispatch(async () =>
+                {
+                    if (_backCts == cts)
+                    {
+                        _backCts?.Dispose();
+                        _backCts = null;
+                    }
+
+                    if (_isNavigatingBack) return;
+                    _isNavigatingBack = true;
+
+                    try
+                    {
+                        await Shell.Current.GoToAsync("..");
+                    }
+                    catch { }
+                    finally
+                    {
+                        await Task.Delay(350);
+                        _isNavigatingBack = false;
+                    }
+                });
+            }
+            catch (OperationCanceledException)
+            {
+                // تم الإلغاء لأن الضغطة الثانية وصلت وتم تنفيذ الانتقال المباشر
+            }
+        });
+
+        return true;
     }
 
     private void OnFriendConnected(string userName)

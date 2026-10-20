@@ -1,5 +1,6 @@
 using English.Popups;
 using CommunityToolkit.Maui.Core;
+using English.Helpers;
 namespace English.Pages;
 
 public partial class WritingChallengePage : ContentPage
@@ -35,6 +36,12 @@ public partial class WritingChallengePage : ContentPage
     private HubConnection? _hubConnection;
     private string _roomName = "";
     private string _opponentName = "";
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        this.AnimatePageInAsync(PageAnimationOptions.ContainerOnly);
+    }
 
     // For Single Player
     public WritingChallengePage()

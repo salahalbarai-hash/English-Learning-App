@@ -1,5 +1,6 @@
 using English.ViewModels;
 using English.Hubs;
+using English.Helpers;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace English.Pages;
@@ -28,6 +29,12 @@ public partial class DuelGamePage : ContentPage
         {
             Command = new Command(async () => await ConfirmExitAsync())
         });
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        this.AnimatePageInAsync(PageAnimationOptions.ContainerOnly);
     }
 
     private bool _isLeaving = false;

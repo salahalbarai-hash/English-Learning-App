@@ -12,16 +12,6 @@ public partial class LoginPage : ContentPage
     public LoginPage()
     {
         InitializeComponent();
-
-        // إخفاء العناصر لتفادي الوميض (Flashing)
-        if (this.Content is Layout rootLayout)
-        {
-            foreach (var child in rootLayout.Children.OfType<VisualElement>())
-            {
-                child.Opacity = 0;
-                child.TranslationY = 40;
-            }
-        }
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)
@@ -107,6 +97,17 @@ public partial class LoginPage : ContentPage
 
     private async Task LoginSuccess(string username)
     {
+        // 🟢 جلب الأصدقاء وحفظهم في الكاش المحلي لضمان وجودهم للأجهزة الجديدة
+        try
+        {
+            var friends = await Service.GetFriendsAsync(username);
+            if (friends != null && friends.Length > 0)
+            {
+                Preferences.Set("Cached_Friends_List", System.Text.Json.JsonSerializer.Serialize(friends.ToList()));
+            }
+        }
+        catch { }
+
         if (Application.Current?.Windows.Count > 0)
         {
             // فصل الاتصال القديم لمنع تكرار الأحداث وتسريب الذاكرة (Memory Leak)

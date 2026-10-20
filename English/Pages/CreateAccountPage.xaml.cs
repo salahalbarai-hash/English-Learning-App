@@ -1,7 +1,8 @@
-﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using English.Models;
 using English.Services;
+using English.Helpers;
 
 namespace English.Pages;
 
@@ -12,6 +13,12 @@ public partial class CreateAccountPage : ContentPage
     public CreateAccountPage()
     {
         InitializeComponent();
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        this.AnimatePageInAsync();
     }
 
     private async void OnCreateAccountClicked(object sender, EventArgs e)

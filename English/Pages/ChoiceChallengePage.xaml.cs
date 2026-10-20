@@ -1,5 +1,6 @@
 using English.Popups;
 using CommunityToolkit.Maui.Core;
+using English.Helpers;
 
 namespace English.Pages;
 
@@ -37,6 +38,12 @@ public partial class ChoiceChallengePage : ContentPage
     private HubConnection? _hubConnection;
     private string _roomName = "";
     private string _opponentName = "";
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        this.AnimatePageInAsync(PageAnimationOptions.ContainerOnly);
+    }
 
     // للعب الفردي
     public ChoiceChallengePage()

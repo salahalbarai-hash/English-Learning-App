@@ -1,82 +1,87 @@
+using System.Text.Json;
+using English.Helpers;
+
 namespace English.Pages;
-
-public class MessagesFriendItem
-{
-    public string Name { get; set; } = string.Empty;
-    public string Initials => string.IsNullOrEmpty(Name)
-        ? "?"
-        : string.Join("", Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0].ToString())).ToUpper();
-    public string StatusIcon { get; set; } = "🔴";
-    public string StatusText => StatusIcon == "🟢" ? "متصل الآن" : "غير متصل";
-
-    // 🟢 لون نقطة الاتصال: أخضر زاهي للمتصل وأحمر هادئ للغير متصل
-    public Color StatusColor => StatusIcon == "🟢" ? Color.FromArgb("#10B981") : Color.FromArgb("#F43F5E");
-
-    // لون نص الحالة: أخضر للمتصل ورمادي للغير متصل
-    public Color StatusTextColor => StatusIcon == "🟢" ? Color.FromArgb("#10B981") : Color.FromArgb("#64748B");
-}
 
 public partial class MessagesPage : ContentPage
 {
-    private List<MessagesFriendItem> _allFriends = new();
+    private List<MessagesFriendItem> _allFriends = [];
     private bool _isNavigating = false;
+    private bool _isNavigatingBack = false;
+    private DateTime _pageAppearedTime = DateTime.MinValue;
 
     public MessagesPage()
     {
         InitializeComponent();
+        Shell.SetNavBarIsVisible(this, false);
+    }
+
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+        _pageAppearedTime = DateTime.UtcNow;
+        _isNavigating = false;
+        _isNavigatingBack = false;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        _pageAppearedTime = DateTime.UtcNow;
         _isNavigating = false;
+        _isNavigatingBack = false;
 
         // إزالة التحديد عند العودة للصفحة
         FriendsList.SelectedItem = null;
 
-        await LoadFriendsAsync();
+        // 1. يبدأ بقراءة الكاش المحلي فوراً (0ms) وتحديث الواجهة قبل التوقف عند await الشبكة
+        var loadTask = LoadFriendsAsync();
+
+        // 2. تشغيل حركة ظهور الصفحة بالتوازي دون انتظار انتهاء اتصال الشبكة
+        var animationTask = this.AnimatePageInAsync();
+
+        // 3. انتظار اكتمال جلب حالة المتصلين وانتهاء الحركة معاً
+        await Task.WhenAll(loadTask, animationTask);
     }
 
     private async Task LoadFriendsAsync()
     {
-        List<string> friendsList = new();
-        List<string> onlineUsers = new();
-        var userName = Preferences.Get("UserName", "");
+        List<string> friendsList = [];
+        List<string> onlineUsers = [];
 
-        try
+        // 🟢 1. القراءة الفورية المباشرة من الكاش المحلي (Instant Load 0ms)
+        var cachedJson = Preferences.Get("Cached_Friends_List", "");
+        if (!string.IsNullOrEmpty(cachedJson))
         {
-            if (Shell.Current is AppShell appShell)
+            try
             {
-                var fetchedFriends = await appShell.GetFriendsAsync();
-                var fetchedOnline = await appShell.GetOnlineUsersAsync();
+                friendsList = JsonSerializer.Deserialize<List<string>>(cachedJson) ?? [];
+            }
+            catch { }
+        }
 
-                if (fetchedFriends != null) friendsList = fetchedFriends;
+        // عرض بيانات الكاش المحلي فوراً قبل انتظار الشبكة حتى تبدأ الحركة والقائمة ممتلئة
+        // وحتى لا يظهر EmptyLabel بالخطأ أثناء جلب حالة الاتصال
+        if (_allFriends.Count == 0 && friendsList.Count > 0)
+        {
+            _allFriends = friendsList.Select(f => new MessagesFriendItem
+            {
+                Name = f,
+                StatusIcon = "🔴"
+            }).ToList();
+
+            RefreshList();
+        }
+
+        // 🟢 2. جلب حالة المستخدمين المتصلين فقط لتحديد النقطة الخضراء/الحمراء
+        if (Shell.Current is AppShell appShell)
+        {
+            try
+            {
+                var fetchedOnline = await appShell.GetOnlineUsersAsync();
                 if (fetchedOnline != null) onlineUsers = fetchedOnline;
             }
-
-            if (friendsList.Count == 0 && !string.IsNullOrEmpty(userName))
-            {
-                var arr = await Services.Service.GetFriendsAsync(userName);
-                if (arr != null) friendsList = arr.ToList();
-            }
-
-            if (friendsList.Count > 0)
-            {
-                Preferences.Set("OfflineFriendsCache", string.Join(",", friendsList));
-            }
-        }
-        catch
-        {
-            // الوضع غير المتصل
-        }
-
-        if (friendsList.Count == 0)
-        {
-            var cachedFriends = Preferences.Get("OfflineFriendsCache", "");
-            if (!string.IsNullOrEmpty(cachedFriends))
-            {
-                friendsList = cachedFriends.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
-            }
+            catch { }
         }
 
         _allFriends = friendsList.Select(f =>
@@ -115,7 +120,7 @@ public partial class MessagesPage : ContentPage
 
     private async void OnFriendSelected(object sender, SelectionChangedEventArgs e)
     {
-        if (_isNavigating) return;
+        if (_isNavigating || (DateTime.UtcNow - _pageAppearedTime).TotalMilliseconds < 350) return;
 
         if (e.CurrentSelection.FirstOrDefault() is MessagesFriendItem item)
         {
@@ -134,4 +139,45 @@ public partial class MessagesPage : ContentPage
             }
         }
     }
+
+    protected override bool OnBackButtonPressed()
+    {
+        if (_isNavigatingBack) return true;
+        _isNavigatingBack = true;
+
+        Dispatcher.Dispatch(async () =>
+        {
+            try
+            {
+                await Shell.Current.GoToAsync("//MorePage");
+            }
+            catch
+            {
+                try { await Shell.Current.GoToAsync(".."); } catch { }
+            }
+            finally
+            {
+                await Task.Delay(350);
+                _isNavigatingBack = false;
+            }
+        });
+
+        return true;
+    }
+}
+
+public class MessagesFriendItem
+{
+    public string Name { get; set; } = string.Empty;
+    public string Initials => string.IsNullOrEmpty(Name)
+        ? "?"
+        : string.Join("", Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0].ToString())).ToUpper();
+    public string StatusIcon { get; set; } = "🔴";
+    public string StatusText => StatusIcon == "🟢" ? "متصل الآن" : "غير متصل";
+
+    // 🟢 لون نقطة الاتصال: أخضر زاهي للمتصل وأحمر هادئ للغير متصل
+    public Color StatusColor => StatusIcon == "🟢" ? Color.FromArgb("#10B981") : Color.FromArgb("#F43F5E");
+
+    // لون نص الحالة: أخضر للمتصل ورمادي للغير متصل
+    public Color StatusTextColor => StatusIcon == "🟢" ? Color.FromArgb("#10B981") : Color.FromArgb("#64748B");
 }

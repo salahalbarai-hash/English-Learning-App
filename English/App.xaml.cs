@@ -20,7 +20,7 @@ namespace English
             else
             {
                 SetPreferences();
-                SaveJsonFileIfNotExists();
+                //SaveJsonFileIfNotExists();
                 return new Window(new LoginPage());
             }
         }

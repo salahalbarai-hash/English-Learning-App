@@ -1,3 +1,5 @@
+using English.Helpers;
+
 namespace English.Pages;
 
 public partial class AboutPage : ContentPage
@@ -5,6 +7,12 @@ public partial class AboutPage : ContentPage
     public AboutPage()
     {
         InitializeComponent();
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        this.AnimatePageInAsync();
     }
 
     // دالة زر تقييم التطبيق

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="English.Pages.WritingChallengePage"
              FlowDirection="RightToLeft"
+             Shell.NavBarIsVisible="False"
              NavigationPage.HasNavigationBar="False">
 
     <!-- خلفية متدرجة عصرية للشاشة بالكامل -->

@@ -1,5 +1,6 @@
-﻿using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Core;
 using English.ViewModels;
+using English.Helpers;
 
 namespace English.Pages;
 
@@ -16,6 +17,7 @@ public partial class LeadersPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        this.AnimatePageInAsync();
 
         await Task.Delay(200);
 

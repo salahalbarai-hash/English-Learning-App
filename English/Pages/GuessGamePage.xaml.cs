@@ -1,5 +1,6 @@
 using English.ViewModels;
 using English.Models;
+using English.Helpers;
 
 namespace English.Pages;
 
@@ -14,6 +15,12 @@ public partial class GuessGamePage : ContentPage
         _viewModel = new GuessGameVM(selectedCategory);
         BindingContext = _viewModel;
         _viewModel.ScrollToBottomRequested = ScrollToBottom;
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        this.AnimatePageInAsync(PageAnimationOptions.ContainerOnly);
     }
 
     private async void OnBackClicked(object sender, EventArgs e)

@@ -17,6 +17,7 @@ namespace English
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             Routing.RegisterRoute(nameof(FriendRequestsPage), typeof(FriendRequestsPage));
             Routing.RegisterRoute(nameof(ChatPage), typeof(ChatPage));
+            Routing.RegisterRoute(nameof(MessagesPage), typeof(MessagesPage));
             Routing.RegisterRoute(nameof(SmartInspectorPage), typeof(SmartInspectorPage));
             Routing.RegisterRoute(nameof(ChoiceChallengePage), typeof(ChoiceChallengePage));
             Routing.RegisterRoute(nameof(WritingChallengePage), typeof(WritingChallengePage));
@@ -65,6 +66,20 @@ namespace English
                 return;
 
             await _gameHub.ConnectAsync(currentUserName);
+
+            // 🟢 مزامنة الأصدقاء بهدوء في الخلفية لتحديث أي طلبات قُبلت أثناء عدم الاتصال
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    var serverFriends = await _gameHub.GetFriendsAsync();
+                    if (serverFriends != null && serverFriends.Count > 0)
+                    {
+                        Preferences.Set("Cached_Friends_List", JsonSerializer.Serialize(serverFriends));
+                    }
+                }
+                catch { }
+            });
 
             if (_isEventsSubscribed) return;
             _isEventsSubscribed = true;
@@ -305,24 +320,40 @@ namespace English
                             await _gameHub.AcceptFriendRequestAsync(senderName);
 
                             // 🟢 تحديث الكاش المحلي فوراً بإضافة الصديق الجديد
-                            try
-                            {
-                                string cachedFriendsJson = Preferences.Get("Cached_Friends_List", "[]");
-                                var friendsList = JsonSerializer.Deserialize<List<string>>(cachedFriendsJson) ?? new List<string>();
-
-                                if (!friendsList.Contains(senderName, StringComparer.OrdinalIgnoreCase))
-                                {
-                                    friendsList.Add(senderName);
-                                    Preferences.Set("Cached_Friends_List", JsonSerializer.Serialize(friendsList));
-                                }
-                            }
-                            catch { }
+                            AddFriendToLocalCache(senderName);
 
                             await Toast.Make($"أصبح {senderName} الآن في قائمة أصدقائك!").Show();
                         }
                     }
                 });
             };
+
+            // 🟢 الاستماع لإشعار قبول الطرف الآخر لطلب الصداقة وتحديث الكاش المحلي فوراً
+            _gameHub.OnFriendRequestAccepted += (acceptorName) =>
+            {
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    AddFriendToLocalCache(acceptorName);
+                    await Toast.Make($"قبل {acceptorName} طلب صداقتك! 🎉").Show();
+                });
+            };
+        }
+
+        public static void AddFriendToLocalCache(string friendName)
+        {
+            if (string.IsNullOrWhiteSpace(friendName)) return;
+            try
+            {
+                string cachedFriendsJson = Preferences.Get("Cached_Friends_List", "[]");
+                var friendsList = JsonSerializer.Deserialize<List<string>>(cachedFriendsJson) ?? new List<string>();
+
+                if (!friendsList.Contains(friendName, StringComparer.OrdinalIgnoreCase))
+                {
+                    friendsList.Add(friendName);
+                    Preferences.Set("Cached_Friends_List", JsonSerializer.Serialize(friendsList));
+                }
+            }
+            catch { }
         }
 
         // تم إضافة كلمة التحدي "word" كمعامل اختياري ليتناسب مع الإستدعاء في صفحة الأصدقاء

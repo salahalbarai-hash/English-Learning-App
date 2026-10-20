@@ -14,16 +14,6 @@ public partial class GroupPage : ContentPage
     {
         InitializeComponent();
 
-        // إخفاء العناصر لتفادي الوميض (Flashing)
-        if (this.Content is Layout rootLayout)
-        {
-            foreach (var child in rootLayout.Children.OfType<VisualElement>())
-            {
-                child.Opacity = 0;
-                child.TranslationY = 40;
-            }
-        }
-
         vm = new WordsVM();
         BindingContext = vm;
         // إعداد غير متزامن لتحميل الكلمات

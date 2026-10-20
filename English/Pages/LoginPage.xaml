@@ -16,7 +16,13 @@
 
                     <VerticalStackLayout Spacing="10" HorizontalOptions="Center" Margin="0,0,0,20">
                         <Border WidthRequest="100" HeightRequest="100" StrokeShape="RoundRectangle 25" StrokeThickness="0">
-                            <Image Source="login.gif" Aspect="AspectFill" IsAnimationPlaying="True" />
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#38BDF8" Offset="0.0" />
+                                    <GradientStop Color="#818CF8" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Label Text="📘" FontSize="48" HorizontalOptions="Center" VerticalOptions="Center" />
                             <Border.Shadow>
                                 <Shadow Brush="#38BDF8" Offset="0,10" Radius="25" Opacity="0.4" />
                             </Border.Shadow>

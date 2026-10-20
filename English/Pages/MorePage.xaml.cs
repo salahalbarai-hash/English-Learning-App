@@ -1,25 +1,37 @@
 using Microsoft.Maui.ApplicationModel.DataTransfer;
+using English.Helpers;
 
 namespace English.Pages;
 
 public partial class MorePage : ContentPage
 {
     private bool _isNavigating = false;
+    private DateTime _lastAppearedTime = DateTime.MinValue;
 
     public MorePage()
     {
         InitializeComponent();
     }
 
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+        _lastAppearedTime = DateTime.UtcNow;
+        _isNavigating = false;
+    }
+
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        _lastAppearedTime = DateTime.UtcNow;
         _isNavigating = false;
+        this.AnimatePageInAsync();
     }
 
     private async void MenuClicked(object sender, TappedEventArgs e)
     {
-        if (_isNavigating) return;
+        // حماية تامة من اللمسات العابرة (Tap-through) والنقر المزدوج عند العودة السريعة للشاشة
+        if (_isNavigating || (DateTime.UtcNow - _lastAppearedTime).TotalMilliseconds < 450) return;
         _isNavigating = true;
 
         try
@@ -40,7 +52,7 @@ public partial class MorePage : ContentPage
                     await Navigation.PushModalAsync(new FriendsPage());
                     break;
                 case "Messages":
-                    await Navigation.PushModalAsync(new MessagesPage());
+                    await Shell.Current.GoToAsync(nameof(MessagesPage));
                     break;
                 case "Share":
                     await Share.Default.RequestAsync(new ShareTextRequest

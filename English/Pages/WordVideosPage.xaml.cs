@@ -1,5 +1,6 @@
 using System.Text.Json;
 using CommunityToolkit.Maui.Alerts;
+using English.Helpers;
 
 namespace English.Pages;
 
@@ -18,6 +19,7 @@ public partial class WordVideosPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        this.AnimatePageInAsync();
     }
 
     private async void FindLearningVideo_Clicked(object sender, EventArgs e)

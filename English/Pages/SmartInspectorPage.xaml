@@ -5,6 +5,7 @@
              ios:Page.UseSafeArea="True"
              x:Class="English.Pages.SmartInspectorPage"
              FlowDirection="RightToLeft"
+             Shell.NavBarIsVisible="False"
              NavigationPage.HasNavigationBar="False">
 
     <!-- خلفية احترافية مطابقة تماماً لشاشات اللعب -->

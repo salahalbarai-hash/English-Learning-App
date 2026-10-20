@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Views;
 using English.Hubs;
+using English.Helpers;
 using Microsoft.Maui.Controls.Shapes;
 using System.Collections.ObjectModel;
 using System.Text.Json;
@@ -53,6 +54,7 @@ public partial class SmartInspectorPage : ContentPage
     {
         base.OnAppearing();
         _isNavigating = false;
+        this.AnimatePageInAsync();
         await LoadCategoriesFastAsync();
     }
 
