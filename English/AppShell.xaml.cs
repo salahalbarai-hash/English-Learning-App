@@ -15,7 +15,6 @@ namespace English
             InitializeComponent();
             Routing.RegisterRoute(nameof(AboutPage), typeof(AboutPage));
             Routing.RegisterRoute(nameof(CreateAccountPage), typeof(CreateAccountPage));
-            Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             Routing.RegisterRoute(nameof(FriendsPage), typeof(FriendsPage));
             Routing.RegisterRoute(nameof(FriendRequestsPage), typeof(FriendRequestsPage));
             Routing.RegisterRoute(nameof(ChatPage), typeof(ChatPage));
@@ -29,8 +28,18 @@ namespace English
             Routing.RegisterRoute(nameof(TermsOfServicePage), typeof(TermsOfServicePage));
             _gameHub = new GameHub();
 
+            string isLogin = Preferences.Get("IsLogin", "0");
+            if (isLogin == "1")
+            {
+                CurrentItem = MainTabBar;
+            }
+            else
+            {
+                CurrentItem = LoginPageContent;
+            }
+
             string savedUserName = Preferences.Get("UserName", "");
-            if (!string.IsNullOrEmpty(savedUserName))
+            if (isLogin == "1" && !string.IsNullOrEmpty(savedUserName))
             {
                 _ = StartGameHubAsync(savedUserName);
             }

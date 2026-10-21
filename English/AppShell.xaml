@@ -8,7 +8,16 @@
     Shell.FlyoutBehavior="Disabled"
     Title="English">
 
-    <TabBar>
+    <!-- شاشة تسجيل الدخول -->
+    <ShellContent
+        x:Name="LoginPageContent"
+        Route="LoginPage"
+        ContentTemplate="{DataTemplate pages:LoginPage}"
+        Shell.FlyoutItemIsVisible="False"
+        Shell.TabBarIsVisible="False"
+        Shell.NavBarIsVisible="False" />
+
+    <TabBar x:Name="MainTabBar">
         <ShellContent Title="الكلمات"
               Icon="home.png"              
               ContentTemplate="{DataTemplate pages:TenWordsPage}"

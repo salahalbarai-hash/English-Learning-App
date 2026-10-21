@@ -128,4 +128,14 @@ public partial class LoginPage : ContentPage
     {
         await Shell.Current.GoToAsync(nameof(CreateAccountPage));
     }
+
+    private async void OnPrivacyPolicyTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(PrivacyPolicyPage));
+    }
+
+    private async void OnTermsOfServiceTapped(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(TermsOfServicePage));
+    }
 }

@@ -60,7 +60,7 @@ public partial class CreateAccountPage : ContentPage
 
             await ShowToast("تم إنشاء حسابك بنجاح! مرحباً بك 🎉");
 
-            Application.Current!.Windows[0].Page = new LoginPage();
+            await Shell.Current.GoToAsync("..");
         }
         catch (Exception ex)
         {

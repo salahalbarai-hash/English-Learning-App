@@ -13,16 +13,13 @@ namespace English
         {
             var isLogin = Preferences.Get("IsLogin", "0");
 
-            if (isLogin == "1")
-            {
-                return new Window(new AppShell());
-            }
-            else
+            if (isLogin != "1")
             {
                 SetPreferences();
                 //SaveJsonFileIfNotExists();
-                return new Window(new LoginPage());
             }
+
+            return new Window(new AppShell());
         }
 
         //private async Task InitializeAdsAsync()

@@ -75,7 +75,15 @@ public partial class MorePage : ContentPage
                     if (result)
                     {
                         Preferences.Set("IsLogin", "0");
-                        Application.Current!.Windows[0].Page = new LoginPage();
+                        if (Application.Current?.Windows.Count > 0 && Application.Current.Windows[0].Page is AppShell currentShell)
+                        {
+                            try
+                            {
+                                await currentShell.GameHub.DisconnectAsync();
+                            }
+                            catch { }
+                        }
+                        await Shell.Current.GoToAsync("//LoginPage");
                     }
                     break;
             }

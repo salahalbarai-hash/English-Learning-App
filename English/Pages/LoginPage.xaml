@@ -5,7 +5,9 @@
              Title="تسجيل الدخول"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              FlowDirection="RightToLeft"
-             BackgroundColor="#0B0F1A">
+             BackgroundColor="#0B0F1A"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
     <ContentPage.Content>
         <Grid>
             <Ellipse Fill="#1A38BDF8" WidthRequest="300" HeightRequest="300" HorizontalOptions="Start" VerticalOptions="Start" Margin="-100,-100,0,0" />
@@ -106,6 +108,37 @@
                             </Label.GestureRecognizers>
                         </Label>
                     </HorizontalStackLayout>
+
+                    <!-- إقرار الموافقة على شروط الخدمة وسياسة الخصوصية -->
+                    <Label HorizontalOptions="Center" 
+                           HorizontalTextAlignment="Center" 
+                           Margin="10,25,10,5" 
+                           FontSize="12"
+                           FontFamily="CairoRegular"
+                           LineHeight="1.5">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="بتسجيل دخولك أو إنشاء حساب، فإنك توافق على " TextColor="#64748B" />
+                                <Span Text="شروط الخدمة" 
+                                      TextColor="#38BDF8" 
+                                      TextDecorations="Underline" 
+                                      FontAttributes="Bold">
+                                    <Span.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnTermsOfServiceTapped" />
+                                    </Span.GestureRecognizers>
+                                </Span>
+                                <Span Text=" و " TextColor="#64748B" />
+                                <Span Text="سياسة الخصوصية" 
+                                      TextColor="#38BDF8" 
+                                      TextDecorations="Underline" 
+                                      FontAttributes="Bold">
+                                    <Span.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnPrivacyPolicyTapped" />
+                                    </Span.GestureRecognizers>
+                                </Span>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
 
                 </VerticalStackLayout>
             </ScrollView>
