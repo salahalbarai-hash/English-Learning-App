@@ -1,90 +1,217 @@
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 using English.Services;
+using Shared.Models;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace English.ViewModels
 {
-    public class LeadersPageVM : INotifyPropertyChanged
+    public partial class LeadersPageVM : ObservableObject
     {
-        // تهيئة القائمة فوراً تمنع مشاكل الربط (Binding)
-        public ObservableCollection<Leader> TopTenLeaders { get; set; } = [];
+        public ObservableCollection<Leader> TopTenLeaders { get; } = [];
 
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsNotBusy))]
         private bool isBusy;
+
+        [ObservableProperty]
+        private bool isRefreshing;
+
+        [ObservableProperty]
+        private string refreshButtonText = "تحديث";
+
+        [ObservableProperty]
         private bool isErrorVisible;
+
+        [ObservableProperty]
         private bool showOverlay;
 
-        public bool IsBusy
-        {
-            get => isBusy;
-            set { isBusy = value; OnPropertyChanged(); }
-        }
-
-        public bool IsErrorVisible
-        {
-            get => isErrorVisible;
-            set { isErrorVisible = value; OnPropertyChanged(); }
-        }
-
-        public bool ShowOverlay
-        {
-            get => showOverlay;
-            set { showOverlay = value; OnPropertyChanged(); }
-        }
+        public bool IsNotBusy => !IsBusy;
 
         public LeadersPageVM() { }
-        public async Task LoadLeadersAsync()
+
+        public async Task LoadLeadersAsync(bool isManualRefresh = false)
         {
             if (IsBusy) return;
 
-            // إعداد الحالة البصرية للتحميل
-            ShowOverlay = true;
-            IsBusy = true;
-            IsErrorVisible = false;
-
             try
             {
-                // فحص الإنترنت قبل الجلب
-                if (await Service.HasActiveInternetAsync(4))
+                IsBusy = true;
+                IsErrorVisible = false;
+
+                if (isManualRefresh)
                 {
-                    var leaders = await Service.GetStudents();
+                    IsRefreshing = true;
+                    RefreshButtonText = "جاري التحديث...";
+                }
+                else if (TopTenLeaders.Count == 0)
+                {
+                    ShowOverlay = true;
+                }
 
-                    if (leaders != null)
+                // 1. فحص الاتصال بالإنترنت
+                if (!await Service.HasActiveInternetAsync(4))
+                {
+                    HandleNetworkError(isManualRefresh, "يرجى الاتصال بالإنترنت 📶");
+                    return;
+                }
+
+                // 2. مزامنة بيانات حساب المستخدم الحالي إن وُجد بالتوازي
+                if (isManualRefresh)
+                {
+                    await SyncCurrentUserDataAsync();
+                }
+
+                // 3. جلب قائمة المتصدرين من الخادم
+                var leaders = await Service.GetStudents();
+
+                if (leaders != null && leaders.Length > 0)
+                {
+                    var sortedLeaders = leaders
+                        .OrderByDescending(l => l.Coins)
+                        .ThenByDescending(l => l.MemorizedWords)
+                        .ToList();
+
+                    for (int i = 0; i < sortedLeaders.Count; i++)
                     {
-                        var sortedLeaders = leaders.OrderByDescending(l => l.Coins).ThenByDescending(l => l.MemorizedWords).ToList();
+                        sortedLeaders[i].Rank = i + 1;
+                    }
 
-                        // تحديث القائمة على الخيط الرئيسي لضمان الظهور الفوري
-                        MainThread.BeginInvokeOnMainThread(() =>
+                    await MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        TopTenLeaders.Clear();
+                        foreach (var leader in sortedLeaders)
                         {
-                            TopTenLeaders.Clear();
-                            int i = 1;
-                            foreach (var leader in sortedLeaders)
-                            {
-                                leader.Rank = i++;
-                                TopTenLeaders.Add(leader);
-                            }
-                            ShowOverlay = false; // إخفاء طبقة التحميل بنجاح
-                        });
+                            TopTenLeaders.Add(leader);
+                        }
+
+                        ShowOverlay = false;
+                        IsErrorVisible = false;
+                    });
+
+                    if (isManualRefresh)
+                    {
+                        await Toast.Make("تم تحديث لوحة الشرف بنجاح ✨", ToastDuration.Short).Show();
                     }
                 }
                 else
                 {
-                    IsErrorVisible = true;
+                    HandleNetworkError(isManualRefresh, "تعذر جلب بيانات المتصدرين من الخادم");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                IsErrorVisible = true;
+                HandleNetworkError(isManualRefresh, ex.Message);
             }
             finally
             {
                 IsBusy = false;
+                IsRefreshing = false;
+                RefreshButtonText = "تحديث";
+
+                if (!IsErrorVisible && TopTenLeaders.Count > 0)
+                {
+                    ShowOverlay = false;
+                }
             }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        private async Task SyncCurrentUserDataAsync()
+        {
+            try
+            {
+                string userName = Preferences.Get("UserName", "");
+                string password = Preferences.Get("Password", "");
+
+                if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+                    return;
+
+                var result = await Service.GetUser(new User
+                {
+                    UserName = userName,
+                    Password = password,
+                });
+
+                if (result.Success && result.Data != null)
+                {
+                    User user = result.Data;
+                    int memorizedWords = Preferences.Get("MemorizedWords", 0);
+                    long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0L);
+                    long coins = Preferences.Get("Coins", 0L);
+
+                    if (!long.TryParse(Preferences.Get("ID", "0")?.Trim('"'), out long id))
+                    {
+                        id = user.ID;
+                    }
+
+                    var syncTasks = new List<Task>();
+
+                    if (memorizedWords < user.MemorizedWords)
+                    {
+                        Preferences.Set("MemorizedWords", user.MemorizedWords);
+                    }
+                    else if (memorizedWords > user.MemorizedWords && id > 0)
+                    {
+                        syncTasks.Add(Service.UpdateMemorizedWords(new User
+                        {
+                            ID = id,
+                            MemorizedWords = memorizedWords
+                        }));
+                    }
+
+                    if (friendsChallengeCount < user.FriendsChallengeCount)
+                    {
+                        Preferences.Set("FriendsChallengeCount", user.FriendsChallengeCount);
+                    }
+                    else if (friendsChallengeCount > user.FriendsChallengeCount && id > 0)
+                    {
+                        syncTasks.Add(Service.UpdateFriendsChallengeCount(new User
+                        {
+                            ID = id,
+                            FriendsChallengeCount = friendsChallengeCount
+                        }));
+                    }
+
+                    if (coins < user.Coins)
+                    {
+                        Preferences.Set("Coins", user.Coins);
+                    }
+                    else if (coins > user.Coins && id > 0)
+                    {
+                        syncTasks.Add(Service.UpdateCoins(new User
+                        {
+                            ID = id,
+                            Coins = coins
+                        }));
+                    }
+
+                    if (syncTasks.Count > 0)
+                    {
+                        await Task.WhenAll(syncTasks);
+                    }
+                }
+            }
+            catch
+            {
+                // لا نوقف تحديث المتصدرين في حال حدوث خطأ في مزامنة الحساب الفردي
+            }
+        }
+
+        private void HandleNetworkError(bool isManualRefresh, string errorMessage)
+        {
+            if (TopTenLeaders.Count == 0)
+            {
+                IsErrorVisible = true;
+                ShowOverlay = true;
+            }
+            else
+            {
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    await Toast.Make(errorMessage, ToastDuration.Short).Show();
+                });
+            }
+        }
     }
 }
