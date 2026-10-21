@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:English.Pages"
              x:Class="English.Pages.FriendsPage"
              Title="الأصدقاء"
              FlowDirection="RightToLeft"
@@ -8,21 +9,37 @@
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False">
 
-    <VerticalStackLayout Padding="20" Spacing="15">
+    <Grid RowDefinitions="Auto, Auto, Auto, *" Padding="20,16,20,10" RowSpacing="12">
 
-        <!-- زر الانتقال لصفحة طلبات الصداقة -->
-        <Button x:Name="BtnPendingRequests"
-                Text="طلبات الصداقة الواردة 📩"
-                BackgroundColor="#3B82F6"
-                TextColor="White"
-                CornerRadius="8"
-                FontSize="14"
-                FontFamily="CairoBold"
-                Clicked="OnOpenRequestsPageClicked"
-                IsVisible="False"/>
+        <!-- زر الانتقال لصفحة طلبات الصداقة الواردة -->
+        <Border x:Name="BtnPendingRequests"
+                Grid.Row="0"
+                BackgroundColor="#2563EB"
+                StrokeShape="RoundRectangle 10"
+                StrokeThickness="0"
+                Padding="14,10"
+                IsVisible="False">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnOpenRequestsPageClicked" />
+            </Border.GestureRecognizers>
+            <Grid ColumnDefinitions="*, Auto">
+                <Label x:Name="LblPendingCount"
+                       Text="طلبات الصداقة الواردة 📩"
+                       TextColor="White"
+                       FontSize="14"
+                       FontFamily="CairoBold"
+                       VerticalOptions="Center"/>
+                <Label Grid.Column="1"
+                       Text="عرض الكل ›"
+                       TextColor="#BFDBFE"
+                       FontSize="13"
+                       FontFamily="CairoRegular"
+                       VerticalOptions="Center"/>
+            </Grid>
+        </Border>
 
         <!-- أزرار التبويبات (المتصلون والأصدقاء) -->
-        <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+        <Grid Grid.Row="1" ColumnDefinitions="*, *" ColumnSpacing="10">
             <Button Grid.Column="0"
                     x:Name="TabOnline" 
                     Text="المتصلون" 
@@ -47,65 +64,108 @@
         </Grid>
 
         <!-- شريط البحث -->
-        <SearchBar x:Name="SearchBox"
+        <SearchBar Grid.Row="2"
+                   x:Name="SearchBox"
                    Placeholder="ابحث عن اسم المستخدم..."
                    TextChanged="OnSearchTextChanged"
                    BackgroundColor="#1E293B"
                    TextColor="White"
                    PlaceholderColor="#94A3B8"/>
 
-        <!-- 1. قائمة المتصلين -->
-        <CollectionView x:Name="OnlineUsersList" HeightRequest="500" IsVisible="True">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Border Padding="12" Margin="0,5" BackgroundColor="#1E293B" StrokeShape="RoundRectangle 12">
-                        <Grid ColumnDefinitions="*, Auto">
-                            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                                <Label Text="🟢" FontSize="12" VerticalOptions="Center"/>
-                                <Label Text="{Binding Name}" TextColor="White" FontSize="15" VerticalOptions="Center" FontFamily="CairoBold"/>
-                            </HorizontalStackLayout>
+        <!-- محتوى القوائم داخل RefreshView متجاوب يملأ الشاشة بسلاسة -->
+        <RefreshView Grid.Row="3"
+                     x:Name="PageRefreshView"
+                     Refreshing="OnPageRefreshing"
+                     RefreshColor="#6366F1">
+            <Grid>
+                <!-- 1. قائمة المتصلين -->
+                <CollectionView x:Name="OnlineUsersList" 
+                                SelectionMode="None" 
+                                IsVisible="True">
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout Spacing="10" VerticalOptions="Center" HorizontalOptions="Center" Padding="20,40">
+                            <Label Text="😴" FontSize="40" HorizontalOptions="Center"/>
+                            <Label Text="لا يوجد مستخدمون متصلون حالياً" 
+                                   TextColor="#94A3B8" 
+                                   FontSize="15" 
+                                   FontFamily="CairoBold" 
+                                   HorizontalOptions="Center"/>
+                            <Label Text="اسحب لأسفل لتحديث القائمة" 
+                                   TextColor="#64748B" 
+                                   FontSize="12" 
+                                   FontFamily="CairoRegular" 
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
 
-                            <Button Grid.Column="1"
-                                    Text="{Binding ButtonText}"
-                                    IsEnabled="{Binding IsButtonEnabled}"
-                                    BackgroundColor="{Binding ButtonBgColor}"
-                                    TextColor="White"
-                                    FontSize="12"
-                                    HeightRequest="35"
-                                    Clicked="OnAddFriendClicked"
-                                    CommandParameter="{Binding Name}"/>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="local:OnlineUserItem">
+                            <Border Padding="14,10" Margin="0,4" BackgroundColor="#1E293B" StrokeShape="RoundRectangle 12">
+                                <Grid ColumnDefinitions="Auto, *, Auto">
+                                    <Label Text="🟢" FontSize="12" VerticalOptions="Center" Margin="0,0,10,0"/>
+                                    <Label Grid.Column="1" 
+                                           Text="{Binding Name}" 
+                                           TextColor="White" 
+                                           FontSize="15" 
+                                           VerticalOptions="Center" 
+                                           FontFamily="CairoBold"/>
 
-        <!-- 2. قائمة الأصدقاء (زر التحدي يظهر فقط إذا كان متصلاً IsOnline) -->
-        <CollectionView x:Name="FriendsList" HeightRequest="500" IsVisible="False">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Border Padding="12" Margin="0,5" BackgroundColor="#1E293B" StrokeShape="RoundRectangle 12">
-                        <Grid ColumnDefinitions="*, Auto">
-                            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                                <Label Text="{Binding StatusIcon}" FontSize="12" VerticalOptions="Center"/>
-                                <Label Text="{Binding Name}" TextColor="White" FontSize="15" VerticalOptions="Center" FontFamily="CairoBold"/>
-                            </HorizontalStackLayout>
+                                    <Button Grid.Column="2"
+                                            Text="{Binding ButtonText}"
+                                            IsEnabled="{Binding IsButtonEnabled}"
+                                            BackgroundColor="{Binding ButtonBgColor}"
+                                            TextColor="White"
+                                            FontSize="12"
+                                            FontFamily="CairoBold"
+                                            Padding="12,0"
+                                            CornerRadius="8"
+                                            HeightRequest="36"
+                                            Clicked="OnAddFriendClicked"
+                                            CommandParameter="{Binding Name}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
-                            <!--   {Binding IsOnline} زر التحدي يظهر فقط عند اتصال الصديق -->
-                            <Button Grid.Column="1" 
-                                    Text="تحدي ⚔️" 
-                                    IsVisible="False"
-                                    BackgroundColor="#F59E0B" 
-                                    TextColor="White" 
-                                    FontSize="12" 
-                                    HeightRequest="35" 
-                                    Clicked="OnChallengeClicked" 
-                                    CommandParameter="{Binding Name}"/>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                <!-- 2. قائمة الأصدقاء (بدون زر التحدي وبمظهر نظيف متكامل) -->
+                <CollectionView x:Name="FriendsList" 
+                                SelectionMode="None" 
+                                IsVisible="False">
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout Spacing="10" VerticalOptions="Center" HorizontalOptions="Center" Padding="20,40">
+                            <Label Text="👥" FontSize="40" HorizontalOptions="Center"/>
+                            <Label Text="لم تقم بإضافة أي أصدقاء بعد" 
+                                   TextColor="#94A3B8" 
+                                   FontSize="15" 
+                                   FontFamily="CairoBold" 
+                                   HorizontalOptions="Center"/>
+                            <Label Text="تصفح قائمة المتصلين لإرسال طلبات صداقة" 
+                                   TextColor="#64748B" 
+                                   FontSize="12" 
+                                   FontFamily="CairoRegular" 
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
 
-    </VerticalStackLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="local:FriendItem">
+                            <Border Padding="14,12" Margin="0,4" BackgroundColor="#1E293B" StrokeShape="RoundRectangle 12">
+                                <Grid ColumnDefinitions="Auto, *">
+                                    <Label Text="{Binding StatusIcon}" FontSize="12" VerticalOptions="Center" Margin="0,0,10,0"/>
+                                    <Label Grid.Column="1" 
+                                           Text="{Binding Name}" 
+                                           TextColor="White" 
+                                           FontSize="15" 
+                                           VerticalOptions="Center" 
+                                           FontFamily="CairoBold"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </RefreshView>
+
+    </Grid>
 </ContentPage>

@@ -1,5 +1,9 @@
+using CommunityToolkit.Maui.Alerts;
 using English.Helpers;
-using English.Popups;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 namespace English.Pages;
 
@@ -70,12 +74,17 @@ public class FriendItem : INotifyPropertyChanged
 
 public partial class FriendsPage : ContentPage
 {
-    private ObservableCollection<OnlineUserItem> _onlineUserItems = new();
-    private ObservableCollection<FriendItem> _friendItems = new();
+    // القوائم المعروضة المربوطة بالواجهة
+    private readonly ObservableCollection<OnlineUserItem> _displayedOnlineUsers = [];
+    private readonly ObservableCollection<FriendItem> _displayedFriends = [];
 
-    private List<string> _onlineUsers = new();
-    private List<string> _friends = new();
-    private List<string> _sentRequests = new();
+    // القوائم الأصلية الكاملة
+    private readonly List<OnlineUserItem> _onlineUserItems = [];
+    private readonly List<FriendItem> _friendItems = [];
+
+    private List<string> _onlineUsers = [];
+    private List<string> _friends = [];
+    private List<string> _sentRequests = [];
 
     private string _currentTab = "Online";
 
@@ -86,12 +95,16 @@ public partial class FriendsPage : ContentPage
     public FriendsPage()
     {
         InitializeComponent();
+
+        // ربط القوائم لمرة واحدة لمنع وميض وتفكك الربط عند البحث والتحديث
+        OnlineUsersList.ItemsSource = _displayedOnlineUsers;
+        FriendsList.ItemsSource = _displayedFriends;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        this.AnimatePageInAsync();
+        _ = this.AnimatePageInAsync();
 
         if (Shell.Current is AppShell appShell && appShell.GameHub != null)
         {
@@ -99,7 +112,6 @@ public partial class FriendsPage : ContentPage
             appShell.GameHub.OnUserDisconnected += OnUserDisconnectedHandler;
         }
 
-        // الاستماع لتغيرات الشبكة لتحديث البيانات فور عودة الإنترنت
         Connectivity.Current.ConnectivityChanged += OnConnectivityChanged;
 
         await LoadDataAsync();
@@ -131,20 +143,17 @@ public partial class FriendsPage : ContentPage
 
     private async Task LoadDataAsync()
     {
-        // 1️⃣ أولاً: التحميل الفوري للبيانات المخبأة محلياً (Offline-First)
+        // 1. التحميل الفوري من الذاكرة المحلية (Offline-First)
         LoadDataFromLocalCache();
         BuildUIItems();
 
-        // 2️⃣ ثانياً: إذا كان هناك إنترنت، يتم تحديث البيانات في الخلفية من السيرفر
+        // 2. التحديث بالخلفية عبر الإنترنت
         if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
         {
             await FetchDataFromNetworkAsync();
         }
     }
 
-    /// <summary>
-    /// قراءة البيانات المخزنة محلياً لضمان السرعة وعرض الأصدقاء بدون إنترنت
-    /// </summary>
     private void LoadDataFromLocalCache()
     {
         try
@@ -152,25 +161,22 @@ public partial class FriendsPage : ContentPage
             string cachedFriendsJson = Preferences.Get(CachedFriendsKey, string.Empty);
             if (!string.IsNullOrEmpty(cachedFriendsJson))
             {
-                _friends = JsonSerializer.Deserialize<List<string>>(cachedFriendsJson) ?? new List<string>();
+                _friends = JsonSerializer.Deserialize<List<string>>(cachedFriendsJson) ?? [];
             }
 
             string cachedRequestsJson = Preferences.Get(CachedSentRequestsKey, string.Empty);
             if (!string.IsNullOrEmpty(cachedRequestsJson))
             {
-                _sentRequests = JsonSerializer.Deserialize<List<string>>(cachedRequestsJson) ?? new List<string>();
+                _sentRequests = JsonSerializer.Deserialize<List<string>>(cachedRequestsJson) ?? [];
             }
         }
         catch
         {
-            _friends = new List<string>();
-            _sentRequests = new List<string>();
+            _friends = [];
+            _sentRequests = [];
         }
     }
 
-    /// <summary>
-    /// جلب البيانات من السيرفر وتحديث الكاش المحلي
-    /// </summary>
     private async Task FetchDataFromNetworkAsync()
     {
         if (Shell.Current is AppShell appShell)
@@ -187,7 +193,7 @@ public partial class FriendsPage : ContentPage
                     if (incomingRequests != null && incomingRequests.Count > 0)
                     {
                         BtnPendingRequests.IsVisible = true;
-                        BtnPendingRequests.Text = $"طلبات الصداقة ({incomingRequests.Count}) 📩";
+                        LblPendingCount.Text = $"طلبات الصداقة الواردة ({incomingRequests.Count}) 📩";
                     }
                     else
                     {
@@ -195,10 +201,10 @@ public partial class FriendsPage : ContentPage
                     }
                 });
 
-                _onlineUsers = fetchedOnline ?? new List<string>();
+                _onlineUsers = fetchedOnline ?? [];
 
-                // تحديث الأصدقاء وطلبات الصداقة فقط في حال إرجاع قائمة سليمة من السيرفر
-                if (fetchedFriends != null && fetchedFriends.Count > 0)
+                // تحديث الأصدقاء حتى وإن كانت القائمة فارغة لحل ثغرة تجميد الكاش
+                if (fetchedFriends != null)
                 {
                     _friends = fetchedFriends;
                     Preferences.Set(CachedFriendsKey, JsonSerializer.Serialize(_friends));
@@ -214,14 +220,11 @@ public partial class FriendsPage : ContentPage
             }
             catch
             {
-                // في حال حدوث أي خطأ في الاتصال، يتم الاكتفاء بالبيانات المحلية المحملة سابقاً
+                // في حال انقطاع الشبكة يتم الاعتماد على البيانات السابقة
             }
         }
     }
 
-    /// <summary>
-    /// إعادة بناء عناصر القوائم وتحديث الواجهة
-    /// </summary>
     private void BuildUIItems()
     {
         var currentUser = Preferences.Get("UserName", "");
@@ -256,7 +259,38 @@ public partial class FriendsPage : ContentPage
             });
         }
 
-        RefreshUI();
+        ApplyFilter();
+    }
+
+    private void ApplyFilter()
+    {
+        string keyword = SearchBox?.Text?.Trim() ?? string.Empty;
+
+        // تصفية المتصلين
+        var filteredOnline = string.IsNullOrEmpty(keyword)
+            ? _onlineUserItems
+            : _onlineUserItems.Where(u => u.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        SyncCollection(_displayedOnlineUsers, filteredOnline);
+
+        // تصفية الأصدقاء
+        var filteredFriends = string.IsNullOrEmpty(keyword)
+            ? _friendItems
+            : _friendItems.Where(f => f.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        SyncCollection(_displayedFriends, filteredFriends);
+    }
+
+    private static void SyncCollection<T>(ObservableCollection<T> target, IList<T> source)
+    {
+        if (target.SequenceEqual(source))
+            return;
+
+        target.Clear();
+        foreach (var item in source)
+        {
+            target.Add(item);
+        }
     }
 
     private void OnUserConnectedHandler(string userName)
@@ -284,9 +318,10 @@ public partial class FriendsPage : ContentPage
                         IsButtonEnabled = true,
                         ButtonBgColor = Color.FromArgb("#6366F1")
                     });
-                    RefreshUI();
                 }
             }
+
+            ApplyFilter();
         });
     }
 
@@ -303,24 +338,29 @@ public partial class FriendsPage : ContentPage
                 friend.IsOnline = false;
             }
 
-            var itemsToRemove = _onlineUserItems.Where(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase)).ToList();
-            foreach (var item in itemsToRemove)
-            {
-                _onlineUserItems.Remove(item);
-            }
-            RefreshUI();
+            _onlineUserItems.RemoveAll(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
+
+            ApplyFilter();
         });
     }
 
-    private void RefreshUI()
+    private async void OnPageRefreshing(object sender, EventArgs e)
     {
-        if (OnlineUsersList.ItemsSource != _onlineUserItems)
-            OnlineUsersList.ItemsSource = _onlineUserItems;
-
-        if (FriendsList.ItemsSource != _friendItems)
-            FriendsList.ItemsSource = _friendItems;
-
-        OnSearchTextChanged(SearchBox, new TextChangedEventArgs(string.Empty, SearchBox.Text));
+        try
+        {
+            if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+            {
+                await FetchDataFromNetworkAsync();
+            }
+            else
+            {
+                await Toast.Make("لا يوجد اتصال بالإنترنت 📶").Show();
+            }
+        }
+        finally
+        {
+            PageRefreshView.IsRefreshing = false;
+        }
     }
 
     private async void OnOpenRequestsPageClicked(object sender, EventArgs e)
@@ -346,23 +386,13 @@ public partial class FriendsPage : ContentPage
             else if (tabName == "Friends") FriendsList.IsVisible = true;
 
             SearchBox.Text = string.Empty;
+            ApplyFilter();
         }
     }
 
     private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
     {
-        string keyword = e.NewTextValue?.Trim() ?? string.Empty;
-
-        if (_currentTab == "Online")
-        {
-            OnlineUsersList.ItemsSource = string.IsNullOrEmpty(keyword) ?
-                _onlineUserItems : _onlineUserItems.Where(u => u.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
-        }
-        else if (_currentTab == "Friends")
-        {
-            FriendsList.ItemsSource = string.IsNullOrEmpty(keyword) ?
-                _friendItems : _friendItems.Where(u => u.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
-        }
+        ApplyFilter();
     }
 
     private async void OnAddFriendClicked(object sender, EventArgs e)
@@ -387,12 +417,6 @@ public partial class FriendsPage : ContentPage
                 await appShell.SendFriendRequestAsync(targetUser);
             }
 
-            var itemToRemove = _onlineUserItems.FirstOrDefault(u => u.Name.Equals(targetUser, StringComparison.OrdinalIgnoreCase));
-            if (itemToRemove != null)
-            {
-                _onlineUserItems.Remove(itemToRemove);
-            }
-
             // إضافة المستخدم لطلبات الصداقة المرسلة وحفظها محلياً
             if (!_sentRequests.Contains(targetUser, StringComparer.OrdinalIgnoreCase))
             {
@@ -400,126 +424,11 @@ public partial class FriendsPage : ContentPage
                 Preferences.Set(CachedSentRequestsKey, JsonSerializer.Serialize(_sentRequests));
             }
 
-            RefreshUI();
+            _onlineUserItems.RemoveAll(u => u.Name.Equals(targetUser, StringComparison.OrdinalIgnoreCase));
 
-            await Toast.Make($"تم إرسال طلب الصداقة إلى {targetUser}").Show();
-        }
-    }
+            ApplyFilter();
 
-    private async void OnChallengeClicked(object sender, EventArgs e)
-    {
-        if (sender is Button button && button.CommandParameter is string friendName)
-        {
-            // التحقق أولاً من وجود اتصال عند محاولة إرسال التحدي
-            if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
-            {
-                await Toast.Make("لا يوجد اتصال بالإنترنت لإرسال التحدي!"). Show();
-                return;
-            }
-
-            int memorizedCount = Preferences.Get("MemorizedWords", 0);
-            int friendMemorizedCount = await Service.FetchFriendMemorizedWordsCountAsync(friendName);
-            int effectiveMemorizedCount = (friendMemorizedCount > 0) ? Math.Min(memorizedCount, friendMemorizedCount) : memorizedCount;
-
-            if (memorizedCount == 0)
-            {
-                await Toast.Make("يجب عليك حفظ بعض الكلمات أولاً لتتمكن من إرسال تحدي!").Show();
-                return;
-            }
-
-            List<string> allowedCategories = new();
-            JsonDocument doc;
-            string json;
-
-            try
-            {
-                using var stream = await FileSystem.OpenAppPackageFileAsync("words.json");
-                using var reader = new StreamReader(stream);
-                json = await reader.ReadToEndAsync();
-                doc = JsonDocument.Parse(json);
-
-                var memorizedWords = doc.RootElement.EnumerateArray().Take(effectiveMemorizedCount);
-
-                allowedCategories = memorizedWords
-                    .Where(x => x.TryGetProperty("Category", out var c))
-                    .Select(x => x.GetProperty("Category").GetString())
-                    .Where(c => !string.IsNullOrWhiteSpace(c))
-                    .Distinct()
-                    .ToList()!;
-            }
-            catch
-            {
-                await Toast.Make("تعذر قراءة ملف الكلمات").Show();
-                return;
-            }
-
-            if (allowedCategories.Count == 0)
-            {
-                await Toast.Make("لا توجد فئات متاحة ضمن الكلمات التي حفظتها.").Show();
-                return;
-            }
-
-            var popup = new CategorySelectPopup(allowedCategories, memorizedCount);
-            var result = await this.ShowPopupAsync(popup);
-
-            if (result is not CategorySelectPopup.CategorySelectionResult sel || string.IsNullOrWhiteSpace(sel.Category))
-                return;
-
-            string category = sel.Category;
-            string selectedWordEnglish = sel.English;
-
-            if (string.IsNullOrEmpty(category) || category == "إلغاء")
-                return;
-
-            if (string.IsNullOrEmpty(selectedWordEnglish))
-            {
-                var items = doc.RootElement.EnumerateArray()
-                             .Take(memorizedCount)
-                             .Where(x => x.TryGetProperty("Category", out var c) && c.GetString() == category)
-                             .ToArray();
-
-                if (items.Length == 0)
-                {
-                    await Toast.Make($"لا توجد كلمات محفوظة في الفئة {category}").Show();
-                    return;
-                }
-
-                var rnd = new Random();
-                var chosen = items[rnd.Next(items.Length)];
-                selectedWordEnglish = chosen.GetProperty("EnglishWord").GetString() ?? string.Empty;
-            }
-
-            if (Shell.Current is AppShell appShell)
-            {
-                var waitingPopup = new Popups.WaitingChallengePopup(friendName);
-
-                Action<string, bool, string> onChallengeResponded = (responder, isAccepted, cat) =>
-                {
-                    if (responder == friendName)
-                    {
-                        MainThread.BeginInvokeOnMainThread(() => waitingPopup.Close(isAccepted));
-                    }
-                };
-
-                appShell.GameHub.OnChallengeResponseReceived += onChallengeResponded;
-
-                await appShell.SendChallengeToFriendAsync(friendName, category, selectedWordEnglish);
-                await Toast.Make($"تم إرسال التحدي إلى {friendName} في قسم {category}").Show();
-
-                var waitResult = await this.ShowPopupAsync(waitingPopup);
-
-                appShell.GameHub.OnChallengeResponseReceived -= onChallengeResponded;
-
-                if (waitResult is bool isAcceptedResult)
-                {
-                    if (!isAcceptedResult)
-                        await Toast.Make($"{friendName} رفض التحدي أو هو مشغول حالياً.").Show();
-                }
-                else if (waitResult is string status && status == "Cancel")
-                {
-                    await appShell.GameHub.CancelChallengeAsync(friendName);
-                }
-            }
+            await Toast.Make($"تم إرسال طلب الصداقة إلى {targetUser} 📩").Show();
         }
     }
 }
