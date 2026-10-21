@@ -100,19 +100,6 @@
                 </Border.GestureRecognizers>
             </Border>
 
-            <!-- شروط الخدمة -->
-            <Border BackgroundColor="#252A34" StrokeThickness="0" StrokeShape="RoundRectangle 18" Padding="16" HeightRequest="65" Margin="0,0,0,12" ClassId="TermsOfService">
-                <Grid ColumnDefinitions="40,*,25">
-                    <Label Text="📜" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
-                    <Label Grid.Column="1" Text="شروط الخدمة" FontSize="16" FontAttributes="Bold" TextColor="#F1F1F1" VerticalOptions="Center"/>
-                    <Label Grid.Column="2" Text="›" FontSize="25" TextColor="#8A8A8A" HorizontalOptions="End" VerticalOptions="Center"/>
-                </Grid>
-
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="MenuClicked"/>
-                </Border.GestureRecognizers>
-            </Border>
-
             <!-- تسجيل الخروج -->
             <Border BackgroundColor="#252A34" StrokeThickness="0" StrokeShape="RoundRectangle 18" Padding="16" HeightRequest="65" Margin="0,0,0,12" ClassId="Logout">
                 <Grid ColumnDefinitions="40,*">

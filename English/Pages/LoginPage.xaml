@@ -109,7 +109,7 @@
                         </Label>
                     </HorizontalStackLayout>
 
-                    <!-- إقرار الموافقة على شروط الخدمة وسياسة الخصوصية -->
+                    <!-- إقرار الموافقة على سياسة الخصوصية -->
                     <Label HorizontalOptions="Center" 
                            HorizontalTextAlignment="Center" 
                            Margin="10,25,10,5" 
@@ -119,15 +119,6 @@
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span Text="بتسجيل دخولك أو إنشاء حساب، فإنك توافق على " TextColor="#64748B" />
-                                <Span Text="شروط الخدمة" 
-                                      TextColor="#38BDF8" 
-                                      TextDecorations="Underline" 
-                                      FontAttributes="Bold">
-                                    <Span.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="OnTermsOfServiceTapped" />
-                                    </Span.GestureRecognizers>
-                                </Span>
-                                <Span Text=" و " TextColor="#64748B" />
                                 <Span Text="سياسة الخصوصية" 
                                       TextColor="#38BDF8" 
                                       TextDecorations="Underline" 

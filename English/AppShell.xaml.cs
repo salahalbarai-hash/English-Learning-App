@@ -25,7 +25,6 @@ namespace English
             Routing.RegisterRoute(nameof(WritingChallengePage), typeof(WritingChallengePage));
             Routing.RegisterRoute(nameof(WordVideosPage), typeof(WordVideosPage));
             Routing.RegisterRoute(nameof(PrivacyPolicyPage), typeof(PrivacyPolicyPage));
-            Routing.RegisterRoute(nameof(TermsOfServicePage), typeof(TermsOfServicePage));
             _gameHub = new GameHub();
 
             string isLogin = Preferences.Get("IsLogin", "0");
