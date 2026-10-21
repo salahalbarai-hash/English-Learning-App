@@ -92,7 +92,7 @@ namespace English.ViewModels
 
                     if (isManualRefresh)
                     {
-                        await Toast.Make("تم تحديث لوحة الشرف بنجاح ✨", ToastDuration.Short).Show();
+                        await Toast.Make("تم التحديث بنجاح ✔", ToastDuration.Short).Show();
                     }
                 }
                 else
