@@ -906,6 +906,11 @@ public partial class ChoiceChallengePage : ContentPage
         await SafePopAsync();
     }
 
+    private async void OnCloseSetupClicked(object sender, EventArgs e)
+    {
+        await SafePopAsync();
+    }
+
     private async void OnBackClicked(object sender, EventArgs e)
     {
         await ConfirmExitAsync();

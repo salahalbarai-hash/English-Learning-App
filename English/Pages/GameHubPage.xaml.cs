@@ -1,3 +1,5 @@
+using CommunityToolkit.Maui.Alerts;
+
 namespace English.Pages;
 
 public partial class GameHubPage : ContentPage
@@ -7,67 +9,68 @@ public partial class GameHubPage : ContentPage
     public GameHubPage()
     {
         InitializeComponent();
-
-        foreach (var child in CardsLayout.Children.OfType<VisualElement>())
-        {
-            child.Opacity = 0;
-            child.TranslationY = 40;
-        }
     }
 
-    protected override async void OnAppearing()
+    protected override void OnAppearing()
     {
         base.OnAppearing();
-
-        ChallengeCountLabel.Text = Preferences.Get("FriendsChallengeCount", 0L).ToString();
         _isNavigating = false;
+        UpdateHeaderStats();
+    }
 
-        // حركة متتالية (Staggered Animation) لكروت الألعاب فقط (الهدير يبقى ثابتاً)
-        await Task.Delay(100);
-        int staggerDelay = 0;
-        foreach (var child in CardsLayout.Children.OfType<VisualElement>())
+    private void UpdateHeaderStats()
+    {
+        long challenges = Preferences.Get("FriendsChallengeCount", 0L);
+        long coins = Preferences.Get("Coins", 0L);
+
+        ChallengeCountLabel.Text = challenges.ToString();
+        CoinsCountLabel.Text = coins.ToString();
+    }
+
+    private async Task SafeNavigateAsync(Func<Page> pageFactory)
+    {
+        if (_isNavigating) return;
+        _isNavigating = true;
+
+        try
         {
-            _ = Task.Run(async () =>
-            {
-                await Task.Delay(staggerDelay);
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    child.FadeTo(1, 500, Easing.SpringOut);
-                    child.TranslateTo(0, 0, 500, Easing.SpringOut);
-                });
-            });
-            staggerDelay += 80;
+            var page = pageFactory();
+            await Navigation.PushModalAsync(page);
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
+        }
+        finally
+        {
+            _isNavigating = false;
         }
     }
 
-    private async void OnSmartInspectorTapped(object sender, EventArgs e)
+    private async void OnSmartInspectorClicked(object sender, EventArgs e)
     {
-        if (_isNavigating) return;
-        _isNavigating = true;
-
-        // الانتقال المباشر لشاشة المفتش الذكي (تتضمن خيارات اللعب الفردي والتحدي بداخلها)
-        await Navigation.PushModalAsync(new SmartInspectorPage());
+        await SafeNavigateAsync(() => new SmartInspectorPage());
     }
 
-    private async void OnChoiceChallengeTapped(object sender, EventArgs e)
+    private async void OnChoiceChallengeClicked(object sender, EventArgs e)
     {
-        if (_isNavigating) return;
-        _isNavigating = true;
-
-        await Navigation.PushModalAsync(new ChoiceChallengePage());
+        await SafeNavigateAsync(() => new ChoiceChallengePage());
     }
 
-    private async void OnWritingChallengeTapped(object sender, EventArgs e)
+    private async void OnWritingChallengeClicked(object sender, EventArgs e)
     {
-        if (_isNavigating) return;
-        _isNavigating = true;
-
-        // الانتقال المباشر لشاشة تحدي الكتابة
-        await Navigation.PushModalAsync(new WritingChallengePage());
+        await SafeNavigateAsync(() => new WritingChallengePage());
     }
 
     private async void OnChallengeFriendTapped(object sender, EventArgs e)
     {
-        await Toast.Make($"لديك {ChallengeCountLabel.Text} محاولات تحدي صديق ⚔️").Show();
+        long count = Preferences.Get("FriendsChallengeCount", 0L);
+        await Toast.Make($"لديك {count} محاولات لتحدي الأصدقاء ⚔️ (تكسب محاولات جديدة عند إتمام وحفظ الكلمات)").Show();
+    }
+
+    private async void OnCoinsBadgeTapped(object sender, EventArgs e)
+    {
+        long coins = Preferences.Get("Coins", 0L);
+        await Toast.Make($"رصيدك الحالي: {coins} كوينز ذهبي 💰 (تكسبها عند الفوز في التحديات والمسابقات)").Show();
     }
 }

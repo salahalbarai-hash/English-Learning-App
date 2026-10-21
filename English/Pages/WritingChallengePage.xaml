@@ -23,6 +23,7 @@
 
                 <!-- Header -->
                 <Grid ColumnDefinitions="Auto, *">
+                    <Button Grid.Column="0" Text="✕" FontSize="18" FontAttributes="Bold" TextColor="White" BackgroundColor="#1E293B" WidthRequest="44" HeightRequest="44" CornerRadius="22" Padding="0" Clicked="OnCloseSetupClicked"/>
                     <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Margin="-44,0,0,0" Spacing="4">
                         <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
                             <Label Text="✍️" FontSize="26" VerticalOptions="Center"/>
@@ -154,8 +155,8 @@
             </Border>
 
             <!-- Gameplay Area -->
-            <Grid Grid.Row="1" Padding="20">
-                <VerticalStackLayout VerticalOptions="Center" Spacing="24" Margin="0,-40,0,0">
+            <ScrollView Grid.Row="1" Orientation="Vertical" VerticalScrollBarVisibility="Default" Padding="20,10,20,30">
+                <VerticalStackLayout VerticalOptions="Center" Spacing="20">
 
                     <!-- بنر إشعار انسحاب الخصم / الانتظار -->
                     <Border x:Name="WithdrawalBanner" IsVisible="False" BackgroundColor="#2D1517" Stroke="#EF4444" StrokeThickness="2" StrokeShape="RoundRectangle 18" Padding="16,14" Margin="0,0,0,10">
@@ -172,7 +173,7 @@
                         <Label x:Name="QuestionIndexLabel" Text="سؤال 1 من 10" TextColor="#94A3B8" FontSize="13" FontFamily="CairoBold"/>
                     </Border>
 
-                    <Label x:Name="ArabicWordLabel" Text="كلمة" TextColor="White" FontSize="46" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontFamily="CairoBold" Margin="0,10">
+                    <Label x:Name="ArabicWordLabel" Text="كلمة" TextColor="White" FontSize="44" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontFamily="CairoBold" Margin="0,5">
                         <Label.Shadow>
                             <Shadow Brush="#0EA5E9" Offset="0,0" Radius="25" Opacity="0.6"/>
                         </Label.Shadow>
@@ -189,7 +190,7 @@
 
                     <Label x:Name="FeedbackLabel" Text="" FontSize="16" FontFamily="CairoBold" HorizontalOptions="Center" HorizontalTextAlignment="Center" IsVisible="False"/>
 
-                    <Button x:Name="ActionButton" Text="تأكيد الإجابة ➔" TextColor="White" FontFamily="CairoBold" FontSize="17" HeightRequest="56" CornerRadius="18" Margin="10,10,10,0" Clicked="OnActionClicked">
+                    <Button x:Name="ActionButton" Text="تأكيد الإجابة ➔" TextColor="White" FontFamily="CairoBold" FontSize="17" HeightRequest="54" CornerRadius="18" Margin="10,6,10,0" Clicked="OnActionClicked">
                         <Button.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                                 <GradientStop Color="#0284C7" Offset="0.0" />
@@ -198,7 +199,7 @@
                         </Button.Background>
                     </Button>
                 </VerticalStackLayout>
-            </Grid>
+            </ScrollView>
         </Grid>
     </Grid>
 </ContentPage>

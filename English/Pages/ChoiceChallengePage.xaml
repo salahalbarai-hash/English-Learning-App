@@ -23,6 +23,7 @@
 
                 <!-- Header -->
                 <Grid ColumnDefinitions="Auto, *">
+                    <Button Grid.Column="0" Text="✕" FontSize="18" FontAttributes="Bold" TextColor="White" BackgroundColor="#1E293B" WidthRequest="44" HeightRequest="44" CornerRadius="22" Padding="0" Clicked="OnCloseSetupClicked"/>
                     <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Margin="-44,0,0,0" Spacing="4">
                         <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
                             <Label Text="⚡" FontSize="26" VerticalOptions="Center"/>
