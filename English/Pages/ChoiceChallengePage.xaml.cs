@@ -30,6 +30,7 @@ public partial class ChoiceChallengePage : ContentPage
     private int _timeLeft = 5;
     private bool _answered = false;
     private bool _isLeaving = false;
+    private bool _isTransitioning = false;
     private bool _isMultiplayer = false;
     private bool _hasLocalFinished = false;
     private bool _hasOpponentFinished = false;
@@ -134,6 +135,8 @@ public partial class ChoiceChallengePage : ContentPage
                         StopTimer();
                         StopNextQuestionTimer();
 
+                        AwardWinnerCoins(6);
+
                         if (WithdrawalIconLabel != null) WithdrawalIconLabel.Text = "⚠️";
                         if (WithdrawalTextLabel != null)
                         {
@@ -179,6 +182,11 @@ public partial class ChoiceChallengePage : ContentPage
     private void LoadSetupData()
     {
         _memorizedWords = TenWords.GetMemorizedWords();
+        if (_memorizedWords.Count == 0)
+        {
+            _memorizedWords = TenWords.All();
+        }
+
         MaxWordsLabel.Text = _memorizedWords.Count.ToString();
 
         if (_memorizedWords.Count > 0)
@@ -524,7 +532,7 @@ public partial class ChoiceChallengePage : ContentPage
     private void GenerateQuestions(int count, int maxAllowedWords = 0)
     {
         _questions.Clear();
-        var allWordsFromFile = TenWords.GetAllWords();
+        var allWords = TenWords.GetAllWords();
         List<WordModel> sourceWords;
         if (_memorizedWords != null && _memorizedWords.Count > 0)
         {
@@ -535,36 +543,70 @@ public partial class ChoiceChallengePage : ContentPage
         }
         else
         {
-            sourceWords = allWordsFromFile;
+            sourceWords = allWords.Count > 0 ? allWords : TenWords.All();
         }
 
         if (sourceWords.Count == 0) return;
 
-        var selectedWords = sourceWords.OrderBy(_ => Guid.NewGuid()).Take(count).ToList();
+        // Shuffle sourceWords efficiently using Fisher-Yates
+        var shuffledSource = new List<WordModel>(sourceWords);
+        for (int i = shuffledSource.Count - 1; i > 0; i--)
+        {
+            int j = Random.Shared.Next(i + 1);
+            (shuffledSource[i], shuffledSource[j]) = (shuffledSource[j], shuffledSource[i]);
+        }
+
+        var selectedWords = shuffledSource.Take(count).ToList();
+
+        // Prepare pool of distinct wrong answers once (instant lookup)
+        var allArabicPool = allWords
+            .Select(w => w.ArabicWord)
+            .Where(w => !string.IsNullOrWhiteSpace(w))
+            .Distinct()
+            .ToList();
+
+        if (allArabicPool.Count < 4)
+        {
+            allArabicPool = sourceWords.Select(w => w.ArabicWord).Where(w => !string.IsNullOrWhiteSpace(w)).Distinct().ToList();
+        }
 
         foreach (var word in selectedWords)
         {
-            var options = new List<string> { word.ArabicWord };
-            var wrongOptions = allWordsFromFile
-                .Where(w => !string.IsNullOrWhiteSpace(w.ArabicWord) && w.ArabicWord != word.ArabicWord)
-                .Select(w => w.ArabicWord)
-                .Distinct()
-                .OrderBy(_ => Guid.NewGuid())
-                .Take(3)
-                .ToList();
+            var options = new List<string>(4) { word.ArabicWord };
+            var wrongPool = allArabicPool.Where(a => a != word.ArabicWord).ToList();
 
-            options.AddRange(wrongOptions);
+            // Pick 3 distinct wrong answers randomly
+            int needed = Math.Min(3, wrongPool.Count);
+            for (int i = 0; i < needed; i++)
+            {
+                int idx = Random.Shared.Next(wrongPool.Count);
+                options.Add(wrongPool[idx]);
+                wrongPool.RemoveAt(idx);
+            }
+
+            // Shuffle options
+            for (int i = options.Count - 1; i > 0; i--)
+            {
+                int j = Random.Shared.Next(i + 1);
+                (options[i], options[j]) = (options[j], options[i]);
+            }
 
             _questions.Add(new QuestionItem
             {
                 Word = word.EnglishWord,
                 CorrectAnswer = word.ArabicWord,
-                Options = options.OrderBy(_ => Guid.NewGuid()).ToList()
+                Options = options
             });
         }
+
+        _currentIndex = 0;
+        _score = 0;
+        _opponentScore = 0;
+        ScoreLabel.Text = "0";
+        OpponentScoreLabel.Text = "0";
     }
 
-    private void LoadQuestion()
+    private async void LoadQuestion()
     {
         StopNextQuestionTimer();
 
@@ -574,6 +616,7 @@ public partial class ChoiceChallengePage : ContentPage
             return;
         }
 
+        _isTransitioning = false;
         _answered = false;
         NextButton.IsVisible = false;
         ResetOptionButtons();
@@ -583,10 +626,14 @@ public partial class ChoiceChallengePage : ContentPage
         var q = _questions[_currentIndex];
         QuestionWordLabel.Text = q.Word;
 
-        OptionBtn0.Text = q.Options[0];
-        OptionBtn1.Text = q.Options[1];
-        OptionBtn2.Text = q.Options[2];
-        OptionBtn3.Text = q.Options[3];
+        OptionBtn0.Text = q.Options.ElementAtOrDefault(0) ?? "";
+        OptionBtn1.Text = q.Options.ElementAtOrDefault(1) ?? "";
+        OptionBtn2.Text = q.Options.ElementAtOrDefault(2) ?? "";
+        OptionBtn3.Text = q.Options.ElementAtOrDefault(3) ?? "";
+
+        // انتقال ناعم ورشيق للكلمة
+        QuestionWordLabel.Opacity = 0.5;
+        await QuestionWordLabel.FadeTo(1.0, 180);
 
         StartTimer();
     }
@@ -602,10 +649,20 @@ public partial class ChoiceChallengePage : ContentPage
         _timer.Elapsed += (s, e) =>
         {
             _timeLeft--;
-            MainThread.BeginInvokeOnMainThread(() =>
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
-                TimerLabel.Text = _timeLeft.ToString();
-                TimerProgress.Progress = (double)_timeLeft / (double)_timePerQuestion;
+                if (_isLeaving || _answered) return;
+
+                TimerLabel.Text = Math.Max(0, _timeLeft).ToString();
+                double targetProgress = Math.Max(0.0, (double)_timeLeft / _timePerQuestion);
+                try
+                {
+                    await TimerProgress.ProgressTo(targetProgress, 600, Easing.Linear);
+                }
+                catch
+                {
+                    TimerProgress.Progress = targetProgress;
+                }
 
                 if (_timeLeft <= 0)
                 {
@@ -685,7 +742,7 @@ public partial class ChoiceChallengePage : ContentPage
 
     private async void OnOptionClicked(object sender, TappedEventArgs e)
     {
-        if (_answered) return;
+        if (_answered || _isTransitioning) return;
         _answered = true;
         StopTimer();
 
@@ -707,6 +764,9 @@ public partial class ChoiceChallengePage : ContentPage
 
         if (border != null)
         {
+            // لمسة تفاعلية سريعة (Tactile Micro-Animation)
+            _ = border.ScaleTo(0.96, 50).ContinueWith(_ => MainThread.BeginInvokeOnMainThread(() => border.ScaleTo(1.0, 50)));
+
             string selected = "";
             if (border == OptionBorder0 || param == "0") selected = OptionBtn0.Text;
             else if (border == OptionBorder1 || param == "1") selected = OptionBtn1.Text;
@@ -719,24 +779,36 @@ public partial class ChoiceChallengePage : ContentPage
             {
                 border.BackgroundColor = Color.FromArgb("#10B981"); // Green
                 border.Stroke = Color.FromArgb("#10B981");
+                border.Opacity = 1.0;
                 _score += 10;
                 ScoreLabel.Text = _score.ToString();
+
+                // تمييز الخيارات الأخرى بالشفافية لراحة العين
+                Border[] allBorders = [OptionBorder0, OptionBorder1, OptionBorder2, OptionBorder3];
+                foreach (var b in allBorders)
+                {
+                    if (b != border) b.Opacity = 0.45;
+                }
             }
             else
             {
                 border.BackgroundColor = Color.FromArgb("#EF4444"); // Red
                 border.Stroke = Color.FromArgb("#EF4444");
+                border.Opacity = 1.0;
                 HighlightCorrectAnswer();
             }
 
             if (_isMultiplayer && _hubConnection != null)
             {
-                try
+                _ = Task.Run(async () =>
                 {
-                    string currentUser = Preferences.Get("UserName", "");
-                    await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, currentUser, $"SCORE:{_score}");
-                }
-                catch { }
+                    try
+                    {
+                        string currentUser = Preferences.Get("UserName", "");
+                        await _hubConnection.InvokeAsync("SendDuelAnswer", _roomName, currentUser, $"SCORE:{_score}");
+                    }
+                    catch { }
+                });
             }
         }
 
@@ -746,20 +818,38 @@ public partial class ChoiceChallengePage : ContentPage
     private void HighlightCorrectAnswer()
     {
         var correct = _questions[_currentIndex].CorrectAnswer;
+        (Border Border, Label Label)[] options =
+        [
+            (OptionBorder0, OptionBtn0),
+            (OptionBorder1, OptionBtn1),
+            (OptionBorder2, OptionBtn2),
+            (OptionBorder3, OptionBtn3)
+        ];
 
-        if (OptionBtn0.Text == correct) { OptionBorder0.BackgroundColor = Color.FromArgb("#10B981"); OptionBorder0.Stroke = Color.FromArgb("#10B981"); }
-        if (OptionBtn1.Text == correct) { OptionBorder1.BackgroundColor = Color.FromArgb("#10B981"); OptionBorder1.Stroke = Color.FromArgb("#10B981"); }
-        if (OptionBtn2.Text == correct) { OptionBorder2.BackgroundColor = Color.FromArgb("#10B981"); OptionBorder2.Stroke = Color.FromArgb("#10B981"); }
-        if (OptionBtn3.Text == correct) { OptionBorder3.BackgroundColor = Color.FromArgb("#10B981"); OptionBorder3.Stroke = Color.FromArgb("#10B981"); }
+        foreach (var item in options)
+        {
+            if (item.Label.Text == correct)
+            {
+                item.Border.BackgroundColor = Color.FromArgb("#10B981");
+                item.Border.Stroke = Color.FromArgb("#10B981");
+                item.Border.Opacity = 1.0;
+            }
+            else
+            {
+                item.Border.Opacity = 0.45;
+            }
+        }
     }
 
     private void ResetOptionButtons()
     {
-        Border[] borders = { OptionBorder0, OptionBorder1, OptionBorder2, OptionBorder3 };
+        Border[] borders = [OptionBorder0, OptionBorder1, OptionBorder2, OptionBorder3];
         foreach (var b in borders)
         {
-            b.BackgroundColor = Color.FromArgb("#121B2D"); // مطابقة لخلفية الكارد في الـ XAML الجديد
-            b.Stroke = Color.FromArgb("#23344D");         // مطابقة لحدود الكارد في الـ XAML الجديد
+            b.BackgroundColor = Color.FromArgb("#121B2D");
+            b.Stroke = Color.FromArgb("#23344D");
+            b.Opacity = 1.0;
+            b.Scale = 1.0;
         }
     }
 
@@ -779,15 +869,18 @@ public partial class ChoiceChallengePage : ContentPage
         catch { }
     }
 
-    private async void OnNextClicked(object sender, EventArgs e)
+    private void OnNextClicked(object sender, EventArgs e)
     {
+        if (_isTransitioning) return;
+        _isTransitioning = true;
+
         StopNextQuestionTimer();
 
         if (WithdrawalBanner != null && WithdrawalBanner.IsVisible)
         {
             _isLeaving = true;
             StopTimer();
-            await SafePopAsync();
+            _ = SafePopAsync();
             return;
         }
 
@@ -879,34 +972,60 @@ public partial class ChoiceChallengePage : ContentPage
 
         string myName = Preferences.Get("UserName", "أنا");
         // --- Award coins to winner (choice: winner gets 6 coins) ---
-        try
+        if (_score > _opponentScore)
         {
-            const int reward = 6; // for choice challenge
-            if (_score > _opponentScore)
-            {
-                long id = Convert.ToInt64(Preferences.Get("ID", "0"));
-                long coins = Preferences.Get("Coins", 0L) + reward;
-                Preferences.Set("Coins", coins);
-                if (await Service.HasActiveInternetAsync(5))
-                {
-                    var res = await Service.UpdateCoins(new User { ID = id, Coins = coins });
-                    if (res != "1")
-                    {
-                        Service.AddPendingCoinsUpdate(id, coins);
-                    }
-                }
-                else
-                {
-                    Service.AddPendingCoinsUpdate(id, coins);
-                }
-            }
+            AwardWinnerCoins(6);
         }
-        catch { }
 
         var resultPopup = new ChallengeResultPopup(myName, _score, _opponentName, _opponentScore);
         await this.ShowPopupAsync(resultPopup);
 
+        CleanUpMultiplayer();
         await SafePopAsync();
+    }
+
+    private void AwardWinnerCoins(int reward = 6)
+    {
+        try
+        {
+            long id = Convert.ToInt64(Preferences.Get("ID", "0"));
+            long coins = Preferences.Get("Coins", 0L) + reward;
+            Preferences.Set("Coins", coins);
+
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    if (await Service.HasActiveInternetAsync(5))
+                    {
+                        var res = await Service.UpdateCoins(new User { ID = id, Coins = coins });
+                        if (res != "1")
+                        {
+                            Service.AddPendingCoinsUpdate(id, coins);
+                        }
+                    }
+                    else
+                    {
+                        Service.AddPendingCoinsUpdate(id, coins);
+                    }
+                }
+                catch { }
+            });
+        }
+        catch { }
+    }
+
+    private void CleanUpMultiplayer()
+    {
+        if (_hubConnection != null)
+        {
+            try
+            {
+                _hubConnection.Remove("ReceiveDuelAnswer");
+                _hubConnection.Remove("ReceiveDuelWithdrawal");
+            }
+            catch { }
+        }
     }
 
     private async Task ConfirmExitAsync()
@@ -919,6 +1038,7 @@ public partial class ChoiceChallengePage : ContentPage
             _isLeaving = true;
             StopTimer();
             StopNextQuestionTimer();
+            CleanUpMultiplayer();
             await SafePopAsync();
             return;
         }
@@ -948,6 +1068,7 @@ public partial class ChoiceChallengePage : ContentPage
         _isLeaving = true;
         StopTimer();
         StopNextQuestionTimer();
+        CleanUpMultiplayer();
         await SafePopAsync();
     }
 
@@ -971,5 +1092,6 @@ public partial class ChoiceChallengePage : ContentPage
         base.OnDisappearing();
         StopTimer();
         StopNextQuestionTimer();
+        CleanUpMultiplayer();
     }
 }

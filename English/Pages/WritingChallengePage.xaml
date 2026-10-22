@@ -208,7 +208,22 @@
                         <Border.Shadow>
                             <Shadow Brush="#0EA5E9" Offset="0,0" Radius="15" Opacity="0.2"/>
                         </Border.Shadow>
-                        <Entry x:Name="AnswerEntry" Placeholder="اكتب هنا..." PlaceholderColor="#475569" TextColor="White" FontSize="22" FontFamily="CairoBold" HorizontalTextAlignment="Center" ReturnType="Done" Completed="OnSubmitClicked" TextChanged="OnAnswerTextChanged" BackgroundColor="Transparent"/>
+                        <Entry x:Name="AnswerEntry" 
+                               Placeholder="اكتب الكلمة هنا..." 
+                               PlaceholderColor="#475569" 
+                               TextColor="White" 
+                               FontSize="22" 
+                               FontFamily="CairoBold" 
+                               HorizontalTextAlignment="Center" 
+                               FlowDirection="LeftToRight"
+                               Keyboard="Plain"
+                               IsSpellCheckEnabled="False"
+                               IsTextPredictionEnabled="False"
+                               ClearButtonVisibility="WhileEditing"
+                               ReturnType="Done" 
+                               Completed="OnSubmitClicked" 
+                               TextChanged="OnAnswerTextChanged" 
+                               BackgroundColor="Transparent"/>
                     </Border>
 
                     <Label x:Name="FeedbackLabel" Text="" FontSize="16" FontFamily="CairoBold" HorizontalOptions="Center" HorizontalTextAlignment="Center" IsVisible="False"/>

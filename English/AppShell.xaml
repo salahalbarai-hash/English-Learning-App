@@ -31,7 +31,7 @@
               Shell.NavBarIsVisible="False"/>
 
         <ShellContent Title="التحديات"
-                      Icon="swords.png"
+                      Icon="challenges.png"
                       ContentTemplate="{DataTemplate pages:GameHubPage}"
                       Route="GameHubPage"
                       Shell.NavBarIsVisible="False"/>

@@ -28,6 +28,7 @@ public partial class WritingChallengePage : ContentPage
     private int _timeLeft = 10;
     private bool _answered = false;
     private bool _isLeaving = false;
+    private bool _isTransitioning = false;
     private bool _isMultiplayer = false;
     private bool _hasLocalFinished = false;
     private bool _hasOpponentFinished = false;
@@ -131,6 +132,8 @@ public partial class WritingChallengePage : ContentPage
                         if (_isLeaving) return;
                         StopTimer();
                         StopNextQuestionTimer();
+
+                        AwardWinnerCoins(10);
 
                         if (WithdrawalIconLabel != null) WithdrawalIconLabel.Text = "⚠️";
                         if (WithdrawalTextLabel != null)
@@ -537,8 +540,17 @@ public partial class WritingChallengePage : ContentPage
             sourceWords = TenWords.All();
         }
 
-        var rnd = new Random();
-        var selectedWords = sourceWords.OrderBy(_ => rnd.Next()).Take(count).ToList();
+        if (sourceWords.Count == 0) return;
+
+        // Shuffle using Fisher-Yates
+        var shuffledSource = new List<WordModel>(sourceWords);
+        for (int i = shuffledSource.Count - 1; i > 0; i--)
+        {
+            int j = Random.Shared.Next(i + 1);
+            (shuffledSource[i], shuffledSource[j]) = (shuffledSource[j], shuffledSource[i]);
+        }
+
+        var selectedWords = shuffledSource.Take(count).ToList();
 
         _questions = selectedWords.Select(w => new WritingQuestionItem
         {
@@ -553,7 +565,7 @@ public partial class WritingChallengePage : ContentPage
         OpponentScoreLabel.Text = "0";
     }
 
-    private void LoadQuestion()
+    private async void LoadQuestion()
     {
         StopNextQuestionTimer();
 
@@ -563,6 +575,7 @@ public partial class WritingChallengePage : ContentPage
             return;
         }
 
+        _isTransitioning = false;
         _answered = false;
         var q = _questions[_currentIndex];
 
@@ -572,9 +585,15 @@ public partial class WritingChallengePage : ContentPage
         AnswerEntry.Text = string.Empty;
         AnswerEntry.IsEnabled = true;
         AnswerBorder.Stroke = Color.FromArgb("#0284C7");
+        AnswerBorder.TranslationX = 0;
+        AnswerBorder.Scale = 1.0;
         FeedbackLabel.IsVisible = false;
 
         ActionButton.Text = "تأكيد الإجابة ➔";
+
+        // انتقال بصري سلس للكلمة
+        ArabicWordLabel.Opacity = 0.5;
+        await ArabicWordLabel.FadeTo(1.0, 180);
 
         StartTimer();
 
@@ -595,11 +614,20 @@ public partial class WritingChallengePage : ContentPage
         _timer.Elapsed += (s, e) =>
         {
             _timeLeft--;
-            MainThread.BeginInvokeOnMainThread(() =>
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
-                if (_isLeaving) return;
+                if (_isLeaving || _answered) return;
+
                 TimerLabel.Text = Math.Max(0, _timeLeft).ToString();
-                TimerProgress.Progress = (double)Math.Max(0, _timeLeft) / _timePerQuestion;
+                double targetProgress = Math.Max(0.0, (double)_timeLeft / _timePerQuestion);
+                try
+                {
+                    await TimerProgress.ProgressTo(targetProgress, 600, Easing.Linear);
+                }
+                catch
+                {
+                    TimerProgress.Progress = targetProgress;
+                }
 
                 if (_timeLeft <= 0)
                 {
@@ -649,8 +677,7 @@ public partial class WritingChallengePage : ContentPage
                 else
                 {
                     StopNextQuestionTimer();
-                    _currentIndex++;
-                    LoadQuestion();
+                    OnActionClicked(this, EventArgs.Empty);
                 }
             });
         };
@@ -697,14 +724,15 @@ public partial class WritingChallengePage : ContentPage
         catch { }
     }
 
-    private async void OnActionClicked(object sender, EventArgs e)
+    private void OnActionClicked(object sender, EventArgs e)
     {
         if (WithdrawalBanner != null && WithdrawalBanner.IsVisible)
         {
             _isLeaving = true;
             StopTimer();
             StopNextQuestionTimer();
-            await SafePopAsync();
+            CleanUpMultiplayer();
+            _ = SafePopAsync();
             return;
         }
 
@@ -714,10 +742,25 @@ public partial class WritingChallengePage : ContentPage
         }
         else
         {
+            if (_isTransitioning) return;
+            _isTransitioning = true;
+
             StopNextQuestionTimer();
             _currentIndex++;
             LoadQuestion();
         }
+    }
+
+    private static string NormalizeText(string? input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+        var cleaned = input.Trim()
+                           .TrimEnd('.', ',', '!', '?')
+                           .Replace('’', '\'')
+                           .Replace('‘', '\'')
+                           .Replace('`', '\'');
+        cleaned = System.Text.RegularExpressions.Regex.Replace(cleaned, @"\s+", " ");
+        return cleaned;
     }
 
     private void ProcessAnswer(string? userAnswer)
@@ -728,8 +771,11 @@ public partial class WritingChallengePage : ContentPage
         AnswerEntry.IsEnabled = false;
 
         var currentQ = _questions[_currentIndex];
-        bool isCorrect = !string.IsNullOrWhiteSpace(userAnswer) &&
-                         userAnswer.Trim().Equals(currentQ.EnglishWord.Trim(), StringComparison.OrdinalIgnoreCase);
+        string cleanUser = NormalizeText(userAnswer);
+        string cleanExpected = NormalizeText(currentQ.EnglishWord);
+
+        bool isCorrect = !string.IsNullOrEmpty(cleanUser) &&
+                         cleanUser.Equals(cleanExpected, StringComparison.OrdinalIgnoreCase);
 
         if (isCorrect)
         {
@@ -740,6 +786,9 @@ public partial class WritingChallengePage : ContentPage
             FeedbackLabel.Text = "إجابة صحيحة! 🎉";
             FeedbackLabel.TextColor = Color.FromArgb("#10B981");
             FeedbackLabel.IsVisible = true;
+
+            // نبضة تفاعلية خفيفة عند الصحة
+            _ = AnswerBorder.ScaleTo(1.03, 80).ContinueWith(_ => MainThread.BeginInvokeOnMainThread(() => AnswerBorder.ScaleTo(1.0, 80)));
         }
         else
         {
@@ -747,6 +796,23 @@ public partial class WritingChallengePage : ContentPage
             FeedbackLabel.Text = $"إجابة خاطئة! الكلمة الصحيحة هي: {currentQ.EnglishWord}";
             FeedbackLabel.TextColor = Color.FromArgb("#EF4444");
             FeedbackLabel.IsVisible = true;
+
+            // اهتزاز خفيف مدروس للتنبيه بالخطأ
+            _ = Task.Run(async () =>
+            {
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    try
+                    {
+                        await AnswerBorder.TranslateTo(-7, 0, 35);
+                        await AnswerBorder.TranslateTo(7, 0, 35);
+                        await AnswerBorder.TranslateTo(-4, 0, 35);
+                        await AnswerBorder.TranslateTo(4, 0, 35);
+                        await AnswerBorder.TranslateTo(0, 0, 35);
+                    }
+                    catch { }
+                });
+            });
         }
 
         // Multiplayer score update
@@ -855,34 +921,60 @@ public partial class WritingChallengePage : ContentPage
 
         string myName = Preferences.Get("UserName", "أنا");
         // --- Award coins to winner (writing: winner gets 10 coins) ---
-        try
+        if (_score > _opponentScore)
         {
-            const int reward = 10; // for writing challenge
-            if (_score > _opponentScore)
-            {
-                long id = Convert.ToInt64(Preferences.Get("ID", "0"));
-                long coins = Preferences.Get("Coins", 0L) + reward;
-                Preferences.Set("Coins", coins);
-                if (await Service.HasActiveInternetAsync(5))
-                {
-                    var res = await Service.UpdateCoins(new User { ID = id, Coins = coins });
-                    if (res != "1")
-                    {
-                        Service.AddPendingCoinsUpdate(id, coins);
-                    }
-                }
-                else
-                {
-                    Service.AddPendingCoinsUpdate(id, coins);
-                }
-            }
+            AwardWinnerCoins(10);
         }
-        catch { }
 
         var resultPopup = new ChallengeResultPopup(myName, _score, _opponentName, _opponentScore);
         await this.ShowPopupAsync(resultPopup);
 
+        CleanUpMultiplayer();
         await SafePopAsync();
+    }
+
+    private void AwardWinnerCoins(int reward = 10)
+    {
+        try
+        {
+            long id = Convert.ToInt64(Preferences.Get("ID", "0"));
+            long coins = Preferences.Get("Coins", 0L) + reward;
+            Preferences.Set("Coins", coins);
+
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    if (await Service.HasActiveInternetAsync(5))
+                    {
+                        var res = await Service.UpdateCoins(new User { ID = id, Coins = coins });
+                        if (res != "1")
+                        {
+                            Service.AddPendingCoinsUpdate(id, coins);
+                        }
+                    }
+                    else
+                    {
+                        Service.AddPendingCoinsUpdate(id, coins);
+                    }
+                }
+                catch { }
+            });
+        }
+        catch { }
+    }
+
+    private void CleanUpMultiplayer()
+    {
+        if (_hubConnection != null)
+        {
+            try
+            {
+                _hubConnection.Remove("ReceiveDuelAnswer");
+                _hubConnection.Remove("ReceiveDuelWithdrawal");
+            }
+            catch { }
+        }
     }
 
     private async Task ConfirmExitAsync()
@@ -895,6 +987,7 @@ public partial class WritingChallengePage : ContentPage
             _isLeaving = true;
             StopTimer();
             StopNextQuestionTimer();
+            CleanUpMultiplayer();
             await SafePopAsync();
             return;
         }
@@ -924,6 +1017,7 @@ public partial class WritingChallengePage : ContentPage
         _isLeaving = true;
         StopTimer();
         StopNextQuestionTimer();
+        CleanUpMultiplayer();
         await SafePopAsync();
     }
 
@@ -947,5 +1041,6 @@ public partial class WritingChallengePage : ContentPage
         base.OnDisappearing();
         StopTimer();
         StopNextQuestionTimer();
+        CleanUpMultiplayer();
     }
 }
