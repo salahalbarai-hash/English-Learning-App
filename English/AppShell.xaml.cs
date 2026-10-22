@@ -353,7 +353,7 @@ namespace English
                 });
             };
 
-            // 🟢 الاستماع المركزي لوصول الرسائل المباشرة وتخزينها محلياً حتى لو لم تكن ChatPage مفتوحة
+            // 🟢 الاستماع المركزي لوصول الرسائل المباشرة وتخزينها محلياً وعرض إشعار عائم إذا لم تكن المحادثة مفتوحة
             _gameHub.OnDirectMessageReceived += (messageId, sender, message) =>
             {
                 if (ChatPage.CurrentActiveFriend != null && 
@@ -364,6 +364,9 @@ namespace English
                 }
 
                 _ = ChatStorageService.AppendIncomingMessageAsync(sender, messageId, message);
+
+                // إظهار الشريط العائم الأنيق
+                ShowInAppMessageBanner(sender, message);
             };
 
             _gameHub.OnMessageDeleted += (msgId) =>
@@ -461,6 +464,66 @@ namespace English
                 return await _gameHub.GetLastSeenAsync(targetUser);
             }
             return null;
+        }
+
+        // 🟢 إظهار شريط إشعار عائم في أعلى الشاشة عند وصول رسالة جديدة أثناء استخدام التطبيق
+        private static readonly SemaphoreSlim _bannerSemaphore = new(1, 1);
+        private static InAppMessageBannerPopup? _activeBanner = null;
+
+        public static void ShowInAppMessageBanner(string sender, string message)
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                try
+                {
+                    // إذا كان المستخدم حالياً داخل محادثة هذا الصديق، لا داعي لإظهار الشريط
+                    if (ChatPage.CurrentActiveFriend != null &&
+                        ChatPage.CurrentActiveFriend.Equals(sender, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return;
+                    }
+
+                    await _bannerSemaphore.WaitAsync();
+                    try
+                    {
+                        // إغلاق أي شريط إشعار نشط حالياً قبل فتح الجديد لتفادي التداخل
+                        if (_activeBanner != null)
+                        {
+                            try { _activeBanner.DismissBanner(); } catch { }
+                            _activeBanner = null;
+                            await Task.Delay(120);
+                        }
+
+                        // إعادة فحص الحالة في حال تغيرت أثناء فترة الانتظار
+                        if (ChatPage.CurrentActiveFriend != null &&
+                            ChatPage.CurrentActiveFriend.Equals(sender, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return;
+                        }
+
+                        if (Current == null) return;
+
+                        var banner = new InAppMessageBannerPopup(sender, message);
+                        _activeBanner = banner;
+
+                        try
+                        {
+                            HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+                        }
+                        catch { }
+
+                        await Current.ShowPopupAsync(banner);
+                    }
+                    finally
+                    {
+                        _bannerSemaphore.Release();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[Banner Error] {ex.Message}");
+                }
+            });
         }
     }
 }
