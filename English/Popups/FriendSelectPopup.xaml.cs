@@ -8,16 +8,16 @@ public partial class FriendSelectPopup : Popup
     private string _selectedCategory;
     private List<string> _allFriends = new();
 
-    // المُنشئ المعدل ليقبل القسم وقائمة الأصدقاء الفعليين
+    // المُنشئ المعدل ليقبل القسم وقائمة الأصدقاء المتصلين
     public FriendSelectPopup(string category, List<string> friendsList = null)
     {
         InitializeComponent();
         _selectedCategory = category;
 
-        // عرض القسم المستهدف في العنوان الفرعي للنافذة
-        CategorySubtitleLabel.Text = $"القسم: {_selectedCategory}";
+        // عرض القسم المستهدف وحالة المتصلين في العنوان الفرعي للنافذة
+        CategorySubtitleLabel.Text = $"القسم: {_selectedCategory} • المتصلون الآن 🟢";
 
-        // إذا تم تمرير القائمة الفعلية، يتم عرضها، وإلا يتم إظهار رسالة عدم وجود أصدقاء
+        // إذا تم تمرير القائمة الفعلية، يتم عرضها، وإلا يتم إظهار رسالة عدم وجود متصلين
         if (friendsList != null && friendsList.Count > 0)
         {
             _allFriends = friendsList;
@@ -27,7 +27,7 @@ public partial class FriendSelectPopup : Popup
         }
         else
         {
-            EmptyFriendsLabel.Text = "ليس لديك أصدقاء مضافون حالياً 📭";
+            EmptyFriendsLabel.Text = "لا يوجد أصدقاء متصلون حالياً 📭";
             EmptyFriendsLabel.IsVisible = true;
             FriendsCollectionView.IsVisible = false;
             SendButton.IsEnabled = false;
@@ -49,7 +49,7 @@ public partial class FriendSelectPopup : Popup
 
         if (filtered.Count == 0)
         {
-            EmptyFriendsLabel.Text = "لا يوجد أصدقاء يطابقون هذا البحث 🔍";
+            EmptyFriendsLabel.Text = "لا يوجد أصدقاء متصلون يطابقون هذا البحث 🔍";
             EmptyFriendsLabel.IsVisible = true;
             FriendsCollectionView.IsVisible = false;
         }

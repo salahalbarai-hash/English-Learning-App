@@ -271,31 +271,62 @@ public partial class ChoiceChallengePage : ContentPage
             // --- وضع تحدي صديق ---
             try
             {
+                SetLoadingState(true, "جاري فحص المتصلين... 🔍");
+
                 if (!await Service.HasActiveInternetAsync(5))
                 {
                     await Toast.Make("لا يوجد اتصال بالإنترنت. يرجى التحقق من الاتصال قبل بدء التحدي.").Show();
                     return;
                 }
 
-                List<string> myFriends = await FetchFriendsFromDatabaseAsync();
-                
+                AppShell? appShellForOnline = Application.Current?.MainPage as AppShell ?? Shell.Current as AppShell;
+                if (appShellForOnline == null)
+                {
+                    await Toast.Make("تعذر الوصول لخدمات الاتصال.").Show();
+                    return;
+                }
+
+                string currentUser = Preferences.Get("UserName", "");
+                if (appShellForOnline.GameHub != null && (appShellForOnline.GameHub.HubConnection == null || appShellForOnline.GameHub.HubConnection.State != Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected))
+                {
+                    SetLoadingState(true, "جاري الاتصال بالخادم... ⚡");
+                    await appShellForOnline.GameHub.ConnectAsync(currentUser);
+                }
+
+                SetLoadingState(true, "جاري فحص الأصدقاء المتصلين... 🔍");
+                var friendsTask = FetchFriendsFromDatabaseAsync();
+                var onlineUsersTask = appShellForOnline.GetOnlineUsersAsync();
+
+                await Task.WhenAll(friendsTask, onlineUsersTask);
+
+                List<string> myFriends = await friendsTask;
+                List<string> onlineUsers = (await onlineUsersTask) ?? new List<string>();
+
+                if (myFriends == null || myFriends.Count == 0)
+                {
+                    try
+                    {
+                        string cachedFriendsJson = Preferences.Get("Cached_Friends_List", "[]");
+                        myFriends = System.Text.Json.JsonSerializer.Deserialize<List<string>>(cachedFriendsJson) ?? new List<string>();
+                    }
+                    catch { }
+                }
+
                 if (myFriends == null || myFriends.Count == 0)
                 {
                     await Toast.Make("ليس لديك أصدقاء مضافين حتى الآن.").Show();
                     return;
                 }
 
-                if (Application.Current?.MainPage is AppShell appShellForOnline)
-                {
-                    var onlineUsers = await appShellForOnline.GetOnlineUsersAsync() ?? new List<string>();
-                    myFriends = myFriends.Where(f => onlineUsers.Contains(f, StringComparer.OrdinalIgnoreCase)).ToList();
-                }
+                myFriends = myFriends.Where(f => onlineUsers.Contains(f, StringComparer.OrdinalIgnoreCase)).ToList();
 
                 if (myFriends.Count == 0)
                 {
-                    await Toast.Make("لا يوجد أي صديق متصل حالياً لتحديه.").Show();
+                    await Toast.Make("لا يوجد أي صديق متصل حالياً لتحديه 📭").Show();
                     return;
                 }
+
+                SetLoadingState(false);
 
                 var popup = new Popups.FriendSelectPopup("تحدي الخيارات", myFriends);
                 var result = await this.ShowPopupAsync(popup);
@@ -385,7 +416,7 @@ public partial class ChoiceChallengePage : ContentPage
 
                         if (waitResult is string status && status == "Accepted")
                         {
-                            string currentUser = Preferences.Get("UserName", "");
+                            currentUser = Preferences.Get("UserName", "");
                             // --- Challenge accepted: decrement local FriendsChallengeCount (only challenger) and deduct stake coins ---
                             try
                             {
@@ -463,7 +494,21 @@ public partial class ChoiceChallengePage : ContentPage
                 await DisplayAlert("خطأ في الاتصال", $"تعذر بدء التحدي: {ex.Message}", "حسناً");
                 Console.WriteLine($"Error in multiplayer game start: {ex.Message}");
             }
+            finally
+            {
+                SetLoadingState(false);
+            }
         }
+    }
+
+    private void SetLoadingState(bool isLoading, string statusText = "")
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            StartLoadingIndicator.IsRunning = isLoading;
+            StartLoadingIndicator.IsVisible = isLoading;
+            StartGameButton.Text = isLoading ? statusText : "🚀 بدء التحدي";
+        });
     }
 
     private async Task<List<string>> FetchFriendsFromDatabaseAsync()
@@ -903,11 +948,6 @@ public partial class ChoiceChallengePage : ContentPage
         _isLeaving = true;
         StopTimer();
         StopNextQuestionTimer();
-        await SafePopAsync();
-    }
-
-    private async void OnCloseSetupClicked(object sender, EventArgs e)
-    {
         await SafePopAsync();
     }
 

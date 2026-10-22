@@ -1,6 +1,8 @@
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Views;
 using English.Hubs;
 using English.Helpers;
+using English.Services;
 using Microsoft.Maui.Controls.Shapes;
 using System.Collections.ObjectModel;
 using System.Text.Json;
@@ -9,7 +11,7 @@ namespace English.Pages;
 
 public class CategoryItem : BindableObject
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     private bool _isSelected;
     public bool IsSelected
@@ -25,20 +27,20 @@ public class CategoryItem : BindableObject
         }
     }
 
-    // 🟢 ألوان الفئات (متطابقة مع ألوان تحديد وضع اللعب)
-    public Color BackgroundColor => IsSelected ? Color.FromArgb("#112A38") : Color.FromArgb("#151624");
+    // 🟢 ألوان الفئات (متناسقة مع ثيم البنفسجي الداكن)
+    public Color BackgroundColor => IsSelected ? Color.FromArgb("#261E4E") : Color.FromArgb("#141726");
     public Color TextColor => IsSelected ? Colors.White : Color.FromArgb("#94A3B8");
-    public Color StrokeColor => IsSelected ? Color.FromArgb("#6366F1") : Color.FromArgb("#312E81");
+    public Color StrokeColor => IsSelected ? Color.FromArgb("#8B5CF6") : Color.FromArgb("#25283D");
 }
 
 public partial class SmartInspectorPage : ContentPage
 {
     public ObservableCollection<CategoryItem> CategoriesList { get; set; } = new();
-    private CategoryItem _selectedCategoryItem;
-    private bool _isMultiplayer = false;
+    private CategoryItem? _selectedCategoryItem;
+    private bool _isMultiplayer = true; // نشط افتراضياً لتجنب اللعب الفردي
     private bool _isNavigating = false;
 
-    // قائمة الفئات المسموح بظهورها (يمكنك التعديل عليها مستقبلاً)
+    // قائمة الفئات المسموح بظهورها
     private readonly List<string> _allowedCategories = new()
     {
         "صفات", "طعام", "افعال", "ادوات", "حيوانات", "مهن", "الاشكال"
@@ -47,6 +49,7 @@ public partial class SmartInspectorPage : ContentPage
     public SmartInspectorPage()
     {
         InitializeComponent();
+        _isMultiplayer = true;
         UpdateGameModeUI();
     }
 
@@ -54,54 +57,30 @@ public partial class SmartInspectorPage : ContentPage
     {
         base.OnAppearing();
         _isNavigating = false;
+        SetLoadingState(false);
         this.AnimatePageInAsync();
         await LoadCategoriesFastAsync();
     }
 
+    // ⚡ تحميل فائق السرعة بالاعتماد على الكاش الداخلي للكلمات بدون إعادة قراءة الملف من الديسك
     private async Task LoadCategoriesFastAsync()
     {
         try
         {
-            // جلب عدد الكلمات المحفوظة للطالب
             int memorizedCount = Preferences.Get("MemorizedWords", 0);
+            var allWords = await TenWords.GetAllWordsAsync();
 
-            var availableCategories = await Task.Run(async () =>
-            {
-                using var stream = await FileSystem.OpenAppPackageFileAsync("words.json");
-                using var reader = new StreamReader(stream);
-                var jsonString = await reader.ReadToEndAsync();
+            var uniqueCategories = allWords
+                .Take(memorizedCount)
+                .Where(w => !string.IsNullOrWhiteSpace(w.Category) && _allowedCategories.Contains(w.Category))
+                .Select(w => w.Category)
+                .Distinct()
+                .ToHashSet();
 
-                using var doc = JsonDocument.Parse(jsonString);
-                var uniqueCategories = new HashSet<string>();
-                int currentWordIndex = 0;
+            var orderedCategories = _allowedCategories.Where(c => uniqueCategories.Contains(c)).ToList();
 
-                // الدوران على الكلمات الموجودة في الجيسون
-                foreach (var element in doc.RootElement.EnumerateArray())
-                {
-                    // التوقف إذا تجاوزنا عدد الكلمات التي حفظها الطالب
-                    if (currentWordIndex >= memorizedCount)
-                        break;
-
-                    if (element.TryGetProperty("Category", out var categoryElement) ||
-                        element.TryGetProperty("category", out categoryElement))
-                    {
-                        var cat = categoryElement.GetString();
-                        // التحقق مما إذا كانت الفئة ضمن القائمة المسموحة ولم تكن فارغة
-                        if (!string.IsNullOrWhiteSpace(cat) && _allowedCategories.Contains(cat))
-                        {
-                            uniqueCategories.Add(cat);
-                        }
-                    }
-                    currentWordIndex++;
-                }
-
-                // ترتيب الفئات لتظهر بنفس الترتيب الموجود في قائمتك الأساسية
-                return _allowedCategories.Where(c => uniqueCategories.Contains(c)).ToList();
-            });
-
-            // تحديث واجهة المستخدم
             CategoriesList.Clear();
-            foreach (var cat in availableCategories)
+            foreach (var cat in orderedCategories)
             {
                 CategoriesList.Add(new CategoryItem { Name = cat, IsSelected = false });
             }
@@ -114,7 +93,6 @@ public partial class SmartInspectorPage : ContentPage
             }
             else
             {
-                // إظهار رسالة إذا لم يكن هناك أي فئات مفتوحة بعد
                 EmptyCategoriesLabel.IsVisible = true;
                 _selectedCategoryItem = null;
             }
@@ -123,7 +101,7 @@ public partial class SmartInspectorPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("خطأ", $"حدث خطأ أثناء معالجة البيانات: {ex.Message}", "حسناً");
+            await DisplayAlert("خطأ", $"حدث خطأ أثناء تحميل الفئات: {ex.Message}", "حسناً");
         }
     }
 
@@ -139,9 +117,11 @@ public partial class SmartInspectorPage : ContentPage
         }
     }
 
-    private void OnSinglePlayerTapped(object sender, TappedEventArgs e)
+    private async void OnSinglePlayerTapped(object sender, TappedEventArgs e)
     {
-        _isMultiplayer = false;
+        // إشعار فوري بأن الميزة قيد التطوير مع إبقاء وضع التحدي مفعلاً
+        await Toast.Make("طور اللعب الفردي قيد التطوير وستتم إتاحته قريباً ⏳").Show();
+        _isMultiplayer = true;
         UpdateGameModeUI();
     }
 
@@ -153,25 +133,36 @@ public partial class SmartInspectorPage : ContentPage
 
     private void UpdateGameModeUI()
     {
-        // 🟢 ألوان بطاقات وضع اللعب
-        Color normalBorderColor = Color.FromArgb("#6366F1");
-        Color normalBgColor = Color.FromArgb("#151624");
-        Color normalTextColor = Color.FromArgb("#94A3B8");
+        Color normalBorderColor = Color.FromArgb("#2D3248");
+        Color normalBgColor = Color.FromArgb("#141724");
+        Color normalTextColor = Color.FromArgb("#64748B");
 
-        // الألوان عند التحديد
-        Color selectedBorderColor = Color.FromArgb("#6366F1");
-        Color selectedBgColor = Color.FromArgb("#112A38");
+        Color selectedBorderColor = Color.FromArgb("#8B5CF6");
+        Color selectedBgColor = Color.FromArgb("#1E1B3D");
         Color selectedTextColor = Colors.White;
 
-        // تحديث كرت اللعب الفردي
-        SinglePlayerCard.BackgroundColor = !_isMultiplayer ? selectedBgColor : normalBgColor;
-        SinglePlayerCard.Stroke = !_isMultiplayer ? selectedBorderColor : normalBorderColor;
-        SinglePlayerText.TextColor = !_isMultiplayer ? selectedTextColor : normalTextColor;
+        // كرت اللعب الفردي (مخصص ليظهر كوضع مستقبلي)
+        SinglePlayerCard.BackgroundColor = normalBgColor;
+        SinglePlayerCard.Stroke = normalBorderColor;
+        SinglePlayerText.TextColor = normalTextColor;
+        SinglePlayerCard.Opacity = 0.65;
 
-        // تحديث كرت اللعب المتعدد (تحدي صديق)
-        MultiplayerCard.BackgroundColor = _isMultiplayer ? selectedBgColor : normalBgColor;
-        MultiplayerCard.Stroke = _isMultiplayer ? selectedBorderColor : normalBorderColor;
-        MultiplayerText.TextColor = _isMultiplayer ? selectedTextColor : normalTextColor;
+        // كرت تحدي صديق (الوضع الأساسي والفعال دائماً)
+        MultiplayerCard.BackgroundColor = selectedBgColor;
+        MultiplayerCard.Stroke = selectedBorderColor;
+        MultiplayerText.TextColor = selectedTextColor;
+        MultiplayerCard.Opacity = 1.0;
+    }
+
+    // 🔄 التحكم بحالة التحميل لزر التحدي (Native Button لمنع أي تقلص في الارتفاع)
+    private void SetLoadingState(bool isLoading, string statusText = "")
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            StartLoadingIndicator.IsRunning = isLoading;
+            StartLoadingIndicator.IsVisible = isLoading;
+            StartChallengeButton.Text = isLoading ? statusText : "🚀 بدء التحدي مع صديق";
+        });
     }
 
     private async void OnStartGameClicked(object sender, EventArgs e)
@@ -183,110 +174,172 @@ public partial class SmartInspectorPage : ContentPage
         {
             if (_selectedCategoryItem == null)
             {
-                await DisplayAlert("تنبيه", "يجب فتح فئة واحدة على الأقل لبدء اللعب!", "حسناً");
+                await DisplayAlert("تنبيه", "يجب فتح فئة واحدة على الأقل لبدء اللعب! احفظ مزيداً من الكلمات لفتحها.", "حسناً");
                 return;
             }
 
-            if (!_isMultiplayer)
+            // فحص رصيد محاولات التحدي
+            long remainingChallenges = Preferences.Get("FriendsChallengeCount", 0L);
+            if (remainingChallenges <= 0)
             {
-                // --- وضع اللعب الفردي ---
-                await Toast.Make("هذه الميزة قيد التطوير، وستكون متاحة قريبًا 📚").Show();
+                await Toast.Make("ليس لديك محاولات تحدي كافية ⚔️! احفظ كلمات إضافية لكسب محاولات جديدة.").Show();
                 return;
             }
 
-            // --- وضع تحدي صديق ---
-            try
-            {
-                List<string> myFriends = await FetchFriendsFromDatabaseAsync();
+            // تفعيل حالة التحميل والمؤشر على الزر تماماً كزر التحديث في لوحة المتصدرين
+            SetLoadingState(true, "جاري فحص المتصلين... 🔍");
 
-                if (myFriends == null || myFriends.Count == 0)
+            // فحص الاتصال بالإنترنت أولاً بسرعة
+            if (!await Service.HasActiveInternetAsync(5))
+            {
+                await Toast.Make("لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة للمتابعة.").Show();
+                return;
+            }
+
+            AppShell? appShell = Shell.Current as AppShell ?? Application.Current?.MainPage as AppShell;
+            if (appShell == null)
+            {
+                await Toast.Make("تعذر الوصول لخدمات الاتصال.").Show();
+                return;
+            }
+
+            string currentUser = Preferences.Get("UserName", "");
+            if (appShell.GameHub != null && (appShell.GameHub.HubConnection == null || appShell.GameHub.HubConnection.State != Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected))
+            {
+                SetLoadingState(true, "جاري الاتصال بالخادم... ⚡");
+                await appShell.GameHub.ConnectAsync(currentUser);
+            }
+
+            // جلب الأصدقاء وقائمة المتصلين بالتوازي لسرعة استجابة فائقة
+            SetLoadingState(true, "جاري فحص الأصدقاء المتصلين... 🔍");
+            var friendsTask = FetchFriendsFromDatabaseAsync();
+            var onlineUsersTask = appShell.GetOnlineUsersAsync();
+
+            await Task.WhenAll(friendsTask, onlineUsersTask);
+
+            List<string> myFriends = await friendsTask;
+            List<string> onlineUsers = (await onlineUsersTask) ?? new List<string>();
+
+            // استخدام الكاش المحلي كاحتياطي سريع إذا لم ترجع قاعدة البيانات شيئاً
+            if (myFriends == null || myFriends.Count == 0)
+            {
+                try
                 {
-                    await DisplayAlert("عذراً", "ليس لديك أصدقاء مضافين حالياً لتحديهم. قم بإضافة أصدقاء أولاً!", "حسناً");
+                    string cachedFriendsJson = Preferences.Get("Cached_Friends_List", "[]");
+                    myFriends = JsonSerializer.Deserialize<List<string>>(cachedFriendsJson) ?? new List<string>();
+                }
+                catch { }
+            }
+
+            if (myFriends == null || myFriends.Count == 0)
+            {
+                await Toast.Make("ليس لديك أصدقاء مضافين حالياً لتحديهم. قم بإضافة أصدقاء أولاً! 👥").Show();
+                return;
+            }
+
+            // 🟢 التصفية الصارمة: إظهار الأصدقاء المتصلين فقط
+            var onlineFriends = myFriends
+                .Where(f => onlineUsers.Contains(f, StringComparer.OrdinalIgnoreCase))
+                .ToList();
+
+            if (onlineFriends.Count == 0)
+            {
+                await Toast.Make("لا يوجد أي صديق متصل حالياً للمبارزة 📭").Show();
+                return;
+            }
+
+            // إعادة الزر لحالته الطبيعية قبل فتح نافذة الاختيار
+            SetLoadingState(false);
+
+            // فتح نافذة اختيار الصديق بالمتصلين فقط
+            var popup = new Popups.FriendSelectPopup(_selectedCategoryItem.Name, onlineFriends);
+            var result = await this.ShowPopupAsync(popup);
+
+            if (result is string targetFriend && !string.IsNullOrEmpty(targetFriend))
+            {
+                if (appShell.GameHub != null && (appShell.GameHub.HubConnection == null || appShell.GameHub.HubConnection.State != Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected))
+                {
+                    await appShell.GameHub.ConnectAsync(currentUser);
+                }
+
+                if (appShell.GameHub == null || appShell.GameHub.HubConnection == null || appShell.GameHub.HubConnection.State != Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected)
+                {
+                    await Toast.Make("تعذر الاتصال بخادم التحديات حالياً. يرجى المحاولة بعد لحظات.").Show();
                     return;
                 }
 
-                var popup = new Popups.FriendSelectPopup(_selectedCategoryItem.Name, myFriends);
-                var result = await this.ShowPopupAsync(popup);
+                // إرسال الطلب للسيرفر 
+                await appShell.GameHub.SendChallengeAsync(targetFriend, _selectedCategoryItem.Name);
 
-                if (result is string targetFriend && !string.IsNullOrEmpty(targetFriend))
+                var waitingPopup = new Popups.WaitingChallengePopup(targetFriend);
+
+                Action<string, bool, string> onChallengeResponded = (responder, isAccepted, category) =>
                 {
-                    if (Shell.Current is AppShell appShell)
+                    if (responder == targetFriend)
                     {
-                        string currentUser = Preferences.Get("UserName", "");
-                        if (appShell.GameHub != null && (appShell.GameHub.HubConnection == null || appShell.GameHub.HubConnection.State != Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected))
+                        MainThread.BeginInvokeOnMainThread(() =>
                         {
-                            await appShell.GameHub.ConnectAsync(currentUser);
+                            waitingPopup.CloseWithResult(isAccepted);
+                        });
+                    }
+                };
+
+                try
+                {
+                    appShell.GameHub.OnChallengeResponseReceived += onChallengeResponded;
+
+                    // عرض نافذة الانتظار
+                    var waitResult = await this.ShowPopupAsync(waitingPopup);
+
+                    if (waitResult is string statusResult)
+                    {
+                        if (statusResult == "Accepted")
+                        {
+                            // الصديق قبل التحدي (AppShell سيتولى فتح صفحة DuelGamePage)
                         }
-
-                        // إرسال الطلب للسيرفر 
-                        await appShell.GameHub.SendChallengeAsync(targetFriend, _selectedCategoryItem.Name);
-
-                        var waitingPopup = new Popups.WaitingChallengePopup(targetFriend);
-
-                        // 🟢 الاستماع لرد السيرفر وتمرير القيمة المنطقية كما هي
-                        Action<string, bool, string> onChallengeResponded = (responder, isAccepted, category) =>
+                        else if (statusResult == "Rejected")
                         {
-                            if (responder == targetFriend)
-                            {
-                                MainThread.BeginInvokeOnMainThread(() =>
-                                {
-                                    waitingPopup.CloseWithResult(isAccepted); // تمرير bool
-                                });
-                            }
-                        };
-
-                        appShell.GameHub.OnChallengeResponseReceived += onChallengeResponded;
-
-                        // عرض نافذة الانتظار
-                        var waitResult = await this.ShowPopupAsync(waitingPopup);
-
-                        appShell.GameHub.OnChallengeResponseReceived -= onChallengeResponded;
-
-                        // 🔵 معالجة النتيجة
-                        if (waitResult is string statusResult)
+                            await Toast.Make($"{targetFriend} رفض التحدي أو هو مشغول حالياً.").Show();
+                        }
+                        else if (statusResult == "Cancel")
                         {
-                            if (statusResult == "Accepted")
-                            {
-                                // الصديق قبل التحدي (تم إزالة كود الانتقال لأن AppShell سيتولى ذلك)
-                            }
-                            else if (statusResult == "Rejected")
-                            {
-                                await Toast.Make($"{targetFriend} رفض التحدي أو هو مشغول حالياً.").Show();
-                            }
-                            else if (statusResult == "Cancel")
-                            {
-                                // المستخدم ألغى الطلب بنفسه
-                                await appShell.GameHub.CancelChallengeAsync(targetFriend);
-                            }
+                            await appShell.GameHub.CancelChallengeAsync(targetFriend);
                         }
                     }
                 }
+                finally
+                {
+                    // التأكد التام من إزالة المستمع لتجنب تسريب الذاكرة وتكرار الأحداث
+                    appShell.GameHub.OnChallengeResponseReceived -= onChallengeResponded;
+                }
             }
-            catch (Exception ex)
-            {
-                await DisplayAlert("خطأ في الاتصال", $"تعذر بدء التحدي: {ex.Message}", "حسناً");
-                Console.WriteLine($"Error in multiplayer game start: {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("خطأ في الاتصال", $"تعذر بدء التحدي: {ex.Message}", "حسناً");
         }
         finally
         {
+            SetLoadingState(false);
             _isNavigating = false;
         }
     }
 
-    // 🟢 دالة مساعدة لجلب الأصدقاء من قاعدة البيانات
+    // دالة مساعدة سريعة لجلب الأصدقاء
     private async Task<List<string>> FetchFriendsFromDatabaseAsync()
     {
-        // جلب اسم المستخدم الحالي المخزن في التطبيق
         var currentUserName = Preferences.Get("UserName", "");
-
         if (string.IsNullOrEmpty(currentUserName))
             return new List<string>();
 
-        // استدعاء دالة الـ API لجلب الأصدقاء فعلياً
-        string[] friendsArray = await Service.GetFriendsAsync(currentUserName);
-
-        // تحويل المصفوفة إلى قائمة وإرجاعها
-        return [.. friendsArray];
-    }    
+        try
+        {
+            string[] friendsArray = await Service.GetFriendsAsync(currentUserName);
+            return [.. friendsArray];
+        }
+        catch
+        {
+            return new List<string>();
+        }
+    }
 }

@@ -4,7 +4,9 @@
              x:Class="English.Pages.CreateAccountPage"
              Title="إنشاء حساب"
              FlowDirection="RightToLeft"
-             BackgroundColor="#0B0F1A">
+             BackgroundColor="#0B0F1A"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
 
     <Grid>
         <Ellipse Fill="#15818CF8" WidthRequest="300" HeightRequest="300" HorizontalOptions="End" VerticalOptions="Start" Margin="0,-150,-150,0" />

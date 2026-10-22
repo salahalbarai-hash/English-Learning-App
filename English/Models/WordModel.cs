@@ -1,9 +1,10 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 public class WordModel : INotifyPropertyChanged
 {
     public string Tag { get; set; } = "";
+    public string Category { get; set; } = "";
     public string ArabicWord { get; set; } = "";
     public string EnglishWord { get; set; } = "";
     public bool Locked { get; set; } = false;

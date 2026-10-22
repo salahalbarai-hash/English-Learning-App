@@ -173,7 +173,7 @@
                                     StrokeShape="RoundRectangle 20" 
                                     Padding="10,4" 
                                     VerticalOptions="Center">
-                                <Label Text="فردي وجماعي 👥" FontSize="10.5" FontFamily="CairoBold" TextColor="#FFFFFF"/>
+                                <Label Text="تحدي الأصدقاء 👥" FontSize="10.5" FontFamily="CairoBold" TextColor="#FFFFFF"/>
                             </Border>
                         </Grid>
 

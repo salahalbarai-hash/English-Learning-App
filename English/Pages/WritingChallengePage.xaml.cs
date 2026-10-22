@@ -275,12 +275,46 @@ public partial class WritingChallengePage : ContentPage
             // --- Friend Challenge Mode ---
             try
             {
+                SetLoadingState(true, "جاري فحص المتصلين... 🔍");
+
                 if (!await Service.HasActiveInternetAsync(5))
                 {
                     await Toast.Make("لا يوجد اتصال بالإنترنت. يرجى التحقق من الاتصال قبل بدء التحدي.").Show();
                     return;
                 }
-                List<string> myFriends = await FetchFriendsFromDatabaseAsync();
+
+                AppShell? appShellForOnline = Application.Current?.MainPage as AppShell ?? Shell.Current as AppShell;
+                if (appShellForOnline == null)
+                {
+                    await Toast.Make("تعذر الوصول لخدمات الاتصال.").Show();
+                    return;
+                }
+
+                string currentUser = Preferences.Get("UserName", "");
+                if (appShellForOnline.GameHub != null && (appShellForOnline.GameHub.HubConnection == null || appShellForOnline.GameHub.HubConnection.State != Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected))
+                {
+                    SetLoadingState(true, "جاري الاتصال بالخادم... ⚡");
+                    await appShellForOnline.GameHub.ConnectAsync(currentUser);
+                }
+
+                SetLoadingState(true, "جاري فحص الأصدقاء المتصلين... 🔍");
+                var friendsTask = FetchFriendsFromDatabaseAsync();
+                var onlineUsersTask = appShellForOnline.GetOnlineUsersAsync();
+
+                await Task.WhenAll(friendsTask, onlineUsersTask);
+
+                List<string> myFriends = await friendsTask;
+                List<string> onlineUsers = (await onlineUsersTask) ?? new List<string>();
+
+                if (myFriends == null || myFriends.Count == 0)
+                {
+                    try
+                    {
+                        string cachedFriendsJson = Preferences.Get("Cached_Friends_List", "[]");
+                        myFriends = System.Text.Json.JsonSerializer.Deserialize<List<string>>(cachedFriendsJson) ?? new List<string>();
+                    }
+                    catch { }
+                }
 
                 if (myFriends == null || myFriends.Count == 0)
                 {
@@ -288,17 +322,15 @@ public partial class WritingChallengePage : ContentPage
                     return;
                 }
 
-                if (Application.Current?.MainPage is AppShell appShellForOnline)
-                {
-                    var onlineUsers = await appShellForOnline.GetOnlineUsersAsync() ?? new List<string>();
-                    myFriends = myFriends.Where(f => onlineUsers.Contains(f, StringComparer.OrdinalIgnoreCase)).ToList();
-                }
+                myFriends = myFriends.Where(f => onlineUsers.Contains(f, StringComparer.OrdinalIgnoreCase)).ToList();
 
                 if (myFriends.Count == 0)
                 {
-                    await Toast.Make("لا يوجد أي صديق متصل حالياً لتحديه.").Show();
+                    await Toast.Make("لا يوجد أي صديق متصل حالياً لتحديه 📭").Show();
                     return;
                 }
+
+                SetLoadingState(false);
 
                 var popup = new Popups.FriendSelectPopup("تحدي الكتابة", myFriends);
                 var result = await this.ShowPopupAsync(popup);
@@ -386,7 +418,7 @@ public partial class WritingChallengePage : ContentPage
 
                         if (waitResult is string status && status == "Accepted")
                         {
-                            string currentUser = Preferences.Get("UserName", "");
+                            currentUser = Preferences.Get("UserName", "");
                             _hubConnection = appShell.GameHub.HubConnection;
                             _roomName = string.Compare(currentUser, targetFriend, StringComparison.Ordinal) < 0
                                         ? $"room_{currentUser}_{targetFriend}" : $"room_{targetFriend}_{currentUser}";
@@ -463,7 +495,21 @@ public partial class WritingChallengePage : ContentPage
             {
                 await DisplayAlert("خطأ في الاتصال", $"تعذر بدء التحدي: {ex.Message}", "حسناً");
             }
+            finally
+            {
+                SetLoadingState(false);
+            }
         }
+    }
+
+    private void SetLoadingState(bool isLoading, string statusText = "")
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            StartLoadingIndicator.IsRunning = isLoading;
+            StartLoadingIndicator.IsVisible = isLoading;
+            StartGameButton.Text = isLoading ? statusText : "🚀 بدء التحدي";
+        });
     }
 
     private async Task<List<string>> FetchFriendsFromDatabaseAsync()
@@ -878,11 +924,6 @@ public partial class WritingChallengePage : ContentPage
         _isLeaving = true;
         StopTimer();
         StopNextQuestionTimer();
-        await SafePopAsync();
-    }
-
-    private async void OnCloseSetupClicked(object sender, EventArgs e)
-    {
         await SafePopAsync();
     }
 

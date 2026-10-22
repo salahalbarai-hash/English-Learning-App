@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="English.Popups.FriendSelectPopup"
-             Color="Transparent">
+              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+              x:Class="English.Popups.FriendSelectPopup"
+              Color="Transparent">
 
     <!-- إطار عصري متناسق مع الهوية البصرية للتطبيق (Dark Mode & Neon Glow) -->
     <Border BackgroundColor="#151624"
@@ -36,7 +36,7 @@
                     Padding="12,2"
                     HeightRequest="46">
                 <Entry x:Name="SearchEntry"
-                       Placeholder="🔍 بحث عن صديق..."
+                       Placeholder="🔍 بحث في المتصلين..."
                        PlaceholderColor="#64748B"
                        TextColor="White"
                        FontSize="14"
@@ -45,16 +45,16 @@
                        TextChanged="OnSearchTextChanged"/>
             </Border>
 
-            <!-- رسالة في حال عدم وجود أصدقاء -->
+            <!-- رسالة في حال عدم وجود أصدقاء متصلين -->
             <Label x:Name="EmptyFriendsLabel"
-                   Text="ليس لديك أصدقاء مضافون حالياً 📭"
+                   Text="لا يوجد أصدقاء متصلون حالياً 📭"
                    TextColor="#94A3B8"
                    FontSize="14"
                    HorizontalOptions="Center"
                    IsVisible="False"
                    Margin="0,10"/>
 
-            <!-- قائمة الأصدقاء المتاحين -->
+            <!-- قائمة الأصدقاء المتصلين المتاحين -->
             <CollectionView x:Name="FriendsCollectionView" 
                             HeightRequest="240"
                             SelectionMode="Single">
@@ -66,20 +66,34 @@
                                 Stroke="#333752"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 14">
-                            <HorizontalStackLayout Spacing="12">
-                                <Border BackgroundColor="#112A38" 
+                            <Grid ColumnDefinitions="Auto, *, Auto" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="#112A38" 
                                         Stroke="#00E5FF" 
                                         StrokeThickness="1"
                                         StrokeShape="RoundRectangle 10" 
                                         WidthRequest="36" HeightRequest="36">
                                     <Label Text="👤" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center"/>
                                 </Border>
-                                <Label Text="{Binding}" 
+                                <Label Grid.Column="1"
+                                       Text="{Binding}" 
                                        TextColor="White" 
                                        FontSize="16" 
                                        FontAttributes="Bold" 
                                        VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
+                                <Border Grid.Column="2"
+                                        BackgroundColor="#064E3B"
+                                        Stroke="#10B981"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 10"
+                                        Padding="8,4"
+                                        VerticalOptions="Center">
+                                    <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                                        <BoxView WidthRequest="7" HeightRequest="7" CornerRadius="3.5" Color="#10B981" VerticalOptions="Center"/>
+                                        <Label Text="متصل" TextColor="#6EE7B7" FontSize="11" FontAttributes="Bold" VerticalOptions="Center"/>
+                                    </HorizontalStackLayout>
+                                </Border>
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

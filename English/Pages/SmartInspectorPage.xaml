@@ -8,94 +8,109 @@
              Shell.NavBarIsVisible="False"
              NavigationPage.HasNavigationBar="False">
 
-    <!-- خلفية احترافية مطابقة تماماً لشاشات اللعب -->
+    <!-- خلفية احترافية داكنة متناسقة مع ثيم التطبيق وساحة التحديات -->
     <ContentPage.Background>
-        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#10111A" Offset="0.0" />
-            <!-- كحلي داكن جداً -->
-            <GradientStop Color="#1A1B2F" Offset="1.0" />
-            <!-- أزرق مائل للبنفسجي الداكن -->
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#0A0E1A" Offset="0.0" />
+            <GradientStop Color="#0F172A" Offset="0.5" />
+            <GradientStop Color="#13132B" Offset="1.0" />
         </LinearGradientBrush>
     </ContentPage.Background>
 
-    <Grid RowDefinitions="Auto, Auto, *, Auto" Padding="20">
+    <Grid RowDefinitions="Auto, Auto, *, Auto" Padding="20,18,20,14">
 
-        <!-- الصف 0: الهيدر وزر العودة -->
-        <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,20" VerticalOptions="Center">
-            <VerticalStackLayout Grid.Column="1" Spacing="3" HorizontalOptions="Center">
-                <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
-                    <Label Text="🧠" FontSize="28" VerticalOptions="Center"/>
-                    <Label Text="المفتش الذكي" FontSize="24" FontAttributes="Bold" TextColor="#F8F9FA" VerticalOptions="Center"/>
-                </HorizontalStackLayout>
-                <Label Text="اكتشف الكلمة السرية عن طريق الأسئلة!" 
-                       TextColor="#94A3B8" FontSize="13" HorizontalOptions="Center"/>
-            </VerticalStackLayout>
-        </Grid>
+        <!-- الصف 0: الترويسة العلوية الفاخرة (بدون أي أزرار رجوع) -->
+        <VerticalStackLayout Grid.Row="0" Spacing="4" HorizontalOptions="Center" Margin="0,8,0,22">
+            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Label Text="🔍" FontSize="26" VerticalOptions="Center"/>
+                <Label Text="المفتش الذكي" FontSize="24" FontFamily="CairoBold" TextColor="White" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+            <Label Text="اكتشف الكلمة السرية بالتخمين والأسئلة الذكية!" 
+                   TextColor="#94A3B8" FontSize="12.5" FontFamily="CairoRegular" HorizontalOptions="Center"/>
+        </VerticalStackLayout>
 
-        <!-- الصف 1: اختيار وضع اللعب -->
-        <VerticalStackLayout Grid.Row="1" Spacing="15" Margin="0,0,0,20">
-            <Label Text="🎮 وضع اللعب:" TextColor="White" FontSize="20" FontAttributes="Bold"/>
+        <!-- الصف 1: اختيار وضع اللعب (تحدي الأصدقاء نشط افتراضياً + شارة قريباً للفردي) -->
+        <VerticalStackLayout Grid.Row="1" Spacing="12" Margin="0,0,0,22">
+            <Label Text="وضع اللعب" TextColor="#CBD5E1" FontSize="15" FontFamily="CairoBold"/>
 
-            <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
-                <!-- كرت اللعب الفردي -->
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="14">
+                <!-- كرت اللعب الفردي (قريباً ⏳) -->
                 <Border x:Name="SinglePlayerCard" Grid.Column="0" 
-                        Stroke="#333752" StrokeThickness="2" 
-                        BackgroundColor="#151624" 
-                        Padding="15" StrokeShape="RoundRectangle 20">
+                        Stroke="#2D3248" StrokeThickness="1.5" 
+                        BackgroundColor="#141724" 
+                        Padding="14,14" 
+                        Opacity="0.65"
+                        StrokeShape="RoundRectangle 18">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnSinglePlayerTapped" />
                     </Border.GestureRecognizers>
-                    <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                        <Label Text="👤" FontSize="35" HorizontalOptions="Center"/>
-                        <Label x:Name="SinglePlayerText" Text="لعب فردي" TextColor="White" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                        <!-- شارة قريباً -->
+                        <Border BackgroundColor="#1E2338" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="8,2" HorizontalOptions="Center">
+                            <Label Text="قريباً ⏳" FontSize="10.5" FontFamily="CairoBold" TextColor="#94A3B8"/>
+                        </Border>
+                        <Label Text="👤" FontSize="28" HorizontalOptions="Center"/>
+                        <Label x:Name="SinglePlayerText" Text="لعب فردي" TextColor="#64748B" FontSize="14.5" FontFamily="CairoBold" HorizontalOptions="Center"/>
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- كرت تحدي صديق -->
+                <!-- كرت تحدي صديق (المحدد والنشط افتراضياً) -->
                 <Border x:Name="MultiplayerCard" Grid.Column="1" 
-                        Stroke="#333752" StrokeThickness="2" 
-                        BackgroundColor="#151624" 
-                        Padding="15" StrokeShape="RoundRectangle 20">
+                        Stroke="#8B5CF6" StrokeThickness="2" 
+                        BackgroundColor="#1E1B3D" 
+                        Padding="14,14" 
+                        StrokeShape="RoundRectangle 18">
+                    <Border.Shadow>
+                        <Shadow Brush="#8B5CF6" Radius="12" Offset="0,2" Opacity="0.25"/>
+                    </Border.Shadow>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnMultiplayerTapped" />
                     </Border.GestureRecognizers>
-                    <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
-                        <Label Text="👥" FontSize="35" HorizontalOptions="Center"/>
-                        <Label x:Name="MultiplayerText" Text="تحدي صديق" TextColor="White" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
+                        <!-- شارة متاح الآن -->
+                        <Border BackgroundColor="#2D1F5B" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="8,2" HorizontalOptions="Center">
+                            <Label Text="متاح الآن ⚔️" FontSize="10.5" FontFamily="CairoBold" TextColor="#C4B5FD"/>
+                        </Border>
+                        <Label Text="👥" FontSize="28" HorizontalOptions="Center"/>
+                        <Label x:Name="MultiplayerText" Text="تحدي صديق" TextColor="White" FontSize="14.5" FontFamily="CairoBold" HorizontalOptions="Center"/>
                     </VerticalStackLayout>
                 </Border>
             </Grid>
         </VerticalStackLayout>
 
-        <!-- الصف 2: قسم الفئات -->
-        <ScrollView Grid.Row="2" VerticalScrollBarVisibility="Never">
-            <VerticalStackLayout Spacing="15" Padding="0,0,0,20">
-                <Label Text="📌 الفئة المستهدفة:" TextColor="White" FontSize="20" FontAttributes="Bold"/>
+        <!-- الصف 2: قسم الفئات المستهدفة -->
+        <ScrollView Grid.Row="2" VerticalScrollBarVisibility="Never" Orientation="Vertical">
+            <VerticalStackLayout Spacing="14" Padding="0,0,0,16">
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="الفئة المستهدفة" TextColor="#CBD5E1" FontSize="15" FontFamily="CairoBold"/>
+                    <Label Text="اختر مجال الكلمات للبدء بالتحدي" TextColor="#64748B" FontSize="12" FontFamily="CairoRegular"/>
+                </VerticalStackLayout>
 
                 <Label x:Name="EmptyCategoriesLabel" 
-                       Text="احفظ المزيد من الكلمات لفتح الفئات!" 
-                       TextColor="#00E5FF" 
-                       FontSize="16" 
+                       Text="احفظ المزيد من الكلمات لفتح الفئات! 📚" 
+                       TextColor="#A5B4FC" 
+                       FontSize="15" 
+                       FontFamily="CairoBold" 
                        IsVisible="False"
                        HorizontalOptions="Center" 
-                       Margin="0,20,0,0"/>
+                       Margin="0,30,0,0"/>
 
                 <FlexLayout x:Name="CategoriesContainer" Wrap="Wrap" Direction="Row" JustifyContent="Start">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
                             <Border Stroke="{Binding StrokeColor}" 
-                                    StrokeThickness="2" 
+                                    StrokeThickness="1.5" 
                                     BackgroundColor="{Binding BackgroundColor}" 
-                                    Padding="20,10" 
+                                    Padding="18,10" 
                                     Margin="0,0,10,10" 
-                                    StrokeShape="RoundRectangle 15">
+                                    StrokeShape="RoundRectangle 14">
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="OnCategoryTapped" />
                                 </Border.GestureRecognizers>
                                 <Label Text="{Binding Name}" 
                                        TextColor="{Binding TextColor}" 
-                                       FontAttributes="Bold" 
-                                       FontSize="16" 
+                                       FontFamily="CairoBold" 
+                                       FontSize="14.5" 
                                        VerticalOptions="Center"/>
                             </Border>
                         </DataTemplate>
@@ -104,22 +119,39 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- الصف 3: زر البدء -->
-        <Button Grid.Row="3"
-                Text="بدء اللعب"
-                BackgroundColor="#00B4D8" 
-                TextColor="#0B1221"
-                FontSize="22"
-                FontAttributes="Bold"
-                HeightRequest="60"
-                CornerRadius="15"
-                Clicked="OnStartGameClicked"
-                Margin="0,10,0,10">
-            <!-- توهج ناعم وهادئ للزر -->
-            <Button.Shadow>
-                <Shadow Brush="#00B4D8" Offset="0,4" Radius="10" Opacity="0.4"/>
-            </Button.Shadow>
-        </Button>
+        <!-- الصف 3: زر بدء التحدي كـ Button أصيل مع مؤشر تحميل مدمج لمنع أي تقلص في الارتفاع نهائياً -->
+        <Grid Grid.Row="3" HeightRequest="56" Margin="0,10,0,10">
+            <Button x:Name="StartChallengeButton"
+                    Text="🚀 بدء التحدي مع صديق"
+                    TextColor="White"
+                    FontFamily="CairoBold"
+                    FontSize="17"
+                    HeightRequest="56"
+                    CornerRadius="16"
+                    Clicked="OnStartGameClicked">
+                <Button.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#4F46E5" Offset="0.0" />
+                        <GradientStop Color="#7C3AED" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Button.Background>
+                <Button.Shadow>
+                    <Shadow Brush="#7C3AED" Offset="0,4" Radius="12" Opacity="0.3"/>
+                </Button.Shadow>
+            </Button>
+
+            <!-- مؤشر التحميل الدوار فوق الزر -->
+            <ActivityIndicator x:Name="StartLoadingIndicator"
+                               IsRunning="False"
+                               IsVisible="False"
+                               Color="White"
+                               WidthRequest="22"
+                               HeightRequest="22"
+                               HorizontalOptions="End"
+                               Margin="0,0,24,0"
+                               InputTransparent="True"
+                               VerticalOptions="Center"/>
+        </Grid>
 
     </Grid>
 </ContentPage>
