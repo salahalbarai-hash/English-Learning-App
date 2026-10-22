@@ -136,6 +136,7 @@ public partial class MessagesPage : ContentPage
             if (item != null)
             {
                 item.IsOnline = true;
+                SortAndRefreshList(_currentFilter);
             }
         });
     }
@@ -148,6 +149,7 @@ public partial class MessagesPage : ContentPage
             if (item != null)
             {
                 item.IsOnline = false;
+                SortAndRefreshList(_currentFilter);
             }
         });
     }
@@ -193,17 +195,15 @@ public partial class MessagesPage : ContentPage
                 try
                 {
                     var fetchedOnline = await _shell.GetOnlineUsersAsync();
-                    if (fetchedOnline != null && fetchedOnline.Count > 0)
+                    var onlineSet = new HashSet<string>(fetchedOnline ?? [], StringComparer.OrdinalIgnoreCase);
+                    MainThread.BeginInvokeOnMainThread(() =>
                     {
-                        MainThread.BeginInvokeOnMainThread(() =>
+                        foreach (var item in _allFriends)
                         {
-                            foreach (var item in _allFriends)
-                            {
-                                item.IsOnline = fetchedOnline.Contains(item.Name, StringComparer.OrdinalIgnoreCase);
-                            }
-                            SortAndRefreshList(_currentFilter);
-                        });
-                    }
+                            item.IsOnline = onlineSet.Contains(item.Name);
+                        }
+                        SortAndRefreshList(_currentFilter);
+                    });
                 }
                 catch { }
             }

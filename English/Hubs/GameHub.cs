@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 
+using Microsoft.AspNetCore.Http.Connections;
+
 namespace English.Hubs;
 
 public class GameHub
 {
     private HubConnection? _hubConnection;
+    private string _lastConnectedUserName = string.Empty;
+    private bool _isConnecting = false;
 
     // --- الأحداث الخاصة بالتحديات ---
     public event Action<string, string>? OnChallengeReceived;
@@ -46,12 +50,27 @@ public class GameHub
 
     public HubConnection? HubConnection => _hubConnection;
 
+    public async Task EnsureConnectedAsync(string? userName = null)
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+            return;
+
+        userName ??= !string.IsNullOrEmpty(_lastConnectedUserName)
+            ? _lastConnectedUserName
+            : Preferences.Get("UserName", "");
+
+        if (string.IsNullOrWhiteSpace(userName))
+            return;
+
+        await ConnectAsync(userName);
+    }
+
     public async Task ConnectAsync(string userName)
     {
         if (string.IsNullOrWhiteSpace(userName))
             return;
 
-        string url = Service.ApiUrl;
+        _lastConnectedUserName = userName;
 
         if (_hubConnection != null)
         {
@@ -67,8 +86,14 @@ public class GameHub
             _hubConnection = null;
         }
 
+        string url = Service.ApiUrl;
+        string escapedUser = Uri.EscapeDataString(userName);
+
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl($"{url}gamehub?username={userName}")
+            .WithUrl($"{url}gamehub?username={escapedUser}", options =>
+            {
+                options.Transports = HttpTransportType.WebSockets | HttpTransportType.LongPolling;
+            })
             .WithAutomaticReconnect()
             .Build();
 
@@ -168,6 +193,26 @@ public class GameHub
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"SignalR Connection Error: {ex.Message}");
+            // إعادة المحاولة في الخلفية إذا فشل الإقلاع الأولي بسبب بطء الشبكة أو خمول السيرفر
+            _ = Task.Run(async () =>
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    await Task.Delay(3000);
+                    if (_hubConnection?.State == HubConnectionState.Connected) break;
+                    try
+                    {
+                        if (_hubConnection != null)
+                        {
+                            await _hubConnection.StartAsync();
+                            await _hubConnection.InvokeAsync("RegisterUser", userName);
+                            OnReconnected?.Invoke();
+                            break;
+                        }
+                    }
+                    catch { }
+                }
+            });
         }
     }
 
@@ -228,6 +273,7 @@ public class GameHub
 
     public async Task<List<string>> GetOnlineUsersAsync()
     {
+        await EnsureConnectedAsync();
         if (_hubConnection?.State == HubConnectionState.Connected)
         {
             try { return await _hubConnection.InvokeAsync<List<string>>("GetOnlineUsers"); }
@@ -238,6 +284,7 @@ public class GameHub
 
     public async Task<List<string>> GetFriendsAsync()
     {
+        await EnsureConnectedAsync();
         if (_hubConnection?.State == HubConnectionState.Connected)
         {
             try { return await _hubConnection.InvokeAsync<List<string>>("GetFriends"); }
@@ -305,6 +352,7 @@ public class GameHub
 
     public async Task<bool> SendDirectMessageAsync(string targetUser, string content)
     {
+        await EnsureConnectedAsync();
         if (_hubConnection?.State == HubConnectionState.Connected)
         {
             try

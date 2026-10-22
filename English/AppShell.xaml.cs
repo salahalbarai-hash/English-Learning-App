@@ -377,6 +377,14 @@ namespace English
                     _ = ChatStorageService.RemoveMessageByIdAsync(msgId);
                 }
             };
+
+            _gameHub.OnMessagesReadBy += (friendName) =>
+            {
+                if (ChatPage.CurrentActiveFriend == null || !ChatPage.CurrentActiveFriend.Equals(friendName, StringComparison.OrdinalIgnoreCase))
+                {
+                    _ = ChatStorageService.MarkMySentMessagesAsReadAsync(friendName);
+                }
+            };
         }
 
         public static void AddFriendToLocalCache(string friendName)

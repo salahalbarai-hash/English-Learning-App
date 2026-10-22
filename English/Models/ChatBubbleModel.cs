@@ -15,8 +15,6 @@ public enum MessageStatus
 
 public partial class ChatBubbleModel : ObservableObject
 {
-    // 🟢 كاش ثابت (Static) لتخزين أشكال أيقونات الحالة بدلاً من إنشاء واحدة لكل رسالة
-    private static readonly Dictionary<string, Geometry> _geometryCache = new();
     private static readonly PathGeometryConverter _converter = new();
 
     [ObservableProperty]
@@ -90,26 +88,15 @@ public partial class ChatBubbleModel : ObservableObject
             if (string.IsNullOrEmpty(path))
                 return new PathGeometry();
 
-            // استخدام الكاش الثابت: إذا تم تحويل هذا المسار سابقاً نعيد النتيجة مباشرة
-            if (_geometryCache.TryGetValue(path, out var cached))
-                return cached;
-
             try
             {
-                var geometry = (Geometry)_converter.ConvertFromInvariantString(path);
-                _geometryCache[path] = geometry;
-                return geometry;
+                return (Geometry)_converter.ConvertFromInvariantString(path);
             }
             catch
             {
                 return new PathGeometry();
             }
         }
-    }
-
-    partial void OnStatusChanged(MessageStatus oldValue, MessageStatus newValue)
-    {
-        // لا حاجة لمسح الكاش بعد الآن لأنه ثابت ومشترك
     }
 
     [JsonIgnore]

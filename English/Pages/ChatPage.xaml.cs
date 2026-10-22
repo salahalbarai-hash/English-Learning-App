@@ -25,6 +25,7 @@ public partial class ChatPage : ContentPage
     public ObservableCollection<ChatBubbleModel> Messages { get; set; } = [];
     private AppShell? _shell;
     private string _currentUserName = "";
+    private bool _isFriendOnline = false;
 
     public ICommand LongPressCommand { get; private set; }
     public ICommand TapCommand { get; private set; }
@@ -260,11 +261,16 @@ public partial class ChatPage : ContentPage
             }
 
             _ = ChatStorageService.MarkMessagesAsReadAsync(FriendName);
+        }
 
-            if (_shell?.GameHub != null)
+        // إبلاغ الخادم دائماً بوجود المستخدم داخل المحادثة ليتحول لون الصحين إلى الأزرق عند الطرف الآخر فوراً
+        if (_shell?.GameHub != null)
+        {
+            try
             {
                 await _shell.GameHub.MarkMessagesAsReadAsync(FriendName);
             }
+            catch { }
         }
     }
 
@@ -310,16 +316,19 @@ public partial class ChatPage : ContentPage
             // 1. البحث عن الرسالة بالـ Id إذا كان مطابقاً
             var msg = Messages.FirstOrDefault(m => m.Id == messageId);
 
-            // 2. إذا لم يطابق (لأن الرسالة أُنشئت محلياً بـ Id=0)، نربطها بأقدم رسالة مرسلة تنتظر تأكيد الاستلام
+            // 2. إذا لم يطابق (لأن الرسالة أُنشئت محلياً بـ Id=0)، نربطها بأحدث رسالة مرسلة تنتظر تأكيد الاستلام
             if (msg == null)
             {
-                msg = Messages.FirstOrDefault(m => m.IsMine && (m.Id <= 0 || m.Status < MessageStatus.Delivered));
+                msg = Messages.LastOrDefault(m => m.IsMine && (m.Id <= 0 || m.Status < MessageStatus.Delivered));
             }
 
             if (msg != null)
             {
                 msg.Id = messageId;
-                msg.Status = MessageStatus.Delivered; // صحين رمادي
+                if (msg.Status < MessageStatus.Delivered)
+                {
+                    msg.Status = MessageStatus.Delivered; // صحين رمادي غير ملونة
+                }
                 _ = SaveMessagesOfflineAsync();
             }
         });
@@ -368,6 +377,7 @@ public partial class ChatPage : ContentPage
     {
         if (userName.Equals(FriendName, StringComparison.OrdinalIgnoreCase))
         {
+            _isFriendOnline = true;
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 FriendStatusLabel.Text = "متصل الآن";
@@ -382,6 +392,7 @@ public partial class ChatPage : ContentPage
     {
         if (userName.Equals(FriendName, StringComparison.OrdinalIgnoreCase))
         {
+            _isFriendOnline = false;
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 await UpdateLastSeenUIAsync();
@@ -393,25 +404,26 @@ public partial class ChatPage : ContentPage
     {
         try
         {
-            if (_shell?.GameHub?.HubConnection?.State == HubConnectionState.Connected)
+            var onlineUsers = _shell != null ? await _shell.GetOnlineUsersAsync() : [];
+            bool isOnline = onlineUsers != null && onlineUsers.Contains(FriendName, StringComparer.OrdinalIgnoreCase);
+            _isFriendOnline = isOnline;
+
+            if (isOnline)
             {
-                var onlineUsers = await _shell.GetOnlineUsersAsync();
-                if (onlineUsers != null && onlineUsers.Contains(FriendName, StringComparer.OrdinalIgnoreCase))
+                MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    MainThread.BeginInvokeOnMainThread(() =>
-                    {
-                        FriendStatusLabel.Text = "متصل الآن";
-                        FriendStatusLabel.TextColor = Color.FromArgb("#10B981");
-                        OnlineStatusIndicator.IsVisible = true;
-                        OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#10B981");
-                    });
-                    return;
-                }
+                    FriendStatusLabel.Text = "متصل الآن";
+                    FriendStatusLabel.TextColor = Color.FromArgb("#10B981");
+                    OnlineStatusIndicator.IsVisible = true;
+                    OnlineStatusIndicator.BackgroundColor = Color.FromArgb("#10B981");
+                });
+                return;
             }
             await UpdateLastSeenUIAsync();
         }
         catch
         {
+            _isFriendOnline = false;
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 OnlineStatusIndicator.IsVisible = false;
@@ -712,14 +724,16 @@ public partial class ChatPage : ContentPage
 
         try
         {
-            if (_shell?.GameHub?.HubConnection?.State == HubConnectionState.Connected)
+            if (_shell?.GameHub != null)
             {
                 bool sent = await _shell.GameHub.SendDirectMessageAsync(FriendName, text);
                 if (sent)
                 {
                     if (newMsg.Status == MessageStatus.Pending)
                     {
-                        newMsg.Status = MessageStatus.Sent;
+                        // إذا كان الصديق متصلاً، فالرسالة وصلت له فوراً وتظهر صحين رمادي غير ملونة
+                        // أما إذا كان غير متصل، فتظهر علامة صح واحدة
+                        newMsg.Status = _isFriendOnline ? MessageStatus.Delivered : MessageStatus.Sent;
                         _ = SaveMessagesOfflineAsync();
                     }
                 }

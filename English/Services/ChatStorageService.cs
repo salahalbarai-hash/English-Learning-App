@@ -265,6 +265,48 @@ public static class ChatStorageService
         OnChatSummaryChanged?.Invoke(friendName);
     }
 
+    public static async Task MarkMySentMessagesAsReadAsync(string friendName)
+    {
+        if (string.IsNullOrWhiteSpace(friendName)) return;
+
+        var sem = GetLock(friendName);
+        await sem.WaitAsync();
+        try
+        {
+            string path = GetFilePath(friendName);
+            if (!File.Exists(path)) return;
+
+            string json = await File.ReadAllTextAsync(path);
+            if (string.IsNullOrWhiteSpace(json)) return;
+
+            var list = JsonSerializer.Deserialize<List<ChatBubbleModel>>(json) ?? [];
+            bool changed = false;
+
+            foreach (var m in list)
+            {
+                if (m.IsMine && m.Status != MessageStatus.Read)
+                {
+                    m.Status = MessageStatus.Read;
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                string saveJson = JsonSerializer.Serialize(list);
+                await File.WriteAllTextAsync(path, saveJson);
+                UpdateSummaryCache(friendName, list);
+            }
+        }
+        catch { }
+        finally
+        {
+            sem.Release();
+        }
+
+        OnChatSummaryChanged?.Invoke(friendName);
+    }
+
     public static async Task RemoveMessageByIdAsync(int messageId)
     {
         if (messageId <= 0) return;
