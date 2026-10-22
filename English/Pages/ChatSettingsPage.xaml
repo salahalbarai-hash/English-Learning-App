@@ -7,87 +7,44 @@
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False">
 
-    <Grid>
-        <!-- ══════════ الخلفية العلوية المتدرجة ══════════ -->
-        <Border VerticalOptions="Start" HeightRequest="140" StrokeThickness="0">
+    <Grid RowDefinitions="Auto, *">
+
+        <!-- ══════════ الترويسة العلوية ══════════ -->
+        <Border Grid.Row="0"
+                StrokeThickness="0"
+                Padding="20,44,20,18">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <GradientStop Color="#1E293B" Offset="0.0" />
                     <GradientStop Color="#0F172A" Offset="1.0" />
                 </LinearGradientBrush>
             </Border.Background>
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,4" Radius="10" Opacity="0.3"/>
+            </Border.Shadow>
+
+            <!-- عنوان الصفحة بدون أيقونة الإعدادات -->
+            <Label Text="إعدادات المحادثات"
+                   FontFamily="CairoBold"
+                   FontSize="21"
+                   TextColor="#F8FAFC"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
         </Border>
 
-        <!-- خط فاصل زجاجي -->
-        <Border VerticalOptions="Start" HeightRequest="1"
-                Margin="0,139,0,0" StrokeThickness="0"
-                BackgroundColor="#38BDF8" Opacity="0.18"/>
-
-        <ScrollView>
-            <VerticalStackLayout Spacing="0" Padding="0,0,0,40">
-
-                <!-- ══════════ ترويسة ══════════ -->
-                <Grid Padding="20,55,20,30">
-                    <Grid ColumnDefinitions="Auto, *, Auto">
-
-                        <!-- أيقونة الإعدادات -->
-                        <Border Grid.Column="0"
-                                WidthRequest="46" HeightRequest="46"
-                                StrokeShape="RoundRectangle 23"
-                                StrokeThickness="0">
-                            <Border.Background>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                    <GradientStop Color="#334155" Offset="0.0"/>
-                                    <GradientStop Color="#1E293B" Offset="1.0"/>
-                                </LinearGradientBrush>
-                            </Border.Background>
-                            <Label Text="⚙️" FontSize="22"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"/>
-                        </Border>
-
-                        <!-- العنوان والوصف -->
-                        <VerticalStackLayout Grid.Column="1" Spacing="2"
-                                             Margin="14,0,0,0"
-                                             VerticalOptions="Center">
-                            <Label Text="إعدادات المحادثات"
-                                   FontFamily="CairoBold"
-                                   FontSize="20"
-                                   TextColor="#F8FAFC"/>
-                            <Label Text="تحكم في تجربة الرسائل"
-                                   FontSize="12"
-                                   TextColor="#64748B"/>
-                        </VerticalStackLayout>
-
-                        <!-- زر الرجوع -->
-                        <Border Grid.Column="2"
-                                WidthRequest="38" HeightRequest="38"
-                                StrokeShape="RoundRectangle 19"
-                                StrokeThickness="1"
-                                Stroke="#1E293B"
-                                BackgroundColor="#151E2F"
-                                VerticalOptions="Center">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnBackClicked"/>
-                            </Border.GestureRecognizers>
-                            <Label Text="✕" FontSize="16"
-                                   FontAttributes="Bold"
-                                   TextColor="#64748B"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"/>
-                        </Border>
-                    </Grid>
-                </Grid>
+        <!-- ══════════ المحتوى القابل للتمرير ══════════ -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="0" Padding="0,22,0,40">
 
                 <!-- ══════════ قسم الإشعارات ══════════ -->
                 <Label Text="الإشعارات"
                        FontSize="13"
-                       FontAttributes="Bold"
-                       TextColor="#64748B"
+                       FontFamily="CairoBold"
+                       TextColor="#94A3B8"
                        Margin="24,0,24,10"/>
 
                 <!-- بطاقة إشعارات الرسائل -->
-                <Border Margin="20,0,20,12"
+                <Border Margin="20,0,20,16"
                         StrokeShape="RoundRectangle 20"
                         StrokeThickness="1"
                         Stroke="#1E293B"
@@ -141,12 +98,12 @@
                 <!-- ══════════ قسم الخصوصية ══════════ -->
                 <Label Text="معاينة الرسائل"
                        FontSize="13"
-                       FontAttributes="Bold"
-                       TextColor="#64748B"
+                       FontFamily="CairoBold"
+                       TextColor="#94A3B8"
                        Margin="24,8,24,10"/>
 
                 <!-- بطاقة معاينة الرسالة في الإشعار -->
-                <Border Margin="20,0,20,12"
+                <Border Margin="20,0,20,16"
                         StrokeShape="RoundRectangle 20"
                         StrokeThickness="1"
                         Stroke="#1E293B"
@@ -198,7 +155,7 @@
                 </Border>
 
                 <!-- ══════════ معلومة إضافية ══════════ -->
-                <Border Margin="20,8,20,0"
+                <Border Margin="20,4,20,0"
                         StrokeShape="RoundRectangle 16"
                         StrokeThickness="1"
                         Stroke="#1E3A5F"
