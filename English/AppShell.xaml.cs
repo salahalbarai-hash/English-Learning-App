@@ -323,10 +323,11 @@ namespace English
             {
                 MainThread.BeginInvokeOnMainThread(async () =>
                 {
-                    if (Current != null)
+                    var topPage = GetTopMostPage();
+                    if (topPage != null)
                     {
                         var popup = new ReceiveFriendRequestPopup(senderName);
-                        var result = await Current.ShowPopupAsync(popup);
+                        var result = await topPage.ShowPopupAsync(popup);
 
                         bool isAccepted = result is bool b && b;
 
@@ -466,64 +467,37 @@ namespace English
             return null;
         }
 
-        // 🟢 إظهار شريط إشعار عائم في أعلى الشاشة عند وصول رسالة جديدة أثناء استخدام التطبيق
-        private static readonly SemaphoreSlim _bannerSemaphore = new(1, 1);
-        private static InAppMessageBannerPopup? _activeBanner = null;
+        // 🟢 جلب الصفحة النشطة العلوية المعروضة على الشاشة بدقة متناهية
+        public static Page GetTopMostPage()
+        {
+            try
+            {
+                var current = Shell.Current;
+                if (current == null) return Application.Current?.MainPage ?? new ContentPage();
 
+                if (current.Navigation?.ModalStack?.Count > 0)
+                    return current.Navigation.ModalStack.Last();
+
+                if (current.CurrentPage != null)
+                {
+                    if (current.CurrentPage.Navigation?.ModalStack?.Count > 0)
+                        return current.CurrentPage.Navigation.ModalStack.Last();
+
+                    return current.CurrentPage;
+                }
+
+                return current;
+            }
+            catch
+            {
+                return (Page?)Shell.Current ?? new ContentPage();
+            }
+        }
+
+        // 🟢 إظهار شريط إشعار عائم في أعلى الشاشة عند وصول رسالة جديدة عبر DecorView ليكون دائماً في المقدمة وفوق كل الصفحات
         public static void ShowInAppMessageBanner(string sender, string message)
         {
-            MainThread.BeginInvokeOnMainThread(async () =>
-            {
-                try
-                {
-                    // إذا كان المستخدم حالياً داخل محادثة هذا الصديق، لا داعي لإظهار الشريط
-                    if (ChatPage.CurrentActiveFriend != null &&
-                        ChatPage.CurrentActiveFriend.Equals(sender, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return;
-                    }
-
-                    await _bannerSemaphore.WaitAsync();
-                    try
-                    {
-                        // إغلاق أي شريط إشعار نشط حالياً قبل فتح الجديد لتفادي التداخل
-                        if (_activeBanner != null)
-                        {
-                            try { _activeBanner.DismissBanner(); } catch { }
-                            _activeBanner = null;
-                            await Task.Delay(120);
-                        }
-
-                        // إعادة فحص الحالة في حال تغيرت أثناء فترة الانتظار
-                        if (ChatPage.CurrentActiveFriend != null &&
-                            ChatPage.CurrentActiveFriend.Equals(sender, StringComparison.OrdinalIgnoreCase))
-                        {
-                            return;
-                        }
-
-                        if (Current == null) return;
-
-                        var banner = new InAppMessageBannerPopup(sender, message);
-                        _activeBanner = banner;
-
-                        try
-                        {
-                            HapticFeedback.Default.Perform(HapticFeedbackType.Click);
-                        }
-                        catch { }
-
-                        await Current.ShowPopupAsync(banner);
-                    }
-                    finally
-                    {
-                        _bannerSemaphore.Release();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"[Banner Error] {ex.Message}");
-                }
-            });
+            InAppNotificationService.ShowMessageBanner(sender, message);
         }
     }
 }

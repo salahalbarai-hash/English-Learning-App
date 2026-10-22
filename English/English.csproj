@@ -160,9 +160,7 @@
 	  <MauiXaml Update="Popups\FriendSelectPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Popups\InAppMessageBannerPopup.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
+
 	  <MauiXaml Update="Popups\GameModeSelectionPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -200,6 +198,6 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-	  <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
+	  <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
 	</PropertyGroup>
 </Project>
