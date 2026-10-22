@@ -268,6 +268,27 @@ public partial class MessagesPage : ContentPage
         }
     }
 
+    private bool _isSettingsNavigating = false;
+    private async void OnSettingsClicked(object sender, TappedEventArgs e)
+    {
+        if (_isSettingsNavigating) return;
+        _isSettingsNavigating = true;
+        try
+        {
+            if (SettingsBtn is Border btn)
+            {
+                await btn.ScaleTo(0.9, 80);
+                await btn.ScaleTo(1.0, 80);
+            }
+            await Shell.Current.GoToAsync(nameof(ChatSettingsPage));
+        }
+        catch { }
+        finally
+        {
+            _isSettingsNavigating = false;
+        }
+    }
+
     protected override bool OnBackButtonPressed()
     {
         // إذا كان هناك رجوع سريع قيد التنفيذ من صفحة الدردشة، نجدول الذهاب المباشر إلى MorePage فوراً

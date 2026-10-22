@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="English.Pages.ChatSettingsPage"
+             BackgroundColor="#0B1120"
+             FlowDirection="RightToLeft"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
+
+    <Grid>
+        <!-- ══════════ الخلفية العلوية المتدرجة ══════════ -->
+        <Border VerticalOptions="Start" HeightRequest="140" StrokeThickness="0">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#1E293B" Offset="0.0" />
+                    <GradientStop Color="#0F172A" Offset="1.0" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <!-- خط فاصل زجاجي -->
+        <Border VerticalOptions="Start" HeightRequest="1"
+                Margin="0,139,0,0" StrokeThickness="0"
+                BackgroundColor="#38BDF8" Opacity="0.18"/>
+
+        <ScrollView>
+            <VerticalStackLayout Spacing="0" Padding="0,0,0,40">
+
+                <!-- ══════════ ترويسة ══════════ -->
+                <Grid Padding="20,55,20,30">
+                    <Grid ColumnDefinitions="Auto, *, Auto">
+
+                        <!-- أيقونة الإعدادات -->
+                        <Border Grid.Column="0"
+                                WidthRequest="46" HeightRequest="46"
+                                StrokeShape="RoundRectangle 23"
+                                StrokeThickness="0">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#334155" Offset="0.0"/>
+                                    <GradientStop Color="#1E293B" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Label Text="⚙️" FontSize="22"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- العنوان والوصف -->
+                        <VerticalStackLayout Grid.Column="1" Spacing="2"
+                                             Margin="14,0,0,0"
+                                             VerticalOptions="Center">
+                            <Label Text="إعدادات المحادثات"
+                                   FontFamily="CairoBold"
+                                   FontSize="20"
+                                   TextColor="#F8FAFC"/>
+                            <Label Text="تحكم في تجربة الرسائل"
+                                   FontSize="12"
+                                   TextColor="#64748B"/>
+                        </VerticalStackLayout>
+
+                        <!-- زر الرجوع -->
+                        <Border Grid.Column="2"
+                                WidthRequest="38" HeightRequest="38"
+                                StrokeShape="RoundRectangle 19"
+                                StrokeThickness="1"
+                                Stroke="#1E293B"
+                                BackgroundColor="#151E2F"
+                                VerticalOptions="Center">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnBackClicked"/>
+                            </Border.GestureRecognizers>
+                            <Label Text="✕" FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#64748B"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                    </Grid>
+                </Grid>
+
+                <!-- ══════════ قسم الإشعارات ══════════ -->
+                <Label Text="الإشعارات"
+                       FontSize="13"
+                       FontAttributes="Bold"
+                       TextColor="#64748B"
+                       Margin="24,0,24,10"/>
+
+                <!-- بطاقة إشعارات الرسائل -->
+                <Border Margin="20,0,20,12"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="1"
+                        Stroke="#1E293B"
+                        BackgroundColor="#0F172A"
+                        Padding="20,18">
+                    <Border.Shadow>
+                        <Shadow Brush="#000000" Offset="0,4" Radius="12" Opacity="0.3"/>
+                    </Border.Shadow>
+
+                    <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto" RowSpacing="6">
+
+                        <!-- أيقونة الجرس -->
+                        <Border Grid.Column="0" Grid.RowSpan="2"
+                                WidthRequest="44" HeightRequest="44"
+                                StrokeShape="RoundRectangle 22"
+                                StrokeThickness="0"
+                                BackgroundColor="#151E2F"
+                                VerticalOptions="Center"
+                                Margin="0,0,14,0">
+                            <Label Text="🔔" FontSize="20"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- نص العنوان -->
+                        <Label Grid.Column="1" Grid.Row="0"
+                               Text="إشعارات الرسائل"
+                               FontFamily="CairoBold"
+                               FontSize="15"
+                               TextColor="#F8FAFC"
+                               VerticalOptions="End"/>
+
+                        <!-- النص الوصفي -->
+                        <Label Grid.Column="1" Grid.Row="1"
+                               x:Name="NotificationStatusLabel"
+                               Text="تلقّي إشعار عند وصول رسالة من صديق"
+                               FontSize="12"
+                               TextColor="#64748B"
+                               VerticalOptions="Start"/>
+
+                        <!-- مفتاح التفعيل -->
+                        <Switch Grid.Column="2" Grid.RowSpan="2"
+                                x:Name="NotificationSwitch"
+                                VerticalOptions="Center"
+                                OnColor="#6366F1"
+                                ThumbColor="#F8FAFC"
+                                Toggled="OnNotificationSwitchToggled"/>
+                    </Grid>
+                </Border>
+
+                <!-- ══════════ قسم الخصوصية ══════════ -->
+                <Label Text="معاينة الرسائل"
+                       FontSize="13"
+                       FontAttributes="Bold"
+                       TextColor="#64748B"
+                       Margin="24,8,24,10"/>
+
+                <!-- بطاقة معاينة الرسالة في الإشعار -->
+                <Border Margin="20,0,20,12"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="1"
+                        Stroke="#1E293B"
+                        BackgroundColor="#0F172A"
+                        Padding="20,18">
+                    <Border.Shadow>
+                        <Shadow Brush="#000000" Offset="0,4" Radius="12" Opacity="0.3"/>
+                    </Border.Shadow>
+
+                    <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto" RowSpacing="6">
+
+                        <!-- أيقونة -->
+                        <Border Grid.Column="0" Grid.RowSpan="2"
+                                WidthRequest="44" HeightRequest="44"
+                                StrokeShape="RoundRectangle 22"
+                                StrokeThickness="0"
+                                BackgroundColor="#151E2F"
+                                VerticalOptions="Center"
+                                Margin="0,0,14,0">
+                            <Label Text="💬" FontSize="20"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- عنوان -->
+                        <Label Grid.Column="1" Grid.Row="0"
+                               Text="عرض محتوى الرسالة"
+                               FontFamily="CairoBold"
+                               FontSize="15"
+                               TextColor="#F8FAFC"
+                               VerticalOptions="End"/>
+
+                        <!-- وصف -->
+                        <Label Grid.Column="1" Grid.Row="1"
+                               x:Name="PreviewStatusLabel"
+                               Text="إظهار نص الرسالة في شريط الإشعار"
+                               FontSize="12"
+                               TextColor="#64748B"
+                               VerticalOptions="Start"/>
+
+                        <!-- مفتاح -->
+                        <Switch Grid.Column="2" Grid.RowSpan="2"
+                                x:Name="PreviewSwitch"
+                                VerticalOptions="Center"
+                                OnColor="#6366F1"
+                                ThumbColor="#F8FAFC"
+                                Toggled="OnPreviewSwitchToggled"/>
+                    </Grid>
+                </Border>
+
+                <!-- ══════════ معلومة إضافية ══════════ -->
+                <Border Margin="20,8,20,0"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="1"
+                        Stroke="#1E3A5F"
+                        BackgroundColor="#0D1E32"
+                        Padding="16,14">
+                    <Grid ColumnDefinitions="Auto, *">
+                        <Label Grid.Column="0"
+                               Text="ℹ️" FontSize="17"
+                               VerticalOptions="Start"
+                               Margin="0,0,10,0"/>
+                        <Label Grid.Column="1"
+                               Text="تظهر الإشعارات كشريط عائم أعلى الشاشة عند وصول رسالة وأنت في أي صفحة أخرى داخل التطبيق."
+                               FontSize="12"
+                               TextColor="#93C5FD"
+                               LineBreakMode="WordWrap"/>
+                    </Grid>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

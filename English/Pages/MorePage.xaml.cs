@@ -1,5 +1,6 @@
 using Microsoft.Maui.ApplicationModel.DataTransfer;
 using English.Helpers;
+using English.Services;
 
 namespace English.Pages;
 
@@ -26,6 +27,58 @@ public partial class MorePage : ContentPage
         _lastAppearedTime = DateTime.UtcNow;
         _isNavigating = false;
         this.AnimatePageInAsync();
+
+        // تحديث شارة الرسائل غير المقروءة
+        RefreshUnreadBadge();
+
+        // الاشتراك في حدث وصول رسالة جديدة لتحديث الشارة فوراً
+        ChatStorageService.OnGlobalMessageReceived += OnNewMessageReceived;
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        ChatStorageService.OnGlobalMessageReceived -= OnNewMessageReceived;
+    }
+
+    private void OnNewMessageReceived(string sender, int messageId, string content)
+    {
+        MainThread.BeginInvokeOnMainThread(RefreshUnreadBadge);
+    }
+
+    private void RefreshUnreadBadge()
+    {
+        try
+        {
+            // جمع كل الرسائل غير المقروءة من جميع المحادثات
+            int totalUnread = ChatStorageService.GetTotalUnreadCount();
+
+            if (totalUnread > 0)
+            {
+                UnreadCountLabel.Text = totalUnread > 99 ? "99+" : totalUnread.ToString();
+                UnreadBadge.IsVisible = true;
+                UnreadDot.IsVisible = false;
+
+                // تأثير نبض خفيف لجذب الانتباه
+                AnimateBadge();
+            }
+            else
+            {
+                UnreadBadge.IsVisible = false;
+                UnreadDot.IsVisible = false;
+            }
+        }
+        catch { }
+    }
+
+    private async void AnimateBadge()
+    {
+        try
+        {
+            await UnreadBadge.ScaleTo(1.15, 120, Easing.CubicOut);
+            await UnreadBadge.ScaleTo(1.0, 100, Easing.CubicIn);
+        }
+        catch { }
     }
 
     private async void MenuClicked(object sender, TappedEventArgs e)
@@ -90,4 +143,4 @@ public partial class MorePage : ContentPage
             _isNavigating = false;
         }
     }
-}
+}

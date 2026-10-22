@@ -26,6 +26,10 @@ public static class InAppNotificationService
         {
             try
             {
+                // ── التحقق من إعداد المستخدم: هل الإشعارات مفعّلة؟ ──
+                bool notifEnabled = Preferences.Get(Pages.ChatSettingsPage.NotificationsEnabledKey, true);
+                if (!notifEnabled) return;
+
                 // إذا كان المستخدم حالياً داخل شاشة المحادثة مع هذا الصديق، لا داعي لإظهار الشريط
                 if (ChatPage.CurrentActiveFriend != null &&
                     ChatPage.CurrentActiveFriend.Equals(senderName, StringComparison.OrdinalIgnoreCase))
@@ -189,7 +193,9 @@ public static class InAppNotificationService
 
                 _messagePreviewView = new TextView(activity)
                 {
-                    Text = string.IsNullOrWhiteSpace(messageText) ? "أرسل لك رسالة" : messageText,
+                    Text = Preferences.Get(Pages.ChatSettingsPage.PreviewEnabledKey, true)
+                            ? (string.IsNullOrWhiteSpace(messageText) ? "أرسل لك رسالة" : messageText)
+                            : "اضغط لعرض الرسالة",
                     TextSize = 12,
                     Ellipsize = Android.Text.TextUtils.TruncateAt.End
                 };

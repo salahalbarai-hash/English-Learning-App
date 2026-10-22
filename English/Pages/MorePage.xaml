@@ -43,10 +43,48 @@
 
             <!-- الرسائل -->
             <Border BackgroundColor="#252A34" StrokeThickness="0" StrokeShape="RoundRectangle 18" Padding="16" HeightRequest="65" Margin="0,0,0,12" ClassId="Messages">
-                <Grid ColumnDefinitions="40,*,25">
+                <Grid ColumnDefinitions="40,*,Auto,25">
                     <Image Source="messages.png" WidthRequest="25" HeightRequest="25" VerticalOptions="Center"/>
                     <Label Grid.Column="1" Text="الرسائل" FontSize="16" FontAttributes="Bold" TextColor="#F1F1F1" VerticalOptions="Center"/>
-                    <Label Grid.Column="2" Text="›" FontSize="25" TextColor="#8A8A8A" HorizontalOptions="End" VerticalOptions="Center"/>
+
+                    <!-- شارة الرسائل غير المقروءة -->
+                    <Grid Grid.Column="2" VerticalOptions="Center" Margin="0,0,6,0">
+                        <!-- الشارة العددية -->
+                        <Border x:Name="UnreadBadge"
+                                IsVisible="False"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 12"
+                                Padding="8,3"
+                                MinimumWidthRequest="24" HeightRequest="24"
+                                VerticalOptions="Center">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#6366F1" Offset="0.0"/>
+                                    <GradientStop Color="#38BDF8" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Border.Shadow>
+                                <Shadow Brush="#6366F1" Offset="0,2" Radius="6" Opacity="0.5"/>
+                            </Border.Shadow>
+                            <Label x:Name="UnreadCountLabel"
+                                   Text="0"
+                                   FontAttributes="Bold"
+                                   FontSize="11"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- نقطة تومض عند وجود رسائل جديدة (تظهر بدلاً من الشارة عند العدد 0) -->
+                        <Ellipse x:Name="UnreadDot"
+                                 IsVisible="False"
+                                 Fill="#38BDF8"
+                                 WidthRequest="10" HeightRequest="10"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center"/>
+                    </Grid>
+
+                    <Label Grid.Column="3" Text="›" FontSize="25" TextColor="#8A8A8A" HorizontalOptions="End" VerticalOptions="Center"/>
                 </Grid>
 
                 <Border.GestureRecognizers>

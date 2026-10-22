@@ -337,4 +337,34 @@ public static class ChatStorageService
         summary.UnreadCount = valid.Count(m => !m.IsMine && m.Status != MessageStatus.Read);
         _summaryCache[friendName] = summary;
     }
+
+    /// <summary>
+    /// يحسب مجموع كل الرسائل غير المقروءة عبر جميع المحادثات (من الكاش والملفات)
+    /// </summary>
+    public static int GetTotalUnreadCount()
+    {
+        try
+        {
+            // جلب قائمة الأصدقاء من الكاش المحلي
+            var friendsJson = Preferences.Get("Cached_Friends_List", "");
+            List<string> friends = [];
+            if (!string.IsNullOrEmpty(friendsJson))
+            {
+                try { friends = System.Text.Json.JsonSerializer.Deserialize<List<string>>(friendsJson) ?? []; }
+                catch { }
+            }
+
+            int total = 0;
+            foreach (var friend in friends)
+            {
+                var summary = GetChatSummary(friend);
+                total += summary.UnreadCount;
+            }
+            return total;
+        }
+        catch
+        {
+            return 0;
+        }
+    }
 }

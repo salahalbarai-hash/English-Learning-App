@@ -18,14 +18,19 @@
                        TextColor="#F8FAFC"
                        VerticalOptions="Center" />
 
-                <!-- أيقونة المحادثة التجميلية -->
+                <!-- أيقونة إعدادات المحادثات -->
                 <Border Grid.Column="1"
+                        x:Name="SettingsBtn"
                         WidthRequest="42" HeightRequest="42"
                         StrokeShape="RoundRectangle 21"
-                        StrokeThickness="0"
+                        StrokeThickness="1"
+                        Stroke="#1E293B"
                         BackgroundColor="#151E2F"
                         VerticalOptions="Center">
-                    <Label Text="💬" FontSize="20"
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSettingsClicked"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="⚙️" FontSize="20"
                            HorizontalOptions="Center" VerticalOptions="Center" />
                 </Border>
             </Grid>
