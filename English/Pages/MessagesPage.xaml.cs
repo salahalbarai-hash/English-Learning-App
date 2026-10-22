@@ -1,17 +1,28 @@
+using System.Collections.ObjectModel;
+using System.Text.Json;
+using CommunityToolkit.Mvvm.ComponentModel;
 using English.Helpers;
+using English.Models;
+using English.Services;
 
 namespace English.Pages;
 
 public partial class MessagesPage : ContentPage
 {
-    private List<MessagesFriendItem> _allFriends = [];
+    private readonly List<MessagesFriendItem> _allFriends = [];
+    private readonly ObservableCollection<MessagesFriendItem> _displayedFriends = [];
     private bool _isNavigating = false;
     private bool _isNavigatingBack = false;
+    private bool _isFirstAppearance = true;
     private DateTime _pageAppearedTime = DateTime.MinValue;
+    private string _currentFilter = string.Empty;
+    private AppShell? _shell;
 
     public MessagesPage()
     {
         InitializeComponent();
+        FriendsList.ItemsSource = _displayedFriends;
+        _shell = Shell.Current as AppShell;
     }
 
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
@@ -32,22 +43,121 @@ public partial class MessagesPage : ContentPage
         // إزالة التحديد عند العودة للصفحة
         FriendsList.SelectedItem = null;
 
-        // 1. يبدأ بقراءة الكاش المحلي فوراً (0ms) وتحديث الواجهة قبل التوقف عند await الشبكة
-        var loadTask = LoadFriendsAsync();
+        // ربط الأحداث اللحظية
+        AttachEvents();
 
-        // 2. تشغيل حركة ظهور الصفحة بالتوازي دون انتظار انتهاء اتصال الشبكة
-        var animationTask = this.AnimatePageInAsync();
+        // 1. تحميل الأصدقاء مع ملخص الرسائل والوقت فوراً من الكاش المحلي (0ms)
+        var loadTask = LoadFriendsWithSummariesAsync();
 
-        // 3. انتظار اكتمال جلب حالة المتصلين وانتهاء الحركة معاً
-        await Task.WhenAll(loadTask, animationTask);
+        // 2. تشغيل حركة ظهور الصفحة ككتلة واحدة في أول فتح فقط، لكي تكون العودة لاحقاً من الدردشة خفيفة وفورية كالنسيم
+        if (_isFirstAppearance)
+        {
+            _isFirstAppearance = false;
+            await Task.WhenAll(loadTask, this.AnimatePageInAsync(PageAnimationOptions.ContainerOnly));
+        }
+        else
+        {
+            await loadTask;
+        }
     }
 
-    private async Task LoadFriendsAsync()
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        DetachEvents();
+    }
+
+    private void AttachEvents()
+    {
+        DetachEvents();
+
+        ChatStorageService.OnGlobalMessageReceived += OnGlobalMessageReceived;
+        ChatStorageService.OnChatSummaryChanged += OnChatSummaryChanged;
+
+        if (_shell?.GameHub != null)
+        {
+            _shell.GameHub.OnUserConnected += OnFriendConnected;
+            _shell.GameHub.OnUserDisconnected += OnFriendDisconnected;
+        }
+    }
+
+    private void DetachEvents()
+    {
+        ChatStorageService.OnGlobalMessageReceived -= OnGlobalMessageReceived;
+        ChatStorageService.OnChatSummaryChanged -= OnChatSummaryChanged;
+
+        if (_shell?.GameHub != null)
+        {
+            _shell.GameHub.OnUserConnected -= OnFriendConnected;
+            _shell.GameHub.OnUserDisconnected -= OnFriendDisconnected;
+        }
+    }
+
+    private void OnGlobalMessageReceived(string sender, int messageId, string content)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            var item = _allFriends.FirstOrDefault(f => f.Name.Equals(sender, StringComparison.OrdinalIgnoreCase));
+            if (item != null)
+            {
+                item.LastMessage = content;
+                item.IsLastMessageMine = false;
+                item.LastMessageTime = DateTime.Now;
+                item.UnreadCount++;
+
+                SortAndRefreshList(_currentFilter);
+            }
+            else
+            {
+                _ = LoadFriendsWithSummariesAsync();
+            }
+        });
+    }
+
+    private void OnChatSummaryChanged(string friendName)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            var item = _allFriends.FirstOrDefault(f => f.Name.Equals(friendName, StringComparison.OrdinalIgnoreCase));
+            if (item != null)
+            {
+                var summary = ChatStorageService.GetChatSummary(friendName);
+                item.UpdateFromSummary(summary);
+                SortAndRefreshList(_currentFilter);
+            }
+        });
+    }
+
+    private void OnFriendConnected(string userName)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            var item = _allFriends.FirstOrDefault(f => f.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
+            if (item != null)
+            {
+                item.IsOnline = true;
+            }
+        });
+    }
+
+    private void OnFriendDisconnected(string userName)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            var item = _allFriends.FirstOrDefault(f => f.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
+            if (item != null)
+            {
+                item.IsOnline = false;
+            }
+        });
+    }
+
+    private async Task LoadFriendsWithSummariesAsync()
     {
         List<string> friendsList = [];
         List<string> onlineUsers = [];
 
-        // 🟢 1. القراءة الفورية المباشرة من الكاش المحلي (Instant Load 0ms)
+        // 🟢 1. القراءة الفورية المباشرة من الكاش المحلي (0ms)
         var cachedJson = Preferences.Get("Cached_Friends_List", "");
         if (!string.IsNullOrEmpty(cachedJson))
         {
@@ -58,80 +168,100 @@ public partial class MessagesPage : ContentPage
             catch { }
         }
 
-        // عرض بيانات الكاش المحلي فوراً قبل انتظار الشبكة حتى تبدأ الحركة والقائمة ممتلئة
-        // وحتى لا يظهر EmptyLabel بالخطأ أثناء جلب حالة الاتصال
-        if (_allFriends.Count == 0 && friendsList.Count > 0)
+        // 🟢 1. بناء القائمة فوراً من الكاش المحلي وملخصات الرسائل في 0ms
+        _allFriends.Clear();
+        foreach (var name in friendsList)
         {
-            _allFriends = friendsList.Select(f => new MessagesFriendItem
-            {
-                Name = f,
-                StatusIcon = "🔴"
-            }).ToList();
+            var summary = ChatStorageService.GetChatSummary(name);
 
-            RefreshList();
-        }
-
-        // 🟢 2. جلب حالة المستخدمين المتصلين فقط لتحديد النقطة الخضراء/الحمراء
-        if (Shell.Current is AppShell appShell)
-        {
-            try
+            var item = new MessagesFriendItem
             {
-                var fetchedOnline = await appShell.GetOnlineUsersAsync();
-                if (fetchedOnline != null) onlineUsers = fetchedOnline;
-            }
-            catch { }
-        }
-
-        _allFriends = friendsList.Select(f =>
-        {
-            bool isOnline = onlineUsers.Contains(f, StringComparer.OrdinalIgnoreCase);
-            return new MessagesFriendItem
-            {
-                Name = f,
-                StatusIcon = isOnline ? "🟢" : "🔴"
+                Name = name,
+                IsOnline = false
             };
-        }).ToList();
+            item.UpdateFromSummary(summary);
+            _allFriends.Add(item);
+        }
 
-        _allFriends = _allFriends
-            .OrderByDescending(f => f.StatusIcon == "🟢")
+        SortAndRefreshList(_currentFilter);
+
+        // 🟢 2. جلب وتحديث حالة المتصلين في الخلفية بهدوء دون حجز واجهة المستخدم
+        _ = Task.Run(async () =>
+        {
+            if (_shell != null)
+            {
+                try
+                {
+                    var fetchedOnline = await _shell.GetOnlineUsersAsync();
+                    if (fetchedOnline != null && fetchedOnline.Count > 0)
+                    {
+                        MainThread.BeginInvokeOnMainThread(() =>
+                        {
+                            foreach (var item in _allFriends)
+                            {
+                                item.IsOnline = fetchedOnline.Contains(item.Name, StringComparer.OrdinalIgnoreCase);
+                            }
+                            SortAndRefreshList(_currentFilter);
+                        });
+                    }
+                }
+                catch { }
+            }
+        });
+
+        await Task.CompletedTask;
+    }
+
+    private void SortAndRefreshList(string filter = "")
+    {
+        _currentFilter = filter;
+
+        // 🟢 ترتيب ذكي كالواتساب والتيليغرام:
+        // 1. المحادثات التي تحتوي على رسائل ترتب بحسب وقت آخر رسالة (الأحدث في القمة).
+        // 2. المحادثات التي ليس بها رسائل بعد، يظهر الأصدقاء المتصلون أولاً ثم ترتيب أبجدي.
+        var sorted = _allFriends
+            .OrderByDescending(f => f.HasLastMessage)
+            .ThenByDescending(f => f.LastMessageTime ?? DateTime.MinValue)
+            .ThenByDescending(f => f.IsOnline)
             .ThenBy(f => f.Name)
             .ToList();
 
-        RefreshList();
-    }
-
-    private void RefreshList(string filter = "")
-    {
         var filtered = string.IsNullOrWhiteSpace(filter)
-            ? _allFriends
-            : _allFriends.Where(f => f.Name.Contains(filter, StringComparison.OrdinalIgnoreCase)).ToList();
+            ? sorted
+            : sorted.Where(f => f.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
+                                (f.LastMessage != null && f.LastMessage.Contains(filter, StringComparison.OrdinalIgnoreCase))).ToList();
 
-        FriendsList.ItemsSource = filtered;
-        EmptyLabel.IsVisible = filtered.Count == 0;
+        // تحديث ObservableCollection دون إعادة بناء الواجهة بالكامل
+        _displayedFriends.Clear();
+        foreach (var item in filtered)
+        {
+            _displayedFriends.Add(item);
+        }
+
+        EmptyLabel.IsVisible = _displayedFriends.Count == 0;
     }
 
     private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
     {
-        var text = e.NewTextValue ?? string.Empty;
-        RefreshList(text.Trim());
+        var text = (e.NewTextValue ?? string.Empty).Trim();
+        SortAndRefreshList(text);
     }
 
     private async void OnFriendSelected(object sender, SelectionChangedEventArgs e)
     {
-        if (_isNavigating || (DateTime.UtcNow - _pageAppearedTime).TotalMilliseconds < 350) return;
+        if (_isNavigating || (DateTime.UtcNow - _pageAppearedTime).TotalMilliseconds < 300) return;
 
         if (e.CurrentSelection.FirstOrDefault() is MessagesFriendItem item)
         {
             _isNavigating = true;
             try
             {
-                // الانتقال للدردشة أولاً
+                // الانتقال للدردشة
                 await Shell.Current.GoToAsync($"ChatPage?FriendName={item.Name}");
             }
             finally
             {
                 _isNavigating = false;
-                // إزالة التحديد بعد الانتقال لتجنب الوميض المزعج
                 if (sender is CollectionView cv)
                     cv.SelectedItem = null;
             }
@@ -140,6 +270,13 @@ public partial class MessagesPage : ContentPage
 
     protected override bool OnBackButtonPressed()
     {
+        // إذا كان هناك رجوع سريع قيد التنفيذ من صفحة الدردشة، نجدول الذهاب المباشر إلى MorePage فوراً
+        if (ChatPage.IsNavigatingBack)
+        {
+            ChatPage.QueueSecondBack();
+            return true;
+        }
+
         if (_isNavigatingBack) return true;
         _isNavigatingBack = true;
 
@@ -155,7 +292,7 @@ public partial class MessagesPage : ContentPage
             }
             finally
             {
-                await Task.Delay(350);
+                await Task.Delay(300);
                 _isNavigatingBack = false;
             }
         });
@@ -164,18 +301,102 @@ public partial class MessagesPage : ContentPage
     }
 }
 
-public class MessagesFriendItem
+public partial class MessagesFriendItem : ObservableObject
 {
-    public string Name { get; set; } = string.Empty;
-    public string Initials => string.IsNullOrEmpty(Name)
+    [ObservableProperty]
+    private string name = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(StatusColor))]
+    [NotifyPropertyChangedFor(nameof(StatusTextColor))]
+    [NotifyPropertyChangedFor(nameof(StatusText))]
+    [NotifyPropertyChangedFor(nameof(StatusIcon))]
+    [NotifyPropertyChangedFor(nameof(LastMessagePreview))]
+    private bool isOnline;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasLastMessage))]
+    [NotifyPropertyChangedFor(nameof(LastMessagePreview))]
+    private string? lastMessage;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(LastMessagePreview))]
+    private bool isLastMessageMine;
+
+    [ObservableProperty]
+    private MessageStatus lastMessageStatus = MessageStatus.Pending;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(LastMessageTimeString))]
+    private DateTime? lastMessageTime;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasUnread))]
+    [NotifyPropertyChangedFor(nameof(IsArrowVisible))]
+    [NotifyPropertyChangedFor(nameof(UnreadCountText))]
+    [NotifyPropertyChangedFor(nameof(LastMessageColor))]
+    [NotifyPropertyChangedFor(nameof(LastMessageFontAttributes))]
+    private int unreadCount;
+
+    public string Initials => string.IsNullOrWhiteSpace(Name)
         ? "?"
         : string.Join("", Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(s => s[0].ToString())).ToUpper();
-    public string StatusIcon { get; set; } = "🔴";
-    public string StatusText => StatusIcon == "🟢" ? "متصل الآن" : "غير متصل";
 
-    // 🟢 لون نقطة الاتصال: أخضر زاهي للمتصل وأحمر هادئ للغير متصل
-    public Color StatusColor => StatusIcon == "🟢" ? Color.FromArgb("#10B981") : Color.FromArgb("#F43F5E");
+    public string StatusIcon => IsOnline ? "🟢" : "🔴";
+    public string StatusText => IsOnline ? "متصل الآن" : "غير متصل";
 
-    // لون نص الحالة: أخضر للمتصل ورمادي للغير متصل
-    public Color StatusTextColor => StatusIcon == "🟢" ? Color.FromArgb("#10B981") : Color.FromArgb("#64748B");
+    public Color StatusColor => IsOnline ? Color.FromArgb("#10B981") : Color.FromArgb("#64748B");
+    public Color StatusTextColor => IsOnline ? Color.FromArgb("#10B981") : Color.FromArgb("#64748B");
+
+    public bool HasLastMessage => !string.IsNullOrEmpty(LastMessage);
+    public bool HasUnread => UnreadCount > 0;
+    public bool IsArrowVisible => UnreadCount <= 0;
+    public string UnreadCountText => UnreadCount > 99 ? "99+" : UnreadCount.ToString();
+
+    public string LastMessagePreview
+    {
+        get
+        {
+            if (!HasLastMessage) return StatusText;
+            return IsLastMessageMine ? $"أنت: {LastMessage}" : (LastMessage ?? string.Empty);
+        }
+    }
+
+    public Color LastMessageColor => HasUnread ? Color.FromArgb("#F8FAFC") : Color.FromArgb("#94A3B8");
+    public FontAttributes LastMessageFontAttributes => HasUnread ? FontAttributes.Bold : FontAttributes.None;
+
+    public string LastMessageTimeString
+    {
+        get
+        {
+            if (!LastMessageTime.HasValue) return string.Empty;
+
+            var time = LastMessageTime.Value.ToLocalTime();
+            var culture = new System.Globalization.CultureInfo("ar-SA");
+            var today = DateTime.Today;
+
+            if (time.Date == today)
+            {
+                return time.ToString("hh:mm tt", culture);
+            }
+            if (time.Date == today.AddDays(-1))
+            {
+                return "أمس";
+            }
+            if ((today - time.Date).TotalDays < 7)
+            {
+                return time.ToString("dddd", culture);
+            }
+            return time.ToString("dd/MM", culture);
+        }
+    }
+
+    public void UpdateFromSummary(ChatSummary summary)
+    {
+        LastMessage = summary.LastMessage;
+        IsLastMessageMine = summary.IsMine;
+        LastMessageStatus = summary.Status;
+        LastMessageTime = summary.LastMessageTime;
+        UnreadCount = summary.UnreadCount;
+    }
 }

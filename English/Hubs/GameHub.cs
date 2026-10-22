@@ -39,6 +39,11 @@ public class GameHub
     public event Action<string>? OnDuelWithdrawalReceived;
     public event Action<int>? OnMessageDeleted;
 
+    // --- 🟢 أحداث الرسائل المباشرة المركزية ---
+    public event Action<int, string, string>? OnDirectMessageReceived;
+    public event Action<int>? OnMessageDelivered;
+    public event Action<string>? OnMessagesReadBy;
+
     public HubConnection? HubConnection => _hubConnection;
 
     public async Task ConnectAsync(string userName)
@@ -144,6 +149,16 @@ public class GameHub
 
         _hubConnection.On<int>("MessageDeleted", (msgId) =>
             OnMessageDeleted?.Invoke(msgId));
+
+        // 🟢 الاستماع المركزي للرسائل المباشرة وحالات الاستلام والقراءة
+        _hubConnection.On<int, string, string>("ReceiveDirectMessage", (messageId, sender, message) =>
+            OnDirectMessageReceived?.Invoke(messageId, sender, message));
+
+        _hubConnection.On<int>("MessageDelivered", (messageId) =>
+            OnMessageDelivered?.Invoke(messageId));
+
+        _hubConnection.On<string>("MessagesReadBy", (friendName) =>
+            OnMessagesReadBy?.Invoke(friendName));
 
         try
         {
@@ -267,13 +282,16 @@ public class GameHub
         return 0;
     }
 
-    public async Task<bool> DeleteMessageAsync(int messageId)
+    public async Task<bool> DeleteMessageAsync(int messageId, string? targetUser = null)
     {
         if (_hubConnection?.State == HubConnectionState.Connected)
         {
             try
             {
-                await _hubConnection.InvokeAsync("DeleteMessage", messageId);
+                if (!string.IsNullOrEmpty(targetUser))
+                    await _hubConnection.InvokeAsync("DeleteMessage", messageId, targetUser);
+                else
+                    await _hubConnection.InvokeAsync("DeleteMessage", messageId);
                 return true;
             }
             catch
@@ -283,5 +301,34 @@ public class GameHub
             }
         }
         return false;
+    }
+
+    public async Task<bool> SendDirectMessageAsync(string targetUser, string content)
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+        {
+            try
+            {
+                await _hubConnection.InvokeAsync("SendDirectMessage", targetUser, content);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public async Task MarkMessagesAsReadAsync(string senderUser)
+    {
+        if (_hubConnection?.State == HubConnectionState.Connected)
+        {
+            try
+            {
+                await _hubConnection.InvokeAsync("MarkMessagesAsRead", senderUser);
+            }
+            catch { }
+        }
     }
 }

@@ -36,6 +36,7 @@ public partial class ChatBubbleModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(StatusIconPath))]
     [NotifyPropertyChangedFor(nameof(StatusIconGeometry))]
     [NotifyPropertyChangedFor(nameof(StatusIconColor))]
+    [NotifyPropertyChangedFor(nameof(StatusIconWidth))]
     private MessageStatus status = MessageStatus.Pending;
 
 
@@ -66,9 +67,18 @@ public partial class ChatBubbleModel : ObservableObject
     public string StatusIconPath => Status switch
     {
         MessageStatus.Pending => "M12 2A10 10 0 1 0 12 22A10 10 0 1 0 12 2 M12 7v5l3 3",
-        MessageStatus.Sent => "M5 13l4 4L19 7",
+        MessageStatus.Sent => "M2 13l4 4L15 7",
         MessageStatus.Delivered or MessageStatus.Read => "M2 13l4 4L15 7 M9 13l4 4L22 7",
         _ => ""
+    };
+
+    [JsonIgnore]
+    public double StatusIconWidth => Status switch
+    {
+        MessageStatus.Pending => 14,
+        MessageStatus.Sent => 11,
+        MessageStatus.Delivered or MessageStatus.Read => 16,
+        _ => 16
     };
 
     [JsonIgnore]

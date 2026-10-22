@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:English.Pages"
              x:Class="English.Pages.MessagesPage"
              BackgroundColor="#0B1120"
              Shell.NavBarIsVisible="False"
@@ -17,7 +18,7 @@
                        TextColor="#F8FAFC"
                        VerticalOptions="Center" />
 
-                <!-- أيقونة المحادثة -->
+                <!-- أيقونة المحادثة التجميلية -->
                 <Border Grid.Column="1"
                         WidthRequest="42" HeightRequest="42"
                         StrokeShape="RoundRectangle 21"
@@ -44,7 +45,7 @@
                        VerticalOptions="Center" Opacity="0.6" />
                 <Entry Grid.Column="1"
                        x:Name="SearchBarFriends"
-                       Placeholder="ابحث عن صديق..."
+                       Placeholder="ابحث عن صديق أو رسالة..."
                        BackgroundColor="Transparent"
                        PlaceholderColor="#64748B"
                        TextColor="#F8FAFC"
@@ -54,17 +55,17 @@
             </Grid>
         </Border>
 
-        <!-- ══════════ قائمة الأصدقاء ══════════ -->
+        <!-- ══════════ قائمة المحادثات ══════════ -->
         <CollectionView x:Name="FriendsList"
                         Grid.Row="2"
                         SelectionMode="Single"
                         SelectionChanged="OnFriendSelected">
 
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="local:MessagesFriendItem">
                     <Grid BackgroundColor="Transparent">
 
-                        <!-- تأثير اللمس -->
+                        <!-- تأثير التحديد -->
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="CommonStates">
                                 <VisualState Name="Normal" />
@@ -76,18 +77,18 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-                        <Grid ColumnDefinitions="Auto, *, Auto" Padding="20,14,20,14">
+                        <Grid ColumnDefinitions="Auto, *, Auto" Padding="20,12,20,12">
 
                             <!-- الصورة ونقطة الاتصال -->
                             <Grid Grid.Column="0"
-                                  WidthRequest="56"
-                                  HeightRequest="56"
-                                  Margin="0,0,14,0">
+                                  WidthRequest="52"
+                                  HeightRequest="52"
+                                  Margin="0,0,12,0">
 
                                 <!-- صورة العرض الدائرية مع تدرج لوني -->
-                                <Border WidthRequest="56"
-                                        HeightRequest="56"
-                                        StrokeShape="RoundRectangle 28"
+                                <Border WidthRequest="52"
+                                        HeightRequest="52"
+                                        StrokeShape="RoundRectangle 26"
                                         StrokeThickness="0">
                                     <Border.Background>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -97,16 +98,16 @@
                                     </Border.Background>
                                     <Label Text="{Binding Initials}"
                                            FontAttributes="Bold"
-                                           FontSize="20" FontFamily="CairoBold"
+                                           FontSize="19" FontFamily="CairoBold"
                                            TextColor="White"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
                                 </Border>
 
                                 <!-- نقطة الاتصال المدمجة -->
-                                <Border WidthRequest="16"
-                                        HeightRequest="16"
-                                        StrokeShape="RoundRectangle 8"
+                                <Border WidthRequest="15"
+                                        HeightRequest="15"
+                                        StrokeShape="RoundRectangle 7.5"
                                         Stroke="#0B1120"
                                         StrokeThickness="2.5"
                                         BackgroundColor="{Binding StatusColor}"
@@ -116,31 +117,70 @@
                                         TranslationY="2"/>
                             </Grid>
 
-                            <!-- معلومات الصديق -->
-                            <VerticalStackLayout Grid.Column="1"
-                                                 VerticalOptions="Center"
-                                                 Spacing="3">
-                                <Label Text="{Binding Name}"
-                                       FontSize="16" FontFamily="CairoBold"
-                                       TextColor="#F8FAFC"/>
+                            <!-- معلومات الصديق وآخر رسالة -->
+                            <Grid Grid.Column="1"
+                                  RowDefinitions="Auto, Auto"
+                                  RowSpacing="3"
+                                  VerticalOptions="Center">
 
-                                <Label Text="{Binding StatusText}"
-                                       FontSize="13" 
-                                       TextColor="{Binding StatusTextColor}"/>
-                            </VerticalStackLayout>
+                                <!-- السطر الأول: الاسم + وقت آخر رسالة -->
+                                <Grid Grid.Row="0" ColumnDefinitions="*, Auto">
+                                    <Label Grid.Column="0"
+                                           Text="{Binding Name}"
+                                           FontSize="15" FontFamily="CairoBold"
+                                           TextColor="#F8FAFC"
+                                           LineBreakMode="TailTruncation"/>
 
-                            <!-- أيقونة السهم -->
-                            <Border Grid.Column="2"
-                                    WidthRequest="32" HeightRequest="32"
-                                    StrokeShape="RoundRectangle 16"
-                                    StrokeThickness="0"
-                                    BackgroundColor="#1E293B"
-                                    VerticalOptions="Center">
-                                <Label Text="›"
-                                       FontSize="20" FontAttributes="Bold"
-                                       VerticalOptions="Center" HorizontalOptions="Center"
-                                       TextColor="#64748B" />
-                            </Border>
+                                    <Label Grid.Column="1"
+                                           Text="{Binding LastMessageTimeString}"
+                                           FontSize="11"
+                                           TextColor="#64748B"
+                                           VerticalOptions="Center"
+                                           IsVisible="{Binding HasLastMessage}"/>
+                                </Grid>
+
+                                <!-- السطر الثاني: معاينة آخر رسالة أو نص الحالة -->
+                                <Label Grid.Row="1"
+                                       Text="{Binding LastMessagePreview}"
+                                       FontSize="13"
+                                       TextColor="{Binding LastMessageColor}"
+                                       FontAttributes="{Binding LastMessageFontAttributes}"
+                                       LineBreakMode="TailTruncation"
+                                       MaxLines="1"/>
+                            </Grid>
+
+                            <!-- شارة الرسائل غير المقروءة أو سهم الانتقال -->
+                            <Grid Grid.Column="2"
+                                  VerticalOptions="Center"
+                                  Margin="8,0,0,0">
+
+                                <!-- شارة الرسائل غير المقروءة -->
+                                <Border IsVisible="{Binding HasUnread}"
+                                        BackgroundColor="#38BDF8"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 11"
+                                        Padding="7,2"
+                                        MinimumWidthRequest="22" HeightRequest="22"
+                                        VerticalOptions="Center">
+                                    <Label Text="{Binding UnreadCountText}"
+                                           FontFamily="CairoBold" FontSize="11"
+                                           TextColor="#040814"
+                                           HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Border>
+
+                                <!-- سهم الانتقال الدائري عند عدم وجود رسائل غير مقروءة -->
+                                <Border IsVisible="{Binding IsArrowVisible}"
+                                        WidthRequest="28" HeightRequest="28"
+                                        StrokeShape="RoundRectangle 14"
+                                        StrokeThickness="0"
+                                        BackgroundColor="#1E293B"
+                                        VerticalOptions="Center">
+                                    <Label Text="›"
+                                           FontSize="18" FontAttributes="Bold"
+                                           VerticalOptions="Center" HorizontalOptions="Center"
+                                           TextColor="#64748B" />
+                                </Border>
+                            </Grid>
 
                         </Grid>
 
@@ -148,7 +188,7 @@
                         <BoxView HeightRequest="0.5"
                                  Color="#1E293B"
                                  VerticalOptions="End"
-                                 Margin="90,0,20,0"/>
+                                 Margin="84,0,20,0"/>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

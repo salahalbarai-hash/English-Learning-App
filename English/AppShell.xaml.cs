@@ -1,5 +1,7 @@
 using English.Hubs;
 using English.Popups;
+using English.Services;
+using English.Pages;
 
 namespace English
 {
@@ -349,6 +351,27 @@ namespace English
                     AddFriendToLocalCache(acceptorName);
                     await Toast.Make($"قبل {acceptorName} طلب صداقتك! 🎉").Show();
                 });
+            };
+
+            // 🟢 الاستماع المركزي لوصول الرسائل المباشرة وتخزينها محلياً حتى لو لم تكن ChatPage مفتوحة
+            _gameHub.OnDirectMessageReceived += (messageId, sender, message) =>
+            {
+                if (ChatPage.CurrentActiveFriend != null && 
+                    ChatPage.CurrentActiveFriend.Equals(sender, StringComparison.OrdinalIgnoreCase))
+                {
+                    // الصفحة نشطة ومفتوحة وتتولى العرض بنفسها
+                    return;
+                }
+
+                _ = ChatStorageService.AppendIncomingMessageAsync(sender, messageId, message);
+            };
+
+            _gameHub.OnMessageDeleted += (msgId) =>
+            {
+                if (ChatPage.CurrentActiveFriend == null)
+                {
+                    _ = ChatStorageService.RemoveMessageByIdAsync(msgId);
+                }
             };
         }
 
