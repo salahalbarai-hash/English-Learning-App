@@ -341,74 +341,27 @@ public partial class ChoiceChallengePage : ContentPage
 
                 if (result is string targetFriend && !string.IsNullOrEmpty(targetFriend))
                 {
-                    int friendWordsCount = await Service.FetchFriendMemorizedWordsCountAsync(targetFriend);
-                    int myWordsCount = _memorizedWords.Count;
-                    int effectiveLimit = (friendWordsCount > 0) ? Math.Min(myWordsCount, friendWordsCount) : myWordsCount;
+                    const int stakeForChoice = 3;
 
-                    GenerateQuestions(count, effectiveLimit);
+                    // فحص محلي فوري قبل فتح النافذة
+                    long localFriendsRemaining = Preferences.Get("FriendsChallengeCount", 0L);
+                    long localCoins = Preferences.Get("Coins", 0L);
+                    if (localFriendsRemaining <= 0)
+                    {
+                        await Toast.Make("لا توجد لديك محاولات لتحدي الأصدقاء ⚠️").Show();
+                        return;
+                    }
+                    if (localCoins < stakeForChoice)
+                    {
+                        await Toast.Make("لا يوجد لديك عملات كافية لإرسال التحدي ⚠️").Show();
+                        return;
+                    }
 
                     if (Shell.Current is AppShell appShell)
                     {
-                        // --- Pre-checks: ensure both sender and receiver have enough coins and remaining friend-challenge attempts ---
-                        const int stakeForChoice = 3;
-
-                        // Sync with server first to adopt the latest/higher stats if updated
-                        await Service.SyncUserStatsWithServerAsync();
-
-                        // Local checks
-                        long localFriendsRemaining = Preferences.Get("FriendsChallengeCount", 0L);
-                        long localCoins = Preferences.Get("Coins", 0L);
-                        if (localFriendsRemaining <= 0)
-                        {
-                            await Toast.Make("لا توجد لديك محاولات لتحدي الأصدقاء ⚠️").Show();
-                            return;
-                        }
-                        if (localCoins < stakeForChoice)
-                        {
-                            await Toast.Make("لا يوجد لديك عملات كافية لإرسال التحدي ⚠️").Show();
-                            return;
-                        }
-
-                        // Remote checks (require internet)
-                        if (!await Service.HasActiveInternetAsync(5))
-                        {
-                            await Toast.Make("يتطلب إرسال التحدي اتصالاً بالإنترنت للتحقق من حالة الصديق.").Show();
-                            return;
-                        }
-
-                        // Fetch friend info directly by username (username is unique)
-                        var friendResult = await Service.GetUserByUserName(targetFriend);
-                        if (!friendResult.Success || friendResult.Data == null)
-                        {
-                            await Toast.Make("تعذر التحقق من حالة الصديق. حاول لاحقاً.").Show();
-                            return;
-                        }
-
-                        if (friendResult.Data.FriendsChallengeCount <= 0)
-                        {
-                            await Toast.Make($"{targetFriend} ليس لديه محاولات متبقية لتلقي التحدي.").Show();
-                            return;
-                        }
-
-                        if (friendResult.Data.Coins < stakeForChoice)
-                        {
-                            await Toast.Make($"{targetFriend} لا يملك عملات كافية لقبول التحدي.").Show();
-                            return;
-                        }
-
-                        var payload = new GamePayload { Questions = _questions, TimePerQuestion = _timePerQuestion };
-                        string payloadJson = JsonSerializer.Serialize(payload);
-
-                        try
-                        {
-                            await appShell.GameHub.SendChallengeAsync(targetFriend, "ChoiceMulti", payloadJson);
-                        }
-                        catch
-                        {
-                            await appShell.GameHub.SendChallengeAsync(targetFriend, "ChoiceMulti");
-                        }
-
-                        var waitingPopup = new Popups.WaitingChallengePopup(targetFriend);
+                        string payloadJson = "";
+                        // فتح نافذة الانتظار فوراً وبدون أي تأخير (المرحلة 1: جارٍ التحقق وتجهيز التحدي)
+                        var waitingPopup = new Popups.WaitingChallengePopup(targetFriend, startInPreparingState: true);
 
                         Action<string, bool, string> onChallengeResponded = (responder, isAccepted, category) =>
                         {
@@ -422,10 +375,94 @@ public partial class ChoiceChallengePage : ContentPage
                         };
 
                         appShell.GameHub.OnChallengeResponseReceived += onChallengeResponded;
+
+                        // تنفيذ الفحوصات وتوليد الأسئلة وإرسال التحدي بالتوازي في الخلفية
+                        _ = Task.Run(async () =>
+                        {
+                            try
+                            {
+                                var wordsTask = Service.FetchFriendMemorizedWordsCountAsync(targetFriend);
+                                var syncTask = Service.SyncUserStatsWithServerAsync();
+                                var friendTask = Service.GetUserByUserName(targetFriend);
+
+                                await Task.WhenAll(wordsTask, syncTask, friendTask);
+
+                                if (waitingPopup.IsCancelled) return;
+
+                                // التحقق من الرصيد بعد التزامن
+                                long myCoins = Preferences.Get("Coins", 0L);
+                                long myChallenges = Preferences.Get("FriendsChallengeCount", 0L);
+                                if (myChallenges <= 0)
+                                {
+                                    waitingPopup.CloseWithError("لا توجد لديك محاولات لتحدي الأصدقاء ⚠️");
+                                    return;
+                                }
+                                if (myCoins < stakeForChoice)
+                                {
+                                    waitingPopup.CloseWithError("لا يوجد لديك عملات كافية لإرسال التحدي ⚠️");
+                                    return;
+                                }
+
+                                var friendResult = friendTask.Result;
+                                if (!friendResult.Success || friendResult.Data == null)
+                                {
+                                    waitingPopup.CloseWithError("تعذر التحقق من حالة الصديق. حاول لاحقاً.");
+                                    return;
+                                }
+
+                                if (friendResult.Data.FriendsChallengeCount <= 0)
+                                {
+                                    waitingPopup.CloseWithError($"{targetFriend} ليس لديه محاولات متبقية لتلقي التحدي.");
+                                    return;
+                                }
+
+                                if (friendResult.Data.Coins < stakeForChoice)
+                                {
+                                    waitingPopup.CloseWithError($"{targetFriend} لا يملك عملات كافية لقبول التحدي.");
+                                    return;
+                                }
+
+                                // توليد الأسئلة بناءً على كلمات الصديق
+                                int friendWordsCount = wordsTask.Result;
+                                int myWordsCount = _memorizedWords.Count;
+                                int effectiveLimit = (friendWordsCount > 0) ? Math.Min(myWordsCount, friendWordsCount) : myWordsCount;
+
+                                GenerateQuestions(count, effectiveLimit);
+
+                                if (waitingPopup.IsCancelled) return;
+
+                                var payload = new GamePayload { Questions = _questions, TimePerQuestion = _timePerQuestion };
+                                payloadJson = JsonSerializer.Serialize(payload);
+
+                                try
+                                {
+                                    await appShell.GameHub.SendChallengeAsync(targetFriend, "ChoiceMulti", payloadJson);
+                                }
+                                catch
+                                {
+                                    await appShell.GameHub.SendChallengeAsync(targetFriend, "ChoiceMulti");
+                                }
+
+                                if (waitingPopup.IsCancelled) return;
+
+                                // الانتقال للمرحلة الثانية بسلاسة: في انتظار رد الصديق
+                                waitingPopup.SetWaitingForFriendState(targetFriend);
+                            }
+                            catch (Exception ex)
+                            {
+                                waitingPopup.CloseWithError($"حدث خطأ أثناء إعداد التحدي: {ex.Message}");
+                            }
+                        });
+
                         var waitResult = await this.ShowPopupAsync(waitingPopup);
                         appShell.GameHub.OnChallengeResponseReceived -= onChallengeResponded;
 
-                        if (waitResult is string status && status == "Accepted")
+                        if (waitResult is string err && err.StartsWith("Error:"))
+                        {
+                            await Toast.Make(err.Substring(6)).Show();
+                            return;
+                        }
+                        else if (waitResult is string status && status == "Accepted")
                         {
                             currentUser = Preferences.Get("UserName", "");
                             const int stake = 3; // choice challenge

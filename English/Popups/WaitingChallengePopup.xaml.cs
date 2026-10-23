@@ -4,21 +4,65 @@ namespace English.Popups;
 
 public partial class WaitingChallengePopup : Popup
 {
-    public WaitingChallengePopup(string friendName)
+    private string _friendName = "";
+    public bool IsCancelled { get; private set; } = false;
+
+    public WaitingChallengePopup(string friendName, bool startInPreparingState = false)
     {
         InitializeComponent();
-        FriendNameLabel.Text = $"الصديق: {friendName}";
+        _friendName = friendName;
+
+        if (startInPreparingState)
+        {
+            SetPreparingState();
+        }
+        else
+        {
+            SetWaitingForFriendState(friendName);
+        }
+    }
+
+    public void SetPreparingState()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            IconLabel.Text = "⚡";
+            TitleLabel.Text = "جارٍ التحقق وتجهيز التحدي...";
+            SubtitleLabel.Text = "نتحقق من جاهزية الصديق ونُعد الأسئلة...";
+            SubtitleLabel.IsVisible = true;
+            FriendNameLabel.Text = $"الصديق: {_friendName}";
+            FriendNameLabel.IsVisible = true;
+        });
+    }
+
+    public void SetWaitingForFriendState(string? friendName = null)
+    {
+        if (!string.IsNullOrEmpty(friendName)) _friendName = friendName;
+
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            IconLabel.Text = "⏳";
+            TitleLabel.Text = "بانتظار قبول التحدي...";
+            SubtitleLabel.Text = $"تم إرسال الدعوة إلى {_friendName}";
+            SubtitleLabel.IsVisible = true;
+            FriendNameLabel.Text = $"الصديق: {_friendName}";
+            FriendNameLabel.IsVisible = false;
+        });
     }
 
     private void OnCancelClicked(object sender, EventArgs e)
     {
-        // إغلاق النافذة وإرجاع قيمة "Cancel" لكي يعرف التطبيق أننا ألغينا الطلب
+        IsCancelled = true;
         Close("Cancel");
     }
 
-    // هذه الدالة سنستدعيها من الخارج عندما يأتي رد من السيرفر بالقبول أو الرفض
     public void CloseWithResult(bool isAccepted)
     {
         Close(isAccepted ? "Accepted" : "Rejected");
+    }
+
+    public void CloseWithError(string errorMessage)
+    {
+        Close($"Error:{errorMessage}");
     }
 }
