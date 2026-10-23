@@ -20,6 +20,11 @@ public partial class TenWordsPage : ContentPage
         _isNavigating = false;
         vm.ProgressStatus = Preferences.Get("Coins", 0L).ToString();
 
+        if (ProgressBarContainer.Width > 0)
+        {
+            vm.UpdateContainerWidth(ProgressBarContainer.Width);
+        }
+
         long savedWords = Preferences.Get("MemorizedWords", 0);
         if(savedWords > 0)
             vm.MemorizedWordsCount = savedWords;
@@ -28,8 +33,14 @@ public partial class TenWordsPage : ContentPage
             //vm.ProgressStatus = "عقلك الاَن أرض بكر.. ابدأ بغرس الكلمات! 🌱";
             vm.LoadDailyWords();
         }
-        //await Task.Delay(100);
-        //AnimateProgress();
+    }
+
+    private void OnProgressBarContainerSizeChanged(object sender, EventArgs e)
+    {
+        if (sender is Grid grid && grid.Width > 0 && vm != null)
+        {
+            vm.UpdateContainerWidth(grid.Width);
+        }
     }
 
     private async void OnWordTapped(object sender, TappedEventArgs e)

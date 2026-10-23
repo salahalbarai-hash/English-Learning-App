@@ -42,7 +42,7 @@
                 </Grid>
 
                 <!-- شريط التقدم -->
-                <Grid VerticalOptions="Center" FlowDirection="RightToLeft">
+                <Grid x:Name="ProgressBarContainer" VerticalOptions="Center" FlowDirection="RightToLeft" SizeChanged="OnProgressBarContainerSizeChanged">
                     <Border HeightRequest="14" BackgroundColor="#1E293B" Stroke="#334155" StrokeThickness="1" StrokeShape="RoundRectangle 7"/>
 
                     <Border x:Name="ProgressBar" HeightRequest="14" WidthRequest="{Binding ProgressWidth}" HorizontalOptions="Start" StrokeShape="RoundRectangle 7" StrokeThickness="0">

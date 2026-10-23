@@ -38,6 +38,16 @@ namespace English.ViewModels
             //UpdateUI(value);
         }
 
+        [ObservableProperty]
+        private double containerWidth;
+
+        public void UpdateContainerWidth(double width)
+        {
+            if (width <= 0) return;
+            ContainerWidth = width;
+            UpdateProgressWidth(MemorizedWordsCount);
+        }
+
         private void UpdateProgressWidth(long count)
         {
             CurrentGoal = 1000;
@@ -46,7 +56,7 @@ namespace English.ViewModels
             if (count >= 3000) CurrentGoal = 4000;
             if (count >= 4000) CurrentGoal = 5000;
 
-            double maxWidth = 220;
+            double maxWidth = ContainerWidth > 0 ? ContainerWidth : 340;
             double ratio = Math.Clamp((double)count / CurrentGoal, 0, 1);
             ProgressWidth = ratio * maxWidth;
         }
