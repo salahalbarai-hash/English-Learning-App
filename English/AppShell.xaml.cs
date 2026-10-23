@@ -133,27 +133,29 @@ namespace English
                                     long.TryParse(Preferences.Get("ID", "0")?.Trim('"', ' '), out long id);
                                     string uName = Preferences.Get("UserName", "");
 
-                                    // خصم الكوينز
-                                    long coins = Preferences.Get("Coins", 0L) - stake;
-                                    Preferences.Set("Coins", coins);
+                                    long originalCoins = Preferences.Get("Coins", 0L);
+                                    long originalChallenges = Preferences.Get("FriendsChallengeCount", 0L);
 
-                                    // خصم عدد محاولات تحدي الأصدقاء
-                                    long challengeCount = Preferences.Get("FriendsChallengeCount", 0L);
-                                    if (challengeCount > 0) challengeCount -= 1;
+                                    long coins = originalCoins - stake;
+                                    long challengeCount = originalChallenges > 0 ? originalChallenges - 1 : 0;
+
+                                    Preferences.Set("Coins", coins);
                                     Preferences.Set("FriendsChallengeCount", challengeCount);
 
+                                    bool serverDeducted = false;
                                     if (await Service.HasActiveInternetAsync(5))
                                     {
                                         var resCoins = await Service.UpdateCoins(new User { ID = id, UserName = uName, Coins = coins });
-                                        if (resCoins != "1") Service.AddPendingCoinsUpdate(id, coins, uName);
-
                                         var resCount = await Service.UpdateFriendsChallengeCount(new User { ID = id, UserName = uName, FriendsChallengeCount = challengeCount });
-                                        if (resCount != "1") Service.AddPendingFriendsChallengeUpdate(id, challengeCount, uName);
+                                        serverDeducted = (resCoins == "1" && resCount == "1");
                                     }
-                                    else
+
+                                    if (!serverDeducted)
                                     {
-                                        Service.AddPendingCoinsUpdate(id, coins, uName);
-                                        Service.AddPendingFriendsChallengeUpdate(id, challengeCount, uName);
+                                        Preferences.Set("Coins", originalCoins);
+                                        Preferences.Set("FriendsChallengeCount", originalChallenges);
+                                        accepted = false;
+                                        await Toast.Make("تعذر قبول التحدي لعدم استقرار الاتصال بالسيرفر ⚠️").Show();
                                     }
                                 }
                             }
@@ -238,28 +240,29 @@ namespace English
                                 long.TryParse(Preferences.Get("ID", "0")?.Trim('"', ' '), out long id);
                                 string uName = Preferences.Get("UserName", "");
 
-                                // خصم الكوينز
-                                long coins = Preferences.Get("Coins", 0L) - stake;
-                                Preferences.Set("Coins", coins);
+                                long originalCoins = Preferences.Get("Coins", 0L);
+                                long originalChallenges = Preferences.Get("FriendsChallengeCount", 0L);
 
-                                // خصم عدد محاولات تحدي الأصدقاء
-                                long challengeCount = Preferences.Get("FriendsChallengeCount", 0L);
-                                if (challengeCount > 0) challengeCount -= 1;
+                                long coins = originalCoins - stake;
+                                long challengeCount = originalChallenges > 0 ? originalChallenges - 1 : 0;
+
+                                Preferences.Set("Coins", coins);
                                 Preferences.Set("FriendsChallengeCount", challengeCount);
 
-                                // حفظ التغييرات على السيرفر
+                                bool serverDeducted = false;
                                 if (await Service.HasActiveInternetAsync(5))
                                 {
                                     var resCoins = await Service.UpdateCoins(new User { ID = id, UserName = uName, Coins = coins });
-                                    if (resCoins != "1") Service.AddPendingCoinsUpdate(id, coins, uName);
-
                                     var resCount = await Service.UpdateFriendsChallengeCount(new User { ID = id, UserName = uName, FriendsChallengeCount = challengeCount });
-                                    if (resCount != "1") Service.AddPendingFriendsChallengeUpdate(id, challengeCount, uName);
+                                    serverDeducted = (resCoins == "1" && resCount == "1");
                                 }
-                                else
+
+                                if (!serverDeducted)
                                 {
-                                    Service.AddPendingCoinsUpdate(id, coins, uName);
-                                    Service.AddPendingFriendsChallengeUpdate(id, challengeCount, uName);
+                                    Preferences.Set("Coins", originalCoins);
+                                    Preferences.Set("FriendsChallengeCount", originalChallenges);
+                                    accepted = false;
+                                    await Toast.Make("تعذر قبول التحدي لعدم استقرار الاتصال بالسيرفر ⚠️").Show();
                                 }
                             }
                             catch { }

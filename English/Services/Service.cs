@@ -337,6 +337,71 @@ namespace English.Services
             return string.Empty;
         }
 
+        /// <summary>
+        /// مزامنة إحصائيات المستخدم (الكلمات، محاولات التحدي، الكوينز) باعتماد القيمة الأكبر دائماً بين المحلي والسيرفر
+        /// </summary>
+        public static async Task<bool> SyncUserStatsWithServerAsync()
+        {
+            try
+            {
+                if (!await HasActiveInternetAsync(4)) return false;
+
+                // أولاً: مزامنة أي عمليات معلقة إن وجدت
+                await TrySyncPendingCoinsAsync();
+
+                string userName = Preferences.Get("UserName", "");
+                if (string.IsNullOrWhiteSpace(userName)) return false;
+
+                var result = await GetUserByUserName(userName);
+                if (!result.Success || result.Data == null) return false;
+
+                User serverUser = result.Data;
+
+                long.TryParse(Preferences.Get("ID", "0")?.Trim('"', ' '), out long id);
+                if (id <= 0 && serverUser.ID > 0)
+                {
+                    id = serverUser.ID;
+                    Preferences.Set("ID", id.ToString());
+                }
+
+                // 1. الكلمات المحفوظة: اعتماد الأكبر
+                int localWords = Preferences.Get("MemorizedWords", 0);
+                int maxWords = Math.Max(localWords, serverUser.MemorizedWords);
+                Preferences.Set("MemorizedWords", maxWords);
+
+                if (localWords > serverUser.MemorizedWords && id > 0)
+                {
+                    _ = UpdateMemorizedWords(new User { ID = id, UserName = userName, MemorizedWords = maxWords });
+                }
+
+                // 2. محاولات تحدي الأصدقاء: اعتماد الأكبر
+                long localChallenges = Preferences.Get("FriendsChallengeCount", 0L);
+                long maxChallenges = Math.Max(localChallenges, serverUser.FriendsChallengeCount);
+                Preferences.Set("FriendsChallengeCount", maxChallenges);
+
+                if (localChallenges > serverUser.FriendsChallengeCount && id > 0)
+                {
+                    _ = UpdateFriendsChallengeCount(new User { ID = id, UserName = userName, FriendsChallengeCount = maxChallenges });
+                }
+
+                // 3. الكوينز: اعتماد الأكبر
+                long localCoins = Preferences.Get("Coins", 0L);
+                long maxCoins = Math.Max(localCoins, serverUser.Coins);
+                Preferences.Set("Coins", maxCoins);
+
+                if (localCoins > serverUser.Coins && id > 0)
+                {
+                    _ = UpdateCoins(new User { ID = id, UserName = userName, Coins = maxCoins });
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         // ========================
         // Internet
         // ========================

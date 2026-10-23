@@ -352,6 +352,9 @@ public partial class ChoiceChallengePage : ContentPage
                         // --- Pre-checks: ensure both sender and receiver have enough coins and remaining friend-challenge attempts ---
                         const int stakeForChoice = 3;
 
+                        // Sync with server first to adopt the latest/higher stats if updated
+                        await Service.SyncUserStatsWithServerAsync();
+
                         // Local checks
                         long localFriendsRemaining = Preferences.Get("FriendsChallengeCount", 0L);
                         long localCoins = Preferences.Get("Coins", 0L);
@@ -425,59 +428,54 @@ public partial class ChoiceChallengePage : ContentPage
                         if (waitResult is string status && status == "Accepted")
                         {
                             currentUser = Preferences.Get("UserName", "");
-                            // --- Challenge accepted: decrement local FriendsChallengeCount (only challenger) and deduct stake coins ---
+                            const int stake = 3; // choice challenge
+
+                            long originalChallenges = Preferences.Get("FriendsChallengeCount", 0L);
+                            long originalCoins = Preferences.Get("Coins", 0L);
+
+                            long.TryParse(Preferences.Get("ID", "0")?.Trim('"', ' '), out long id);
+
+                            long newChallenges = originalChallenges > 0 ? originalChallenges - 1 : 0;
+                            long newCoins = originalCoins - stake;
+
+                            // الخصم محلياً
+                            Preferences.Set("FriendsChallengeCount", newChallenges);
+                            Preferences.Set("Coins", newCoins);
+
+                            // الخصم في السيرفر بشكل إلزامي قبل الدخول للجولة
+                            bool serverDeducted = false;
                             try
                             {
-                                long.TryParse(Preferences.Get("ID", "0")?.Trim('"', ' '), out long id);
-
-                                // decrement remaining friend challenges
-                                long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0L);
-                                if (friendsChallengeCount > 0) friendsChallengeCount -= 1;
-                                Preferences.Set("FriendsChallengeCount", friendsChallengeCount);
-
-                                // deduct stake from current user (challenger)
-                                const int stake = 3; // choice challenge
-                                long coins = Preferences.Get("Coins", 0L) - stake;
-                                Preferences.Set("Coins", coins);
-
-                                _ = Task.Run(async () =>
+                                if (await Service.HasActiveInternetAsync(5))
                                 {
-                                    try
+                                    var resCount = await Service.UpdateFriendsChallengeCount(new User
                                     {
-                                        if (await Service.HasActiveInternetAsync(5))
-                                        {
-                                            var resCount = await Service.UpdateFriendsChallengeCount(new User
-                                            {
-                                                ID = id,
-                                                UserName = currentUser,
-                                                FriendsChallengeCount = friendsChallengeCount
-                                            });
-                                            if (resCount != "1")
-                                            {
-                                                Service.AddPendingFriendsChallengeUpdate(id, friendsChallengeCount, currentUser);
-                                            }
+                                        ID = id,
+                                        UserName = currentUser,
+                                        FriendsChallengeCount = newChallenges
+                                    });
 
-                                            var resCoins = await Service.UpdateCoins(new User
-                                            {
-                                                ID = id,
-                                                UserName = currentUser,
-                                                Coins = coins
-                                            });
-                                            if (resCoins != "1")
-                                            {
-                                                Service.AddPendingCoinsUpdate(id, coins, currentUser);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            Service.AddPendingFriendsChallengeUpdate(id, friendsChallengeCount, currentUser);
-                                            Service.AddPendingCoinsUpdate(id, coins, currentUser);
-                                        }
-                                    }
-                                    catch { }
-                                });
+                                    var resCoins = await Service.UpdateCoins(new User
+                                    {
+                                        ID = id,
+                                        UserName = currentUser,
+                                        Coins = newCoins
+                                    });
+
+                                    serverDeducted = (resCount == "1" && resCoins == "1");
+                                }
                             }
                             catch { }
+
+                            if (!serverDeducted)
+                            {
+                                // التراجع عن الخصم المحلي لعدم نجاح السيرفر
+                                Preferences.Set("FriendsChallengeCount", originalChallenges);
+                                Preferences.Set("Coins", originalCoins);
+
+                                await Toast.Make("تعذر بدء التحدي: فشل الاتصال بالسيرفر لخصم الرصيد ⚠️").Show();
+                                return;
+                            }
                             _hubConnection = appShell.GameHub.HubConnection;
                             _roomName = string.Compare(currentUser, targetFriend, StringComparison.Ordinal) < 0
                                     ? $"room_{currentUser}_{targetFriend}" : $"room_{targetFriend}_{currentUser}";

@@ -16,7 +16,13 @@ public partial class GameHubPage : ContentPage
         base.OnAppearing();
         _isNavigating = false;
         UpdateHeaderStats();
-        _ = Service.TrySyncPendingCoinsAsync();
+        _ = Task.Run(async () =>
+        {
+            if (await Service.SyncUserStatsWithServerAsync())
+            {
+                MainThread.BeginInvokeOnMainThread(UpdateHeaderStats);
+            }
+        });
     }
 
     private void UpdateHeaderStats()
