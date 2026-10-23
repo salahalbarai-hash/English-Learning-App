@@ -428,7 +428,8 @@ public partial class ChoiceChallengePage : ContentPage
                             // --- Challenge accepted: decrement local FriendsChallengeCount (only challenger) and deduct stake coins ---
                             try
                             {
-                                long id = Convert.ToInt64(Preferences.Get("ID", "0"));
+                                long.TryParse(Preferences.Get("ID", "0")?.Trim('"', ' '), out long id);
+
                                 // decrement remaining friend challenges
                                 long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0L);
                                 if (friendsChallengeCount > 0) friendsChallengeCount -= 1;
@@ -439,29 +440,42 @@ public partial class ChoiceChallengePage : ContentPage
                                 long coins = Preferences.Get("Coins", 0L) - stake;
                                 Preferences.Set("Coins", coins);
 
-                                if (await Service.HasActiveInternetAsync(5))
+                                _ = Task.Run(async () =>
                                 {
-                                    // persist changes to server
-                                    await Service.UpdateFriendsChallengeCount(new User
+                                    try
                                     {
-                                        ID = id,
-                                        FriendsChallengeCount = friendsChallengeCount
-                                    });
+                                        if (await Service.HasActiveInternetAsync(5))
+                                        {
+                                            var resCount = await Service.UpdateFriendsChallengeCount(new User
+                                            {
+                                                ID = id,
+                                                UserName = currentUser,
+                                                FriendsChallengeCount = friendsChallengeCount
+                                            });
+                                            if (resCount != "1")
+                                            {
+                                                Service.AddPendingFriendsChallengeUpdate(id, friendsChallengeCount, currentUser);
+                                            }
 
-                                    var res = await Service.UpdateCoins(new User
-                                    {
-                                        ID = id,
-                                        Coins = coins
-                                    });
-                                    if (res != "1")
-                                    {
-                                        Service.AddPendingCoinsUpdate(id, coins);
+                                            var resCoins = await Service.UpdateCoins(new User
+                                            {
+                                                ID = id,
+                                                UserName = currentUser,
+                                                Coins = coins
+                                            });
+                                            if (resCoins != "1")
+                                            {
+                                                Service.AddPendingCoinsUpdate(id, coins, currentUser);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Service.AddPendingFriendsChallengeUpdate(id, friendsChallengeCount, currentUser);
+                                            Service.AddPendingCoinsUpdate(id, coins, currentUser);
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    Service.AddPendingCoinsUpdate(id, coins);
-                                }
+                                    catch { }
+                                });
                             }
                             catch { }
                             _hubConnection = appShell.GameHub.HubConnection;
@@ -971,10 +985,14 @@ public partial class ChoiceChallengePage : ContentPage
         StopNextQuestionTimer();
 
         string myName = Preferences.Get("UserName", "أنا");
-        // --- Award coins to winner (choice: winner gets 6 coins) ---
+        // --- Award coins to winner (choice: winner gets 6 coins) or refund on draw ---
         if (_score > _opponentScore)
         {
             AwardWinnerCoins(6);
+        }
+        else if (_score == _opponentScore)
+        {
+            AwardWinnerCoins(3);
         }
 
         var resultPopup = new ChallengeResultPopup(myName, _score, _opponentName, _opponentScore);
@@ -988,9 +1006,11 @@ public partial class ChoiceChallengePage : ContentPage
     {
         try
         {
-            long id = Convert.ToInt64(Preferences.Get("ID", "0"));
             long coins = Preferences.Get("Coins", 0L) + reward;
             Preferences.Set("Coins", coins);
+
+            long.TryParse(Preferences.Get("ID", "0")?.Trim('"', ' '), out long id);
+            string userName = Preferences.Get("UserName", "");
 
             _ = Task.Run(async () =>
             {
@@ -998,15 +1018,15 @@ public partial class ChoiceChallengePage : ContentPage
                 {
                     if (await Service.HasActiveInternetAsync(5))
                     {
-                        var res = await Service.UpdateCoins(new User { ID = id, Coins = coins });
+                        var res = await Service.UpdateCoins(new User { ID = id, UserName = userName, Coins = coins });
                         if (res != "1")
                         {
-                            Service.AddPendingCoinsUpdate(id, coins);
+                            Service.AddPendingCoinsUpdate(id, coins, userName);
                         }
                     }
                     else
                     {
-                        Service.AddPendingCoinsUpdate(id, coins);
+                        Service.AddPendingCoinsUpdate(id, coins, userName);
                     }
                 }
                 catch { }

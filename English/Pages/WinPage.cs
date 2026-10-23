@@ -81,7 +81,8 @@ public class WinPage : ContentPage
 
         saveButton.Clicked += async (s, e) =>
         {
-            long id =  Convert.ToInt64(Preferences.Get("ID", "0"));
+            long.TryParse(Preferences.Get("ID", "0")?.Trim('"', ' '), out long id);
+            string uName = Preferences.Get("UserName", "");
             string time = _timeLabel.Text.Replace("⏱️ ", "");
             loadingOverlay.IsVisible = true;
 
@@ -90,12 +91,14 @@ public class WinPage : ContentPage
                 string resultMemorizedWords = await Service.UpdateMemorizedWords(new User
                 {
                     ID = id,
+                    UserName = uName,
                     MemorizedWords = memorizedWords
                 });
 
                 string resultFriendsChallengeCount = await Service.UpdateFriendsChallengeCount(new User
                 {
                     ID = id,
+                    UserName = uName,
                     FriendsChallengeCount = friendsChallengeCount
                 });
 

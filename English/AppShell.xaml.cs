@@ -130,7 +130,8 @@ namespace English
 
                                 if (stake > 0)
                                 {
-                                    long id = Convert.ToInt64(Preferences.Get("ID", "0"));
+                                    long.TryParse(Preferences.Get("ID", "0")?.Trim('"', ' '), out long id);
+                                    string uName = Preferences.Get("UserName", "");
 
                                     // خصم الكوينز
                                     long coins = Preferences.Get("Coins", 0L) - stake;
@@ -143,14 +144,16 @@ namespace English
 
                                     if (await Service.HasActiveInternetAsync(5))
                                     {
-                                        var res = await Service.UpdateCoins(new User { ID = id, Coins = coins });
-                                        if (res != "1") Service.AddPendingCoinsUpdate(id, coins);
+                                        var resCoins = await Service.UpdateCoins(new User { ID = id, UserName = uName, Coins = coins });
+                                        if (resCoins != "1") Service.AddPendingCoinsUpdate(id, coins, uName);
 
-                                        await Service.UpdateFriendsChallengeCount(new User { ID = id, FriendsChallengeCount = challengeCount });
+                                        var resCount = await Service.UpdateFriendsChallengeCount(new User { ID = id, UserName = uName, FriendsChallengeCount = challengeCount });
+                                        if (resCount != "1") Service.AddPendingFriendsChallengeUpdate(id, challengeCount, uName);
                                     }
                                     else
                                     {
-                                        Service.AddPendingCoinsUpdate(id, coins);
+                                        Service.AddPendingCoinsUpdate(id, coins, uName);
+                                        Service.AddPendingFriendsChallengeUpdate(id, challengeCount, uName);
                                     }
                                 }
                             }
@@ -232,7 +235,8 @@ namespace English
                         {
                             try
                             {
-                                long id = Convert.ToInt64(Preferences.Get("ID", "0"));
+                                long.TryParse(Preferences.Get("ID", "0")?.Trim('"', ' '), out long id);
+                                string uName = Preferences.Get("UserName", "");
 
                                 // خصم الكوينز
                                 long coins = Preferences.Get("Coins", 0L) - stake;
@@ -246,14 +250,16 @@ namespace English
                                 // حفظ التغييرات على السيرفر
                                 if (await Service.HasActiveInternetAsync(5))
                                 {
-                                    var res = await Service.UpdateCoins(new User { ID = id, Coins = coins });
-                                    if (res != "1") Service.AddPendingCoinsUpdate(id, coins);
+                                    var resCoins = await Service.UpdateCoins(new User { ID = id, UserName = uName, Coins = coins });
+                                    if (resCoins != "1") Service.AddPendingCoinsUpdate(id, coins, uName);
 
-                                    await Service.UpdateFriendsChallengeCount(new User { ID = id, FriendsChallengeCount = challengeCount });
+                                    var resCount = await Service.UpdateFriendsChallengeCount(new User { ID = id, UserName = uName, FriendsChallengeCount = challengeCount });
+                                    if (resCount != "1") Service.AddPendingFriendsChallengeUpdate(id, challengeCount, uName);
                                 }
                                 else
                                 {
-                                    Service.AddPendingCoinsUpdate(id, coins);
+                                    Service.AddPendingCoinsUpdate(id, coins, uName);
+                                    Service.AddPendingFriendsChallengeUpdate(id, challengeCount, uName);
                                 }
                             }
                             catch { }

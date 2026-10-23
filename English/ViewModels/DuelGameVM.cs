@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -218,9 +218,11 @@ public class DuelGameVM : INotifyPropertyChanged, IDisposable
 
                 if (reward > 0 && string.Equals(winnerName, _currentUserName, StringComparison.OrdinalIgnoreCase))
                 {
-                    long id = Convert.ToInt64(Preferences.Get("ID", "0"));
                     long coins = Preferences.Get("Coins", 0L) + reward;
                     Preferences.Set("Coins", coins);
+
+                    long.TryParse(Preferences.Get("ID", "0")?.Trim('"', ' '), out long id);
+                    string userName = Preferences.Get("UserName", "");
 
                     _ = Task.Run(async () =>
                     {
@@ -228,17 +230,17 @@ public class DuelGameVM : INotifyPropertyChanged, IDisposable
                         {
                             if (await Service.HasActiveInternetAsync(5))
                             {
-                                var res = await Service.UpdateCoins(new User { ID = id, Coins = coins });
-                                if (res != "1") Service.AddPendingCoinsUpdate(id, coins);
+                                var res = await Service.UpdateCoins(new User { ID = id, UserName = userName, Coins = coins });
+                                if (res != "1") Service.AddPendingCoinsUpdate(id, coins, userName);
                             }
                             else
                             {
-                                Service.AddPendingCoinsUpdate(id, coins);
+                                Service.AddPendingCoinsUpdate(id, coins, userName);
                             }
                         }
                         catch
                         {
-                            Service.AddPendingCoinsUpdate(id, coins);
+                            Service.AddPendingCoinsUpdate(id, coins, userName);
                         }
                     });
                 }

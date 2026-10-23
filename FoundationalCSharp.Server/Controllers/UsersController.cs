@@ -187,7 +187,25 @@ namespace FoundationalCSharp.Server.Controllers
         {
             try
             {
-                DB.UpdateUserCoins(user.ID, user.Coins);
+                DB.UpdateUserCoins(user.ID, user.Coins, user.UserName);
+                return Ok("1");
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("FriendsChallengeCount")]
+        [HttpPut("UpdateFriendsChallengeCount")]
+        public IActionResult UpdateFriendsChallengeCount([FromBody] User user)
+        {
+            try
+            {
+                string query = (user.ID > 0)
+                    ? $"UPDATE UsersTbl SET FriendsChallengeCount = {user.FriendsChallengeCount} WHERE ID = {user.ID}"
+                    : $"UPDATE UsersTbl SET FriendsChallengeCount = {user.FriendsChallengeCount} WHERE UserName = N'{user.UserName}'";
+                DB.Exec(query);
                 return Ok("1");
             }
             catch (Exception)

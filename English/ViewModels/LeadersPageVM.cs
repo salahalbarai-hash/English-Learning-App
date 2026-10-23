@@ -156,6 +156,7 @@ namespace English.ViewModels
                         syncTasks.Add(Service.UpdateMemorizedWords(new User
                         {
                             ID = id,
+                            UserName = userName,
                             MemorizedWords = memorizedWords
                         }));
                     }
@@ -169,6 +170,7 @@ namespace English.ViewModels
                         syncTasks.Add(Service.UpdateFriendsChallengeCount(new User
                         {
                             ID = id,
+                            UserName = userName,
                             FriendsChallengeCount = friendsChallengeCount
                         }));
                     }
@@ -182,6 +184,7 @@ namespace English.ViewModels
                         syncTasks.Add(Service.UpdateCoins(new User
                         {
                             ID = id,
+                            UserName = userName,
                             Coins = coins
                         }));
                     }

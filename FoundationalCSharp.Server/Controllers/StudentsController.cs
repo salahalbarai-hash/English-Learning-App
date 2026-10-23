@@ -25,9 +25,13 @@ namespace FoundationalCSharp.Server.Controllers
         }
 
         [HttpPut("FriendsChallengeCount")]
+        [HttpPut("UpdateFriendsChallengeCount")]
         public IActionResult UpdateFriendsChallengeCount([FromBody] User user)
         {
-            DB.Exec($"UPDATE UsersTbl SET FriendsChallengeCount = {user.FriendsChallengeCount} WHERE ID = {user.ID}");
+            string query = (user.ID > 0)
+                ? $"UPDATE UsersTbl SET FriendsChallengeCount = {user.FriendsChallengeCount} WHERE ID = {user.ID}"
+                : $"UPDATE UsersTbl SET FriendsChallengeCount = {user.FriendsChallengeCount} WHERE UserName = N'{user.UserName}'";
+            DB.Exec(query);
             return Ok("1");
         }
 

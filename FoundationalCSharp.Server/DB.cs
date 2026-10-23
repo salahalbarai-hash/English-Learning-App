@@ -8,13 +8,17 @@ namespace FoundationalCSharp.Server
             return new ConnectionStrings().ConnectionString;
         }
 
-        public static void UpdateUserCoins(long id, long coins)
+        public static void UpdateUserCoins(long id, long coins, string? userName = null)
         {
             using SqlConnection conn = new(GetConnectionString());
-            using SqlCommand sqlCommand = new("UPDATE UsersTbl SET Coins = @Coins WHERE ID = @ID", conn);
+            string query = (id > 0)
+                ? "UPDATE UsersTbl SET Coins = @Coins WHERE ID = @ID"
+                : "UPDATE UsersTbl SET Coins = @Coins WHERE UserName = @UserName";
 
-            sqlCommand.Parameters.Add("@ID", SqlDbType.BigInt).Value = id;
+            using SqlCommand sqlCommand = new(query, conn);
             sqlCommand.Parameters.Add("@Coins", SqlDbType.BigInt).Value = coins;
+            if (id > 0) sqlCommand.Parameters.Add("@ID", SqlDbType.BigInt).Value = id;
+            else sqlCommand.Parameters.Add("@UserName", SqlDbType.NVarChar).Value = userName ?? "";
 
             conn.Open();
             sqlCommand.ExecuteNonQuery();

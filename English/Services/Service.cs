@@ -248,9 +248,28 @@ namespace English.Services
             return response.StatusCode == HttpStatusCode.OK ? "1" : string.Empty;
         }
 
+        private static void EnsureUserIdentification(User user)
+        {
+            if (user == null) return;
+            if (user.ID <= 0)
+            {
+                string rawId = Preferences.Get("ID", "0");
+                if (long.TryParse(rawId?.Trim('"', ' '), out long parsedId))
+                {
+                    user.ID = parsedId;
+                }
+            }
+            if (string.IsNullOrEmpty(user.UserName))
+            {
+                user.UserName = Preferences.Get("UserName", "");
+            }
+        }
+
         public static async Task<string> UpdateCoins(User user)
         {
-            var client = new RestClient(new RestClientOptions(ApiUrl));
+            EnsureUserIdentification(user);
+
+            var client = CreateClient();
             var request = new RestRequest("Users/UpdateCoins", Method.Put);
             request.AddJsonBody(user);
 
@@ -274,6 +293,7 @@ namespace English.Services
         }
         public static async Task<string> UpdateMemorizedWords(User student)
         {
+            EnsureUserIdentification(student);
             var client = CreateClient();
             var request = new RestRequest("Students/UpdateMemorizedWords", Method.Put);
             request.AddJsonBody(student);
@@ -287,15 +307,34 @@ namespace English.Services
 
         public static async Task<string> UpdateFriendsChallengeCount(User student)
         {
+            EnsureUserIdentification(student);
+
             var client = CreateClient();
-            var request = new RestRequest("Students/UpdateFriendsChallengeCount", Method.Put);
+            // Live server endpoint is Students/FriendsChallengeCount
+            var request = new RestRequest("Students/FriendsChallengeCount", Method.Put);
             request.AddJsonBody(student);
 
             var response = await client.ExecuteAsync(request);
 
-            return response.StatusCode == HttpStatusCode.OK && response.Content != null
-                ? response.Content.Trim('"')
-                : string.Empty;
+            if (response.StatusCode == HttpStatusCode.OK && response.Content != null)
+            {
+                return response.Content.Trim('"');
+            }
+
+            // Fallback in case route differs
+            try
+            {
+                var fbReq = new RestRequest("Students/UpdateFriendsChallengeCount", Method.Put);
+                fbReq.AddJsonBody(student);
+                var fbResponse = await client.ExecuteAsync(fbReq);
+                if (fbResponse.StatusCode == HttpStatusCode.OK && fbResponse.Content != null)
+                {
+                    return fbResponse.Content.Trim('"');
+                }
+            }
+            catch { }
+
+            return string.Empty;
         }
 
         // ========================
@@ -379,21 +418,48 @@ namespace English.Services
 
         // Pending coins updates storage key
         private const string PendingCoinsKey = "Pending_Coins_Updates";
+        private const string PendingFriendsChallengeKey = "Pending_FriendsChallenge_Updates";
 
         private class PendingCoinsEntry
         {
             public long ID { get; set; }
+            public string? UserName { get; set; }
             public long Coins { get; set; }
         }
 
-        public static void AddPendingCoinsUpdate(long id, long coins)
+        private class PendingChallengeEntry
+        {
+            public long ID { get; set; }
+            public string? UserName { get; set; }
+            public long Count { get; set; }
+        }
+
+        public static void AddPendingCoinsUpdate(long id, long coins, string? userName = null)
         {
             try
             {
+                if (string.IsNullOrEmpty(userName)) userName = Preferences.Get("UserName", "");
+                if (id <= 0 && long.TryParse(Preferences.Get("ID", "0")?.Trim('"', ' '), out long parsedId)) id = parsedId;
+
                 string json = Preferences.Get(PendingCoinsKey, "[]");
                 var list = System.Text.Json.JsonSerializer.Deserialize<List<PendingCoinsEntry>>(json) ?? new List<PendingCoinsEntry>();
-                list.Add(new PendingCoinsEntry { ID = id, Coins = coins });
+                list.Add(new PendingCoinsEntry { ID = id, UserName = userName, Coins = coins });
                 Preferences.Set(PendingCoinsKey, System.Text.Json.JsonSerializer.Serialize(list));
+            }
+            catch { }
+        }
+
+        public static void AddPendingFriendsChallengeUpdate(long id, long count, string? userName = null)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(userName)) userName = Preferences.Get("UserName", "");
+                if (id <= 0 && long.TryParse(Preferences.Get("ID", "0")?.Trim('"', ' '), out long parsedId)) id = parsedId;
+
+                string json = Preferences.Get(PendingFriendsChallengeKey, "[]");
+                var list = System.Text.Json.JsonSerializer.Deserialize<List<PendingChallengeEntry>>(json) ?? new List<PendingChallengeEntry>();
+                list.Add(new PendingChallengeEntry { ID = id, UserName = userName, Count = count });
+                Preferences.Set(PendingFriendsChallengeKey, System.Text.Json.JsonSerializer.Serialize(list));
             }
             catch { }
         }
@@ -404,29 +470,41 @@ namespace English.Services
             {
                 if (!await HasActiveInternetAsync(5)) return;
 
-                string json = Preferences.Get(PendingCoinsKey, "[]");
-                var list = System.Text.Json.JsonSerializer.Deserialize<List<PendingCoinsEntry>>(json) ?? new List<PendingCoinsEntry>();
-                if (list.Count == 0) return;
-
-                var remaining = new List<PendingCoinsEntry>();
-
-                foreach (var entry in list)
+                // 1. مزامنة الكوينز المعلقة
+                string jsonCoins = Preferences.Get(PendingCoinsKey, "[]");
+                var coinsList = System.Text.Json.JsonSerializer.Deserialize<List<PendingCoinsEntry>>(jsonCoins) ?? new List<PendingCoinsEntry>();
+                if (coinsList.Count > 0)
                 {
-                    try
+                    var remainingCoins = new List<PendingCoinsEntry>();
+                    foreach (var entry in coinsList)
                     {
-                        var res = await UpdateCoins(new User { ID = entry.ID, Coins = entry.Coins });
-                        if (res != "1")
+                        try
                         {
-                            remaining.Add(entry);
+                            var res = await UpdateCoins(new User { ID = entry.ID, UserName = entry.UserName, Coins = entry.Coins });
+                            if (res != "1") remainingCoins.Add(entry);
                         }
+                        catch { remainingCoins.Add(entry); }
                     }
-                    catch
-                    {
-                        remaining.Add(entry);
-                    }
+                    Preferences.Set(PendingCoinsKey, System.Text.Json.JsonSerializer.Serialize(remainingCoins));
                 }
 
-                Preferences.Set(PendingCoinsKey, System.Text.Json.JsonSerializer.Serialize(remaining));
+                // 2. مزامنة محاولات تحدي الأصدقاء المعلقة
+                string jsonChallenges = Preferences.Get(PendingFriendsChallengeKey, "[]");
+                var challengeList = System.Text.Json.JsonSerializer.Deserialize<List<PendingChallengeEntry>>(jsonChallenges) ?? new List<PendingChallengeEntry>();
+                if (challengeList.Count > 0)
+                {
+                    var remainingChallenges = new List<PendingChallengeEntry>();
+                    foreach (var entry in challengeList)
+                    {
+                        try
+                        {
+                            var res = await UpdateFriendsChallengeCount(new User { ID = entry.ID, UserName = entry.UserName, FriendsChallengeCount = entry.Count });
+                            if (res != "1") remainingChallenges.Add(entry);
+                        }
+                        catch { remainingChallenges.Add(entry); }
+                    }
+                    Preferences.Set(PendingFriendsChallengeKey, System.Text.Json.JsonSerializer.Serialize(remainingChallenges));
+                }
             }
             catch { }
         }
