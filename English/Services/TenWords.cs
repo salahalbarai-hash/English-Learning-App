@@ -7,7 +7,7 @@ namespace English.Services
 
         private static async Task<List<WordModel>> LoadWordsAsync()
         {
-            if (_cachedWords != null)
+            if (_cachedWords != null && _cachedWords.Count > 0)
                 return _cachedWords;
 
             try
@@ -16,11 +16,13 @@ namespace English.Services
                 using var reader = new StreamReader(stream);
                 var json = await reader.ReadToEndAsync();
 
-                _cachedWords = JsonSerializer.Deserialize<List<WordModel>>(json) ?? new List<WordModel>();
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                _cachedWords = JsonSerializer.Deserialize<List<WordModel>>(json, options) ?? new List<WordModel>();
                 return _cachedWords;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"[TenWords.LoadWordsAsync] Error: {ex}");
                 return new List<WordModel>();
             }
         }
@@ -44,14 +46,19 @@ namespace English.Services
                 if (allWords.Count == 0)
                     return [];
 
-                int memorizedCount = Preferences.Get("MemorizedWords", 0);
+                long memorized = 0;
+                try { memorized = Preferences.Get("MemorizedWords", 0L); }
+                catch { try { memorized = Preferences.Get("MemorizedWords", 0); } catch { } }
+
+                int memorizedCount = (int)memorized;
                 if (memorizedCount <= 0)
                     return [];
 
                 return allWords.Take(memorizedCount).ToList();
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"[TenWords.GetMemorizedWordsAsync] Error: {ex}");
                 return new List<WordModel>();
             }
         }
@@ -67,7 +74,11 @@ namespace English.Services
 
                 int groupSize = 10;
 
-                int skipCount = Preferences.Get("MemorizedWords", 0);
+                long memorized = 0;
+                try { memorized = Preferences.Get("MemorizedWords", 0L); }
+                catch { try { memorized = Preferences.Get("MemorizedWords", 0); } catch { } }
+
+                int skipCount = (int)memorized;
                 if (skipCount >= allWords.Count)
                 {
                     skipCount = Math.Max(0, allWords.Count - groupSize);
@@ -75,8 +86,9 @@ namespace English.Services
 
                 return [.. allWords.Skip(skipCount).Take(groupSize)];
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"[TenWords.AllAsync] Error: {ex}");
                 return [];
             }
         }
@@ -85,7 +97,7 @@ namespace English.Services
         // These are now safe because they use the cached data after first async load
         public static List<WordModel> GetAllWords()
         {
-            if (_cachedWords != null)
+            if (_cachedWords != null && _cachedWords.Count > 0)
                 return _cachedWords;
 
             try
@@ -94,11 +106,13 @@ namespace English.Services
                 using var reader = new StreamReader(stream);
                 var json = reader.ReadToEnd();
 
-                _cachedWords = JsonSerializer.Deserialize<List<WordModel>>(json) ?? new List<WordModel>();
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                _cachedWords = JsonSerializer.Deserialize<List<WordModel>>(json, options) ?? new List<WordModel>();
                 return _cachedWords;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"[TenWords.GetAllWords] Error: {ex}");
                 return new List<WordModel>();
             }
         }
@@ -112,14 +126,19 @@ namespace English.Services
                 if (allWords.Count == 0)
                     return [];
 
-                int memorizedCount = Preferences.Get("MemorizedWords", 0);
+                long memorized = 0;
+                try { memorized = Preferences.Get("MemorizedWords", 0L); }
+                catch { try { memorized = Preferences.Get("MemorizedWords", 0); } catch { } }
+
+                int memorizedCount = (int)memorized;
                 if (memorizedCount <= 0)
                     return [];
 
                 return allWords.Take(memorizedCount).ToList();
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"[TenWords.GetMemorizedWords] Error: {ex}");
                 return new List<WordModel>();
             }
         }
@@ -135,7 +154,11 @@ namespace English.Services
 
                 int groupSize = 10;
 
-                int skipCount = Preferences.Get("MemorizedWords", 0);
+                long memorized = 0;
+                try { memorized = Preferences.Get("MemorizedWords", 0L); }
+                catch { try { memorized = Preferences.Get("MemorizedWords", 0); } catch { } }
+
+                int skipCount = (int)memorized;
                 if (skipCount >= allWords.Count)
                 {
                     skipCount = Math.Max(0, allWords.Count - groupSize);
@@ -143,8 +166,9 @@ namespace English.Services
 
                 return [.. allWords.Skip(skipCount).Take(groupSize)];
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"[TenWords.All] Error: {ex}");
                 return [];
             }
         }

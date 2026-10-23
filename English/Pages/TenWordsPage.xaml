@@ -74,25 +74,54 @@
                 <DataTemplate>
                     <Grid Padding="2">
                         <!-- التعديل هنا: زيادة الـ Padding العمودي من 16 إلى 24 لجعل الكروت أطول وأكثر راحة للعين -->
-                        <Border StrokeThickness="1.5" StrokeShape="RoundRectangle 18" Padding="18,24" BackgroundColor="#121B2B">
+                        <Border StrokeThickness="1.5" StrokeShape="RoundRectangle 18" Padding="14,18" BackgroundColor="#121B2B" Stroke="{Binding CardStrokeBrush}">
 
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnWordTapped"/>
                                 <TapGestureRecognizer Tapped="OnWordLanguageTapped" NumberOfTapsRequired="2"/>
                             </Border.GestureRecognizers>
 
-                            <Border.Stroke>
-                                <LinearGradientBrush EndPoint="1,0">
-                                    <GradientStop Color="#263B5E" Offset="0.0"/>
-                                    <GradientStop Color="#312E81" Offset="1.0"/>
-                                </LinearGradientBrush>
-                            </Border.Stroke>
-
                             <Border.Shadow>
                                 <Shadow Brush="#000000" Opacity="0.18" Radius="8" Offset="0,3"/>
                             </Border.Shadow>
 
-                            <Label Text="{Binding DisplayText}" TextColor="{Binding DisplayColor}" FontSize="20" FontFamily="CairoBold" HorizontalOptions="Center" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                            <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+
+                                <!-- فراغ متوازن في الجانب الأيسر لضمان توسيط نص الكلمة بدقة -->
+                                <BoxView Grid.Column="0" WidthRequest="38" HeightRequest="38" Color="Transparent"/>
+
+                                <!-- نص الكلمة في المنتصف تماماً -->
+                                <Label Grid.Column="1" 
+                                       Text="{Binding DisplayText}" 
+                                       TextColor="{Binding DisplayColor}" 
+                                       FontSize="20" 
+                                       FontFamily="CairoBold" 
+                                       HorizontalOptions="Center" 
+                                       VerticalOptions="Center" 
+                                       LineBreakMode="TailTruncation"/>
+
+                                <!-- زر الميكروفون التفاعلي لفحص النطق بالذكاء الاصطناعي -->
+                                <Border Grid.Column="2"
+                                        StrokeShape="RoundRectangle 19"
+                                        StrokeThickness="1.5"
+                                        WidthRequest="38"
+                                        HeightRequest="38"
+                                        Background="{Binding MicButtonBgBrush}"
+                                        Stroke="{Binding MicButtonBorderBrush}"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center">
+
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnMicTapped"/>
+                                    </Border.GestureRecognizers>
+
+                                    <Label Text="{Binding MicButtonIcon}"
+                                           FontSize="16"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+
+                            </Grid>
 
                         </Border>
                     </Grid>
