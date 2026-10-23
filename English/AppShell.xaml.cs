@@ -321,11 +321,7 @@ namespace English
                             }
                         }
                     }
-                    else
-                    {
-                        if (Current != null)
-                            await Current.DisplayAlert("اعتذار", $"{responderName} اعتذر أو رفض التحدي حالياً.", "حسناً");
-                    }
+                    // في حال الرفض، يتم الاكتفاء بالـ Toast الذي يظهر في صفحة التحدي دون عرض نافذة رسالة
                 });
             };
 
