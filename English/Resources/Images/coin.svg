@@ -1,139 +1,134 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
   <defs>
+    <!-- عمق الحافة ثلاثية الأبعاد السفلي -->
+    <linearGradient id="coin3DDepth" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9A5200"/>
+      <stop offset="50%" stop-color="#6E3700"/>
+      <stop offset="100%" stop-color="#451E00"/>
+    </linearGradient>
 
-    <!-- الذهب الرئيسي -->
-    <radialGradient id="gold" cx="35%" cy="25%" r="80%">
-      <stop offset="0%" stop-color="#FFF4A8"></stop>
-      <stop offset="18%" stop-color="#FFD84A"></stop>
-      <stop offset="45%" stop-color="#F5B927"></stop>
-      <stop offset="72%" stop-color="#E49A08"></stop>
-      <stop offset="100%" stop-color="#B96B00"></stop>
+    <!-- إطار العملة الذهبي اللامع -->
+    <linearGradient id="outerRimGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFDE0"/>
+      <stop offset="25%" stop-color="#FFDD55"/>
+      <stop offset="60%" stop-color="#F59E0B"/>
+      <stop offset="85%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#92400E"/>
+    </linearGradient>
+
+    <!-- الوجه الداخلي للعملة - لون ذهبي دافئ ومتباعد لإبراز النص الأبيض -->
+    <radialGradient id="innerFaceGold" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="30%" stop-color="#F59E0B"/>
+      <stop offset="70%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#92400E"/>
     </radialGradient>
 
-    <!-- الحافة الجانبية -->
-    <linearGradient id="edge" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#D88900"></stop>
-      <stop offset="45%" stop-color="#A96000"></stop>
-      <stop offset="100%" stop-color="#7C4600"></stop>
+    <!-- تدرج نص En الأبيض اللؤلؤي فائق التباين -->
+    <linearGradient id="enTextGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="65%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#FFF0A3"/>
     </linearGradient>
 
-    <!-- الإطار الداخلي -->
-    <linearGradient id="rim" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFF5B8"></stop>
-      <stop offset="35%" stop-color="#F8C62E"></stop>
-      <stop offset="70%" stop-color="#D98A00"></stop>
-      <stop offset="100%" stop-color="#A96000"></stop>
+    <!-- لمعة زجاجية علوية ناعمة -->
+    <linearGradient id="sheenGradient" x1="0%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.45"/>
+      <stop offset="40%" stop-color="#FFFFFF" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
     </linearGradient>
 
-    <!-- لمعان -->
-    <linearGradient id="shine" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.65"></stop>
-      <stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.12"></stop>
-      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"></stop>
-    </linearGradient>
-
-    <!-- ظل العملة -->
-    <filter id="coinShadow" x="-30%" y="-30%" width="160%" height="170%">
-      <feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="#6B3F00" flood-opacity="0.55"></feDropShadow>
-    </filter>
-
-    <!-- ظل النص -->
-    <filter id="textShadow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="2" stdDeviation="1.2" flood-color="#7A4700" flood-opacity="0.85"></feDropShadow>
-    </filter>
-
-    <!-- قص اللمعة داخل العملة -->
-    <clipPath id="coinClip">
-      <circle cx="50" cy="48" r="44"></circle>
+    <!-- قص اللمعة داخل حدود العملة -->
+    <clipPath id="innerCoinClip">
+      <circle cx="60" cy="57" r="48"/>
     </clipPath>
-
   </defs>
 
+  <!-- 1. الظل الساقط الناعم أسفل العملة -->
+  <ellipse cx="60" cy="107" rx="42" ry="7" fill="#000000" opacity="0.4"/>
 
-  <!-- ===================================== -->
-  <!-- الظل الخارجي -->
-  <!-- ===================================== -->
+  <!-- 2. حافة السماكة ثلاثية الأبعاد (3D Base) -->
+  <circle cx="60" cy="63" r="50" fill="url(#coin3DDepth)"/>
 
-  <circle cx="50" cy="52" r="45" fill="#704000" opacity="0.35"></circle>
+  <!-- 3. إطار العملة الذهبي الأساسي -->
+  <circle cx="60" cy="57" r="50" fill="url(#outerRimGold)"/>
 
+  <!-- 4. الوجه الداخلي الغني (خلفية الحروف) -->
+  <circle cx="60" cy="57" r="42" fill="url(#innerFaceGold)"/>
 
-  <!-- ===================================== -->
-  <!-- الحافة السفلية / السماكة 3D -->
-  <!-- ===================================== -->
+  <!-- 5. حلقات مفرغة مطروقة (Minted Ring) لإعطاء عمق للمعدن -->
+  <circle cx="60" cy="57" r="39" fill="none" stroke="#FFE97D" stroke-width="1.8" opacity="0.65"/>
+  <circle cx="60" cy="57" r="36.5" fill="none" stroke="#78350F" stroke-width="1.2" opacity="0.5"/>
 
-  <circle cx="50" cy="52" r="45" fill="url(#edge)" filter="url(#coinShadow)"></circle>
-
-
-  <!-- خطوط صغيرة على الحافة لإظهار السماكة -->
-
-  <circle cx="50" cy="52" r="42.5" fill="none" stroke="#8B5100" stroke-width="1.5" opacity="0.8"></circle>
-
-
-  <!-- ===================================== -->
-  <!-- جسم العملة -->
-  <!-- ===================================== -->
-
-  <circle cx="50" cy="48" r="44" fill="url(#gold)"></circle>
-
-
-  <!-- حافة خارجية ذهبية -->
-
-  <circle cx="50" cy="48" r="44" fill="none" stroke="#FFE477" stroke-width="1.5" opacity="0.8"></circle>
-
-
-  <!-- ===================================== -->
-  <!-- الإطار الداخلي -->
-  <!-- ===================================== -->
-
-  <circle cx="50" cy="48" r="36.5" fill="none" stroke="#FFF0A0" stroke-width="3" opacity="0.9"></circle>
-
-  <circle cx="50" cy="48" r="34.5" fill="none" stroke="#B96E00" stroke-width="1.5" opacity="0.85"></circle>
-
-
-  <!-- ===================================== -->
-  <!-- زخرفة دائرية خفيفة -->
-  <!-- ===================================== -->
-
-  <circle cx="50" cy="48" r="31.5" fill="none" stroke="#FFD94A" stroke-width="0.8" stroke-dasharray="1.5 3" opacity="0.45"></circle>
-
-
-  <!-- ===================================== -->
-  <!-- اللمعة الرئيسية -->
-  <!-- ===================================== -->
-
-  <g clip-path="url(#coinClip)">
-
-    <ellipse cx="32" cy="25" rx="29" ry="14" fill="url(#shine)" transform="rotate(-18 32 25)"></ellipse>
-
-    <ellipse cx="25" cy="21" rx="10" ry="4" fill="#FFFFFF" opacity="0.25" transform="rotate(-20 25 21)"></ellipse>
-
+  <!-- 6. لمعان علوي زجاجي -->
+  <g clip-path="url(#innerCoinClip)">
+    <path d="M 12,48 C 28,20 78,16 108,48 C 95,26 48,20 12,48 Z" fill="url(#sheenGradient)"/>
   </g>
 
+  <!-- 7. رسم الحرفين En بوضوح استثنائي وتباين فائق (Bold White & Crisp 3D Shadow) -->
+  
+  <!-- أ) ظل العمق الساقط للشعار (Deep Shadow) ليجعل الحروف تبدو محفورة وبارزة -->
+  <g transform="translate(0, 2.5)" opacity="0.7">
+    <!-- حرف E -->
+    <path d="M 31,39 
+             L 54,39 A 2.5,2.5 0 0,1 56.5,41.5 L 56.5,46.5 A 2.5,2.5 0 0,1 54,49 
+             L 43,49 L 43,53.5 
+             L 51.5,53.5 A 2.5,2.5 0 0,1 54,56 L 54,60.5 A 2.5,2.5 0 0,1 51.5,63 
+             L 43,63 L 43,67.5 
+             L 54,67.5 A 2.5,2.5 0 0,1 56.5,70 L 56.5,75 A 2.5,2.5 0 0,1 54,77.5 
+             L 31,77.5 A 2.5,2.5 0 0,1 28.5,75 L 28.5,41.5 A 2.5,2.5 0 0,1 31,39 Z" 
+          fill="#3B1800"/>
 
-  <!-- ===================================== -->
-  <!-- رمز En -->
-  <!-- ===================================== -->
+    <!-- حرف n (صغير ومميز) -->
+    <path d="M 64,48 A 2.5,2.5 0 0,1 66.5,50.5 L 66.5,53.5 
+             C 69,50 73.5,47.5 79,47.5 
+             C 86,47.5 89.5,52 89.5,59.5 L 89.5,75 A 2.5,2.5 0 0,1 87,77.5 L 80.5,77.5 A 2.5,2.5 0 0,1 78,75 L 78,61 
+             C 78,57.5 76,55.5 73,55.5 
+             C 70,55.5 68,57.5 68,61 L 68,75 A 2.5,2.5 0 0,1 65.5,77.5 L 61.5,77.5 A 2.5,2.5 0 0,1 59,75 L 59,50.5 A 2.5,2.5 0 0,1 61.5,48 Z" 
+          fill="#3B1800"/>
+  </g>
 
-  <!-- ظل/عمق خلف النص -->
+  <!-- ب) الحروف البيضاء فائقة التباين والسطوع (Ultra-Visible White En) -->
+  <g>
+    <!-- حرف E -->
+    <path d="M 31,37.5 
+             L 54,37.5 A 2.5,2.5 0 0,1 56.5,40 L 56.5,45 A 2.5,2.5 0 0,1 54,47.5 
+             L 43,47.5 L 43,52 
+             L 51.5,52 A 2.5,2.5 0 0,1 54,54.5 L 54,59 A 2.5,2.5 0 0,1 51.5,61.5 
+             L 43,61.5 L 43,66 
+             L 54,66 A 2.5,2.5 0 0,1 56.5,68.5 L 56.5,73.5 A 2.5,2.5 0 0,1 54,76 
+             L 31,76 A 2.5,2.5 0 0,1 28.5,73.5 L 28.5,40 A 2.5,2.5 0 0,1 31,37.5 Z" 
+          fill="url(#enTextGradient)"/>
 
-  <text x="50" y="63" font-family="Arial, sans-serif" font-size="39" font-weight="900" text-anchor="middle" fill="#9A5A00" opacity="0.55">
-    En
-  </text>
+    <!-- حرف n -->
+    <path d="M 64,46.5 A 2.5,2.5 0 0,1 66.5,49 L 66.5,52 
+             C 69,48.5 73.5,46 79,46 
+             C 86,46 89.5,50.5 89.5,58 L 89.5,73.5 A 2.5,2.5 0 0,1 87,76 L 80.5,76 A 2.5,2.5 0 0,1 78,73.5 L 78,59.5 
+             C 78,56 76,54 73,54 
+             C 70,54 68,56 68,59.5 L 68,73.5 A 2.5,2.5 0 0,1 65.5,76 L 61.5,76 A 2.5,2.5 0 0,1 59,73.5 L 59,49 A 2.5,2.5 0 0,1 61.5,46.5 Z" 
+          fill="url(#enTextGradient)"/>
+  </g>
 
+  <!-- ج) لمعة ناصعة بيضاء على الحواف العلوية للحروف لتعطي إحساس المجوهرات والصقل -->
+  <g opacity="0.85">
+    <path d="M 31,37.5 L 54,37.5 L 54,39.5 L 31,39.5 Z" fill="#FFFFFF"/>
+    <path d="M 43,52 L 51.5,52 L 51.5,53.5 L 43,53.5 Z" fill="#FFFFFF"/>
+    <path d="M 72,46 C 76,46 82,47 85,50 L 83,52 C 80,50 76,48 72,48 Z" fill="#FFFFFF"/>
+  </g>
 
-  <!-- النص الرئيسي -->
+  <!-- 8. نجمة اللمعان السحرية الرباعية أعلى الإطار (Sparkle Star) -->
+  <g transform="translate(89, 21)">
+    <!-- هالة التوهج الناعمة -->
+    <circle cx="0" cy="0" r="11" fill="#FFFFFF" opacity="0.3"/>
+    <circle cx="0" cy="0" r="5.5" fill="#FFFBEB" opacity="0.6"/>
+    <!-- النجمة الساطعة -->
+    <path d="M 0,-13 Q 0,0 13,0 Q 0,0 0,13 Q 0,0 -13,0 Q 0,0 0,-13 Z" fill="#FFFFFF"/>
+    <circle cx="0" cy="0" r="2.5" fill="#FEF08A"/>
+  </g>
 
-  <text x="50" y="61" font-family="Arial, sans-serif" font-size="39" font-weight="900" text-anchor="middle" fill="#FFFFFF" filter="url(#textShadow)">
-    En
-  </text>
-
-
-  <!-- لمعان بسيط على النص -->
-
-  <text x="50" y="60" font-family="Arial, sans-serif" font-size="39" font-weight="900" text-anchor="middle" fill="#FFFFFF" opacity="0.25">
-    En
-  </text>
-
+  <!-- بريق خفيف سفلي -->
+  <g transform="translate(24, 76)">
+    <path d="M 0,-5 Q 0,0 5,0 Q 0,0 0,5 Q 0,0 -5,0 Q 0,0 0,-5 Z" fill="#FFFFFF" opacity="0.8"/>
+  </g>
 
 </svg>

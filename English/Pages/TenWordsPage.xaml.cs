@@ -1,7 +1,4 @@
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Views;
 using English.Popups;
-using English.Services;
 using English.ViewModels;
 
 namespace English.Pages;
@@ -56,7 +53,7 @@ public partial class TenWordsPage : ContentPage
         if (border.Content is Label label) return label;
         if (border.Content is Grid grid)
         {
-            return grid.Children.OfType<Label>().FirstOrDefault(l => Grid.GetColumn(l) == 1) 
+            return grid.Children.OfType<Label>().FirstOrDefault(l => Grid.GetColumn(l) == 1)
                 ?? grid.Children.OfType<Label>().FirstOrDefault();
         }
         return null;

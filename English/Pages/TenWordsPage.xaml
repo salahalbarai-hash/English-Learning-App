@@ -59,7 +59,7 @@
                         <Border StrokeThickness="1" Stroke="#263B5E" StrokeShape="RoundRectangle 20" BackgroundColor="#0B111D" Padding="12,4,12,4" HeightRequest="36" VerticalOptions="Center">
                             <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
                                 <Label Text="{Binding ProgressStatus}" FontSize="16" TextColor="#FBBF24" FontFamily="CairoBold" VerticalOptions="Center"/>
-                                <Image Source="coin.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" SemanticProperties.Description="أيقونة العملات"/>
+                                <Image Source="coin.png" WidthRequest="22" HeightRequest="22" VerticalOptions="Center" SemanticProperties.Description="أيقونة العملات"/>
                             </HorizontalStackLayout>
                         </Border>
 
