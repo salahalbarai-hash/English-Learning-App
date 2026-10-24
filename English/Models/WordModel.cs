@@ -58,6 +58,19 @@ public class WordModel : INotifyPropertyChanged
         }
     }
 
+    private bool _isReciting;
+    [JsonIgnore]
+    public bool IsReciting
+    {
+        get => _isReciting;
+        set
+        {
+            _isReciting = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(CardStrokeBrush));
+        }
+    }
+
     private static readonly SolidColorBrush BrushMicBgDefault = new(Color.FromArgb("#0F172A"));
     private static readonly SolidColorBrush BrushMicBgListening = new(Color.FromArgb("#7F1D1D"));
     private static readonly SolidColorBrush BrushMicBgCorrect = new(Color.FromArgb("#064E3B"));
@@ -69,6 +82,7 @@ public class WordModel : INotifyPropertyChanged
     private static readonly SolidColorBrush BrushCardStrokeDefault = new(Color.FromArgb("#263B5E"));
     private static readonly SolidColorBrush BrushCardStrokeListening = new(Color.FromArgb("#EF4444"));
     private static readonly SolidColorBrush BrushCardStrokeCorrect = new(Color.FromArgb("#10B981"));
+    private static readonly SolidColorBrush BrushCardStrokeReciting = new(Color.FromArgb("#38BDF8"));
 
     [JsonIgnore]
     public Brush MicButtonBgBrush => IsListening 
@@ -88,7 +102,7 @@ public class WordModel : INotifyPropertyChanged
     [JsonIgnore]
     public Brush CardStrokeBrush => IsListening
         ? BrushCardStrokeListening
-        : (IsPronouncedCorrectly ? BrushCardStrokeCorrect : BrushCardStrokeDefault);
+        : (IsPronouncedCorrectly ? BrushCardStrokeCorrect : (IsReciting ? BrushCardStrokeReciting : BrushCardStrokeDefault));
 
     public event PropertyChangedEventHandler? PropertyChanged;
     protected void OnPropertyChanged([CallerMemberName] string propertyName = "")

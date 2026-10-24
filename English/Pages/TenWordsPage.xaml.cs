@@ -1,4 +1,6 @@
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Views;
+using English.Popups;
 using English.Services;
 using English.ViewModels;
 
@@ -9,6 +11,9 @@ public partial class TenWordsPage : ContentPage
     private bool _isLoading = false;
     private bool _isNavigating = false;
     TenWordsVM vm;
+
+    private CancellationTokenSource? _autoReciteCts;
+    private bool _isRecitingActive;
 
     public TenWordsPage()
     {
@@ -59,6 +64,8 @@ public partial class TenWordsPage : ContentPage
 
     private async void OnWordTapped(object sender, TappedEventArgs e)
     {
+        if (_isRecitingActive) StopAutoRecite();
+
         if (sender is Border border && border.BindingContext is WordModel word)
         {
             if (word.Locked) return;
@@ -76,6 +83,8 @@ public partial class TenWordsPage : ContentPage
 
     private async void OnWordLanguageTapped(object sender, TappedEventArgs e)
     {
+        if (_isRecitingActive) StopAutoRecite();
+
         if (sender is Border border && border.BindingContext is WordModel word)
         {
             if (word.Locked) return;
@@ -97,6 +106,7 @@ public partial class TenWordsPage : ContentPage
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
+        StopAutoRecite();
         SpeechRecognitionService.CancelListening();
         if (_currentListeningWord != null)
         {
@@ -110,6 +120,8 @@ public partial class TenWordsPage : ContentPage
 
     private async void OnMicTapped(object sender, TappedEventArgs e)
     {
+        if (_isRecitingActive) StopAutoRecite();
+
         if (_isProcessingMic) return;
         _isProcessingMic = true;
 
@@ -237,6 +249,7 @@ public partial class TenWordsPage : ContentPage
 
     private async void QuizButton_Clicked(object sender, EventArgs e)
     {
+        StopAutoRecite();
         if (_isNavigating) return;
         _isNavigating = true;
 
@@ -267,4 +280,158 @@ public partial class TenWordsPage : ContentPage
             _isNavigating = false;
         }
     }
+
+    #region وضع التلقين الصوتي التلقائي (Hands-Free Recitation)
+
+    private async void OnAutoReciteTapped(object sender, TappedEventArgs e)
+    {
+        if (_isRecitingActive)
+        {
+            StopAutoRecite();
+            return;
+        }
+
+        if (vm.Titles == null || vm.Titles.Count == 0)
+            return;
+
+        // إلغاء أي استماع حالي للمايك
+        if (_currentListeningWord != null)
+        {
+            _currentListeningWord.IsListening = false;
+            SpeechRecognitionService.CancelListening();
+            _currentListeningWord = null;
+        }
+
+        // إظهار نافذة الإعدادات السريعة
+        var popup = new AutoReciteSettingsPopup();
+        var result = await this.ShowPopupAsync(popup);
+
+        if (result is AutoReciteConfig config)
+        {
+            await StartAutoReciteAsync(config);
+        }
+    }
+
+    private void StopAutoRecite()
+    {
+        if (!_isRecitingActive) return;
+
+        try
+        {
+            _autoReciteCts?.Cancel();
+            _autoReciteCts?.Dispose();
+            _autoReciteCts = null;
+        }
+        catch { }
+
+        _isRecitingActive = false;
+
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            AutoReciteImage.Source = "headphones_icon.svg";
+            BtnAutoReciteIcon.Stroke = new SolidColorBrush(Color.FromArgb("#38BDF8"));
+            BtnAutoReciteIcon.BackgroundColor = Color.FromArgb("#0B111D");
+        });
+
+        if (vm?.Titles != null)
+        {
+            foreach (var w in vm.Titles)
+            {
+                w.IsReciting = false;
+                w.CurrentLanguage = "EN";
+            }
+        }
+    }
+
+    private async Task StartAutoReciteAsync(AutoReciteConfig config)
+    {
+        _isRecitingActive = true;
+        _autoReciteCts = new CancellationTokenSource();
+        var token = _autoReciteCts.Token;
+
+        // تحديث زر الواجهة لحالة التشغيل (أيقونة الإيقاف المؤقت بلون وردي تنبيهي أنيق)
+        AutoReciteImage.Source = "pause_icon.svg";
+        BtnAutoReciteIcon.Stroke = new SolidColorBrush(Color.FromArgb("#F43F5E"));
+        BtnAutoReciteIcon.BackgroundColor = Color.FromArgb("#1F1320");
+
+        try
+        {
+            int currentRound = 0;
+            do
+            {
+                currentRound++;
+                var wordsList = vm.Titles.ToList();
+
+                for (int i = 0; i < wordsList.Count; i++)
+                {
+                    if (token.IsCancellationRequested) break;
+
+                    var word = wordsList[i];
+                    if (word.Locked) continue;
+
+                    // تمييز الكرت والتمرير إليه
+                    word.IsReciting = true;
+                    try
+                    {
+                        CV.ScrollTo(word, position: ScrollToPosition.Center, animate: true);
+                    }
+                    catch { }
+
+                    // تنفيذ تكرار نطق الكلمة حسب اختيار المستخدم
+                    for (int r = 0; r < config.WordRepeats; r++)
+                    {
+                        if (token.IsCancellationRequested) break;
+
+                        // 1. التأكد أن الكرت بالإنجليزية ونطقها بوضوح بصوت نقي
+                        word.CurrentLanguage = "EN";
+                        try
+                        {
+                            await TextToSpeech.Default.SpeakAsync(word.EnglishWord, cancelToken: token);
+                        }
+                        catch (OperationCanceledException) { break; }
+                        catch { }
+
+                        if (token.IsCancellationRequested) break;
+
+                        // 2. قلب الكرت لإظهار المعنى بالعربي للقراءة بصرياً
+                        word.CurrentLanguage = "AR";
+                        await Task.Delay(1300, token);
+                        if (token.IsCancellationRequested) break;
+
+                        // 3. إعادة الكرت للإنجليزية
+                        word.CurrentLanguage = "EN";
+
+                        if (r < config.WordRepeats - 1)
+                        {
+                            // مهلة خفيفة قبل إعادة النطق للكلمة نفسها
+                            await Task.Delay(500, token);
+                        }
+                    }
+
+                    word.IsReciting = false;
+
+                    // فاصل مريح قبل الانتقال للكلمة التالية
+                    await Task.Delay(700, token);
+                }
+
+                // إذا لم يكن الوضع مستمراً، نتحقق من اكتمال عدد الدورات المحدد
+                if (!config.IsInfiniteLoop && currentRound >= config.GroupRounds)
+                {
+                    break;
+                }
+
+            } while (!token.IsCancellationRequested);
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[StartAutoReciteAsync] Error: {ex.Message}");
+        }
+        finally
+        {
+            StopAutoRecite();
+        }
+    }
+
+    #endregion
 }

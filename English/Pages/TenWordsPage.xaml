@@ -32,13 +32,38 @@
                         <Label Text="{Binding CurrentGoal}" TextColor="#64748B" FontSize="14" FontFamily="CairoBold" VerticalOptions="Center" Margin="0,2,0,0"/>
                     </HorizontalStackLayout>
                     
-                    <!-- الكوينز (اليسار) -->
-                    <Border Grid.Column="1" StrokeThickness="1" Stroke="#263B5E" StrokeShape="RoundRectangle 20" BackgroundColor="#0B111D" Padding="12,4,12,4">
-                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
-                            <Label Text="{Binding ProgressStatus}" FontSize="16" TextColor="#FBBF24" FontFamily="CairoBold" VerticalOptions="Center"/>
-                            <Image Source="coin.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" SemanticProperties.Description="أيقونة العملات"/>
-                        </HorizontalStackLayout>
-                    </Border>
+                    <!-- أدوات التحكم والكوينز (اليسار) -->
+                    <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+
+                        <!-- زر التلقين الصوتي الدائري الأنيق -->
+                        <Border x:Name="BtnAutoReciteIcon"
+                                StrokeThickness="1"
+                                Stroke="#38BDF8"
+                                StrokeShape="RoundRectangle 18"
+                                BackgroundColor="#0B111D"
+                                WidthRequest="36"
+                                HeightRequest="36"
+                                VerticalOptions="Center">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnAutoReciteTapped"/>
+                            </Border.GestureRecognizers>
+                            <Image x:Name="AutoReciteImage"
+                                   Source="headphones_icon.svg"
+                                   WidthRequest="18"
+                                   HeightRequest="18"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- الكوينز -->
+                        <Border StrokeThickness="1" Stroke="#263B5E" StrokeShape="RoundRectangle 20" BackgroundColor="#0B111D" Padding="12,4,12,4" HeightRequest="36" VerticalOptions="Center">
+                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                <Label Text="{Binding ProgressStatus}" FontSize="16" TextColor="#FBBF24" FontFamily="CairoBold" VerticalOptions="Center"/>
+                                <Image Source="coin.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" SemanticProperties.Description="أيقونة العملات"/>
+                            </HorizontalStackLayout>
+                        </Border>
+
+                    </HorizontalStackLayout>
                 </Grid>
 
                 <!-- شريط التقدم -->
