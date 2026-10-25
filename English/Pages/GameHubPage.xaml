@@ -111,6 +111,106 @@
                     Padding="16,6,16,95">
             <VerticalStackLayout x:Name="CardsLayout" Spacing="16">
 
+                <!-- 🔴 البطاقة الماسية الأولى: ساحة تيك توك لايف (TikTok Live Arena) -->
+                <Border StrokeThickness="1.4" 
+                        StrokeShape="RoundRectangle 22" 
+                        Padding="16,15">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#2C121A" Offset="0.0" />
+                            <GradientStop Color="#1A1528" Offset="0.45" />
+                            <GradientStop Color="#121824" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                            <GradientStop Color="#EF4444" Offset="0.0" />
+                            <GradientStop Color="#BE123C" Offset="0.4" />
+                            <GradientStop Color="#1E2333" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
+                    <Border.Shadow>
+                        <Shadow Brush="#EF4444" Radius="16" Offset="0,4" Opacity="0.22"/>
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="12">
+                        <!-- صف الرأس -->
+                        <Grid ColumnDefinitions="50, *, Auto" ColumnSpacing="10">
+                            <Border Grid.Column="0" 
+                                    WidthRequest="50" 
+                                    HeightRequest="50" 
+                                    StrokeShape="RoundRectangle 14" 
+                                    StrokeThickness="1" 
+                                    Stroke="#80EF4444" 
+                                    BackgroundColor="#26EF4444" 
+                                    VerticalOptions="Center">
+                                <Border.Shadow>
+                                    <Shadow Brush="#EF4444" Radius="8" Offset="0,2" Opacity="0.3"/>
+                                </Border.Shadow>
+                                <Label Text="🔴" FontSize="23" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="1">
+                                <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                                    <Label Text="ساحة تيك توك لايف" 
+                                           FontSize="17.5" 
+                                           FontFamily="CairoBold" 
+                                           TextColor="White" 
+                                           LineBreakMode="NoWrap"/>
+                                </HorizontalStackLayout>
+                                <Label Text="مسابقة تفاعلية مع شات البث" 
+                                       FontSize="11" 
+                                       FontFamily="CairoRegular" 
+                                       TextColor="#FDA4AF" 
+                                       LineBreakMode="NoWrap"/>
+                            </VerticalStackLayout>
+
+                            <Border Grid.Column="2" 
+                                    BackgroundColor="#2E131A" 
+                                    StrokeThickness="1" 
+                                    Stroke="#80EF4444" 
+                                    StrokeShape="RoundRectangle 20" 
+                                    Padding="10,4" 
+                                    VerticalOptions="Center">
+                                <Label Text="🔴 بث مباشر" FontSize="10.5" FontFamily="CairoBold" TextColor="#FCA5A5"/>
+                            </Border>
+                        </Grid>
+
+                        <Label Text="حوّل بثك على TikTok إلى مسابقة أسئلة تلقائية! المشاهدون يكتبون في الشات وتظهر نقاطهم وترتيبهم ونسب التصويت لحظياً." 
+                               FontSize="12.5" 
+                               FontFamily="CairoRegular" 
+                               TextColor="#E2E8F0" 
+                               LineBreakMode="WordWrap" 
+                               LineHeight="1.3"/>
+
+                        <!-- شريط الميزات وزر خوض التحدي -->
+                        <Grid ColumnDefinitions="*, Auto" Margin="0,2,0,0">
+                            <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
+                                <Label Text="👑" FontSize="12.5" VerticalOptions="Center"/>
+                                <Label Text="لوحة شرف • نسب تصويت حية" FontSize="11.5" FontFamily="CairoRegular" TextColor="#CBD5E1" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+
+                            <Button Grid.Column="1" 
+                                    Text="إطلاق التحدي" 
+                                    TextColor="White" 
+                                    FontFamily="CairoBold" 
+                                    FontAttributes="Bold" 
+                                    FontSize="13.5" 
+                                    HeightRequest="40" 
+                                    WidthRequest="120" 
+                                    CornerRadius="14" 
+                                    Clicked="OnTikTokLiveClicked">
+                                <Button.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#DC2626" Offset="0.0" />
+                                        <GradientStop Color="#F43F5E" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
                 <!-- 🔍 البطاقة الأولى: المفتش الذكي (Deep Royal Violet Aura) -->
                 <Border StrokeThickness="1.2" 
                         StrokeShape="RoundRectangle 22" 

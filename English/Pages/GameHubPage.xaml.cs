@@ -1,4 +1,7 @@
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Views;
+using English.Models;
+using English.Popups;
 
 namespace English.Pages;
 
@@ -51,6 +54,16 @@ public partial class GameHubPage : ContentPage
         finally
         {
             _isNavigating = false;
+        }
+    }
+
+    private async void OnTikTokLiveClicked(object sender, EventArgs e)
+    {
+        var popup = new TikTokLiveSettingsPopup();
+        var result = await this.ShowPopupAsync(popup);
+        if (result is TikTokLiveConfig config)
+        {
+            await SafeNavigateAsync(() => new TikTokLiveArenaPage(config));
         }
     }
 

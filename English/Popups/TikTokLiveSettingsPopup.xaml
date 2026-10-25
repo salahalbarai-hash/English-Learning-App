@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+           xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+           x:Class="English.Popups.TikTokLiveSettingsPopup"
+           Color="Transparent">
+
+    <!-- نافذة فاخرة متجاوبة بتصميم داكن وعصري مخصص للبث المباشر -->
+    <Border BackgroundColor="#0F172A"
+            Stroke="#263B5E"
+            StrokeThickness="1.5"
+            StrokeShape="RoundRectangle 24"
+            WidthRequest="360"
+            Padding="22"
+            VerticalOptions="Center"
+            HorizontalOptions="Center">
+        <Border.Shadow>
+            <Shadow Brush="#000000" Radius="30" Offset="0,12" Opacity="0.7"/>
+        </Border.Shadow>
+
+        <VerticalStackLayout Spacing="18" FlowDirection="RightToLeft">
+
+            <!-- الرأس مع أيقونة البث المباشر -->
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <Border Grid.Column="0"
+                        WidthRequest="42"
+                        HeightRequest="42"
+                        StrokeShape="RoundRectangle 14"
+                        StrokeThickness="1"
+                        Stroke="#EF4444"
+                        BackgroundColor="#25EF4444"
+                        VerticalOptions="Center">
+                    <Label Text="🔴" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Border>
+
+                <VerticalStackLayout Grid.Column="1" Margin="12,0,0,0" VerticalOptions="Center" Spacing="2">
+                    <Label Text="إعدادات البث المباشر"
+                           FontSize="18"
+                           FontFamily="CairoBold"
+                           TextColor="White"/>
+                    <Label Text="TikTok Live Stream Arena"
+                           FontSize="11"
+                           FontFamily="CairoRegular"
+                           TextColor="#94A3B8"/>
+                </VerticalStackLayout>
+
+                <Border Grid.Column="2"
+                        WidthRequest="32"
+                        HeightRequest="32"
+                        StrokeShape="RoundRectangle 16"
+                        BackgroundColor="#1E293B"
+                        StrokeThickness="0">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCloseTapped"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="✕" FontSize="14" TextColor="#94A3B8" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Border>
+            </Grid>
+
+            <!-- خط فاصل خافت -->
+            <BoxView HeightRequest="1" Color="#1E293B"/>
+
+            <!-- حقل إدخال اسم الحساب (TikTok Username) -->
+            <VerticalStackLayout Spacing="6">
+                <HorizontalStackLayout Spacing="6">
+                    <Label Text="اسم حسابك على تيك توك:" FontSize="13" FontFamily="CairoBold" TextColor="#CBD5E1"/>
+                    <Label Text="(بدون كلمة سر)" FontSize="11" FontFamily="CairoRegular" TextColor="#64748B" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                
+                <Border BackgroundColor="#131D30"
+                        Stroke="#263B5E"
+                        StrokeThickness="1.5"
+                        StrokeShape="RoundRectangle 14"
+                        Padding="12,8">
+                    <Grid ColumnDefinitions="Auto, *">
+                        <Label Grid.Column="0" Text="@" FontSize="18" FontFamily="CairoBold" TextColor="#38BDF8" VerticalOptions="Center" Margin="0,0,6,0"/>
+                        <Entry Grid.Column="1"
+                               x:Name="HostUsernameEntry"
+                               Placeholder="your_username"
+                               PlaceholderColor="#64748B"
+                               TextColor="White"
+                               FontSize="15"
+                               FontFamily="CairoBold"
+                               BackgroundColor="Transparent"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- زمن السؤال (ثواني) -->
+            <VerticalStackLayout Spacing="8">
+                <Grid ColumnDefinitions="*, Auto">
+                    <Label Grid.Column="0" Text="الزمن لكل سؤال:" FontSize="13" FontFamily="CairoBold" TextColor="#CBD5E1"/>
+                    <Label Grid.Column="1" x:Name="TimerValueLabel" Text="10 ثوانٍ (موصى به)" FontSize="12" FontFamily="CairoBold" TextColor="#38BDF8"/>
+                </Grid>
+
+                <Grid ColumnDefinitions="*, *, *, *" ColumnSpacing="6">
+                    <Border x:Name="ChipTime5" Grid.Column="0" StrokeShape="RoundRectangle 10" StrokeThickness="1" Stroke="#263B5E" BackgroundColor="#131D30" Padding="0,7">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnChipTimeTapped" CommandParameter="5"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="5ث" FontSize="13" FontFamily="CairoBold" TextColor="#94A3B8" HorizontalOptions="Center"/>
+                    </Border>
+                    <Border x:Name="ChipTime10" Grid.Column="1" StrokeShape="RoundRectangle 10" StrokeThickness="1.5" Stroke="#38BDF8" BackgroundColor="#172554" Padding="0,7">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnChipTimeTapped" CommandParameter="10"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="10ث" FontSize="13" FontFamily="CairoBold" TextColor="#38BDF8" HorizontalOptions="Center"/>
+                    </Border>
+                    <Border x:Name="ChipTime15" Grid.Column="2" StrokeShape="RoundRectangle 10" StrokeThickness="1" Stroke="#263B5E" BackgroundColor="#131D30" Padding="0,7">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnChipTimeTapped" CommandParameter="15"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="15ث" FontSize="13" FontFamily="CairoBold" TextColor="#94A3B8" HorizontalOptions="Center"/>
+                    </Border>
+                    <Border x:Name="ChipTime20" Grid.Column="3" StrokeShape="RoundRectangle 10" StrokeThickness="1" Stroke="#263B5E" BackgroundColor="#131D30" Padding="0,7">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnChipTimeTapped" CommandParameter="20"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="20ث" FontSize="13" FontFamily="CairoBold" TextColor="#94A3B8" HorizontalOptions="Center"/>
+                    </Border>
+                </Grid>
+            </VerticalStackLayout>
+
+            <!-- عدد الأسئلة (محدد أو مستمر) -->
+            <VerticalStackLayout Spacing="8">
+                <Grid ColumnDefinitions="*, Auto">
+                    <Label Grid.Column="0" Text="عدد أسئلة التحدي:" FontSize="13" FontFamily="CairoBold" TextColor="#CBD5E1"/>
+                    <Label Grid.Column="1" x:Name="QuestionsCountLabel" Text="20 سؤالاً" FontSize="12" FontFamily="CairoBold" TextColor="#38BDF8"/>
+                </Grid>
+
+                <Grid ColumnDefinitions="*, *, *, *" ColumnSpacing="6">
+                    <Border x:Name="ChipQ10" Grid.Column="0" StrokeShape="RoundRectangle 10" StrokeThickness="1" Stroke="#263B5E" BackgroundColor="#131D30" Padding="0,7">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnChipQuestionsTapped" CommandParameter="10"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="10" FontSize="13" FontFamily="CairoBold" TextColor="#94A3B8" HorizontalOptions="Center"/>
+                    </Border>
+                    <Border x:Name="ChipQ20" Grid.Column="1" StrokeShape="RoundRectangle 10" StrokeThickness="1.5" Stroke="#38BDF8" BackgroundColor="#172554" Padding="0,7">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnChipQuestionsTapped" CommandParameter="20"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="20" FontSize="13" FontFamily="CairoBold" TextColor="#38BDF8" HorizontalOptions="Center"/>
+                    </Border>
+                    <Border x:Name="ChipQ50" Grid.Column="2" StrokeShape="RoundRectangle 10" StrokeThickness="1" Stroke="#263B5E" BackgroundColor="#131D30" Padding="0,7">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnChipQuestionsTapped" CommandParameter="50"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="50" FontSize="13" FontFamily="CairoBold" TextColor="#94A3B8" HorizontalOptions="Center"/>
+                    </Border>
+                    <Border x:Name="ChipQInf" Grid.Column="3" StrokeShape="RoundRectangle 10" StrokeThickness="1" Stroke="#263B5E" BackgroundColor="#131D30" Padding="0,7">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnChipQuestionsTapped" CommandParameter="0"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="♾️ مستمر" FontSize="11" FontFamily="CairoBold" TextColor="#94A3B8" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+                </Grid>
+            </VerticalStackLayout>
+
+            <!-- خيار المحاكاة والتجربة (Simulation Mode) -->
+            <Border BackgroundColor="#131D30"
+                    Stroke="#263B5E"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 14"
+                    Padding="12,10">
+                <Grid ColumnDefinitions="*, Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="🎮 وضع التجربة والمحاكاة" FontSize="13" FontFamily="CairoBold" TextColor="White"/>
+                        <Label Text="ضخ تعليقات وهمية لتجربة الشاشة بدون بث حقيقي" FontSize="10.5" FontFamily="CairoRegular" TextColor="#94A3B8"/>
+                    </VerticalStackLayout>
+                    <Switch Grid.Column="1" x:Name="SimulationSwitch" OnColor="#38BDF8" ThumbColor="White" VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- خيار نطق الكلمة بالصوت -->
+            <Border BackgroundColor="#131D30"
+                    Stroke="#263B5E"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 14"
+                    Padding="12,10">
+                <Grid ColumnDefinitions="*, Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="🔊 نطق الكلمة صوتياً" FontSize="13" FontFamily="CairoBold" TextColor="White"/>
+                        <Label Text="نطق الإنجليزية أوتوماتيكياً فور ظهور السؤال" FontSize="10.5" FontFamily="CairoRegular" TextColor="#94A3B8"/>
+                    </VerticalStackLayout>
+                    <Switch Grid.Column="1" x:Name="AudioSwitch" IsToggled="True" OnColor="#38BDF8" ThumbColor="White" VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- زر بدء البث المباشر -->
+            <Button Text="🚀 بدء التحدي المباشر"
+                    FontFamily="CairoBold"
+                    FontSize="16"
+                    TextColor="White"
+                    HeightRequest="52"
+                    CornerRadius="16"
+                    Clicked="OnStartClicked">
+                <Button.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#EF4444" Offset="0.0"/>
+                        <GradientStop Color="#F43F5E" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+
+        </VerticalStackLayout>
+    </Border>
+</mct:Popup>
