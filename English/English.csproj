@@ -199,8 +199,8 @@
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<AndroidSigningKeyStore>english.keystore</AndroidSigningKeyStore>
 		<AndroidSigningKeyAlias>english</AndroidSigningKeyAlias>
-		<AndroidSigningKeyPass>123456</AndroidSigningKeyPass>
-		<AndroidSigningStorePass>123456</AndroidSigningStorePass>
+		<AndroidSigningKeyPass>$(KEYSTORE_PASS)</AndroidSigningKeyPass>
+		<AndroidSigningStorePass>$(KEYSTORE_PASS)</AndroidSigningStorePass>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

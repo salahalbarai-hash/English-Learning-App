@@ -619,20 +619,5 @@ namespace English.Services
             await File.WriteAllTextAsync(path, json.ToString());
         }
 
-        public static async Task<ImageSource> LoadImageFromServerAsync(string url)
-        {
-            using var client = new HttpClient();
-
-            // إضافة Authentication Header
-            var credentials = "11294124:60-dayfreetrial";
-            var base64Credentials = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes(credentials));
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64Credentials);
-
-            // جلب الصورة كـ Byte Array
-            var imageBytes = await client.GetByteArrayAsync(url);
-
-            // تحويل البايتات إلى ImageSource
-            return ImageSource.FromStream(() => new MemoryStream(imageBytes));
-        }
     }
 }

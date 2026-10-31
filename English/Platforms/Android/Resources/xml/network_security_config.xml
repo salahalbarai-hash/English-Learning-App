@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- حظر الاتصالات غير المشفرة افتراضياً لحماية بيانات الإنتاج -->
+    <base-config cleartextTrafficPermitted="false" />
+
+    <!-- السماح بالاتصال غير المشفر فقط أثناء التطوير على الشبكة المحلية ومحاكي الأندرويد -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">192.168.8.139</domain>
+        <domain includeSubdomains="true">10.0.2.2</domain>
+        <domain includeSubdomains="true">localhost</domain>
+    </domain-config>
+</network-security-config>
+
