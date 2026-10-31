@@ -108,9 +108,8 @@
         <ScrollView Grid.Row="1" 
                     Orientation="Vertical"
                     VerticalScrollBarVisibility="Default"
-                    Padding="16,6,16,95">
+                    Padding="16,11,16,95">
             <VerticalStackLayout x:Name="CardsLayout" Spacing="16">
-
 
                 <!-- 🔍 البطاقة الأولى: المفتش الذكي (Deep Royal Violet Aura) -->
                 <Border StrokeThickness="1.2" 
