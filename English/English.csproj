@@ -16,12 +16,10 @@
 
 		<SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
 		<NuGetAudit>false</NuGetAudit>
+		<RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Release' And $(TargetFramework.Contains('android'))">
-		<!-- دعم جميع الهواتف الحقيقية (القديمة 32-bit والحديثة 64-bit) واستبعاد معماريات المحاكيات x86/x64 -->
-		<RuntimeIdentifiers>android-arm;android-arm64</RuntimeIdentifiers>
-		
 		<!-- إخراج ملف APK موحد مضغوط -->
 		<AndroidPackageFormat>apk</AndroidPackageFormat>
 		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
@@ -34,7 +32,7 @@
 
 		<!-- تفعيل أداة R8 لضغط كود Android وحذف الموارد غير المستخدمة -->
 		<AndroidLinkTool>r8</AndroidLinkTool>
-		<AndroidLinkResources>true</AndroidLinkResources>
+		<AndroidLinkResources>false</AndroidLinkResources>
 
 		<!-- إيقاف AOT و Profiled AOT لتوفير مساحة كبيرة في كلا المعماريتين -->
 		<RunAOTCompilation>false</RunAOTCompilation>

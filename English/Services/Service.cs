@@ -619,5 +619,23 @@ namespace English.Services
             await File.WriteAllTextAsync(path, json.ToString());
         }
 
+        public static async Task<bool> DeleteUserAsync(string userName)
+        {
+            if (string.IsNullOrWhiteSpace(userName))
+                return false;
+
+            try
+            {
+                var client = CreateClient();
+                var request = new RestRequest($"Users/{Uri.EscapeDataString(userName)}", Method.Delete);
+                var response = await client.ExecuteAsync(request);
+                return response.IsSuccessful;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
     }
 }

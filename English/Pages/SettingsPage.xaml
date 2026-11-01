@@ -93,11 +93,27 @@
                             </Border.Shadow>
                             
                             <Button Text="حفظ التعديلات" 
-                                    Command="{Binding SaveCustomerInformationCommand}"
+                                    Command="{Binding SaveCustomerInformationCommand}" 
                                     BackgroundColor="Transparent" 
                                     TextColor="White"
                                     FontFamily="CairoBold"
                                     FontSize="16" />
+                        </Border>
+
+                        <!-- زر حذف الحساب -->
+                        <Border Margin="0,10,0,0"
+                                StrokeThickness="1"
+                                IsVisible="False"
+                                Stroke="#EF4444"
+                                StrokeShape="RoundRectangle 16"
+                                BackgroundColor="#1A0F14"
+                                HeightRequest="52">
+                            <Button Text="حذف الحساب نهائياً" 
+                                    Command="{Binding DeleteAccountCommand}"
+                                    BackgroundColor="Transparent" 
+                                    TextColor="#EF4444"
+                                    FontFamily="CairoBold"
+                                    FontSize="15" />
                         </Border>
 
                     </VerticalStackLayout>

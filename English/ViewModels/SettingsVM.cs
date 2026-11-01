@@ -1,3 +1,4 @@
+using English.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using English.Models;
@@ -109,6 +110,66 @@ namespace English.ViewModels
 
             var toast = Toast.Make(message, ToastDuration.Short, 14); // رسالة، مدة قصيرة، حجم خط 14
             await toast.Show(cancellationTokenSource.Token);
+        }
+
+
+        [RelayCommand]
+        private async Task DeleteAccountAsync()
+        {
+            if (IsBusy) return;
+
+            if (!internetConnected)
+            {
+                await ShowToast("لا يوجد اتصال بالإنترنت");
+                return;
+            }
+
+            Page? currentPage = Application.Current?.Windows.Count > 0 ? Application.Current.Windows[0].Page : null;
+            if (currentPage == null) return;
+
+            bool confirm = await currentPage.DisplayAlert(
+                "حذف الحساب",
+                "هل أنت متأكد من رغبتك في حذف الحساب نهائياً؟ سيتم مسح جميع بياناتك ونقاطك وكلماتك ولا يمكن التراجع عن هذا الإجراء.",
+                "نعم، احذف حسابي",
+                "إلغاء");
+
+            if (!confirm) return;
+
+            try
+            {
+                IsBusy = true;
+                string currentUserName = Preferences.Get(nameof(UserName), "");
+                if (string.IsNullOrWhiteSpace(currentUserName))
+                    currentUserName = UserName;
+
+                bool isDeleted = await Service.DeleteUserAsync(currentUserName);
+                if (isDeleted)
+                {
+                    if (Application.Current?.Windows.Count > 0 && Application.Current.Windows[0].Page is AppShell appShell)
+                    {
+                        try { await appShell.GameHub.DisconnectAsync(); } catch { }
+                    }
+
+                    Preferences.Clear();
+                    SecureStorage.RemoveAll();
+                    Preferences.Set("IsLogin", "0");
+
+                    await ShowToast("تم حذف الحساب بنجاح");
+                    await Shell.Current.GoToAsync("//LoginPage");
+                }
+                else
+                {
+                    await ShowToast("تعذر حذف الحساب، يرجى المحاولة لاحقاً");
+                }
+            }
+            catch (Exception ex)
+            {
+                await ShowToast($"حدث خطأ: {ex.Message}");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         private void Connectivity_ConnectivityChanged(object? sender, ConnectivityChangedEventArgs e)
