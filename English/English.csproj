@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net9.0-android</TargetFramework>
 
@@ -25,6 +25,9 @@
 		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
 		<AndroidEnableMultiDex>true</AndroidEnableMultiDex>
 		<AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
+
+		<!-- ضغط التجميعات (.NET assemblies) داخل APK لتقليل الحجم -->
+		<AndroidEnableAssemblyCompression>true</AndroidEnableAssemblyCompression>
 
 		<!-- تفعيل تشذيب الكود (Trimming) لحذف المكتبات غير المستخدمة مع الحفاظ على عمل JSON والـ API -->
 		<PublishTrimmed>true</PublishTrimmed>
