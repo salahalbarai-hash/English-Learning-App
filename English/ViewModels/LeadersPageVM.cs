@@ -122,7 +122,7 @@ namespace English.ViewModels
             try
             {
                 string userName = Preferences.Get("UserName", "");
-                string password = Preferences.Get("Password", "");
+                string password = await SecureStorage.GetAsync("Password") ?? "";
 
                 if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
                     return;

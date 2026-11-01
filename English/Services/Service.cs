@@ -147,7 +147,7 @@ namespace English.Services
                     return string.Empty;
 
                 var client = new RestClient();
-                var request = new RestRequest($"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key={apiKey}", Method.Post);
+                var request = new RestRequest($"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={apiKey}", Method.Post);
                 request.AddHeader("Content-Type", "application/json");
 
                 var body = new

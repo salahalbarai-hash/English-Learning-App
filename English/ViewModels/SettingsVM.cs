@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using English.Models;
 using CommunityToolkit.Maui.Core;   // إعدادات التوست
@@ -16,7 +16,7 @@ namespace English.ViewModels
         private string userName = Preferences.Get(nameof(UserName), "");
 
         [ObservableProperty]
-        private string password = Preferences.Get(nameof(Password), "");
+        private string password = string.Empty;
 
         [ObservableProperty]
         private string phoneNumber = Preferences.Get(nameof(PhoneNumber), "");
@@ -25,6 +25,12 @@ namespace English.ViewModels
         {
             Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
             internetConnected = Connectivity.Current.NetworkAccess == NetworkAccess.Internet;
+            _ = LoadPasswordAsync();
+        }
+
+        private async Task LoadPasswordAsync()
+        {
+            try { Password = await SecureStorage.GetAsync("Password") ?? ""; } catch { }
         }
 
         [RelayCommand]
@@ -57,7 +63,7 @@ namespace English.ViewModels
                 else
                 {
                     Preferences.Set(nameof(UserName), UserName);
-                    Preferences.Set(nameof(Password), Password);
+                    await SecureStorage.SetAsync("Password", Password ?? "");
                     Preferences.Set(nameof(PhoneNumber), PhoneNumber);
 
                     await ShowToast("تم حفظ البيانات بنجاح ✅");
