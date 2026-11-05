@@ -111,7 +111,283 @@
                     Padding="16,11,16,95">
             <VerticalStackLayout x:Name="CardsLayout" Spacing="16">
 
-                <!-- 🔍 البطاقة الأولى: المفتش الذكي (Deep Royal Violet Aura) -->
+                <!-- 🧠 البطاقة الجديدة 1: مصفوفة الذاكرة (Word Matrix - Rose Pink) -->
+                <Border StrokeThickness="1.2" 
+                        StrokeShape="RoundRectangle 22" 
+                        Padding="16,15">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#26101B" Offset="0.0" />
+                            <GradientStop Color="#1A1826" Offset="0.4" />
+                            <GradientStop Color="#141822" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                            <GradientStop Color="#F43F5E" Offset="0.0" />
+                            <GradientStop Color="#BE123C" Offset="0.35" />
+                            <GradientStop Color="#1E2333" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
+                    <Border.Shadow>
+                        <Shadow Brush="#F43F5E" Radius="14" Offset="0,4" Opacity="0.18"/>
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="50, *, Auto" ColumnSpacing="10">
+                            <Border Grid.Column="0" 
+                                    WidthRequest="50" 
+                                    HeightRequest="50" 
+                                    StrokeShape="RoundRectangle 14" 
+                                    StrokeThickness="1" 
+                                    Stroke="#66F43F5E" 
+                                    BackgroundColor="#26F43F5E" 
+                                    VerticalOptions="Center">
+                                <Label Text="🧠" FontSize="23" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="1">
+                                <Label Text="مصفوفة الذاكرة" 
+                                       FontSize="17.5" 
+                                       FontFamily="CairoBold" 
+                                       TextColor="White" 
+                                       LineBreakMode="NoWrap"/>
+                                <Label Text="تذكر مكاني واسترجاع نشط" 
+                                       FontSize="11" 
+                                       FontFamily="CairoRegular" 
+                                       TextColor="#FECDD3" 
+                                       LineBreakMode="NoWrap"/>
+                            </VerticalStackLayout>
+
+                            <Border Grid.Column="2" 
+                                    BackgroundColor="#350A19" 
+                                    StrokeThickness="1" 
+                                    Stroke="#66F43F5E" 
+                                    StrokeShape="RoundRectangle 20" 
+                                    Padding="10,4" 
+                                    VerticalOptions="Center">
+                                <Label Text="ذاكرة مكانية 🧠" FontSize="10.5" FontFamily="CairoBold" TextColor="#FFFFFF"/>
+                            </Border>
+                        </Grid>
+
+                        <Label Text="احفظ مواقع الكلمات الإنجليزية ومعانيها أثناء مرحلة الملاحظة، ثم طابق الأزواج بدقة قبل نفاد محاولاتك." 
+                               FontSize="12.5" 
+                               FontFamily="CairoRegular" 
+                               TextColor="#D1D5DB" 
+                               LineBreakMode="WordWrap" 
+                               LineHeight="1.3"/>
+
+                        <Grid ColumnDefinitions="*, Auto" Margin="0,2,0,0">
+                            <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
+                                <Label Text="💡" FontSize="12.5" VerticalOptions="Center"/>
+                                <Label Text="تقوية التذكر المكاني" FontSize="11.5" FontFamily="CairoRegular" TextColor="#9CA3AF" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+
+                            <Button Grid.Column="1" 
+                                    Text="خوض اللعبة" 
+                                    TextColor="White" 
+                                    FontFamily="CairoBold" 
+                                    FontSize="13.5" 
+                                    HeightRequest="40" 
+                                    WidthRequest="120" 
+                                    CornerRadius="14" 
+                                    Clicked="OnWordMatrixClicked">
+                                <Button.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#E11D48" Offset="0.0" />
+                                        <GradientStop Color="#BE123C" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- 🚀 البطاقة الجديدة 2: الطائر الصاعد (Skyward Bird - Electric Indigo) -->
+                <Border StrokeThickness="1.2" 
+                        StrokeShape="RoundRectangle 22" 
+                        Padding="16,15">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#141838" Offset="0.0" />
+                            <GradientStop Color="#151A29" Offset="0.4" />
+                            <GradientStop Color="#141822" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                            <GradientStop Color="#6366F1" Offset="0.0" />
+                            <GradientStop Color="#4338CA" Offset="0.35" />
+                            <GradientStop Color="#1E2333" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
+                    <Border.Shadow>
+                        <Shadow Brush="#6366F1" Radius="14" Offset="0,4" Opacity="0.18"/>
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="50, *, Auto" ColumnSpacing="10">
+                            <Border Grid.Column="0" 
+                                    WidthRequest="50" 
+                                    HeightRequest="50" 
+                                    StrokeShape="RoundRectangle 14" 
+                                    StrokeThickness="1" 
+                                    Stroke="#666366F1" 
+                                    BackgroundColor="#266366F1" 
+                                    VerticalOptions="Center">
+                                <Label Text="🚀" FontSize="23" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="1">
+                                <Label Text="الطائر الصاعد" 
+                                       FontSize="17.5" 
+                                       FontFamily="CairoBold" 
+                                       TextColor="White" 
+                                       LineBreakMode="NoWrap"/>
+                                <Label Text="أركيد حركي وفيزياء SkiaSharp" 
+                                       FontSize="11" 
+                                       FontFamily="CairoRegular" 
+                                       TextColor="#C7D2FE" 
+                                       LineBreakMode="NoWrap"/>
+                            </VerticalStackLayout>
+
+                            <Border Grid.Column="2" 
+                                    BackgroundColor="#1A1D4A" 
+                                    StrokeThickness="1" 
+                                    Stroke="#666366F1" 
+                                    StrokeShape="RoundRectangle 20" 
+                                    Padding="10,4" 
+                                    VerticalOptions="Center">
+                                <Label Text="أركيد وحركة 🎮" FontSize="10.5" FontFamily="CairoBold" TextColor="#FFFFFF"/>
+                            </Border>
+                        </Grid>
+
+                        <Label Text="وجّه الطائر نحو سحب الكلمات الإنجليزية المطابقة للمعنى وتفادَ السحب المشتتة بفيزياء طيران ممتعة." 
+                               FontSize="12.5" 
+                               FontFamily="CairoRegular" 
+                               TextColor="#D1D5DB" 
+                               LineBreakMode="WordWrap" 
+                               LineHeight="1.3"/>
+
+                        <Grid ColumnDefinitions="*, Auto" Margin="0,2,0,0">
+                            <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
+                                <Label Text="⚡" FontSize="12.5" VerticalOptions="Center"/>
+                                <Label Text="سرعة بديهة واسترجاع فوري" FontSize="11.5" FontFamily="CairoRegular" TextColor="#9CA3AF" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+
+                            <Button Grid.Column="1" 
+                                    Text="خوض اللعبة" 
+                                    TextColor="White" 
+                                    FontFamily="CairoBold" 
+                                    FontSize="13.5" 
+                                    HeightRequest="40" 
+                                    WidthRequest="120" 
+                                    CornerRadius="14" 
+                                    Clicked="OnSkywardBirdClicked">
+                                <Button.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#4F46E5" Offset="0.0" />
+                                        <GradientStop Color="#4338CA" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ⚡ البطاقة الجديدة 3: مفاعل الحروف (Spell Reactor - Amber Gold) -->
+                <Border StrokeThickness="1.2" 
+                        StrokeShape="RoundRectangle 22" 
+                        Padding="16,15">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#241B10" Offset="0.0" />
+                            <GradientStop Color="#181A24" Offset="0.4" />
+                            <GradientStop Color="#141822" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Stroke>
+                        <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                            <GradientStop Color="#F59E0B" Offset="0.0" />
+                            <GradientStop Color="#D97706" Offset="0.35" />
+                            <GradientStop Color="#1E2333" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
+                    <Border.Shadow>
+                        <Shadow Brush="#F59E0B" Radius="14" Offset="0,4" Opacity="0.18"/>
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="50, *, Auto" ColumnSpacing="10">
+                            <Border Grid.Column="0" 
+                                    WidthRequest="50" 
+                                    HeightRequest="50" 
+                                    StrokeShape="RoundRectangle 14" 
+                                    StrokeThickness="1" 
+                                    Stroke="#66F59E0B" 
+                                    BackgroundColor="#26F59E0B" 
+                                    VerticalOptions="Center">
+                                <Label Text="⚡" FontSize="23" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="1">
+                                <Label Text="مفاعل الحروف" 
+                                       FontSize="17.5" 
+                                       FontFamily="CairoBold" 
+                                       TextColor="White" 
+                                       LineBreakMode="NoWrap"/>
+                                <Label Text="إتقان التهجئة والاسترجاع النشط" 
+                                       FontSize="11" 
+                                       FontFamily="CairoRegular" 
+                                       TextColor="#FDE68A" 
+                                       LineBreakMode="NoWrap"/>
+                            </VerticalStackLayout>
+
+                            <Border Grid.Column="2" 
+                                    BackgroundColor="#2E1E07" 
+                                    StrokeThickness="1" 
+                                    Stroke="#66F59E0B" 
+                                    StrokeShape="RoundRectangle 20" 
+                                    Padding="10,4" 
+                                    VerticalOptions="Center">
+                                <Label Text="تثبيت التهجئة 🔤" FontSize="10.5" FontFamily="CairoBold" TextColor="#FFFFFF"/>
+                            </Border>
+                        </Grid>
+
+                        <Label Text="اجمع كرات الحروف المتساقطة بالترتيب الدقيق لتكوين الكلمة وتهدئة المفاعل قبل فقدان الاستقرار." 
+                               FontSize="12.5" 
+                               FontFamily="CairoRegular" 
+                               TextColor="#D1D5DB" 
+                               LineBreakMode="WordWrap" 
+                               LineHeight="1.3"/>
+
+                        <Grid ColumnDefinitions="*, Auto" Margin="0,2,0,0">
+                            <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
+                                <Label Text="🎯" FontSize="12.5" VerticalOptions="Center"/>
+                                <Label Text="تثبيت الذاكرة الإملائية" FontSize="11.5" FontFamily="CairoRegular" TextColor="#9CA3AF" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+
+                            <Button Grid.Column="1" 
+                                    Text="خوض اللعبة" 
+                                    TextColor="White" 
+                                    FontFamily="CairoBold" 
+                                    FontSize="13.5" 
+                                    HeightRequest="40" 
+                                    WidthRequest="120" 
+                                    CornerRadius="14" 
+                                    Clicked="OnSpellReactorClicked">
+                                <Button.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Color="#D97706" Offset="0.0" />
+                                        <GradientStop Color="#B45309" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- 🔍 البطاقة الحالية 4: المفتش الذكي (Royal Violet - مطابقة لشاشتها) -->
                 <Border StrokeThickness="1.2" 
                         StrokeShape="RoundRectangle 22" 
                         Padding="16,15">
@@ -134,9 +410,7 @@
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="12">
-                        <!-- صف الرأس: الأيقونة الشفافة + الاسم على سطر واحد + شارة النوع -->
                         <Grid ColumnDefinitions="50, *, Auto" ColumnSpacing="10">
-                            <!-- مربع الأيقونة المضيء بشفافية 15% وإطار 40% لتباين مثالي -->
                             <Border Grid.Column="0" 
                                     WidthRequest="50" 
                                     HeightRequest="50" 
@@ -151,7 +425,6 @@
                                 <Label Text="🔍" FontSize="23" HorizontalOptions="Center" VerticalOptions="Center"/>
                             </Border>
 
-                            <!-- نصوص العنوان: كلمة "المفتش الذكي" على نفس السطر دائماً -->
                             <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="1">
                                 <Label Text="المفتش الذكي" 
                                        FontSize="17.5" 
@@ -165,7 +438,6 @@
                                        LineBreakMode="NoWrap"/>
                             </VerticalStackLayout>
 
-                            <!-- شارة التصنيف بحجم متناسق لا يزاحم العنوان -->
                             <Border Grid.Column="2" 
                                     BackgroundColor="#1F1A3A" 
                                     StrokeThickness="1" 
@@ -177,15 +449,13 @@
                             </Border>
                         </Grid>
 
-                        <!-- وصف مريح للقراءة مع تباعد أسطر 1.3 ولون #D1D5DB -->
                         <Label Text="خمن الكلمة السرية الإنجليزية بأقل عدد من التلميحات والأسئلة المنطقية الذكية." 
                                FontSize="12.5" 
                                FontFamily="CairoRegular" 
                                TextColor="#D1D5DB" 
-                               LineBreakMode="WordWrap"
+                               LineBreakMode="WordWrap" 
                                LineHeight="1.3"/>
 
-                        <!-- شريط الإجراء والميزة الساطعة وزر التحدي بدون سهم -->
                         <Grid ColumnDefinitions="*, Auto" Margin="0,2,0,0">
                             <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
                                 <Label Text="💡" FontSize="12.5" VerticalOptions="Center"/>
@@ -199,7 +469,7 @@
                                     FontAttributes="Bold"
                                     FontSize="13.5" 
                                     HeightRequest="40" 
-                                    WidthRequest="120"
+                                    WidthRequest="120" 
                                     CornerRadius="14" 
                                     Clicked="OnSmartInspectorClicked">
                                 <Button.Background>
@@ -213,7 +483,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- ⚡ البطاقة الثانية: تحدي الخيارات (Electric Emerald Glow) -->
+                <!-- ⚡ البطاقة الحالية 5: تحدي الخيارات (Emerald Green - مطابقة لشاشتها) -->
                 <Border StrokeThickness="1.2" 
                         StrokeShape="RoundRectangle 22" 
                         Padding="16,15">
@@ -236,15 +506,14 @@
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="12">
-                        <!-- صف الرأس -->
                         <Grid ColumnDefinitions="50, *, Auto" ColumnSpacing="10">
                             <Border Grid.Column="0" 
                                     WidthRequest="50" 
                                     HeightRequest="50" 
                                     StrokeShape="RoundRectangle 14" 
-                                    StrokeThickness="1"
-                                    Stroke="#6610B981"
-                                    BackgroundColor="#2610B981"
+                                    StrokeThickness="1" 
+                                    Stroke="#6610B981" 
+                                    BackgroundColor="#2610B981" 
                                     VerticalOptions="Center">
                                 <Border.Shadow>
                                     <Shadow Brush="#10B981" Radius="8" Offset="0,2" Opacity="0.25"/>
@@ -280,10 +549,9 @@
                                FontSize="12.5" 
                                FontFamily="CairoRegular" 
                                TextColor="#D1D5DB" 
-                               LineBreakMode="WordWrap"
+                               LineBreakMode="WordWrap" 
                                LineHeight="1.3"/>
 
-                        <!-- شريط الإجراء والميزة وزر التحدي بدون سهم -->
                         <Grid ColumnDefinitions="*, Auto" Margin="0,2,0,0">
                             <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
                                 <Label Text="⏱️" FontSize="12.5" VerticalOptions="Center"/>
@@ -294,10 +562,10 @@
                                     Text="خوض التحدي" 
                                     TextColor="White" 
                                     FontFamily="CairoBold" 
-                                    FontAttributes="Bold"
+                                    FontAttributes="Bold" 
                                     FontSize="13.5" 
                                     HeightRequest="40" 
-                                    WidthRequest="120"
+                                    WidthRequest="120" 
                                     CornerRadius="14" 
                                     Clicked="OnChoiceChallengeClicked">
                                 <Button.Background>
@@ -311,7 +579,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- ✍️ البطاقة الثالثة: تحدي الكتابة (Sapphire & Sky Cobalt) -->
+                <!-- ✍️ البطاقة الحالية 6: تحدي الكتابة (Sky Blue - مطابقة لشاشتها) -->
                 <Border StrokeThickness="1.2" 
                         StrokeShape="RoundRectangle 22" 
                         Padding="16,15">
@@ -334,15 +602,14 @@
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="12">
-                        <!-- صف الرأس -->
                         <Grid ColumnDefinitions="50, *, Auto" ColumnSpacing="10">
                             <Border Grid.Column="0" 
                                     WidthRequest="50" 
                                     HeightRequest="50" 
                                     StrokeShape="RoundRectangle 14" 
-                                    StrokeThickness="1"
-                                    Stroke="#660EA5E9"
-                                    BackgroundColor="#260EA5E9"
+                                    StrokeThickness="1" 
+                                    Stroke="#660EA5E9" 
+                                    BackgroundColor="#260EA5E9" 
                                     VerticalOptions="Center">
                                 <Border.Shadow>
                                     <Shadow Brush="#0EA5E9" Radius="8" Offset="0,2" Opacity="0.25"/>
@@ -378,10 +645,9 @@
                                FontSize="12.5" 
                                FontFamily="CairoRegular" 
                                TextColor="#D1D5DB" 
-                               LineBreakMode="WordWrap"
+                               LineBreakMode="WordWrap" 
                                LineHeight="1.3"/>
 
-                        <!-- شريط الإجراء والميزة وزر التحدي بدون سهم -->
                         <Grid ColumnDefinitions="*, Auto" Margin="0,2,0,0">
                             <HorizontalStackLayout Grid.Column="0" Spacing="6" VerticalOptions="Center">
                                 <Label Text="🎯" FontSize="12.5" VerticalOptions="Center"/>
@@ -392,16 +658,16 @@
                                     Text="خوض التحدي" 
                                     TextColor="White" 
                                     FontFamily="CairoBold" 
-                                    FontAttributes="Bold"
+                                    FontAttributes="Bold" 
                                     FontSize="13.5" 
                                     HeightRequest="40" 
-                                    WidthRequest="120"
+                                    WidthRequest="120" 
                                     CornerRadius="14" 
                                     Clicked="OnWritingChallengeClicked">
                                 <Button.Background>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                        <GradientStop Color="#2563EB" Offset="0.0" />
-                                        <GradientStop Color="#0284C7" Offset="1.0" />
+                                        <GradientStop Color="#0284C7" Offset="0.0" />
+                                        <GradientStop Color="#0369A1" Offset="1.0" />
                                     </LinearGradientBrush>
                                 </Button.Background>
                             </Button>

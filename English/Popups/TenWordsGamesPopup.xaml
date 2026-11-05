@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="English.Popups.TenWordsGamesPopup"
+               CanBeDismissedByTappingOutsideOfPopup="True">
+
+    <Border BackgroundColor="#0F172A"
+            Stroke="#1E293B"
+            StrokeThickness="1.5"
+            StrokeShape="RoundRectangle 24"
+            Padding="20"
+            WidthRequest="340"
+            FlowDirection="RightToLeft">
+
+        <VerticalStackLayout Spacing="14">
+
+            <!-- هيدر النافذة -->
+            <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
+                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                    <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
+                        <Label Text="ألعاب تثبيت الكلمات"
+                               FontSize="17"
+                               FontFamily="CairoBold"
+                               TextColor="White"/>
+                        <Label Text="🎮" FontSize="16" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                    <Label Text="تدرب على كلماتك الحالية قبل خوض التحدي الرسمي"
+                           FontSize="11"
+                           FontFamily="CairoRegular"
+                           TextColor="#94A3B8"/>
+                </VerticalStackLayout>
+
+                <Button Grid.Column="1"
+                        Text="✕"
+                        FontSize="14"
+                        TextColor="#94A3B8"
+                        BackgroundColor="Transparent"
+                        WidthRequest="32"
+                        HeightRequest="32"
+                        Padding="0"
+                        Clicked="OnCloseClicked"/>
+            </Grid>
+
+            <BoxView HeightRequest="1" Color="#1E293B" Margin="0,-4,0,0"/>
+
+            <!-- 1. مصفوفة الذاكرة (Word Matrix) -->
+            <Border Stroke="#8B5CF6"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    BackgroundColor="#17142B"
+                    Padding="12">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnWordMatrixTapped"/>
+                </Border.GestureRecognizers>
+
+                <Grid ColumnDefinitions="44, *" ColumnSpacing="12" VerticalOptions="Center">
+                    <Border Grid.Column="0"
+                            WidthRequest="44"
+                            HeightRequest="44"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="#668B5CF6"
+                            BackgroundColor="#268B5CF6"
+                            VerticalOptions="Center">
+                        <Label Text="🧠" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="1">
+                        <Label Text="مصفوفة الذاكرة (Word Matrix)"
+                               FontSize="14"
+                               FontFamily="CairoBold"
+                               TextColor="White"/>
+                        <Label Text="تذكر مواقع الكلمات واكتشف الأزواج المتطابقة"
+                               FontSize="11"
+                               FontFamily="CairoRegular"
+                               TextColor="#C4B5FD"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- 2. الطائر الصاعد (Skyward Bird) -->
+            <Border Stroke="#0EA5E9"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    BackgroundColor="#0E1D2D"
+                    Padding="12">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSkywardBirdTapped"/>
+                </Border.GestureRecognizers>
+
+                <Grid ColumnDefinitions="44, *" ColumnSpacing="12" VerticalOptions="Center">
+                    <Border Grid.Column="0"
+                            WidthRequest="44"
+                            HeightRequest="44"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="#660EA5E9"
+                            BackgroundColor="#260EA5E9"
+                            VerticalOptions="Center">
+                        <Label Text="🚀" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="1">
+                        <Label Text="الطائر الصاعد (Skyward Bird)"
+                               FontSize="14"
+                               FontFamily="CairoBold"
+                               TextColor="White"/>
+                        <Label Text="طر نحو السحب الصحيحة وتفادَ العوائق بفيزياء SkiaSharp"
+                               FontSize="11"
+                               FontFamily="CairoRegular"
+                               TextColor="#93C5FD"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- 3. مفاعل الحروف (Spell Reactor) -->
+            <Border Stroke="#10B981"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16"
+                    BackgroundColor="#0F2420"
+                    Padding="12">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSpellReactorTapped"/>
+                </Border.GestureRecognizers>
+
+                <Grid ColumnDefinitions="44, *" ColumnSpacing="12" VerticalOptions="Center">
+                    <Border Grid.Column="0"
+                            WidthRequest="44"
+                            HeightRequest="44"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="#6610B981"
+                            BackgroundColor="#2610B981"
+                            VerticalOptions="Center">
+                        <Label Text="⚡" FontSize="20" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+
+                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="1">
+                        <Label Text="مفاعل الحروف (Spell Reactor)"
+                               FontSize="14"
+                               FontFamily="CairoBold"
+                               TextColor="White"/>
+                        <Label Text="اجمع الحروف المتساقطة بالترتيب لضبط التهجئة بدقة"
+                               FontSize="11"
+                               FontFamily="CairoRegular"
+                               TextColor="#6EE7B7"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+        </VerticalStackLayout>
+    </Border>
+
+</toolkit:Popup>
+

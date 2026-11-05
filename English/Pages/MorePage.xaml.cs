@@ -107,6 +107,9 @@ public partial class MorePage : ContentPage
                 case "Messages":
                     await Shell.Current.GoToAsync(nameof(MessagesPage));
                     break;
+                case "MemorySecrets":
+                    await Shell.Current.GoToAsync(nameof(MemorySecretsPage));
+                    break;
                 case "PrivacyPolicy":
                     await Shell.Current.GoToAsync(nameof(PrivacyPolicyPage));
                     break;
@@ -143,4 +146,4 @@ public partial class MorePage : ContentPage
             _isNavigating = false;
         }
     }
-}
+}

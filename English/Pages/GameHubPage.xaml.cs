@@ -1,4 +1,6 @@
 using CommunityToolkit.Maui.Alerts;
+using English.Models;
+using English.Services;
 
 namespace English.Pages;
 
@@ -54,6 +56,50 @@ public partial class GameHubPage : ContentPage
         }
     }
 
+    private async void OnWordMatrixClicked(object sender, EventArgs e)
+    {
+        var memorizedWords = await TenWords.GetMemorizedWordsAsync();
+        if (memorizedWords == null || memorizedWords.Count == 0)
+        {
+            await Toast.Make("لم تقم بحفظ أي كلمات بعد 📚! أتمم اختبار الكلمات العشر لتتمكن من اللعب بكلماتك المحفوظة هنا.").Show();
+            return;
+        }
+
+        if (memorizedWords.Count < 3)
+        {
+            await Toast.Make("يجب أن تحفظ 3 كلمات على الأقل لتتمكن من خوض هذا التحدي 📚").Show();
+            return;
+        }
+
+        var config = GameSessionConfig.FromMemorizedWords(memorizedWords, GameDifficulty.Medium);
+        await SafeNavigateAsync(() => new WordMatrixPage(config));
+    }
+
+    private async void OnSkywardBirdClicked(object sender, EventArgs e)
+    {
+        var memorizedWords = await TenWords.GetMemorizedWordsAsync();
+        if (memorizedWords == null || memorizedWords.Count == 0)
+        {
+            await Toast.Make("لم تقم بحفظ أي كلمات بعد 📚! أتمم اختبار الكلمات العشر لتتمكن من اللعب بكلماتك المحفوظة هنا.").Show();
+            return;
+        }
+
+        await SafeNavigateAsync(() => new SkywardBirdPage());
+    }
+
+    private async void OnSpellReactorClicked(object sender, EventArgs e)
+    {
+        var memorizedWords = await TenWords.GetMemorizedWordsAsync();
+        if (memorizedWords == null || memorizedWords.Count == 0)
+        {
+            await Toast.Make("لم تقم بحفظ أي كلمات بعد 📚! أتمم اختبار الكلمات العشر لتتمكن من اللعب بكلماتك المحفوظة هنا.").Show();
+            return;
+        }
+
+        var config = GameSessionConfig.FromMemorizedWords(memorizedWords, GameDifficulty.Medium);
+        await SafeNavigateAsync(() => new SpellReactorPage(config));
+    }
+
     private async void OnSmartInspectorClicked(object sender, EventArgs e)
     {
         await SafeNavigateAsync(() => new SmartInspectorPage());
@@ -78,6 +124,6 @@ public partial class GameHubPage : ContentPage
     private async void OnCoinsBadgeTapped(object sender, EventArgs e)
     {
         long coins = Preferences.Get("Coins", 0L);
-        await Toast.Make($"رصيدك الحالي: {coins} كوينز ذهبي 💰 (تكسبها عند الفوز في التحديات والمسابقات)").Show();
+        await Toast.Make($"رصيدك الحالي: {coins} كوينز ذهبي 💰 (خاصة بمبارزات تحدي الأصدقاء ⚔️)").Show();
     }
 }

@@ -6,7 +6,7 @@
              Shell.NavBarIsVisible="False"
              NavigationPage.HasNavigationBar="False">
 
-    <!-- خلفية متدرجة عصرية للشاشة بالكامل (مطابقة لتحدي الكتابة) -->
+    <!-- خلفية متدرجة عصرية للشاشة بالكامل -->
     <ContentPage.Background>
         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
             <GradientStop Color="#040814" Offset="0.0" />
@@ -100,7 +100,7 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Start Button Container -->
+                <!-- Start Button Container (Emerald Green Gradient) -->
                 <Grid HeightRequest="56" Margin="0,10,0,20">
                     <Button x:Name="StartGameButton" 
                             Text="🚀 بدء التحدي" 
@@ -112,8 +112,8 @@
                             Clicked="OnStartChallengeClicked">
                         <Button.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                <GradientStop Color="#0284C7" Offset="0.0" />
-                                <GradientStop Color="#0EA5E9" Offset="1.0" />
+                                <GradientStop Color="#059669" Offset="0.0" />
+                                <GradientStop Color="#10B981" Offset="1.0" />
                             </LinearGradientBrush>
                         </Button.Background>
                     </Button>
@@ -152,18 +152,18 @@
                     </Border>
 
                     <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" Spacing="6">
-                        <Label x:Name="TimerLabel" Text="5" FontSize="26" FontFamily="CairoBold" TextColor="#38BDF8" HorizontalOptions="Center">
+                        <Label x:Name="TimerLabel" Text="5" FontSize="26" FontFamily="CairoBold" TextColor="#10B981" HorizontalOptions="Center">
                             <Label.Shadow>
-                                <Shadow Brush="#38BDF8" Radius="8" Opacity="0.5"/>
+                                <Shadow Brush="#10B981" Radius="8" Opacity="0.5"/>
                             </Label.Shadow>
                         </Label>
-                        <ProgressBar x:Name="TimerProgress" Progress="1.0" ProgressColor="#0EA5E9" HeightRequest="8" WidthRequest="120" HorizontalOptions="Center"/>
+                        <ProgressBar x:Name="TimerProgress" Progress="1.0" ProgressColor="#10B981" HeightRequest="8" WidthRequest="120" HorizontalOptions="Center"/>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Grid.Column="2" Spacing="6" VerticalOptions="Center">
-                        <Border BackgroundColor="#0369A1" StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12,6">
+                        <Border BackgroundColor="#065F46" StrokeThickness="0" StrokeShape="RoundRectangle 12" Padding="12,6">
                             <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
-                                <Label x:Name="MyNameLabel" Text="أنا" FontSize="13" FontFamily="CairoBold" TextColor="#E0F2FE"/>
+                                <Label x:Name="MyNameLabel" Text="أنا" FontSize="13" FontFamily="CairoBold" TextColor="#D1FAE5"/>
                                 <Label x:Name="ScoreLabel" Text="0" FontSize="15" FontFamily="CairoBold" TextColor="White"/>
                             </HorizontalStackLayout>
                         </Border>
@@ -200,15 +200,15 @@
                     <!-- الكلمة المراد ترجمتها -->
                     <Label x:Name="QuestionWordLabel" Text="Word" TextColor="White" FontSize="46" HorizontalOptions="Center" HorizontalTextAlignment="Center" FontFamily="CairoBold" Margin="0,0,0,15">
                         <Label.Shadow>
-                            <Shadow Brush="#0EA5E9" Offset="0,0" Radius="25" Opacity="0.6"/>
+                            <Shadow Brush="#10B981" Offset="0,0" Radius="25" Opacity="0.5"/>
                         </Label.Shadow>
                     </Label>
 
-                    <!-- شبكة الخيارات الأربعة (بنفس ستايل حقل الإدخال في تحدي الكتابة) -->
+                    <!-- شبكة الخيارات الأربعة -->
                     <FlexLayout Wrap="Wrap" JustifyContent="SpaceBetween" AlignItems="Center" AlignContent="Center">
                         <Border x:Name="OptionBorder0" FlexLayout.Basis="48%" HeightRequest="95" Margin="0,0,0,14" BackgroundColor="#121B2D" StrokeThickness="1.5" Stroke="#23344D" StrokeShape="RoundRectangle 18">
                             <Border.Shadow>
-                                <Shadow Brush="#0EA5E9" Offset="0,0" Radius="5" Opacity="0.1" />
+                                <Shadow Brush="#10B981" Offset="0,0" Radius="5" Opacity="0.12" />
                             </Border.Shadow>
                             <Label x:Name="OptionBtn0" Text="الخيار الأول" TextColor="White" FontSize="18" FontFamily="CairoBold" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center"/>
                             <Border.GestureRecognizers>
@@ -218,7 +218,7 @@
 
                         <Border x:Name="OptionBorder1" FlexLayout.Basis="48%" HeightRequest="95" Margin="0,0,0,14" BackgroundColor="#121B2D" StrokeThickness="1.5" Stroke="#23344D" StrokeShape="RoundRectangle 18">
                             <Border.Shadow>
-                                <Shadow Brush="#0EA5E9" Offset="0,0" Radius="5" Opacity="0.1" />
+                                <Shadow Brush="#10B981" Offset="0,0" Radius="5" Opacity="0.12" />
                             </Border.Shadow>
                             <Label x:Name="OptionBtn1" Text="الخيار الثاني" TextColor="White" FontSize="18" FontFamily="CairoBold" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center"/>
                             <Border.GestureRecognizers>
@@ -228,7 +228,7 @@
 
                         <Border x:Name="OptionBorder2" FlexLayout.Basis="48%" HeightRequest="95" Margin="0,0,0,14" BackgroundColor="#121B2D" StrokeThickness="1.5" Stroke="#23344D" StrokeShape="RoundRectangle 18">
                             <Border.Shadow>
-                                <Shadow Brush="#0EA5E9" Offset="0,0" Radius="5" Opacity="0.1" />
+                                <Shadow Brush="#10B981" Offset="0,0" Radius="5" Opacity="0.12" />
                             </Border.Shadow>
                             <Label x:Name="OptionBtn2" Text="الخيار الثالث" TextColor="White" FontSize="18" FontFamily="CairoBold" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center"/>
                             <Border.GestureRecognizers>
@@ -238,7 +238,7 @@
 
                         <Border x:Name="OptionBorder3" FlexLayout.Basis="48%" HeightRequest="95" Margin="0,0,0,14" BackgroundColor="#121B2D" StrokeThickness="1.5" Stroke="#23344D" StrokeShape="RoundRectangle 18">
                             <Border.Shadow>
-                                <Shadow Brush="#0EA5E9" Offset="0,0" Radius="5" Opacity="0.1" />
+                                <Shadow Brush="#10B981" Offset="0,0" Radius="5" Opacity="0.12" />
                             </Border.Shadow>
                             <Label x:Name="OptionBtn3" Text="الخيار الرابع" TextColor="White" FontSize="18" FontFamily="CairoBold" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center"/>
                             <Border.GestureRecognizers>
@@ -247,12 +247,12 @@
                         </Border>
                     </FlexLayout>
 
-                    <!-- زر السؤال التالي (بنفس لون زر تحدي الكتابة) -->
+                    <!-- زر السؤال التالي (Emerald Green Gradient) -->
                     <Button x:Name="NextButton" Text="السؤال التالي ➔" TextColor="White" FontFamily="CairoBold" FontSize="17" HeightRequest="56" CornerRadius="18" Margin="0,10,0,0" IsVisible="False" Clicked="OnNextClicked">
                         <Button.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                <GradientStop Color="#0284C7" Offset="0.0" />
-                                <GradientStop Color="#0EA5E9" Offset="1.0" />
+                                <GradientStop Color="#059669" Offset="0.0" />
+                                <GradientStop Color="#10B981" Offset="1.0" />
                             </LinearGradientBrush>
                         </Button.Background>
                     </Button>

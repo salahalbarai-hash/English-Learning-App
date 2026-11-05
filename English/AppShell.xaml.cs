@@ -25,9 +25,13 @@ namespace English
             Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
             Routing.RegisterRoute(nameof(ChoiceChallengePage), typeof(ChoiceChallengePage));
             Routing.RegisterRoute(nameof(WritingChallengePage), typeof(WritingChallengePage));
+            Routing.RegisterRoute(nameof(SkywardBirdPage), typeof(SkywardBirdPage));
+            Routing.RegisterRoute(nameof(WordMatrixPage), typeof(WordMatrixPage));
+            Routing.RegisterRoute(nameof(SpellReactorPage), typeof(SpellReactorPage));
             Routing.RegisterRoute(nameof(WordVideosPage), typeof(WordVideosPage));
             Routing.RegisterRoute(nameof(PrivacyPolicyPage), typeof(PrivacyPolicyPage));
             Routing.RegisterRoute(nameof(ChatSettingsPage), typeof(ChatSettingsPage));
+            Routing.RegisterRoute(nameof(MemorySecretsPage), typeof(MemorySecretsPage));
             _gameHub = new GameHub();
 
             string isLogin = Preferences.Get("IsLogin", "0");
@@ -127,6 +131,9 @@ namespace English
                                 int stake = 0;
                                 if (category != null && (category.Contains("خيارات") || category.Contains("Choice") || category.Contains("تحدي الخيارات"))) stake = 3;
                                 else if (category != null && (category.Contains("كتابة") || category.Contains("Writing") || category.Contains("تحدي الكتابة"))) stake = 5;
+                                else if (category != null && (category.Contains("طائر") || category.Contains("Skyward") || category.Contains("الطائر الصاعد"))) stake = 5;
+                                else if (category != null && (category.Contains("مصفوفة") || category.Contains("Matrix") || category.Contains("مصفوفة الذاكرة"))) stake = 4;
+                                else if (category != null && (category.Contains("مفاعل") || category.Contains("Reactor") || category.Contains("مفاعل الحروف"))) stake = 4;
 
                                 if (stake > 0)
                                 {
@@ -197,6 +204,9 @@ namespace English
                         int stake = 0;
                         if (category == "ChoiceMulti") stake = 3;
                         else if (category == "WritingMulti") stake = 5;
+                        else if (category == "SkywardBirdMulti") stake = 5;
+                        else if (category == "WordMatrixMulti") stake = 4;
+                        else if (category == "SpellReactorMulti") stake = 4;
 
                         // --- فحص رصيد المُستقبِل قبل عرض popup القبول ---
                         if (stake > 0)
@@ -225,9 +235,12 @@ namespace English
                         {
                             "ChoiceMulti" => "تحدي الخيارات",
                             "WritingMulti" => "تحدي الكتابة",
+                            "SkywardBirdMulti" => "تحدي الطائر الصاعد 🚀",
+                            "WordMatrixMulti" => "تحدي مصفوفة الذاكرة 🧠",
+                            "SpellReactorMulti" => "تحدي مفاعل الحروف ⚡",
                             _ => category
                         };
-                        var popup = new ReceiveChallengePopup(senderName, displayCategory);
+                        var popup = new ReceiveChallengePopup(senderName, displayCategory, word);
                         var result = await Current.ShowPopupAsync(popup);
 
                         bool accepted = result is bool b && b;
@@ -286,6 +299,18 @@ namespace English
                                 {
                                     await Current.Navigation.PushModalAsync(new WritingChallengePage(_gameHub.HubConnection, roomName, senderName, word));
                                 }
+                                else if (category == "SkywardBirdMulti")
+                                {
+                                    await Current.Navigation.PushModalAsync(new SkywardBirdPage(_gameHub.HubConnection, roomName, senderName, word));
+                                }
+                                else if (category == "WordMatrixMulti")
+                                {
+                                    await Current.Navigation.PushModalAsync(new WordMatrixPage(_gameHub.HubConnection, roomName, senderName, word));
+                                }
+                                else if (category == "SpellReactorMulti")
+                                {
+                                    await Current.Navigation.PushModalAsync(new SpellReactorPage(_gameHub.HubConnection, roomName, senderName, word));
+                                }
                             }
                         }
                     }
@@ -304,7 +329,7 @@ namespace English
                         {
                             await _gameHub.HubConnection.InvokeAsync("JoinDuelRoom", roomName);
 
-                            if (category == "ChoiceMulti" || category == "WritingMulti")
+                            if (category == "ChoiceMulti" || category == "WritingMulti" || category == "SkywardBirdMulti" || category == "WordMatrixMulti" || category == "SpellReactorMulti")
                             {
                                 // The sender page will handle it internally
                             }

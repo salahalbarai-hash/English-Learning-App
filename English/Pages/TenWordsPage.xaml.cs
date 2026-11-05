@@ -1,3 +1,6 @@
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Views;
+using English.Models;
 using English.Popups;
 using English.ViewModels;
 
@@ -180,7 +183,6 @@ public partial class TenWordsPage : ContentPage
                 word.IsPronouncedCorrectly = true;
                 try { HapticFeedback.Default.Perform(HapticFeedbackType.Click); } catch { }
 
-                // أنيميشن تكبير خفيف على زر النجمة نفسه بدلاً من كارت القائمة بأكمله
                 try
                 {
                     await micBorder.ScaleTo(1.25, 140, Easing.CubicOut);
@@ -194,7 +196,6 @@ public partial class TenWordsPage : ContentPage
                 }
                 catch { }
 
-                // إبقاء اللون الأخضر والنجمة ظاهرة لمدة ثانيتين كإشعار نجاح، ثم إعادتها إلى حالتها الطبيعية
                 _ = Task.Delay(2000).ContinueWith(_ =>
                 {
                     MainThread.BeginInvokeOnMainThread(() =>
@@ -241,6 +242,47 @@ public partial class TenWordsPage : ContentPage
                 _currentListeningWord = null;
             }
             _isProcessingMic = false;
+        }
+    }
+
+    private async void OnPracticeGamesClicked(object sender, EventArgs e)
+    {
+        StopAutoRecite();
+        if (_isNavigating) return;
+
+        var wordsForGames = vm.Titles.ToList();
+        if (!wordsForGames.Any())
+        {
+            await Toast.Make("لا توجد كلمات متاحة للتدريب حالياً.").Show();
+            return;
+        }
+
+        var popup = new TenWordsGamesPopup();
+        var result = await this.ShowPopupAsync(popup);
+
+        if (result is string gameChoice && !string.IsNullOrEmpty(gameChoice))
+        {
+            _isNavigating = true;
+            try
+            {
+                var config = GameSessionConfig.FromTenWords(wordsForGames);
+                Page? targetPage = gameChoice switch
+                {
+                    "WordMatrix" => new WordMatrixPage(config),
+                    "SkywardBird" => new SkywardBirdPage(config),
+                    "SpellReactor" => new SpellReactorPage(config),
+                    _ => null
+                };
+
+                if (targetPage != null)
+                {
+                    await Navigation.PushModalAsync(targetPage);
+                }
+            }
+            finally
+            {
+                _isNavigating = false;
+            }
         }
     }
 
@@ -346,7 +388,6 @@ public partial class TenWordsPage : ContentPage
         _autoReciteCts = new CancellationTokenSource();
         var token = _autoReciteCts.Token;
 
-        // تحديث زر الواجهة لحالة التشغيل (أيقونة الإيقاف المؤقت بلون وردي تنبيهي أنيق)
         AutoReciteImage.Source = "pause_icon.svg";
         BtnAutoReciteIcon.Stroke = new SolidColorBrush(Color.FromArgb("#F43F5E"));
         BtnAutoReciteIcon.BackgroundColor = Color.FromArgb("#1F1320");
@@ -368,6 +409,7 @@ public partial class TenWordsPage : ContentPage
 
                     // تمييز الكرت والتمرير إليه
                     word.IsReciting = true;
+
                     try
                     {
                         CV.ScrollTo(word, position: ScrollToPosition.Center, animate: true);
@@ -400,18 +442,14 @@ public partial class TenWordsPage : ContentPage
 
                         if (r < config.WordRepeats - 1)
                         {
-                            // مهلة خفيفة قبل إعادة النطق للكلمة نفسها
                             await Task.Delay(500, token);
                         }
                     }
 
                     word.IsReciting = false;
-
-                    // فاصل مريح قبل الانتقال للكلمة التالية
                     await Task.Delay(700, token);
                 }
 
-                // إذا لم يكن الوضع مستمراً، نتحقق من اكتمال عدد الدورات المحدد
                 if (!config.IsInfiniteLoop && currentRound >= config.GroupRounds)
                 {
                     break;

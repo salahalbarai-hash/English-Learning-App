@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
+             x:Class="English.Pages.SkywardBirdPage"
+             BackgroundColor="#060913"
+             NavigationPage.HasNavigationBar="False"
+             Shell.NavBarIsVisible="False"
+             FlowDirection="RightToLeft">
+
+    <Grid>
+
+        <!-- ============================================================ -->
+        <!-- 🟢 1. SETUP VIEW (شاشة الإعداد النظيفة تماماً مثل التحديات)   -->
+        <!-- ============================================================ -->
+        <ScrollView x:Name="SetupView" IsVisible="True">
+            <VerticalStackLayout Spacing="24" Padding="20,30,20,20">
+
+                <!-- Header -->
+                <Grid ColumnDefinitions="*">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="4">
+                        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="🚀" FontSize="26" VerticalOptions="Center"/>
+                            <Label Text="الطائر الصاعد" FontSize="24" FontFamily="CairoBold" TextColor="White"/>
+                        </HorizontalStackLayout>
+                        <Label Text="حلّق بطائرك نحو السحب الإنجليزية المطابقة للمعنى" FontSize="13" FontFamily="CairoRegular" TextColor="#94A3B8" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <!-- Memorized Words Stats Card -->
+                <Border BackgroundColor="#121B2D" Stroke="#23344D" StrokeThickness="1.5" StrokeShape="RoundRectangle 20" Padding="18">
+                    <Grid ColumnDefinitions="Auto, *" ColumnSpacing="16">
+                        <Border Grid.Column="0" WidthRequest="50" HeightRequest="50" StrokeShape="RoundRectangle 25" StrokeThickness="0">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#4F46E5" Offset="0.0" />
+                                    <GradientStop Color="#6366F1" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <Label Text="📚" FontSize="22" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                            <Label Text="إجمالي الكلمات المحفوظة" FontSize="13" FontFamily="CairoRegular" TextColor="#94A3B8"/>
+                            <HorizontalStackLayout Spacing="6">
+                                <Label x:Name="MaxWordsLabel" Text="0" FontSize="22" FontFamily="CairoBold" TextColor="#818CF8"/>
+                                <Label Text="كلمة جاهزة للاختبار" FontSize="15" FontFamily="CairoBold" TextColor="White" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- Mode Selection -->
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="وضع اللعب" FontSize="15" FontFamily="CairoBold" TextColor="#CBD5E1"/>
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                        <Border x:Name="SinglePlayerCard" Grid.Column="0" BackgroundColor="#141838" Stroke="#6366F1" StrokeThickness="2" StrokeShape="RoundRectangle 18" Padding="16">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSinglePlayerTapped"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                                <Label Text="👤" FontSize="28" HorizontalOptions="Center"/>
+                                <Label x:Name="SinglePlayerText" Text="لعب فردي" FontSize="15" FontFamily="CairoBold" TextColor="White" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border x:Name="MultiplayerCard" Grid.Column="1" BackgroundColor="#101726" Stroke="#23344D" StrokeThickness="1.5" StrokeShape="RoundRectangle 18" Padding="16">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnMultiplayerTapped"/>
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                                <Label Text="👥" FontSize="28" HorizontalOptions="Center"/>
+                                <Label x:Name="MultiplayerText" Text="تحدي صديق" FontSize="15" FontFamily="CairoBold" TextColor="#64748B" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+
+                <!-- Game Settings Card -->
+                <Border BackgroundColor="#121B2D" Stroke="#23344D" StrokeThickness="1.5" StrokeShape="RoundRectangle 20" Padding="18">
+                    <VerticalStackLayout Spacing="16">
+                        <Label Text="إعدادات الجولة" FontSize="15" FontFamily="CairoBold" TextColor="#CBD5E1"/>
+
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="عدد الكلمات:" FontSize="13" FontFamily="CairoRegular" TextColor="#94A3B8"/>
+                            <Border BackgroundColor="#0B1320" Stroke="#1E293B" StrokeThickness="1" StrokeShape="RoundRectangle 12" Padding="14,2">
+                                <Entry x:Name="WordsCountEntry" Text="10" IsReadOnly="True" Keyboard="Numeric" TextColor="#64748B" FontFamily="CairoBold" FontSize="16" BackgroundColor="Transparent"/>
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Bird Color Selection Card -->
+                <Border BackgroundColor="#121B2D" Stroke="#23344D" StrokeThickness="1.5" StrokeShape="RoundRectangle 20" Padding="16">
+                    <VerticalStackLayout Spacing="12">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="🕊️" FontSize="18" VerticalOptions="Center"/>
+                            <Label Text="لون طائرك في السباق" FontSize="14" FontFamily="CairoBold" TextColor="#CBD5E1" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+
+                        <!-- صف دوائر الألوان الأربعة -->
+                        <HorizontalStackLayout Spacing="14" HorizontalOptions="Center">
+                            <!-- 1. Cyan (أزرق نيون) -->
+                            <Border x:Name="SetupColorCyanBorder" WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 22" StrokeThickness="3" Stroke="White" BackgroundColor="#38BDF8">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnSetupColorCyanTapped"/>
+                                </Border.GestureRecognizers>
+                                <Label x:Name="SetupColorCyanCheck" Text="✓" TextColor="White" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="True"/>
+                            </Border>
+
+                            <!-- 2. Rose (وردي ناري) -->
+                            <Border x:Name="SetupColorRoseBorder" WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 22" StrokeThickness="1" Stroke="#F43F5E" BackgroundColor="#F43F5E">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnSetupColorRoseTapped"/>
+                                </Border.GestureRecognizers>
+                                <Label x:Name="SetupColorRoseCheck" Text="✓" TextColor="White" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="False"/>
+                            </Border>
+
+                            <!-- 3. Gold (ذهبي متوهج) -->
+                            <Border x:Name="SetupColorGoldBorder" WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 22" StrokeThickness="1" Stroke="#F59E0B" BackgroundColor="#F59E0B">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnSetupColorGoldTapped"/>
+                                </Border.GestureRecognizers>
+                                <Label x:Name="SetupColorGoldCheck" Text="✓" TextColor="White" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="False"/>
+                            </Border>
+
+                            <!-- 4. Emerald (أخضر زمردي) -->
+                            <Border x:Name="SetupColorEmeraldBorder" WidthRequest="44" HeightRequest="44" StrokeShape="RoundRectangle 22" StrokeThickness="1" Stroke="#10B981" BackgroundColor="#10B981">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnSetupColorEmeraldTapped"/>
+                                </Border.GestureRecognizers>
+                                <Label x:Name="SetupColorEmeraldCheck" Text="✓" TextColor="White" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="False"/>
+                            </Border>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Start Button Container -->
+                <Grid HeightRequest="56" Margin="0,10,0,20">
+                    <Button x:Name="StartGameButton" 
+                            Text="🚀 بدء التحدي" 
+                            TextColor="White" 
+                            FontFamily="CairoBold" 
+                            FontSize="18" 
+                            HeightRequest="56" 
+                            CornerRadius="18" 
+                            Clicked="OnStartChallengeClicked">
+                        <Button.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#4F46E5" Offset="0.0" />
+                                <GradientStop Color="#6366F1" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+
+                    <!-- مؤشر التحميل الدوار فوق الزر -->
+                    <ActivityIndicator x:Name="StartLoadingIndicator"
+                                       IsRunning="False"
+                                       IsVisible="False"
+                                       Color="White"
+                                       WidthRequest="22"
+                                       HeightRequest="22"
+                                       HorizontalOptions="End"
+                                       Margin="0,0,24,0"
+                                       InputTransparent="True"
+                                       VerticalOptions="Center"/>
+                </Grid>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ============================================================ -->
+        <!-- 🟢 2. ACTIVE GAME VIEW (مضمار الطيران ورسم SkiaSharp)        -->
+        <!-- ============================================================ -->
+        <Grid x:Name="GameView" IsVisible="False">
+
+            <!-- 1. لوحة رسم SkiaSharp للفيزياء والطائرين والسحب والجزيئات -->
+            <skia:SKCanvasView x:Name="GameCanvas"
+                               HorizontalOptions="FillAndExpand"
+                               VerticalOptions="FillAndExpand"
+                               PaintSurface="OnCanvasPaintSurface"
+                               EnableTouchEvents="True"
+                               Touch="OnCanvasTouch"/>
+
+            <!-- 2. الطبقة العلوية XAML لعناصر التحكم والنصوص العربية -->
+            <Grid RowDefinitions="Auto, Auto, *" Padding="16,14,16,16" InputTransparent="True">
+
+                <!-- 🟢 A. شريط التحكم الفردي (Single Player HUD) -->
+                <Grid x:Name="SinglePlayerHud" Grid.Row="0" ColumnDefinitions="Auto, *, Auto" VerticalOptions="Center" Margin="0,0,0,8" InputTransparent="False" IsVisible="True">
+                    <Border Grid.Column="0"
+                            BackgroundColor="#1E293B"
+                            Stroke="#334155"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 14"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            VerticalOptions="Center">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnExitClicked"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="✕" TextColor="#94A3B8" FontSize="16" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+
+                    <HorizontalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="12" VerticalOptions="Center">
+                        <HorizontalStackLayout Spacing="3" VerticalOptions="Center">
+                            <Label x:Name="Heart1Label" Text="❤️" FontSize="18"/>
+                            <Label x:Name="Heart2Label" Text="❤️" FontSize="18"/>
+                            <Label x:Name="Heart3Label" Text="❤️" FontSize="18"/>
+                        </HorizontalStackLayout>
+
+                        <Border BackgroundColor="#0C2036" Stroke="#38BDF8" StrokeThickness="1" StrokeShape="RoundRectangle 12" Padding="8,3">
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="⚡" FontSize="13" VerticalOptions="Center"/>
+                                <Label x:Name="ComboLabel" Text="x1" TextColor="#38BDF8" FontSize="13" FontFamily="CairoBold" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Border>
+                    </HorizontalStackLayout>
+
+                    <Border Grid.Column="2" BackgroundColor="#1C212E" Stroke="#6638BDF8" StrokeThickness="1" StrokeShape="RoundRectangle 14" Padding="10,5">
+                        <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                            <Label Text="⭐" FontSize="14" VerticalOptions="Center"/>
+                            <Label x:Name="SessionScoreLabel" Text="0" FontSize="14" FontFamily="CairoBold" TextColor="#38BDF8" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- 🟢 B. شريط المبارزة الثنائية المباشرة (Multiplayer Duel HUD) -->
+                <Border x:Name="MultiplayerHud"
+                        Grid.Row="0"
+                        StrokeThickness="1.2"
+                        Stroke="#334155"
+                        StrokeShape="RoundRectangle 20"
+                        BackgroundColor="#0B1322"
+                        Padding="12,8"
+                        Margin="0,0,0,8"
+                        InputTransparent="False"
+                        IsVisible="False">
+                    <Grid ColumnDefinitions="*, Auto, *" ColumnSpacing="8" VerticalOptions="Center">
+
+                        <!-- Local Player (أنا - الطائر الأزرق) -->
+                        <Grid Grid.Column="0" ColumnDefinitions="Auto, *" ColumnSpacing="8" VerticalOptions="Center">
+                            <Border Grid.Column="0" WidthRequest="36" HeightRequest="36" StrokeShape="RoundRectangle 12" Stroke="#38BDF8" StrokeThickness="1.5" BackgroundColor="#10253E">
+                                <Label Text="🕊️" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                                <Label x:Name="MyNameLabel" Text="أنا" FontSize="12.5" FontFamily="CairoBold" TextColor="White" LineBreakMode="TailTruncation"/>
+                                <HorizontalStackLayout Spacing="4">
+                                    <Label x:Name="LocalScoreLabel" Text="0 ⭐" FontSize="12" FontFamily="CairoBold" TextColor="#38BDF8"/>
+                                    <Label x:Name="LocalHeartsLabel" Text="❤️❤️❤️" FontSize="10" VerticalOptions="Center"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Center VS Badge & Progress & Exit -->
+                        <HorizontalStackLayout Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" Spacing="6">
+                            <Border BackgroundColor="#1E293B" Stroke="#334155" StrokeThickness="1" StrokeShape="RoundRectangle 10" WidthRequest="28" HeightRequest="28" VerticalOptions="Center">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnExitClicked"/>
+                                </Border.GestureRecognizers>
+                                <Label Text="✕" TextColor="#94A3B8" FontSize="12" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+
+                            <VerticalStackLayout VerticalOptions="Center" Spacing="1">
+                                <Border BackgroundColor="#1A1305" Stroke="#F59E0B" StrokeThickness="1" StrokeShape="RoundRectangle 10" Padding="6,2">
+                                    <Label Text="⚔️ VS" FontSize="11" FontFamily="CairoBold" TextColor="#FBBF24"/>
+                                </Border>
+                                <Label x:Name="DuelProgressLabel" Text="1 / 10" FontSize="10.5" FontFamily="CairoRegular" TextColor="#94A3B8" HorizontalOptions="Center"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+
+                        <!-- Opponent Player (الصديق - الطائر الوردي) -->
+                        <Grid Grid.Column="2" ColumnDefinitions="*, Auto" ColumnSpacing="8" VerticalOptions="Center">
+                            <VerticalStackLayout Grid.Column="0" Spacing="1" VerticalOptions="Center" HorizontalOptions="End">
+                                <Label x:Name="OpponentNameLabel" Text="الصديق" FontSize="12.5" FontFamily="CairoBold" TextColor="White" HorizontalOptions="End" HorizontalTextAlignment="End" LineBreakMode="TailTruncation"/>
+                                <HorizontalStackLayout Spacing="4" HorizontalOptions="End">
+                                    <Label x:Name="OpponentHeartsLabel" Text="❤️❤️❤️" FontSize="10" VerticalOptions="Center"/>
+                                    <Label x:Name="OpponentScoreLabel" Text="0 ⭐" FontSize="12" FontFamily="CairoBold" TextColor="#F43F5E"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                            <Border Grid.Column="1" WidthRequest="36" HeightRequest="36" StrokeShape="RoundRectangle 12" Stroke="#F43F5E" StrokeThickness="1.5" BackgroundColor="#351022">
+                                <Label Text="🦅" FontSize="18" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+                        </Grid>
+
+                    </Grid>
+                </Border>
+
+                <!-- كرت المعنى العربي المستهدف -->
+                <Border Grid.Row="1"
+                        StrokeThickness="1.5"
+                        StrokeShape="RoundRectangle 18"
+                        Padding="16,10"
+                        Margin="0,0,0,6"
+                        BackgroundColor="#0B1322"
+                        InputTransparent="True">
+                    <Border.Stroke>
+                        <LinearGradientBrush EndPoint="1,0">
+                            <GradientStop Color="#0284C7" Offset="0"/>
+                            <GradientStop Color="#38BDF8" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Stroke>
+                    <Border.Shadow>
+                        <Shadow Brush="#0284C7" Opacity="0.25" Radius="10" Offset="0,2"/>
+                    </Border.Shadow>
+
+                    <Grid ColumnDefinitions="Auto, *" VerticalOptions="Center" ColumnSpacing="10">
+                        <Label Text="🎯" FontSize="20" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                            <Label Text="وجّه الطائر نحو سحابة:"
+                                   FontSize="11"
+                                   TextColor="#94A3B8"
+                                   FontFamily="CairoRegular"/>
+                            <Label x:Name="TargetArabicWordLabel"
+                                   Text="مستشفى"
+                                   FontSize="20"
+                                   TextColor="#38BDF8"
+                                   FontFamily="CairoBold"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- شريط الانسحاب أو انتظار الطرف الآخر -->
+                <Border x:Name="WithdrawalBanner"
+                        Grid.Row="2"
+                        IsVisible="False"
+                        BackgroundColor="#2D1517"
+                        Stroke="#EF4444"
+                        StrokeThickness="1.5"
+                        StrokeShape="RoundRectangle 18"
+                        Padding="18,14"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        WidthRequest="320"
+                        InputTransparent="False">
+                    <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Label x:Name="WithdrawalIconLabel" Text="⚠️" FontSize="36" HorizontalOptions="Center"/>
+                        <Label x:Name="WithdrawalTextLabel" Text="انسحب الخصم من التحدي!" FontSize="15" FontFamily="CairoBold" TextColor="#FCA5A5" HorizontalTextAlignment="Center"/>
+                        <Label x:Name="WithdrawalSubTextLabel" Text="تم احتساب الفوز لصالحك ونيل 10 كوينز 🏆" FontSize="12.5" FontFamily="CairoRegular" TextColor="#FDE68A" HorizontalTextAlignment="Center"/>
+                        <Button x:Name="WithdrawalExitButton"
+                                Text="العودة للقائمة الرئيسية ➔"
+                                HeightRequest="44"
+                                CornerRadius="14"
+                                BackgroundColor="#334155"
+                                TextColor="White"
+                                FontFamily="CairoBold"
+                                FontSize="13.5"
+                                Clicked="OnExitConfirmedClicked"/>
+                    </VerticalStackLayout>
+                </Border>
+
+            </Grid>
+
+            <!-- ⏳ شاشة انتظار اكتمال اتصال الصديق في التحدي المشترك -->
+            <Grid x:Name="DuelWaitingOverlay" BackgroundColor="#E6050811" IsVisible="False" ZIndex="950">
+                <Border StrokeThickness="1.5"
+                        Stroke="#6366F1"
+                        StrokeShape="RoundRectangle 24"
+                        BackgroundColor="#0B1320"
+                        Padding="26,24"
+                        WidthRequest="320"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                    <Border.Shadow>
+                        <Shadow Brush="#6366F1" Opacity="0.35" Radius="20" Offset="0,4"/>
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="16" HorizontalOptions="Center">
+                        <ActivityIndicator IsRunning="True" Color="#6366F1" WidthRequest="48" HeightRequest="48" HorizontalOptions="Center"/>
+                        <Label Text="بانتظار اكتمال اتصال الصديق... ⏳"
+                               FontSize="17"
+                               FontFamily="CairoBold"
+                               TextColor="#38BDF8"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="الطيور تحلّق استعداداً للانطلاق المشترك فور اكتمال الاتصال 🕊️"
+                               FontSize="12.5"
+                               FontFamily="CairoRegular"
+                               TextColor="#94A3B8"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"/>
+                        <Button Text="إلغاء والعودة"
+                                HeightRequest="40"
+                                CornerRadius="20"
+                                BackgroundColor="Transparent"
+                                BorderColor="#334155"
+                                BorderWidth="1"
+                                TextColor="#94A3B8"
+                                FontFamily="CairoBold"
+                                FontSize="13"
+                                Clicked="OnExitConfirmedClicked"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- 🚀 شاشة العد التنازلي المتزامن للانطلاق -->
+            <Grid x:Name="DuelCountdownOverlay" BackgroundColor="#80050811" IsVisible="False" ZIndex="960" InputTransparent="True">
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
+                    <Label x:Name="CountdownSubLabel"
+                           Text="استعد للطيران! 🚀"
+                           FontSize="20"
+                           FontFamily="CairoBold"
+                           TextColor="#38BDF8"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"/>
+                    <Label x:Name="CountdownNumberLabel"
+                           Text="3"
+                           FontSize="96"
+                           FontFamily="CairoBold"
+                           TextColor="#F59E0B"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center">
+                        <Label.Shadow>
+                            <Shadow Brush="#F59E0B" Offset="0,0" Radius="30" Opacity="0.8"/>
+                        </Label.Shadow>
+                    </Label>
+                    <Label Text="السباق يبدأ بتزامن تام مع صديقك"
+                           FontSize="13"
+                           FontFamily="CairoRegular"
+                           TextColor="#CBD5E1"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- 🌟 نافذة إيقاف مؤقت / نتيجة الجولة الفردية أو الجماعية -->
+            <Grid x:Name="ResultOverlay" BackgroundColor="#E6050811" IsVisible="False" ZIndex="999">
+                <Border StrokeThickness="1.5"
+                        Stroke="#38BDF8"
+                        StrokeShape="RoundRectangle 26"
+                        BackgroundColor="#0B1320"
+                        Padding="24"
+                        WidthRequest="330"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                    <VerticalStackLayout Spacing="16" HorizontalOptions="Center">
+                        <Label x:Name="ResultIconLabel" Text="🦅" FontSize="54" HorizontalOptions="Center"/>
+                        <Label x:Name="ResultTitleLabel" Text="طيران أسطوري! 🎉" FontSize="21" FontFamily="CairoBold" TextColor="#38BDF8" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        <Label x:Name="ResultDescLabel" Text="تمكن الطائر من جمع السحب الصحيحة والوصول لوجهته." FontSize="13" FontFamily="CairoRegular" TextColor="#94A3B8" HorizontalTextAlignment="Center"/>
+
+                        <!-- إحصائيات الإنجاز أو الكوينز -->
+                        <Border BackgroundColor="#111A2E" Stroke="#1E293B" StrokeThickness="1" StrokeShape="RoundRectangle 16" Padding="16,10">
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
+                                    <Label x:Name="ResultStat1Title" Text="الكلمات المجمعة" FontSize="11" TextColor="#94A3B8" FontFamily="CairoRegular" HorizontalOptions="Center"/>
+                                    <Label x:Name="ResultWordsCountLabel" Text="10 ☁️" FontSize="16" TextColor="#38BDF8" FontFamily="CairoBold" HorizontalOptions="Center"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center">
+                                    <Label x:Name="ResultStat2Title" Text="النقاط المحققة" FontSize="11" TextColor="#94A3B8" FontFamily="CairoRegular" HorizontalOptions="Center"/>
+                                    <Label x:Name="ResultScoreLabel" Text="+100 ⭐" FontSize="16" TextColor="#FBBF24" FontFamily="CairoBold" HorizontalOptions="Center"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+
+                        <Button x:Name="PlayAgainButton"
+                                Text="طيران جديد 🔁"
+                                HeightRequest="48"
+                                CornerRadius="24"
+                                BackgroundColor="#0284C7"
+                                TextColor="White"
+                                FontFamily="CairoBold"
+                                FontSize="15"
+                                Clicked="OnPlayAgainClicked"/>
+
+                        <Button Text="العودة"
+                                HeightRequest="44"
+                                CornerRadius="22"
+                                BackgroundColor="Transparent"
+                                BorderColor="#334155"
+                                BorderWidth="1"
+                                TextColor="#94A3B8"
+                                FontFamily="CairoBold"
+                                FontSize="14"
+                                Clicked="OnExitConfirmedClicked"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+</ContentPage>
