@@ -245,6 +245,36 @@ public partial class TenWordsPage : ContentPage
         }
     }
 
+    private async void OnNeuralJourneyTapped(object sender, EventArgs e)
+    {
+        if (sender is VisualElement btn)
+        {
+            try { HapticFeedback.Default.Perform(HapticFeedbackType.Click); } catch { }
+            await btn.ScaleTo(0.86, 75, Easing.CubicOut);
+            _ = btn.ScaleTo(1.0, 90, Easing.CubicIn);
+        }
+
+        StopAutoRecite();
+        if (_isNavigating) return;
+
+        var words = vm.Titles.Where(w => !string.IsNullOrWhiteSpace(w.EnglishWord) && !string.IsNullOrWhiteSpace(w.ArabicWord)).ToList();
+        if (words.Count == 0)
+        {
+            await Toast.Make("لا توجد كلمات متاحة لبدء رحلة الحفظ حالياً.").Show();
+            return;
+        }
+
+        _isNavigating = true;
+        try
+        {
+            await Navigation.PushModalAsync(new NeuralMemoryJourneyPage(words));
+        }
+        finally
+        {
+            _isNavigating = false;
+        }
+    }
+
     private async void OnPracticeGamesClicked(object sender, EventArgs e)
     {
         StopAutoRecite();

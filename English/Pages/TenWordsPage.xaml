@@ -35,6 +35,27 @@
                     <!-- أدوات التحكم والكوينز (اليسار) -->
                     <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
 
+                        <!-- زر رحلة الحفظ السريع (أيقونة البرق الذكي ⚡) -->
+                        <Border x:Name="BtnNeuralJourney"
+                                StrokeThickness="1"
+                                Stroke="#38BDF8"
+                                StrokeShape="RoundRectangle 18"
+                                BackgroundColor="#0B111D"
+                                WidthRequest="36"
+                                HeightRequest="36"
+                                VerticalOptions="Center">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnNeuralJourneyTapped"/>
+                            </Border.GestureRecognizers>
+                            <Path Data="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
+                                  Fill="#38BDF8"
+                                  WidthRequest="16"
+                                  HeightRequest="16"
+                                  Aspect="Uniform"
+                                  HorizontalOptions="Center"
+                                  VerticalOptions="Center"/>
+                        </Border>
+
                         <!-- زر التلقين الصوتي الدائري الأنيق -->
                         <Border x:Name="BtnAutoReciteIcon"
                                 StrokeThickness="1"
