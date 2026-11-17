@@ -5,48 +5,85 @@
              xmlns:models="clr-namespace:Shared.Models;assembly=Shared"
              x:Class="English.Pages.LeadersPage"
              x:DataType="vm:LeadersPageVM"
-             BackgroundColor="#F0F4F8"
+             BackgroundColor="#080D18"
              FlowDirection="RightToLeft"
              Title="لوحة المتصدرين">
 
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#080D18" Offset="0.0"/>
+            <GradientStop Color="#0B1324" Offset="0.5"/>
+            <GradientStop Color="#090E1A" Offset="1.0"/>
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
     <Grid>
         <!-- تقسيم الشاشة: الهيدر في صف ثابت، والقائمة في صف قابل للتمرير -->
-        <Grid RowDefinitions="Auto, *">
+        <Grid RowDefinitions="Auto, *" Padding="16,10,16,0">
 
             <!-- ========================================== -->
-            <!-- 1. الهيدر الفاخر (ثابت لا يتحرك)           -->
+            <!-- 1. الهيدر الفاخر المدمج (متناسق مع الهوية) -->
             <!-- ========================================== -->
             <Border Grid.Row="0"
-                    Margin="0,0,0,15"
-                    HeightRequest="240"
-                    VerticalOptions="Start"
-                    StrokeThickness="0"
-                    StrokeShape="RoundRectangle 0,0,45,45">
+                    StrokeThickness="1.5"
+                    StrokeShape="RoundRectangle 22"
+                    Margin="0,4,0,12"
+                    Padding="16,14"
+                    BackgroundColor="#101726">
 
-                <!-- تدرج لوني احترافي جداً (Indigo to Blue) -->
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#4338CA" Offset="0.0"/>
-                        <GradientStop Color="#3B82F6" Offset="1.0"/>
+                <!-- تدرج نيون أيقوني مطابق للهوية (Sky Cyan to Indigo) -->
+                <Border.Stroke>
+                    <LinearGradientBrush EndPoint="1,0">
+                        <GradientStop Color="#38BDF8" Offset="0.0"/>
+                        <GradientStop Color="#818CF8" Offset="1.0"/>
                     </LinearGradientBrush>
-                </Border.Background>
+                </Border.Stroke>
 
                 <!-- ظل الهيدر -->
                 <Border.Shadow>
-                    <Shadow Brush="#3B82F6" Radius="25" Offset="0,10" Opacity="0.35"/>
+                    <Shadow Brush="#000000" Radius="12" Offset="0,4" Opacity="0.3"/>
                 </Border.Shadow>
 
-                <Grid>
-                    <!-- زر التحديث (أعلى اليسار - تأثير زجاجي فاخر مع مؤشر تفاعلي) -->
-                    <!-- ملاحظة: HorizontalOptions="End" تعني اليسار لأن الصفحة RightToLeft -->
-                    <Border BackgroundColor="#20FFFFFF"
-                            Stroke="#40FFFFFF"
-                            StrokeThickness="1.5"
-                            StrokeShape="RoundRectangle 20"
-                            Padding="14,7"
-                            HorizontalOptions="End"
-                            VerticalOptions="Start"
-                            Margin="0,20,20,0">
+                <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
+
+                    <!-- معلومات العنوان وأيقونة الكأس -->
+                    <HorizontalStackLayout Grid.Column="0" Spacing="12" VerticalOptions="Center">
+                        <!-- أيقونة الكأس مع خلفية مضيئة -->
+                        <Border WidthRequest="48"
+                                HeightRequest="48"
+                                BackgroundColor="#162238"
+                                Stroke="#38BDF8"
+                                StrokeThickness="1.2"
+                                StrokeShape="RoundRectangle 24"
+                                VerticalOptions="Center">
+                            <Border.Shadow>
+                                <Shadow Brush="#38BDF8" Radius="8" Opacity="0.3" Offset="0,0"/>
+                            </Border.Shadow>
+
+                            <Label Text="🏆" FontSize="25" HorizontalOptions="Center" VerticalOptions="Center"/>
+                        </Border>
+
+                        <VerticalStackLayout VerticalOptions="Center" Spacing="2">
+                            <Label Text="لوحة المتصدرين" 
+                                   FontSize="20" 
+                                   FontFamily="CairoBold" 
+                                   TextColor="White"
+                                   CharacterSpacing="0.5"/>
+                            <Label Text="أبطال إنجليش الأكثر تميزاً 🔥"
+                                   FontSize="11.5"
+                                   FontFamily="Cairo"
+                                   TextColor="#94A3B8"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+
+                    <!-- زر التحديث الزجاجي المتفاعل -->
+                    <Border Grid.Column="1"
+                            BackgroundColor="#090E17"
+                            Stroke="#263B5E"
+                            StrokeThickness="1.2"
+                            StrokeShape="RoundRectangle 18"
+                            Padding="12,7"
+                            VerticalOptions="Center">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="RefreshButton_Clicked" />
                         </Border.GestureRecognizers>
@@ -55,140 +92,133 @@
                             <!-- مؤشر التحميل الدوار يظهر فقط أثناء التحديث -->
                             <ActivityIndicator IsRunning="{Binding IsRefreshing}"
                                                IsVisible="{Binding IsRefreshing}"
-                                               Color="White"
-                                               WidthRequest="15"
-                                               HeightRequest="15"
+                                               Color="#38BDF8"
+                                               WidthRequest="14"
+                                               HeightRequest="14"
                                                VerticalOptions="Center"/>
 
                             <Label Text="{Binding RefreshButtonText}"
-                                   TextColor="White"
-                                   FontSize="13"
+                                   TextColor="#38BDF8"
+                                   FontSize="12.5"
                                    FontFamily="CairoBold"
                                    VerticalOptions="Center"/>
                         </HorizontalStackLayout>
                     </Border>
-
-                    <!-- محتويات الهيدر (النصوص والأيقونة) -->
-                    <VerticalStackLayout VerticalOptions="Center"
-                                         HorizontalOptions="Center"
-                                         Spacing="10"
-                                         Margin="0,20,0,0">
-
-                        <!-- أيقونة الكأس مع خلفية مضيئة -->
-                        <Border WidthRequest="75"
-                                HeightRequest="75"
-                                BackgroundColor="#25FFFFFF"
-                                StrokeThickness="2"
-                                Stroke="#30FFFFFF"
-                                StrokeShape="RoundRectangle 37.5">
-
-                            <Label Text="🏆" FontSize="36" HorizontalOptions="Center" VerticalOptions="Center"/>
-                        </Border>
-
-                        <Label Text="لوحة الشرف" 
-                               FontSize="30" 
-                               FontFamily="CairoBold" 
-                               HorizontalOptions="Center" 
-                               TextColor="White"
-                               CharacterSpacing="1"/>
-
-                    </VerticalStackLayout>
                 </Grid>
             </Border>
 
             <!-- ========================================== -->
-            <!-- 2. قائمة المتصدرين (التمرير الحر بدون تداخل)-->
+            <!-- 2. قائمة المتصدرين (Dark Luxury Podiums)   -->
             <!-- ========================================== -->
             <CollectionView Grid.Row="1"
                             x:Name="CV"
                             ItemsSource="{Binding TopTenLeaders}"
                             SelectionMode="None"
+                            VerticalScrollBarVisibility="Never"
                             MaximumWidthRequest="650"
-                            HorizontalOptions="Center"
-                            Margin="16,0,16,0">
+                            HorizontalOptions="Center">
+
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="1"
+                                     VerticalItemSpacing="10"/>
+                </CollectionView.ItemsLayout>
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Leader">
-                        <Grid Padding="0,6">
+                        <Grid Padding="0,2">
 
-                            <!-- تصميم البطاقة بتجاوب مرن مع الأسماء الطويلة -->
-                            <Border BackgroundColor="White"
-                                    StrokeThickness="1.5"
-                                    Stroke="#FFFFFF"
-                                    StrokeShape="RoundRectangle 26"
-                                    MinimumHeightRequest="95">
+                            <!-- بطاقة المتصدر الداكنة الفاخرة مع إطار نيون للمراكز -->
+                            <Border StrokeThickness="1.2"
+                                    StrokeShape="RoundRectangle 18"
+                                    Stroke="{Binding RankColor}"
+                                    HeightRequest="86"
+                                    Padding="12,0">
 
-                                <!-- ظل ناعم جداً للبطاقة -->
+                                <!-- خلفية متدرجة ليلية -->
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#152238" Offset="0.0"/>
+                                        <GradientStop Color="#0F192A" Offset="1.0"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+
+                                <!-- ظل ناعم للبطاقة -->
                                 <Border.Shadow>
-                                    <Shadow Brush="#0F172A" Radius="15" Offset="0,5" Opacity="0.05"/>
+                                    <Shadow Brush="#000000" Radius="8" Offset="0,3" Opacity="0.25"/>
                                 </Border.Shadow>
 
                                 <!-- محتوى البطاقة -->
-                                <Grid ColumnDefinitions="64,*,Auto" Padding="12,8" ColumnSpacing="10">
+                                <Grid ColumnDefinitions="54,*,Auto" ColumnSpacing="10" VerticalOptions="Center">
 
                                     <!-- دائرة الترتيب الفاخرة -->
                                     <Border Grid.Column="0"
-                                            WidthRequest="52"
-                                            HeightRequest="52"
+                                            WidthRequest="46"
+                                            HeightRequest="46"
                                             StrokeThickness="0"
-                                            StrokeShape="RoundRectangle 26"
+                                            StrokeShape="RoundRectangle 23"
                                             VerticalOptions="Center"
                                             HorizontalOptions="Center">
 
                                         <Border.Background>
                                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                                                 <GradientStop Color="{Binding RankColor}" Offset="0"/>
-                                                <!-- تغميق اللون الثاني قليلاً لإعطاء شكل كروي 3D -->
                                                 <GradientStop Color="{Binding RankColor}" Offset="1"/>
                                             </LinearGradientBrush>
                                         </Border.Background>
 
                                         <Border.Shadow>
-                                            <Shadow Brush="{Binding RankColor}" Radius="8" Offset="0,4" Opacity="0.3"/>
+                                            <Shadow Brush="{Binding RankColor}" Radius="8" Offset="0,2" Opacity="0.35"/>
                                         </Border.Shadow>
 
-                                        <Label Text="{Binding Rank}" TextColor="White" FontSize="20" FontFamily="CairoBold" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                        <Label Text="{Binding Rank}" 
+                                               TextColor="White" 
+                                               FontSize="18.5" 
+                                               FontFamily="CairoBold" 
+                                               HorizontalOptions="Center" 
+                                               VerticalOptions="Center"/>
                                     </Border>
 
                                     <!-- بيانات المستخدم -->
                                     <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
-                                        <!-- اسم المستخدم مع دعم السطرين وتفادي قطع الشارات -->
+                                        <!-- اسم المستخدم -->
                                         <Label Text="{Binding UserName}" 
                                                FontSize="15.5" 
                                                FontFamily="CairoBold" 
-                                               TextColor="#1E293B"
+                                               TextColor="#F8FAFC"
                                                LineBreakMode="TailTruncation"
-                                               MaxLines="2"
-                                               LineHeight="1.15"/>
+                                               MaxLines="1"/>
 
                                         <!-- الشارات (كلمات + كوينز) -->
                                         <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
                                             <!-- شارة الكلمات المحفوظة -->
-                                            <Border BackgroundColor="#F1F5F9" 
-                                                    StrokeThickness="0" 
+                                            <Border BackgroundColor="#172554" 
+                                                    Stroke="#1E3A8A"
+                                                    StrokeThickness="1" 
                                                     StrokeShape="RoundRectangle 10" 
-                                                    Padding="8,3">
+                                                    Padding="8,2.5">
                                                 <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
                                                     <Label Text="📚" FontSize="11" VerticalOptions="Center"/>
                                                     <Label Text="{Binding MemorizedWords}" 
                                                            FontSize="11.5" 
                                                            FontFamily="CairoBold" 
-                                                           TextColor="#6366F1"
+                                                           TextColor="#38BDF8"
                                                            VerticalOptions="Center"/>
                                                 </HorizontalStackLayout>
                                             </Border>
 
                                             <!-- شارة الكوينز -->
-                                            <Border BackgroundColor="#FEF3C7" 
-                                                    StrokeThickness="0" 
+                                            <Border BackgroundColor="#2E1E07" 
+                                                    Stroke="#78350F"
+                                                    StrokeThickness="1" 
                                                     StrokeShape="RoundRectangle 10" 
-                                                    Padding="8,3">
+                                                    Padding="8,2.5">
                                                 <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
                                                     <Label Text="🪙" FontSize="11" VerticalOptions="Center"/>
                                                     <Label Text="{Binding Coins}" 
                                                            FontSize="11.5" 
                                                            FontFamily="CairoBold" 
-                                                           TextColor="#D97706"
+                                                           TextColor="#FBBF24"
                                                            VerticalOptions="Center"/>
                                                 </HorizontalStackLayout>
                                             </Border>
@@ -196,18 +226,19 @@
                                     </VerticalStackLayout>
 
                                     <!-- الميداليات -->
-                                    <Grid Grid.Column="2" WidthRequest="46" VerticalOptions="Center" HorizontalOptions="Center">
-                                        <Label Text="🥇" FontSize="30" IsVisible="{Binding IsFirst}" HorizontalOptions="Center"/>
-                                        <Label Text="🥈" FontSize="30" IsVisible="{Binding IsSecond}" HorizontalOptions="Center"/>
-                                        <Label Text="🥉" FontSize="30" IsVisible="{Binding IsThird}" HorizontalOptions="Center"/>
+                                    <Grid Grid.Column="2" WidthRequest="44" VerticalOptions="Center" HorizontalOptions="Center">
+                                        <Label Text="🥇" FontSize="28" IsVisible="{Binding IsFirst}" HorizontalOptions="Center"/>
+                                        <Label Text="🥈" FontSize="28" IsVisible="{Binding IsSecond}" HorizontalOptions="Center"/>
+                                        <Label Text="🥉" FontSize="28" IsVisible="{Binding IsThird}" HorizontalOptions="Center"/>
 
                                         <Border IsVisible="{Binding IsNotTopThree}" 
-                                                BackgroundColor="#FFF1F2" 
-                                                StrokeThickness="0" 
+                                                BackgroundColor="#2A101A" 
+                                                Stroke="#881337"
+                                                StrokeThickness="1" 
                                                 StrokeShape="RoundRectangle 12" 
-                                                Padding="8,5" 
+                                                Padding="7,4" 
                                                 HorizontalOptions="Center">
-                                            <Label Text="🔥" FontSize="16"/>
+                                            <Label Text="🔥" FontSize="15"/>
                                         </Border>
                                     </Grid>
 
@@ -219,7 +250,7 @@
 
                 <!-- مسافة التنفس أسفل القائمة -->
                 <CollectionView.Footer>
-                    <BoxView HeightRequest="50" Color="Transparent"/>
+                    <BoxView HeightRequest="25" Color="Transparent"/>
                 </CollectionView.Footer>
 
             </CollectionView>
@@ -229,34 +260,35 @@
         <!-- ========================================== -->
         <!-- 3. شاشات الحالات (Overlay) للتحميل والخطأ  -->
         <!-- ========================================== -->
-        <!-- غطاء زجاجي ضبابي يغطي الشاشة عند التحميل الأولي -->
-        <Border BackgroundColor="#FFF"
+        <!-- غطاء زجاجي ضبابي داكن يغطي الشاشة عند التحميل الأولي -->
+        <Border BackgroundColor="#E6080D18"
                 StrokeThickness="0"
                 ZIndex="10"
                 IsVisible="{Binding ShowOverlay}">
 
-            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="30" Padding="24">
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="24" Padding="24">
 
                 <!-- حالة جاري التحميل -->
-                <VerticalStackLayout Spacing="20" IsVisible="{Binding IsBusy}">
-                    <ActivityIndicator IsRunning="True" Color="#4338CA" WidthRequest="60" HeightRequest="60"/>
-                    <Label Text="جاري جلب أبطال إنجليش..." FontSize="16" TextColor="#4338CA" FontFamily="CairoBold" HorizontalOptions="Center"/>
+                <VerticalStackLayout Spacing="16" IsVisible="{Binding IsBusy}">
+                    <ActivityIndicator IsRunning="True" Color="#38BDF8" WidthRequest="55" HeightRequest="55"/>
+                    <Label Text="جاري جلب أبطال إنجليش..." FontSize="16" TextColor="#38BDF8" FontFamily="CairoBold" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
 
                 <!-- حالة خطأ الاتصال -->
-                <VerticalStackLayout Spacing="20" IsVisible="{Binding IsErrorVisible}">
-                    <Image Source="no_internet_icon.png" WidthRequest="80" HeightRequest="80" Opacity="0.8"/>
-                    <Label Text="عذراً، تأكد من اتصالك بالإنترنت" FontSize="18" FontFamily="CairoBold" TextColor="#1E293B" HorizontalOptions="Center"/>
+                <VerticalStackLayout Spacing="18" IsVisible="{Binding IsErrorVisible}">
+                    <Image Source="no_internet_icon.png" WidthRequest="75" HeightRequest="75" Opacity="0.85"/>
+                    <Label Text="عذراً، تأكد من اتصالك بالإنترنت" FontSize="17" FontFamily="CairoBold" TextColor="#F8FAFC" HorizontalOptions="Center"/>
 
                     <Button Text="إعادة المحاولة" 
                             Clicked="RefreshButton_Clicked" 
                             IsEnabled="{Binding IsNotBusy}"
-                            BackgroundColor="#4338CA" 
+                            BackgroundColor="#0284C7" 
                             TextColor="White" 
                             CornerRadius="25" 
-                            Padding="35,14" 
+                            Padding="35,13" 
                             FontSize="15"
-                            FontFamily="CairoBold"/>
+                            FontFamily="CairoBold"
+                            Shadow="{Shadow Brush='#0284C7', Opacity=0.35, Radius=10, Offset='0,3'}"/>
                 </VerticalStackLayout>
 
             </VerticalStackLayout>

@@ -11,7 +11,7 @@ public class WinPage : ContentPage
 
     public WinPage(int finalSeconds)
     {
-        int memorizedWords = Preferences.Get("MemorizedWords", 0) + 5;
+        int memorizedWords = Preferences.Get("MemorizedWords", 0) + 6;
         if (memorizedWords > 5000)
             memorizedWords = 5000;
         Preferences.Set("MemorizedWords", memorizedWords);

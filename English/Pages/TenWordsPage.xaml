@@ -5,15 +5,15 @@
              BackgroundColor="#080D18"
              Title="قاموس انجليش">
 
-    <Grid Padding="16,10,16,0"
-          RowDefinitions="Auto,*">
+    <Grid Padding="16,10,16,12"
+          RowDefinitions="Auto,*,Auto">
 
         <!-- Header -->
         <Border Grid.Row="0"
                 StrokeThickness="1.5"
                 StrokeShape="RoundRectangle 22"
-                Margin="0,4,0,16"
-                Padding="16,18,16,18"
+                Margin="0,4,0,10"
+                Padding="16,16,16,16"
                 BackgroundColor="#101726">
 
             <Border.Stroke>
@@ -30,7 +30,7 @@
                         Offset="0,5"/>
             </Border.Shadow>
 
-            <VerticalStackLayout Spacing="14">
+            <VerticalStackLayout Spacing="12">
 
                 <!-- الصف العلوي -->
                 <Grid ColumnDefinitions="*,Auto"
@@ -161,7 +161,7 @@
 
                         <Border.Background>
                             <LinearGradientBrush StartPoint="1,0"
-                                                  EndPoint="0,0">
+                                                 EndPoint="0,0">
                                 <GradientStop Color="#14B8A6" Offset="0"/>
                                 <GradientStop Color="#38BDF8" Offset="0.55"/>
                                 <GradientStop Color="#818CF8" Offset="1"/>
@@ -180,31 +180,35 @@
             </VerticalStackLayout>
         </Border>
 
-        <!-- قائمة الكلمات -->
+        <!-- قائمة الكلمات الست -->
         <CollectionView x:Name="CV"
-                Grid.Row="1"
-                ItemsSource="{Binding Titles}"
-                SelectionMode="None"
-                SizeChanged="OnCVSizeChanged"
-                Scrolled="OnCVScrolled">
+                        Grid.Row="1"
+                        ItemsSource="{Binding Titles}"
+                        SelectionMode="None"
+                        VerticalScrollBarVisibility="Never"
+                        Margin="0,0,0,8">
 
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical"
                                  Span="1"
-                                 VerticalItemSpacing="20"/>
+                                 VerticalItemSpacing="10"/>
             </CollectionView.ItemsLayout>
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-
-                    <Grid Padding="2">
-
-                        <Border StrokeThickness="1.5"
-                                StrokeShape="RoundRectangle 20"
-                                Padding="16,0"
-                                HeightRequest="86"
-                                BackgroundColor="#111B2C"
+                    <Grid Padding="0,1">
+                        <Border StrokeThickness="1.2"
+                                StrokeShape="RoundRectangle 16"
+                                Padding="14,0"
+                                HeightRequest="72"
                                 Stroke="{Binding CardStrokeBrush}">
+
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#152238" Offset="0.0"/>
+                                    <GradientStop Color="#0F192A" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
 
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnWordTapped"/>
@@ -214,24 +218,24 @@
 
                             <Border.Shadow>
                                 <Shadow Brush="#000000"
-                                        Opacity="0.22"
-                                        Radius="10"
-                                        Offset="0,4"/>
+                                        Opacity="0.18"
+                                        Radius="8"
+                                        Offset="0,3"/>
                             </Border.Shadow>
 
                             <Grid ColumnDefinitions="Auto,*,Auto"
                                   VerticalOptions="Center">
 
                                 <BoxView Grid.Column="0"
-                                         WidthRequest="42"
-                                         HeightRequest="42"
+                                         WidthRequest="38"
+                                         HeightRequest="38"
                                          Color="Transparent"/>
 
                                 <!-- نص الكلمة -->
                                 <Label Grid.Column="1"
                                        Text="{Binding DisplayText}"
                                        TextColor="{Binding DisplayColor}"
-                                       FontSize="22"
+                                       FontSize="18"
                                        FontFamily="CairoBold"
                                        HorizontalOptions="Center"
                                        VerticalOptions="Center"
@@ -239,10 +243,10 @@
 
                                 <!-- زر الميكروفون -->
                                 <Border Grid.Column="2"
-                                        StrokeShape="RoundRectangle 21"
-                                        StrokeThickness="1.5"
-                                        WidthRequest="42"
-                                        HeightRequest="42"
+                                        StrokeShape="RoundRectangle 19"
+                                        StrokeThickness="1.2"
+                                        WidthRequest="38"
+                                        HeightRequest="38"
                                         Background="{Binding MicButtonBgBrush}"
                                         Stroke="{Binding MicButtonBorderBrush}"
                                         HorizontalOptions="Center"
@@ -253,7 +257,7 @@
                                     </Border.GestureRecognizers>
 
                                     <Label Text="{Binding MicButtonIcon}"
-                                           FontSize="17"
+                                           FontSize="15.5"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
                                 </Border>
@@ -264,62 +268,82 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 
-            <!-- الأزرار السفلية -->
-            <CollectionView.Footer>
-                <VerticalStackLayout Spacing="0">
-
-                    <VerticalStackLayout x:Name="FooterContainer"
-                             Spacing="12"
-                             HorizontalOptions="Center"
-                             Padding="0,4,0,0"
-                             Opacity="0"
-                             InputTransparent="True"
-                             SizeChanged="OnFooterContainerSizeChanged">
-
-                        <!-- المسافة بين آخر كلمة وأول زر -->
-                        <BoxView HeightRequest="24"
-                     Color="Transparent"/>
-
-                        <Button Text="تثبيت باللعب 🎮"
-                    HeightRequest="56"
-                    WidthRequest="290"
-                    CornerRadius="28"
-                    BackgroundColor="#0284C7"
-                    TextColor="White"
-                    Clicked="OnPracticeGamesClicked"
-                    FontFamily="CairoBold"
-                    FontSize="16"
-                    Shadow="{Shadow Brush='#0284C7', Opacity=0.35, Radius=10, Offset='0,3'}"/>
-
-                        <Button Text="ابدأ التحدي ⚡"
-                    HeightRequest="56"
-                    WidthRequest="290"
-                    CornerRadius="28"
-                    BackgroundColor="#F43F5E"
-                    TextColor="White"
-                    Clicked="QuizButton_Clicked"
-                    FontFamily="CairoBold"
-                    FontSize="16"
-                    Shadow="{Shadow Brush='#F43F5E', Opacity=0.35, Radius=10, Offset='0,3'}"/>
-
-                        <Label Text="العب لتثبيت الكلمات وتذكرها، ثم ادخل التحدي الرسمي 🏆"
-                   TextColor="#64748B"
-                   FontSize="11"
-                   FontFamily="Cairo"
-                   HorizontalOptions="Center"
-                   Margin="0,2,0,0"/>
-
-                    </VerticalStackLayout>
-
-                    <!-- مساحة إضافية بعد الأزرار لضمان إمكانية التمرير -->
-                    <BoxView x:Name="FooterBottomSpacer"
-                 HeightRequest="80"
-                 Color="Transparent"/>
-
-                </VerticalStackLayout>
-            </CollectionView.Footer>
-
         </CollectionView>
+
+        <!-- شريط الأزرار السفلي المصمم وفق الهوية البصرية -->
+        <Grid Grid.Row="2"
+              ColumnDefinitions="*,*"
+              ColumnSpacing="12"
+              Margin="0,4,0,2">
+
+            <!-- زر تثبيت باللعب -->
+            <Border Grid.Column="0"
+                    HeightRequest="52"
+                    StrokeThickness="1.2"
+                    StrokeShape="RoundRectangle 26">
+                <Border.Stroke>
+                    <LinearGradientBrush EndPoint="1,0">
+                        <GradientStop Color="#0284C7" Offset="0.0"/>
+                        <GradientStop Color="#38BDF8" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Border.Stroke>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#0E2847" Offset="0.0"/>
+                        <GradientStop Color="#09182A" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Shadow>
+                    <Shadow Brush="#0284C7" Opacity="0.35" Radius="10" Offset="0,3"/>
+                </Border.Shadow>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnPracticeGamesClicked"/>
+                </Border.GestureRecognizers>
+
+                <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="6">
+                    <Label Text="🎮" FontSize="16" VerticalOptions="Center"/>
+                    <Label Text="تثبيت باللعب"
+                           TextColor="#38BDF8"
+                           FontFamily="CairoBold"
+                           FontSize="15"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Border>
+
+            <!-- زر ابدأ التحدي -->
+            <Border Grid.Column="1"
+                    HeightRequest="52"
+                    StrokeThickness="1.2"
+                    StrokeShape="RoundRectangle 26">
+                <Border.Stroke>
+                    <LinearGradientBrush EndPoint="1,0">
+                        <GradientStop Color="#F43F5E" Offset="0.0"/>
+                        <GradientStop Color="#FB7185" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Border.Stroke>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#3B0C1A" Offset="0.0"/>
+                        <GradientStop Color="#220710" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Shadow>
+                    <Shadow Brush="#F43F5E" Opacity="0.35" Radius="10" Offset="0,3"/>
+                </Border.Shadow>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="QuizButton_Clicked"/>
+                </Border.GestureRecognizers>
+
+                <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="6">
+                    <Label Text="⚡" FontSize="16" VerticalOptions="Center"/>
+                    <Label Text="ابدأ التحدي"
+                           TextColor="#FDA4AF"
+                           FontFamily="CairoBold"
+                           FontSize="15"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Border>
+        </Grid>
 
     </Grid>
 </ContentPage>

@@ -13,32 +13,10 @@ public partial class TenWordsPage : ContentPage
     private CancellationTokenSource? _autoReciteCts;
     private bool _isRecitingActive;
 
-    // =========================================================
-    // إعدادات المسافة السفلية وإظهار الأزرار
-    // =========================================================
-
-    private bool _footerVisible = false;
-    private int _footerAnimationVersion = 0;
-
-    private const double CardItemHeight = 90.0;
-    private const double CardSpacing = 20.0;
-
-    private const double EstimatedFooterHeight = 180.0;
-
-    // أقل مساحة تمرير مطلوبة بعد الأزرار
-    private const double MinimumScrollRange = 72.0;
-
-    // أقل ارتفاع للفاصل الموجود أسفل الأزرار
-    private const double MinimumBottomSpacer = 80.0;
-
     public TenWordsPage()
     {
         InitializeComponent();
         BindingContext = vm = new TenWordsVM();
-
-        // إخفاء الأزرار عند إنشاء الصفحة
-        FooterContainer.Opacity = 0;
-        FooterContainer.InputTransparent = true;
     }
 
     protected override void OnAppearing()
@@ -75,9 +53,6 @@ public partial class TenWordsPage : ContentPage
         {
             vm.LoadDailyWords();
         }
-
-        // تحديث مساحة التمرير بعد تحميل الكلمات
-        UpdateFooterBottomSpacer();
     }
 
     protected override void OnDisappearing()
@@ -92,117 +67,6 @@ public partial class TenWordsPage : ContentPage
         {
             _currentListeningWord.IsListening = false;
             _currentListeningWord = null;
-        }
-    }
-
-    // =========================================================
-    // حساب المساحة السفلية
-    // =========================================================
-
-    private void OnCVSizeChanged(object sender, EventArgs e)
-    {
-        UpdateFooterBottomSpacer();
-    }
-
-    private void OnFooterContainerSizeChanged(object sender, EventArgs e)
-    {
-        UpdateFooterBottomSpacer();
-    }
-
-    private void UpdateFooterBottomSpacer()
-    {
-        if (CV == null ||
-            FooterContainer == null ||
-            FooterBottomSpacer == null ||
-            vm == null)
-        {
-            return;
-        }
-
-        double viewportHeight = CV.Height;
-
-        if (viewportHeight <= 0)
-            return;
-
-        int count = vm.Titles?.Count > 0
-            ? vm.Titles.Count
-            : 5;
-
-        // ارتفاع البطاقات شامل الحاشية العلوية والسفلية
-        double cardsTotalHeight =
-            (count * CardItemHeight) +
-            (Math.Max(0, count - 1) * CardSpacing);
-
-        // استخدام الارتفاع الفعلي للـ Footer إن كان متاحًا
-        double footerHeight = FooterContainer.Height > 0
-            ? FooterContainer.Height
-            : EstimatedFooterHeight;
-
-        // حساب المسافة المطلوبة أسفل الأزرار
-        // لضمان إمكانية التمرير حتى لو كانت البطاقات قليلة
-        double requiredBottomSpacer = Math.Max(
-            MinimumBottomSpacer,
-            viewportHeight +
-            MinimumScrollRange -
-            cardsTotalHeight -
-            footerHeight
-        );
-
-        // تجنب تحديث القيمة دون حاجة
-        if (Math.Abs(FooterBottomSpacer.HeightRequest -
-                     requiredBottomSpacer) > 1)
-        {
-            FooterBottomSpacer.HeightRequest = requiredBottomSpacer;
-        }
-    }
-
-    // =========================================================
-    // إظهار وإخفاء الأزرار عند التمرير
-    // =========================================================
-
-    private void OnCVScrolled(object sender, ItemsViewScrolledEventArgs e)
-    {
-        // لا تظهر الأزرار إلا بعد بدء التمرير
-        bool shouldShowFooter = e.VerticalOffset > 20;
-
-        if (_footerVisible == shouldShowFooter)
-            return;
-
-        _footerVisible = shouldShowFooter;
-
-        // منع الضغط على الأزرار وهي مخفية
-        FooterContainer.InputTransparent = !shouldShowFooter;
-
-        int animationVersion = ++_footerAnimationVersion;
-
-        _ = AnimateFooterVisibilityAsync(
-            shouldShowFooter,
-            animationVersion
-        );
-    }
-
-    private async Task AnimateFooterVisibilityAsync(
-        bool shouldShow,
-        int animationVersion)
-    {
-        try
-        {
-            await FooterContainer.FadeTo(
-                shouldShow ? 1 : 0,
-                180,
-                Easing.CubicOut
-            );
-
-            // تجاهل أي حركة قديمة إذا بدأ تحريك أحدث
-            if (animationVersion != _footerAnimationVersion)
-                return;
-        }
-        catch
-        {
-            if (animationVersion == _footerAnimationVersion)
-            {
-                FooterContainer.Opacity = shouldShow ? 1 : 0;
-            }
         }
     }
 

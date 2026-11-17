@@ -72,7 +72,7 @@ namespace English.Services
                 if (allWords.Count == 0)
                     return [];
 
-                int groupSize = 5;
+                int groupSize = 6;
 
                 long memorized = 0;
                 try { memorized = Preferences.Get("MemorizedWords", 0L); }
@@ -152,7 +152,7 @@ namespace English.Services
                 if (allWords.Count == 0)
                     return [];
 
-                int groupSize = 5;
+                int groupSize = 6;
 
                 long memorized = 0;
                 try { memorized = Preferences.Get("MemorizedWords", 0L); }

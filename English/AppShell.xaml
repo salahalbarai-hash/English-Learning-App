@@ -6,6 +6,15 @@
     xmlns:local="clr-namespace:English"
     xmlns:pages="clr-namespace:English.Pages"
     Shell.FlyoutBehavior="Disabled"
+    Shell.BackgroundColor="#080D18"
+    Shell.ForegroundColor="#38BDF8"
+    Shell.TitleColor="#38BDF8"
+    Shell.DisabledColor="#334155"
+    Shell.UnselectedColor="#64748B"
+    Shell.TabBarBackgroundColor="#0B1220"
+    Shell.TabBarForegroundColor="#38BDF8"
+    Shell.TabBarTitleColor="#38BDF8"
+    Shell.TabBarUnselectedColor="#64748B"
     Title="English">
 
     <!-- شاشة تسجيل الدخول -->
@@ -17,18 +26,23 @@
         Shell.TabBarIsVisible="False"
         Shell.NavBarIsVisible="False" />
 
-    <TabBar x:Name="MainTabBar">
+    <TabBar x:Name="MainTabBar"
+            Shell.TabBarBackgroundColor="#0B1220"
+            Shell.TabBarForegroundColor="#38BDF8"
+            Shell.TabBarTitleColor="#38BDF8"
+            Shell.TabBarUnselectedColor="#64748B">
+
         <ShellContent Title="الكلمات"
-              Icon="home.png"              
-              ContentTemplate="{DataTemplate pages:TenWordsPage}"
-              Route="MainPage"
-              Shell.NavBarIsVisible="False"/>
+                      Icon="home.png"              
+                      ContentTemplate="{DataTemplate pages:TenWordsPage}"
+                      Route="MainPage"
+                      Shell.NavBarIsVisible="False"/>
 
         <ShellContent Title="المتصدرون"
-              Icon="winner.webp"
-              ContentTemplate="{DataTemplate pages:LeadersPage}"
-              Route="LeadersPage"
-              Shell.NavBarIsVisible="False"/>
+                      Icon="winner.png"
+                      ContentTemplate="{DataTemplate pages:LeadersPage}"
+                      Route="LeadersPage"
+                      Shell.NavBarIsVisible="False"/>
 
         <ShellContent Title="التحديات"
                       Icon="challenges.png"
@@ -37,9 +51,9 @@
                       Shell.NavBarIsVisible="False"/>
 
         <ShellContent Title="المزيد"
-              Icon="more.png"
-              ContentTemplate="{DataTemplate pages:MorePage}"
-              Route="MorePage"
-              Shell.NavBarIsVisible="False"/>
+                      Icon="more.png"
+                      ContentTemplate="{DataTemplate pages:MorePage}"
+                      Route="MorePage"
+                      Shell.NavBarIsVisible="False"/>
     </TabBar>
 </Shell>
