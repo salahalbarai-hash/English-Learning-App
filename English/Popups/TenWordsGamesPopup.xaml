@@ -3,15 +3,28 @@
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
                x:Class="English.Popups.TenWordsGamesPopup"
+               Color="Transparent"
                CanBeDismissedByTappingOutsideOfPopup="True">
 
     <Border BackgroundColor="#0F172A"
-            Stroke="#1E293B"
             StrokeThickness="1.5"
             StrokeShape="RoundRectangle 24"
             Padding="20"
             WidthRequest="340"
             FlowDirection="RightToLeft">
+
+        <!-- إطار متدرج نيون مطابق للهوية -->
+        <Border.Stroke>
+            <LinearGradientBrush EndPoint="1,0">
+                <GradientStop Color="#38BDF8" Offset="0.0"/>
+                <GradientStop Color="#818CF8" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Border.Stroke>
+
+        <!-- ظل النافذة المنبثقة -->
+        <Border.Shadow>
+            <Shadow Brush="#000000" Opacity="0.45" Radius="18" Offset="0,6"/>
+        </Border.Shadow>
 
         <VerticalStackLayout Spacing="14">
 
@@ -31,15 +44,20 @@
                            TextColor="#94A3B8"/>
                 </VerticalStackLayout>
 
-                <Button Grid.Column="1"
-                        Text="✕"
-                        FontSize="14"
-                        TextColor="#94A3B8"
-                        BackgroundColor="Transparent"
+                <!-- زر الإغلاق الدائري الفاخر -->
+                <Border Grid.Column="1"
                         WidthRequest="32"
                         HeightRequest="32"
-                        Padding="0"
-                        Clicked="OnCloseClicked"/>
+                        StrokeShape="RoundRectangle 16"
+                        Stroke="#334155"
+                        StrokeThickness="1"
+                        BackgroundColor="#162032"
+                        VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCloseClicked"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="✕" TextColor="#94A3B8" FontSize="13" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </Border>
             </Grid>
 
             <BoxView HeightRequest="1" Color="#1E293B" Margin="0,-4,0,0"/>
@@ -153,4 +171,3 @@
     </Border>
 
 </toolkit:Popup>
-
