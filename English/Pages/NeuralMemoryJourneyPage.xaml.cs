@@ -10,7 +10,6 @@ namespace English.Pages
     {
         private enum JourneyState
         {
-            Selection,
             Station1_Encoding,
             Station2_Reflex,
             Station3_Spelling,
@@ -59,7 +58,6 @@ namespace English.Pages
         // --- البيانات العامة ---
         private readonly List<WordModel> _allSessionWords = new();
         private List<WordModel> _selectedWords = new();
-        private readonly Dictionary<int, bool> _selectionMap = new();
 
         // --- نظام التقسيم الذكي للأفواج (Micro-Batching) ---
         private List<List<WordModel>> _batches = new();
@@ -111,17 +109,15 @@ namespace English.Pages
 
             _allSessionWords = sessionWords
                 .Where(w => !string.IsNullOrWhiteSpace(w.EnglishWord) && !string.IsNullOrWhiteSpace(w.ArabicWord))
+                .Take(5)
                 .ToList();
 
-            // افتراضياً نحدد أول 5 كلمات كبداية مريحة للطالب
-            for (int i = 0; i < _allSessionWords.Count; i++)
-            {
-                _selectionMap[_allSessionWords[i].Id] = (i < 5);
-            }
+            // مباشرة الكلمات الـ 5 كاملة دون شاشة اختيار
+            _selectedWords = _allSessionWords;
+            _batches = new List<List<WordModel>> { _selectedWords };
+            _currentBatchIndex = 0;
 
-            BuildSelectionGridUI();
-            UpdateSelectionStatus();
-            ShowState(JourneyState.Selection);
+            StartStation1();
         }
 
         protected override void OnDisappearing()
@@ -146,7 +142,6 @@ namespace English.Pages
 
         private void ShowState(JourneyState state)
         {
-            SelectionView.IsVisible = (state == JourneyState.Selection);
             Station1View.IsVisible = (state == JourneyState.Station1_Encoding);
             Station2View.IsVisible = (state == JourneyState.Station2_Reflex);
             Station3View.IsVisible = (state == JourneyState.Station3_Spelling);
@@ -155,16 +150,9 @@ namespace English.Pages
             Station6View.IsVisible = (state == JourneyState.Station6_GoldenVault);
             VictoryView.IsVisible = (state == JourneyState.Victory);
 
-            bool inJourney = (state != JourneyState.Selection && state != JourneyState.Victory);
+            bool inJourney = (state != JourneyState.Victory);
             StepperContainer.IsVisible = inJourney;
-            BatchBadge.IsVisible = inJourney && (_batches.Count > 1);
-
-            if (BatchBadge.IsVisible)
-            {
-                BatchBadgeLabel.Text = (state == JourneyState.Station5_DualMirror || state == JourneyState.Station6_GoldenVault)
-                    ? "الدفعة الشاملة 🏆"
-                    : $"الدفعة {_currentBatchIndex + 1} من {_batches.Count}";
-            }
+            BatchBadge.IsVisible = false;
 
             UpdateStepperBadges(state);
         }
@@ -245,261 +233,6 @@ namespace English.Pages
         }
 
         // ============================================================
-        // 🟢 المحطة 0: شاشة اختيار البطاقات التفاعلية (Card Grid)
-        // ============================================================
-
-        private void BuildSelectionGridUI()
-        {
-            CardGridContainer.Children.Clear();
-
-            for (int i = 0; i < _allSessionWords.Count; i += 2)
-            {
-                var rowGrid = new Grid
-                {
-                    ColumnDefinitions = new ColumnDefinitionCollection
-                    {
-                        new ColumnDefinition { Width = GridLength.Star },
-                        new ColumnDefinition { Width = GridLength.Star }
-                    },
-                    ColumnSpacing = 10
-                };
-
-                // البطاقة الأولى في الصف
-                var w1 = _allSessionWords[i];
-                var card1 = CreateWordCardView(w1);
-                Grid.SetColumn(card1, 0);
-                rowGrid.Children.Add(card1);
-
-                // البطاقة الثانية في الصف (إن وجدت)
-                if (i + 1 < _allSessionWords.Count)
-                {
-                    var w2 = _allSessionWords[i + 1];
-                    var card2 = CreateWordCardView(w2);
-                    Grid.SetColumn(card2, 1);
-                    rowGrid.Children.Add(card2);
-                }
-
-                CardGridContainer.Children.Add(rowGrid);
-            }
-        }
-
-        private Border CreateWordCardView(WordModel word)
-        {
-            bool isSelected = _selectionMap.GetValueOrDefault(word.Id, false);
-
-            var border = new Border
-            {
-                StrokeShape = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = new CornerRadius(16) },
-                StrokeThickness = 1.5,
-                Padding = new Thickness(12, 10),
-                BackgroundColor = isSelected ? Color.FromArgb("#0C2036") : Color.FromArgb("#111A2E"),
-                Stroke = isSelected ? Color.FromArgb("#38BDF8") : Color.FromArgb("#1E293B"),
-                Shadow = isSelected
-                    ? new Shadow { Brush = Color.FromArgb("#38BDF8"), Opacity = 0.25f, Radius = 8, Offset = new Point(0, 2) }
-                    : null
-            };
-
-            var checkBadge = new Border
-            {
-                WidthRequest = 22,
-                HeightRequest = 22,
-                StrokeShape = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = new CornerRadius(11) },
-                BackgroundColor = Color.FromArgb("#0284C7"),
-                StrokeThickness = 0,
-                HorizontalOptions = LayoutOptions.End,
-                VerticalOptions = LayoutOptions.Start,
-                IsVisible = isSelected,
-                Content = new Label
-                {
-                    Text = "✓",
-                    TextColor = Colors.White,
-                    FontSize = 12,
-                    FontFamily = "CairoBold",
-                    HorizontalOptions = LayoutOptions.Center,
-                    VerticalOptions = LayoutOptions.Center
-                }
-            };
-
-            var speakerBtn = new Border
-            {
-                WidthRequest = 28,
-                HeightRequest = 28,
-                StrokeShape = new Microsoft.Maui.Controls.Shapes.RoundRectangle { CornerRadius = new CornerRadius(10) },
-                BackgroundColor = Color.FromArgb("#1E293B"),
-                Stroke = Color.FromArgb("#334155"),
-                StrokeThickness = 1,
-                HorizontalOptions = LayoutOptions.Start,
-                VerticalOptions = LayoutOptions.Center,
-                Content = new Label
-                {
-                    Text = "🔊",
-                    FontSize = 13,
-                    HorizontalOptions = LayoutOptions.Center,
-                    VerticalOptions = LayoutOptions.Center
-                }
-            };
-
-            speakerBtn.GestureRecognizers.Add(new TapGestureRecognizer
-            {
-                Command = new Command(async () =>
-                {
-                    try { await TextToSpeech.Default.SpeakAsync(word.EnglishWord); } catch { }
-                })
-            });
-
-            var infoStack = new VerticalStackLayout
-            {
-                Spacing = 2,
-                VerticalOptions = LayoutOptions.Center,
-                Children =
-                {
-                    new Label
-                    {
-                        Text = word.EnglishWord,
-                        FontSize = 15,
-                        FontFamily = "CairoBold",
-                        TextColor = isSelected ? Color.FromArgb("#38BDF8") : Colors.White,
-                        LineBreakMode = LineBreakMode.TailTruncation
-                    },
-                    new Label
-                    {
-                        Text = word.ArabicWord,
-                        FontSize = 12,
-                        FontFamily = "CairoRegular",
-                        TextColor = Color.FromArgb("#94A3B8"),
-                        LineBreakMode = LineBreakMode.TailTruncation
-                    }
-                }
-            };
-
-            var cardContent = new Grid
-            {
-                RowDefinitions = new RowDefinitionCollection
-                {
-                    new RowDefinition { Height = GridLength.Auto },
-                    new RowDefinition { Height = GridLength.Auto }
-                }
-            };
-
-            // الصف الأول: الأيقونة الصوتية + علامة الاختيار
-            var topRow = new Grid
-            {
-                ColumnDefinitions = new ColumnDefinitionCollection
-                {
-                    new ColumnDefinition { Width = GridLength.Auto },
-                    new ColumnDefinition { Width = GridLength.Star },
-                    new ColumnDefinition { Width = GridLength.Auto }
-                }
-            };
-            Grid.SetColumn(speakerBtn, 0);
-            Grid.SetColumn(checkBadge, 2);
-            topRow.Children.Add(speakerBtn);
-            topRow.Children.Add(checkBadge);
-
-            Grid.SetRow(topRow, 0);
-            Grid.SetRow(infoStack, 1);
-            cardContent.Children.Add(topRow);
-            cardContent.Children.Add(infoStack);
-
-            border.Content = cardContent;
-
-            // لمس البطاقة لتبديل الاختيار
-            border.GestureRecognizers.Add(new TapGestureRecognizer
-            {
-                Command = new Command(() =>
-                {
-                    bool nextState = !_selectionMap.GetValueOrDefault(word.Id, false);
-                    _selectionMap[word.Id] = nextState;
-
-                    try { HapticFeedback.Default.Perform(HapticFeedbackType.Click); } catch { }
-
-                    // تحديث المظهر المرئي للبطاقة
-                    border.BackgroundColor = nextState ? Color.FromArgb("#0C2036") : Color.FromArgb("#111A2E");
-                    border.Stroke = nextState ? Color.FromArgb("#38BDF8") : Color.FromArgb("#1E293B");
-                    border.Shadow = nextState
-                        ? new Shadow { Brush = Color.FromArgb("#38BDF8"), Opacity = 0.25f, Radius = 8, Offset = new Point(0, 2) }
-                        : null;
-                    checkBadge.IsVisible = nextState;
-
-                    var enLabel = (Label)infoStack.Children[0];
-                    enLabel.TextColor = nextState ? Color.FromArgb("#38BDF8") : Colors.White;
-
-                    UpdateSelectionStatus();
-                })
-            });
-
-            return border;
-        }
-
-        private void UpdateSelectionStatus()
-        {
-            int selectedCount = _selectionMap.Count(kv => kv.Value);
-            SelectionCountLabel.Text = $"تم اختيار {selectedCount} من {_allSessionWords.Count} كلمات";
-
-            if (selectedCount >= 3)
-            {
-                StartJourneyButton.IsEnabled = true;
-                StartJourneyButton.Opacity = 1.0;
-                StartJourneyButton.Text = $"انطلق في رحلة الحفظ! 🚀 ({selectedCount} كلمات مختارة)";
-                StartJourneyButton.BackgroundColor = Color.FromArgb("#0284C7");
-            }
-            else
-            {
-                StartJourneyButton.IsEnabled = false;
-                StartJourneyButton.Opacity = 0.45;
-                StartJourneyButton.Text = "اختر 3 كلمات على الأقل للبدء 🎯";
-                StartJourneyButton.BackgroundColor = Color.FromArgb("#334155");
-            }
-        }
-
-        private void OnSelectAllTapped(object sender, EventArgs e)
-        {
-            foreach (var w in _allSessionWords)
-            {
-                _selectionMap[w.Id] = true;
-            }
-            BuildSelectionGridUI();
-            UpdateSelectionStatus();
-            try { HapticFeedback.Default.Perform(HapticFeedbackType.Click); } catch { }
-        }
-
-        private void OnDeselectAllTapped(object sender, EventArgs e)
-        {
-            foreach (var w in _allSessionWords)
-            {
-                _selectionMap[w.Id] = false;
-            }
-            BuildSelectionGridUI();
-            UpdateSelectionStatus();
-            try { HapticFeedback.Default.Perform(HapticFeedbackType.Click); } catch { }
-        }
-
-        private void OnStartJourneyClicked(object sender, EventArgs e)
-        {
-            _selectedWords = _allSessionWords
-                .Where(w => _selectionMap.GetValueOrDefault(w.Id, false))
-                .ToList();
-
-            if (_selectedWords.Count < 3) return;
-
-            // تقسيم الكلمات لأفواج ذكية إذا كان عددها 6 إلى 10
-            _batches.Clear();
-            if (_selectedWords.Count <= 5)
-            {
-                _batches.Add(_selectedWords);
-            }
-            else
-            {
-                int mid = (_selectedWords.Count + 1) / 2;
-                _batches.Add(_selectedWords.Take(mid).ToList());
-                _batches.Add(_selectedWords.Skip(mid).ToList());
-            }
-
-            _currentBatchIndex = 0;
-            StartStation1();
-        }
-
-        // ============================================================
         // 🎧 المحطة 1: البصمة الصوتية والتشفير (Encoding & Match)
         // ============================================================
 
@@ -510,7 +243,7 @@ namespace English.Pages
             Station1_FlashcardContainer.IsVisible = true;
             Station1_MatchingContainer.IsVisible = false;
 
-            Station1HeaderTitle.Text = $"المحطة 1: البصمة الصوتية (الدفعة {_currentBatchIndex + 1})";
+            Station1HeaderTitle.Text = "المحطة 1: البصمة الصوتية والتشفير 🎧";
             Station1HeaderSub.Text = "استمع للفظ الكلمة بوضوح واكتشف معناها قبل الانطلاق.";
 
             DisplayFlashcard(CurrentBatch[_flashcardIndex]);
@@ -1863,7 +1596,7 @@ namespace English.Pages
         private async void OnExitTapped(object sender, EventArgs e)
         {
             SpeechRecognitionService.CancelListening();
-            if (VictoryView.IsVisible || SelectionView.IsVisible)
+            if (VictoryView.IsVisible)
             {
                 await Navigation.PopModalAsync();
                 return;

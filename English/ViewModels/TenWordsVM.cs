@@ -76,7 +76,7 @@ namespace English.ViewModels
             int phaseIndex = Math.Min(count / 1000, Phases.Length - 1);
             var phase = Phases[phaseIndex];
 
-            int level = count / 10;
+            int level = (int)(count / 5);
             int index = level % phase.Length;
 
             ProgressStatus = phase[index];

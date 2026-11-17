@@ -116,79 +116,9 @@
         <Grid Grid.Row="1" Padding="16,12,16,16">
 
             <!-- ======================================================== -->
-            <!-- 🟢 الحالة 0: شاشة اختيار البطاقات التفاعلية (Card Grid)  -->
-            <!-- ======================================================== -->
-            <Grid x:Name="SelectionView" RowDefinitions="Auto, Auto, *, Auto" IsVisible="True">
-
-                <!-- العنوان الترحيبي والتوجيه -->
-                <VerticalStackLayout Grid.Row="0" Spacing="4" Margin="0,4,0,12" HorizontalOptions="Center">
-                    <Label Text="اختر الكلمات التي تريد حفظها 🎯"
-                           FontSize="18"
-                           FontFamily="CairoBold"
-                           TextColor="#38BDF8"
-                           HorizontalOptions="Center"
-                           HorizontalTextAlignment="Center"/>
-                    <Label Text="حدد الكلمات الصعبة عليك للانطلاق في رحلة الحفظ الموجه (3 على الأقل)."
-                           FontSize="12"
-                           FontFamily="CairoRegular"
-                           TextColor="#94A3B8"
-                           HorizontalOptions="Center"
-                           HorizontalTextAlignment="Center"/>
-                </VerticalStackLayout>
-
-                <!-- أزرار الإجراءات السريعة (تحديد الكل / إلغاء) -->
-                <HorizontalStackLayout Grid.Row="1" Spacing="10" Margin="0,0,0,12" HorizontalOptions="Center">
-                    <Border Stroke="#38BDF8" StrokeThickness="1" StrokeShape="RoundRectangle 14" BackgroundColor="#0C2036" Padding="12,6">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnSelectAllTapped"/>
-                        </Border.GestureRecognizers>
-                        <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
-                            <Label Text="✓✓" TextColor="#38BDF8" FontSize="12" FontFamily="CairoBold"/>
-                            <Label Text="تحديد الكل" TextColor="White" FontSize="12" FontFamily="CairoBold"/>
-                        </HorizontalStackLayout>
-                    </Border>
-
-                    <Border Stroke="#334155" StrokeThickness="1" StrokeShape="RoundRectangle 14" BackgroundColor="#162032" Padding="12,6">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnDeselectAllTapped"/>
-                        </Border.GestureRecognizers>
-                        <Label Text="إلغاء التحديد" TextColor="#94A3B8" FontSize="12" FontFamily="CairoRegular"/>
-                    </Border>
-                </HorizontalStackLayout>
-
-                <!-- شبكة البطاقات (2 Columns Grid) لعرض الـ 10 كلمات -->
-                <ScrollView Grid.Row="2" VerticalScrollBarVisibility="Never">
-                    <VerticalStackLayout x:Name="CardGridContainer" Spacing="10" Padding="0,2,0,10"/>
-                </ScrollView>
-
-                <!-- زر الانطلاق السفلي الديناميكي -->
-                <VerticalStackLayout Grid.Row="3" Spacing="6" Margin="0,8,0,0">
-                    <Label x:Name="SelectionCountLabel"
-                           Text="تم اختيار 0 من 10 كلمات"
-                           FontSize="12"
-                           FontFamily="CairoRegular"
-                           TextColor="#94A3B8"
-                           HorizontalOptions="Center"/>
-
-                    <Button x:Name="StartJourneyButton"
-                            Text="اختر 3 كلمات على الأقل للبدء 🎯"
-                            HeightRequest="52"
-                            CornerRadius="26"
-                            BackgroundColor="#0284C7"
-                            TextColor="White"
-                            FontFamily="CairoBold"
-                            FontSize="15"
-                            IsEnabled="False"
-                            Opacity="0.45"
-                            Clicked="OnStartJourneyClicked"/>
-                </VerticalStackLayout>
-            </Grid>
-
-
-            <!-- ======================================================== -->
             <!-- 🟢 الحالة 1: المحطة 1 (البصمة الصوتية والمطابقة الهادئة) 🎧 -->
             <!-- ======================================================== -->
-            <Grid x:Name="Station1View" RowDefinitions="Auto, *" IsVisible="False">
+            <Grid x:Name="Station1View" RowDefinitions="Auto, *" IsVisible="True">
 
                 <!-- ترويسة المحطة -->
                 <Border Grid.Row="0" BackgroundColor="#0C2036" Stroke="#38BDF8" StrokeThickness="1" StrokeShape="RoundRectangle 16" Padding="14,10" Margin="0,0,0,12">

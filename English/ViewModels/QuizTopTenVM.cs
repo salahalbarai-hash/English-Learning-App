@@ -1,4 +1,4 @@
-﻿using English.Models;
+using English.Models;
 using English.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -100,7 +100,7 @@ namespace English.ViewModels
 
         public QuizTopTenVM(List<WordModel> words)
         {
-            _originalTenWords = [.. words.OrderBy(x => Guid.NewGuid()).Take(10)]; // salah
+            _originalTenWords = [.. words.Take(words.Count)];
 
             ExamWords = new List<WordModel>();
             ExamWords.AddRange(_originalTenWords.OrderBy(x => Guid.NewGuid()));
@@ -202,7 +202,8 @@ namespace English.ViewModels
 
             OnPropertyChanged(nameof(CurrentWord));
 
-            if (_wordIndexInStage >= 10) // salah
+            int wordsPerStage = _originalTenWords.Count > 0 ? _originalTenWords.Count : 5;
+            if (_wordIndexInStage >= wordsPerStage)
             {
                 _wordIndexInStage = 0;
                 MoveToNextStage();

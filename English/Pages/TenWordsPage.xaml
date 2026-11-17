@@ -5,10 +5,16 @@
              BackgroundColor="#080D18"
              Title="قاموس انجليش">
 
-    <Grid Padding="16,14,16,8" RowDefinitions="Auto,*">
+    <Grid Padding="16,10,16,0"
+          RowDefinitions="Auto,*">
 
         <!-- Header -->
-        <Border Grid.Row="0" StrokeThickness="1.5" StrokeShape="RoundRectangle 22" Margin="0,0,0,12" Padding="16,14" BackgroundColor="#111827">
+        <Border Grid.Row="0"
+                StrokeThickness="1.5"
+                StrokeShape="RoundRectangle 22"
+                Margin="0,4,0,16"
+                Padding="16,18,16,18"
+                BackgroundColor="#101726">
 
             <Border.Stroke>
                 <LinearGradientBrush EndPoint="1,0">
@@ -18,35 +24,62 @@
             </Border.Stroke>
 
             <Border.Shadow>
-                <Shadow Brush="#000000" Opacity="0.25" Radius="12" Offset="0,5"/>
+                <Shadow Brush="#000000"
+                        Opacity="0.25"
+                        Radius="12"
+                        Offset="0,5"/>
             </Border.Shadow>
 
-            <VerticalStackLayout Spacing="10">
+            <VerticalStackLayout Spacing="14">
 
-                <!-- الصف العلوي: الأرقام والكوينز -->
-                <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
-                    <!-- الأرقام (اليمين) -->
-                    <HorizontalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="4">
-                        <Label Text="{Binding MemorizedWordsCount}" TextColor="#38BDF8" FontSize="18" FontFamily="CairoBold" VerticalOptions="Center"/>
-                        <Label Text="/" TextColor="#64748B" FontSize="14" FontFamily="CairoBold" VerticalOptions="Center" Margin="0,2,0,0"/>
-                        <Label Text="{Binding CurrentGoal}" TextColor="#64748B" FontSize="14" FontFamily="CairoBold" VerticalOptions="Center" Margin="0,2,0,0"/>
+                <!-- الصف العلوي -->
+                <Grid ColumnDefinitions="*,Auto"
+                      VerticalOptions="Center">
+
+                    <HorizontalStackLayout Grid.Column="0"
+                                           VerticalOptions="Center"
+                                           Spacing="5">
+
+                        <Label Text="{Binding MemorizedWordsCount}"
+                               TextColor="#38BDF8"
+                               FontSize="20"
+                               FontFamily="CairoBold"
+                               VerticalOptions="Center"/>
+
+                        <Label Text="/"
+                               TextColor="#475569"
+                               FontSize="14"
+                               FontFamily="CairoBold"
+                               VerticalOptions="Center"
+                               Margin="0,1,0,0"/>
+
+                        <Label Text="{Binding CurrentGoal}"
+                               TextColor="#64748B"
+                               FontSize="14"
+                               FontFamily="CairoBold"
+                               VerticalOptions="Center"
+                               Margin="0,1,0,0"/>
                     </HorizontalStackLayout>
-                    
-                    <!-- أدوات التحكم والكوينز (اليسار) -->
-                    <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
 
-                        <!-- زر رحلة الحفظ السريع (أيقونة البرق الذكي ⚡) -->
+                    <!-- أدوات التحكم والكوينز -->
+                    <HorizontalStackLayout Grid.Column="1"
+                                           Spacing="8"
+                                           VerticalOptions="Center">
+
+                        <!-- زر رحلة الحفظ السريع -->
                         <Border x:Name="BtnNeuralJourney"
                                 StrokeThickness="1"
                                 Stroke="#38BDF8"
-                                StrokeShape="RoundRectangle 18"
-                                BackgroundColor="#0B111D"
-                                WidthRequest="36"
-                                HeightRequest="36"
+                                StrokeShape="RoundRectangle 19"
+                                BackgroundColor="#090E17"
+                                WidthRequest="38"
+                                HeightRequest="38"
                                 VerticalOptions="Center">
+
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnNeuralJourneyTapped"/>
                             </Border.GestureRecognizers>
+
                             <Path Data="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
                                   Fill="#38BDF8"
                                   WidthRequest="16"
@@ -56,18 +89,20 @@
                                   VerticalOptions="Center"/>
                         </Border>
 
-                        <!-- زر التلقين الصوتي الدائري الأنيق -->
+                        <!-- زر التلقين الصوتي -->
                         <Border x:Name="BtnAutoReciteIcon"
                                 StrokeThickness="1"
                                 Stroke="#38BDF8"
-                                StrokeShape="RoundRectangle 18"
-                                BackgroundColor="#0B111D"
-                                WidthRequest="36"
-                                HeightRequest="36"
+                                StrokeShape="RoundRectangle 19"
+                                BackgroundColor="#090E17"
+                                WidthRequest="38"
+                                HeightRequest="38"
                                 VerticalOptions="Center">
+
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnAutoReciteTapped"/>
                             </Border.GestureRecognizers>
+
                             <Image x:Name="AutoReciteImage"
                                    Source="headphones_icon.svg"
                                    WidthRequest="18"
@@ -76,11 +111,29 @@
                                    VerticalOptions="Center"/>
                         </Border>
 
-                        <!-- الكوينز -->
-                        <Border StrokeThickness="1" Stroke="#263B5E" StrokeShape="RoundRectangle 20" BackgroundColor="#0B111D" Padding="12,4,12,4" HeightRequest="36" VerticalOptions="Center">
-                            <HorizontalStackLayout Spacing="6" VerticalOptions="Center">
-                                <Label Text="{Binding ProgressStatus}" FontSize="15" TextColor="#FBBF24" FontFamily="CairoBold" VerticalOptions="Center"/>
-                                <Image Source="coin.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" SemanticProperties.Description="أيقونة العملات"/>
+                        <!-- محفظة الكوينز -->
+                        <Border StrokeThickness="1"
+                                Stroke="#263B5E"
+                                StrokeShape="RoundRectangle 19"
+                                BackgroundColor="#090E17"
+                                Padding="12,0"
+                                HeightRequest="38"
+                                VerticalOptions="Center">
+
+                            <HorizontalStackLayout Spacing="6"
+                                                   VerticalOptions="Center">
+
+                                <Label Text="{Binding ProgressStatus}"
+                                       FontSize="15"
+                                       TextColor="#FBBF24"
+                                       FontFamily="CairoBold"
+                                       VerticalOptions="Center"/>
+
+                                <Image Source="coin.png"
+                                       WidthRequest="20"
+                                       HeightRequest="20"
+                                       VerticalOptions="Center"
+                                       SemanticProperties.Description="أيقونة العملات"/>
                             </HorizontalStackLayout>
                         </Border>
 
@@ -88,12 +141,27 @@
                 </Grid>
 
                 <!-- شريط التقدم -->
-                <Grid x:Name="ProgressBarContainer" VerticalOptions="Center" FlowDirection="RightToLeft" SizeChanged="OnProgressBarContainerSizeChanged">
-                    <Border HeightRequest="12" BackgroundColor="#1E293B" Stroke="#334155" StrokeThickness="1" StrokeShape="RoundRectangle 6"/>
+                <Grid x:Name="ProgressBarContainer"
+                      VerticalOptions="Center"
+                      FlowDirection="RightToLeft"
+                      SizeChanged="OnProgressBarContainerSizeChanged">
 
-                    <Border x:Name="ProgressBar" HeightRequest="12" WidthRequest="{Binding ProgressWidth}" HorizontalOptions="Start" StrokeShape="RoundRectangle 6" StrokeThickness="0">
+                    <Border HeightRequest="10"
+                            BackgroundColor="#1E293B"
+                            Stroke="#334155"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 5"/>
+
+                    <Border x:Name="ProgressBar"
+                            HeightRequest="10"
+                            WidthRequest="{Binding ProgressWidth}"
+                            HorizontalOptions="Start"
+                            StrokeShape="RoundRectangle 5"
+                            StrokeThickness="0">
+
                         <Border.Background>
-                            <LinearGradientBrush StartPoint="1,0" EndPoint="0,0">
+                            <LinearGradientBrush StartPoint="1,0"
+                                                  EndPoint="0,0">
                                 <GradientStop Color="#14B8A6" Offset="0"/>
                                 <GradientStop Color="#38BDF8" Offset="0.55"/>
                                 <GradientStop Color="#818CF8" Offset="1"/>
@@ -101,7 +169,10 @@
                         </Border.Background>
 
                         <Border.Shadow>
-                            <Shadow Brush="#2DD4BF" Opacity="0.5" Radius="8" Offset="0,0"/>
+                            <Shadow Brush="#2DD4BF"
+                                    Opacity="0.5"
+                                    Radius="8"
+                                    Offset="0,0"/>
                         </Border.Shadow>
                     </Border>
                 </Grid>
@@ -110,46 +181,68 @@
         </Border>
 
         <!-- قائمة الكلمات -->
-        <CollectionView x:Name="CV" Grid.Row="1" ItemsSource="{Binding Titles}" SelectionMode="None">
+        <CollectionView x:Name="CV"
+                Grid.Row="1"
+                ItemsSource="{Binding Titles}"
+                SelectionMode="None"
+                SizeChanged="OnCVSizeChanged"
+                Scrolled="OnCVScrolled">
 
             <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" Span="1" VerticalItemSpacing="10"/>
+                <GridItemsLayout Orientation="Vertical"
+                                 Span="1"
+                                 VerticalItemSpacing="20"/>
             </CollectionView.ItemsLayout>
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
+
                     <Grid Padding="2">
-                        <Border StrokeThickness="1.5" StrokeShape="RoundRectangle 18" Padding="14,18" BackgroundColor="#121B2B" Stroke="{Binding CardStrokeBrush}">
+
+                        <Border StrokeThickness="1.5"
+                                StrokeShape="RoundRectangle 20"
+                                Padding="16,0"
+                                HeightRequest="86"
+                                BackgroundColor="#111B2C"
+                                Stroke="{Binding CardStrokeBrush}">
 
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnWordTapped"/>
-                                <TapGestureRecognizer Tapped="OnWordLanguageTapped" NumberOfTapsRequired="2"/>
+                                <TapGestureRecognizer Tapped="OnWordLanguageTapped"
+                                                      NumberOfTapsRequired="2"/>
                             </Border.GestureRecognizers>
 
                             <Border.Shadow>
-                                <Shadow Brush="#000000" Opacity="0.18" Radius="8" Offset="0,3"/>
+                                <Shadow Brush="#000000"
+                                        Opacity="0.22"
+                                        Radius="10"
+                                        Offset="0,4"/>
                             </Border.Shadow>
 
-                            <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                  VerticalOptions="Center">
 
-                                <BoxView Grid.Column="0" WidthRequest="38" HeightRequest="38" Color="Transparent"/>
+                                <BoxView Grid.Column="0"
+                                         WidthRequest="42"
+                                         HeightRequest="42"
+                                         Color="Transparent"/>
 
-                                <!-- نص الكلمة في المنتصف -->
-                                <Label Grid.Column="1" 
-                                       Text="{Binding DisplayText}" 
-                                       TextColor="{Binding DisplayColor}" 
-                                       FontSize="20" 
-                                       FontFamily="CairoBold" 
-                                       HorizontalOptions="Center" 
-                                       VerticalOptions="Center" 
+                                <!-- نص الكلمة -->
+                                <Label Grid.Column="1"
+                                       Text="{Binding DisplayText}"
+                                       TextColor="{Binding DisplayColor}"
+                                       FontSize="22"
+                                       FontFamily="CairoBold"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
                                        LineBreakMode="TailTruncation"/>
 
-                                <!-- زر الميكروفون التفاعلي لفحص النطق بالذكاء الاصطناعي -->
+                                <!-- زر الميكروفون -->
                                 <Border Grid.Column="2"
-                                        StrokeShape="RoundRectangle 19"
+                                        StrokeShape="RoundRectangle 21"
                                         StrokeThickness="1.5"
-                                        WidthRequest="38"
-                                        HeightRequest="38"
+                                        WidthRequest="42"
+                                        HeightRequest="42"
                                         Background="{Binding MicButtonBgBrush}"
                                         Stroke="{Binding MicButtonBorderBrush}"
                                         HorizontalOptions="Center"
@@ -160,54 +253,69 @@
                                     </Border.GestureRecognizers>
 
                                     <Label Text="{Binding MicButtonIcon}"
-                                           FontSize="16"
+                                           FontSize="17"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"/>
                                 </Border>
 
                             </Grid>
-
                         </Border>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 
+            <!-- الأزرار السفلية -->
             <CollectionView.Footer>
-                <VerticalStackLayout Padding="0,18,0,40" Spacing="10" HorizontalOptions="Center">
-                    <!-- أزرار التفاعل: تثبيت باللعب + ابدأ التحدي جنباً إلى جنب -->
-                    <Grid ColumnDefinitions="Auto, Auto" ColumnSpacing="12" HorizontalOptions="Center">
-                        <!-- زر تثبيت باللعب الجديد -->
-                        <Button Grid.Column="0"
-                                Text="تثبيت باللعب 🎮"
-                                HeightRequest="56"
-                                WidthRequest="155"
-                                CornerRadius="28"
-                                BackgroundColor="#0284C7"
-                                TextColor="White"
-                                Clicked="OnPracticeGamesClicked"
-                                FontFamily="CairoBold"
-                                FontSize="15"
-                                Shadow="{Shadow Brush='#0284C7', Opacity=0.35, Radius=10, Offset='0,3'}"/>
+                <VerticalStackLayout Spacing="0">
 
-                        <!-- زر التحدي الحالي -->
-                        <Button Grid.Column="1"
-                                Text="ابدأ التحدي ⚡"
-                                HeightRequest="56"
-                                WidthRequest="155"
-                                CornerRadius="28"
-                                BackgroundColor="#F43F5E"
-                                TextColor="White"
-                                Clicked="QuizButton_Clicked"
-                                FontFamily="CairoBold"
-                                FontSize="15"
-                                Shadow="{Shadow Brush='#F43F5E', Opacity=0.35, Radius=10, Offset='0,3'}"/>
-                    </Grid>
+                    <VerticalStackLayout x:Name="FooterContainer"
+                             Spacing="12"
+                             HorizontalOptions="Center"
+                             Padding="0,4,0,0"
+                             Opacity="0"
+                             InputTransparent="True"
+                             SizeChanged="OnFooterContainerSizeChanged">
 
-                    <Label Text="العب لتثبيت الكلمات وتذكرها، ثم ادخل التحدي الرسمي 🏆"
-                           TextColor="#64748B"
-                           FontSize="11"
-                           FontFamily="Cairo"
-                           HorizontalOptions="Center"/>
+                        <!-- المسافة بين آخر كلمة وأول زر -->
+                        <BoxView HeightRequest="24"
+                     Color="Transparent"/>
+
+                        <Button Text="تثبيت باللعب 🎮"
+                    HeightRequest="56"
+                    WidthRequest="290"
+                    CornerRadius="28"
+                    BackgroundColor="#0284C7"
+                    TextColor="White"
+                    Clicked="OnPracticeGamesClicked"
+                    FontFamily="CairoBold"
+                    FontSize="16"
+                    Shadow="{Shadow Brush='#0284C7', Opacity=0.35, Radius=10, Offset='0,3'}"/>
+
+                        <Button Text="ابدأ التحدي ⚡"
+                    HeightRequest="56"
+                    WidthRequest="290"
+                    CornerRadius="28"
+                    BackgroundColor="#F43F5E"
+                    TextColor="White"
+                    Clicked="QuizButton_Clicked"
+                    FontFamily="CairoBold"
+                    FontSize="16"
+                    Shadow="{Shadow Brush='#F43F5E', Opacity=0.35, Radius=10, Offset='0,3'}"/>
+
+                        <Label Text="العب لتثبيت الكلمات وتذكرها، ثم ادخل التحدي الرسمي 🏆"
+                   TextColor="#64748B"
+                   FontSize="11"
+                   FontFamily="Cairo"
+                   HorizontalOptions="Center"
+                   Margin="0,2,0,0"/>
+
+                    </VerticalStackLayout>
+
+                    <!-- مساحة إضافية بعد الأزرار لضمان إمكانية التمرير -->
+                    <BoxView x:Name="FooterBottomSpacer"
+                 HeightRequest="80"
+                 Color="Transparent"/>
+
                 </VerticalStackLayout>
             </CollectionView.Footer>
 

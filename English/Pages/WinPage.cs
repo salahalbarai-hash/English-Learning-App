@@ -11,12 +11,12 @@ public class WinPage : ContentPage
 
     public WinPage(int finalSeconds)
     {
-        int memorizedWords = Preferences.Get("MemorizedWords", 0) + 10;
+        int memorizedWords = Preferences.Get("MemorizedWords", 0) + 5;
         if (memorizedWords > 5000)
             memorizedWords = 5000;
         Preferences.Set("MemorizedWords", memorizedWords);
 
-        long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0L) + 3;
+        long friendsChallengeCount = Preferences.Get("FriendsChallengeCount", 0L) + 2;
         Preferences.Set("FriendsChallengeCount", friendsChallengeCount);
 
         NavigationPage.SetHasNavigationBar(this, false);
