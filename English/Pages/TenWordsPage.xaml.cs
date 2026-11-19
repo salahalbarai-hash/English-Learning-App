@@ -343,18 +343,6 @@ public partial class TenWordsPage : ContentPage
         object sender,
         EventArgs e)
     {
-        if (sender is VisualElement btn)
-        {
-            try
-            {
-                HapticFeedback.Default.Perform(HapticFeedbackType.Click);
-            }
-            catch { }
-
-            await btn.ScaleTo(0.86, 75, Easing.CubicOut);
-            _ = btn.ScaleTo(1.0, 90, Easing.CubicIn);
-        }
-
         StopAutoRecite();
 
         if (_isNavigating)

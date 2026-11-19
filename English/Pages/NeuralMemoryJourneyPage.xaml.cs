@@ -70,6 +70,11 @@ namespace English.Pages
         private const int ReflexTotalTicks = 18; // 1.8 ثانية خاطفة بمعدل 100ms
         private bool _isProcessingAnswer = false;
 
+        // --- مؤقت بومودورو المحطة 1 (دقيقتان لكل كلمة) ---
+        private IDispatcherTimer? _flashcardPomodoroTimer;
+        private int _flashcardRemainingSeconds = 120;
+        private const int FlashcardPomodoroTotalSeconds = 120;
+
         // --- حالة المحطة 1: Flashcards & Matching ---
         private int _flashcardIndex = 0;
         private Border? _selectedEnglishTile;
@@ -109,10 +114,10 @@ namespace English.Pages
 
             _allSessionWords = sessionWords
                 .Where(w => !string.IsNullOrWhiteSpace(w.EnglishWord) && !string.IsNullOrWhiteSpace(w.ArabicWord))
-                .Take(5)
+                .Take(6)
                 .ToList();
 
-            // مباشرة الكلمات الـ 5 كاملة دون شاشة اختيار
+            // مباشرة الكلمات الـ 6 كاملة دون شاشة اختيار
             _selectedWords = _allSessionWords;
             _batches = new List<List<WordModel>> { _selectedWords };
             _currentBatchIndex = 0;
@@ -133,6 +138,11 @@ namespace English.Pages
             {
                 _reflexTimer.Stop();
                 _reflexTimer = null;
+            }
+            if (_flashcardPomodoroTimer != null)
+            {
+                _flashcardPomodoroTimer.Stop();
+                _flashcardPomodoroTimer = null;
             }
         }
 
@@ -244,7 +254,7 @@ namespace English.Pages
             Station1_MatchingContainer.IsVisible = false;
 
             Station1HeaderTitle.Text = "المحطة 1: البصمة الصوتية والتشفير 🎧";
-            Station1HeaderSub.Text = "استمع للفظ الكلمة بوضوح واكتشف معناها قبل الانطلاق.";
+            Station1HeaderSub.Text = "ركز مع الكلمة لدقيقتين لتثبيتها في الذاكرة، أو اضغط حفظتها مبكراً.";
 
             DisplayFlashcard(CurrentBatch[_flashcardIndex]);
         }
@@ -266,6 +276,56 @@ namespace English.Pages
                 }
                 catch { }
             });
+
+            // تشغيل مؤقت البومودورو لدقيقتين (120 ثانية)
+            StartFlashcardPomodoroTimer();
+        }
+
+        private void StartFlashcardPomodoroTimer()
+        {
+            _flashcardPomodoroTimer?.Stop();
+            _flashcardRemainingSeconds = FlashcardPomodoroTotalSeconds;
+            UpdateFlashcardTimerUI();
+
+            _flashcardPomodoroTimer = Dispatcher.CreateTimer();
+            _flashcardPomodoroTimer.Interval = TimeSpan.FromSeconds(1);
+            _flashcardPomodoroTimer.Tick += OnFlashcardTimerTick;
+            _flashcardPomodoroTimer.Start();
+        }
+
+        private void OnFlashcardTimerTick(object? sender, EventArgs e)
+        {
+            _flashcardRemainingSeconds--;
+            if (_flashcardRemainingSeconds < 0)
+                _flashcardRemainingSeconds = 0;
+
+            UpdateFlashcardTimerUI();
+
+            if (_flashcardRemainingSeconds <= 0)
+            {
+                _flashcardPomodoroTimer?.Stop();
+                _flashcardPomodoroTimer = null;
+                AdvanceFlashcard();
+            }
+        }
+
+        private void UpdateFlashcardTimerUI()
+        {
+            int mins = _flashcardRemainingSeconds / 60;
+            int secs = _flashcardRemainingSeconds % 60;
+            FlashcardPomodoroTimerLabel.Text = $"{mins:D2}:{secs:D2}";
+            FlashcardPomodoroProgressBar.Progress = (double)_flashcardRemainingSeconds / FlashcardPomodoroTotalSeconds;
+
+            if (_flashcardRemainingSeconds <= 15)
+            {
+                FlashcardPomodoroProgressBar.ProgressColor = Color.FromArgb("#F43F5E");
+                FlashcardPomodoroTimerLabel.TextColor = Color.FromArgb("#FB7185");
+            }
+            else
+            {
+                FlashcardPomodoroProgressBar.ProgressColor = Color.FromArgb("#38BDF8");
+                FlashcardPomodoroTimerLabel.TextColor = Color.FromArgb("#38BDF8");
+            }
         }
 
         private static string FormatSyllables(string word)
@@ -294,11 +354,18 @@ namespace English.Pages
 
         private void OnNextFlashcardClicked(object sender, EventArgs e)
         {
+            AdvanceFlashcard();
+        }
+
+        private void AdvanceFlashcard()
+        {
+            _flashcardPomodoroTimer?.Stop();
+            _flashcardPomodoroTimer = null;
+
             _flashcardIndex++;
             if (_flashcardIndex < CurrentBatch.Count)
             {
                 DisplayFlashcard(CurrentBatch[_flashcardIndex]);
-                try { HapticFeedback.Default.Perform(HapticFeedbackType.Click); } catch { }
             }
             else
             {
@@ -309,6 +376,9 @@ namespace English.Pages
 
         private void StartStation1_Matching()
         {
+            _flashcardPomodoroTimer?.Stop();
+            _flashcardPomodoroTimer = null;
+
             Station1_FlashcardContainer.IsVisible = false;
             Station1_MatchingContainer.IsVisible = true;
 

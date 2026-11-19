@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net9.0-android</TargetFramework>
 
@@ -47,7 +47,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#2F87FE" />
+		<ProguardConfiguration Include="Platforms\Android\proguard.pro" Condition="'$(Configuration)' == 'Release'" />
+	<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#2F87FE" />
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#2F87FE" BaseSize="200,200" />
 		<MauiImage Include="Resources\Images\*" />
 		<MauiFont Include="Resources\Fonts\*" />

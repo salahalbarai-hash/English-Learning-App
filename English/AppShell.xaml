@@ -26,11 +26,7 @@
         Shell.TabBarIsVisible="False"
         Shell.NavBarIsVisible="False" />
 
-    <TabBar x:Name="MainTabBar"
-            Shell.TabBarBackgroundColor="#0B1220"
-            Shell.TabBarForegroundColor="#38BDF8"
-            Shell.TabBarTitleColor="#38BDF8"
-            Shell.TabBarUnselectedColor="#64748B">
+    <TabBar x:Name="MainTabBar">
 
         <ShellContent Title="الكلمات"
                       Icon="home.png"              

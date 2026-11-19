@@ -126,12 +126,12 @@
                         <Label Text="🎧" FontSize="24" VerticalOptions="Center"/>
                         <VerticalStackLayout Grid.Column="1" Spacing="1">
                             <Label x:Name="Station1HeaderTitle" Text="المحطة 1: البصمة الصوتية والتشفير" FontSize="14" FontFamily="CairoBold" TextColor="#38BDF8"/>
-                            <Label x:Name="Station1HeaderSub" Text="استمع للفظ الكلمة بوضوح واكتشف معناها قبل الانطلاق." FontSize="11.5" FontFamily="CairoRegular" TextColor="#94A3B8"/>
+                            <Label x:Name="Station1HeaderSub" Text="ركز مع الكلمة لدقيقتين لتثبيتها في الذاكرة، أو اضغط حفظتها مبكراً." FontSize="11.5" FontFamily="CairoRegular" TextColor="#94A3B8"/>
                         </VerticalStackLayout>
                     </Grid>
                 </Border>
 
-                <!-- المحتوى: 1A. بطاقة التشفير الفردية (Flash Encoding) -->
+                <!-- المحتوى: 1A. بطاقة التشفير الفردية (Flash Encoding) مع مؤقت بومودورو دقيقتين -->
                 <Grid x:Name="Station1_FlashcardContainer" Grid.Row="1" VerticalOptions="Center" IsVisible="True">
                     <Border StrokeThickness="1.5"
                             Stroke="#38BDF8"
@@ -144,9 +144,44 @@
                             <Shadow Brush="#0284C7" Opacity="0.3" Radius="18" Offset="0,4"/>
                         </Border.Shadow>
 
-                        <VerticalStackLayout Spacing="16" HorizontalOptions="Center">
-                            <!-- مؤشر تقدم الكلمات في الدفعة -->
-                            <Label x:Name="FlashcardIndexLabel" Text="الكلمة 1 من 4" FontSize="11.5" TextColor="#94A3B8" FontFamily="CairoRegular" HorizontalOptions="Center"/>
+                        <VerticalStackLayout Spacing="14" HorizontalOptions="Center" WidthRequest="272">
+                            <!-- الصف العلوي: مؤشر الكلمة + مؤقت البومودورو لدقيقتين -->
+                            <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
+                                <!-- مؤشر تقدم الكلمات في الدفعة -->
+                                <Label x:Name="FlashcardIndexLabel" 
+                                       Grid.Column="0"
+                                       Text="الكلمة 1 من 6" 
+                                       FontSize="12" 
+                                       TextColor="#94A3B8" 
+                                       FontFamily="CairoBold" 
+                                       VerticalOptions="Center"/>
+
+                                <!-- شارة مؤقت البومودورو لدقيقتين -->
+                                <Border Grid.Column="1"
+                                        BackgroundColor="#0F1F38"
+                                        Stroke="#38BDF8"
+                                        StrokeThickness="1"
+                                        StrokeShape="RoundRectangle 13"
+                                        Padding="8,3"
+                                        VerticalOptions="Center">
+                                    <HorizontalStackLayout Spacing="5" VerticalOptions="Center">
+                                        <Label Text="⏳" FontSize="11" VerticalOptions="Center"/>
+                                        <Label x:Name="FlashcardPomodoroTimerLabel"
+                                               Text="02:00"
+                                               FontSize="12.5"
+                                               FontFamily="CairoBold"
+                                               TextColor="#38BDF8"
+                                               VerticalOptions="Center"/>
+                                    </HorizontalStackLayout>
+                                </Border>
+                            </Grid>
+
+                            <!-- شريط تقدم المؤقت الخاطف للكلمة -->
+                            <ProgressBar x:Name="FlashcardPomodoroProgressBar"
+                                         Progress="1.0"
+                                         ProgressColor="#38BDF8"
+                                         HeightRequest="4"
+                                         Margin="0,-4,0,2"/>
 
                             <!-- الكلمة الإنجليزية الكبيرة -->
                             <Label x:Name="FlashcardEnglishLabel" Text="Hospital" FontSize="32" FontFamily="CairoBold" TextColor="#38BDF8" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
@@ -170,16 +205,32 @@
                                 </HorizontalStackLayout>
                             </Border>
 
-                            <!-- زر التأكيد والانتقال للكلمة التالية -->
-                            <Button Text="فهمتها ➔"
-                                    HeightRequest="46"
-                                    CornerRadius="23"
+                            <!-- زر الحفظ المبكر والتخطي (ثابت وبدون أي حركة عند النقر) -->
+                            <Border HeightRequest="48"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 24"
                                     BackgroundColor="#0284C7"
-                                    TextColor="White"
-                                    FontFamily="CairoBold"
-                                    FontSize="14"
-                                    Margin="0,6,0,0"
-                                    Clicked="OnNextFlashcardClicked"/>
+                                    Margin="0,4,0,0"
+                                    HorizontalOptions="Fill">
+                                <Border.Shadow>
+                                    <Shadow Brush="#0284C7" Opacity="0.35" Radius="8" Offset="0,3"/>
+                                </Border.Shadow>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnNextFlashcardClicked"/>
+                                </Border.GestureRecognizers>
+                                <Label Text="حفظتها مبكراً ⚡"
+                                       TextColor="White"
+                                       FontFamily="CairoBold"
+                                       FontSize="14.5"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                            </Border>
+
+                            <Label Text="ينتقل تلقائياً للكلمة التالية بعد دقيقتين ⏱️"
+                                   FontSize="10.5"
+                                   FontFamily="Cairo"
+                                   TextColor="#64748B"
+                                   HorizontalOptions="Center"/>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>
@@ -466,7 +517,7 @@
                 <Grid Grid.Row="1" RowDefinitions="Auto, *">
                     <!-- عداد الكلمات المسترجعة -->
                     <Border Grid.Row="0" BackgroundColor="#0F172A" Stroke="#1E293B" StrokeThickness="1" StrokeShape="RoundRectangle 12" Padding="12,5" Margin="0,0,0,6" HorizontalOptions="Center">
-                        <Label x:Name="VaultProgressLabel" Text="🎯 تم استرجاع 0 من 5 كلمات" FontSize="12.5" FontFamily="CairoBold" TextColor="#38BDF8"/>
+                        <Label x:Name="VaultProgressLabel" Text="🎯 تم استرجاع 0 من 6 كلمات" FontSize="12.5" FontFamily="CairoBold" TextColor="#38BDF8"/>
                     </Border>
 
                     <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
